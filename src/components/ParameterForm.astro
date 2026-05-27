@@ -1,0 +1,209 @@
+---
+---
+
+<div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
+  <div>
+    <h2 class="font-display text-2xl font-bold tracking-wide text-coffee-gold flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+      </svg>
+      設定沖煮參數
+    </h2>
+    <p class="text-xs text-coffee-muted mt-1">調整您的咖啡豆與沖煮細節，計時器將會自動調整比例。</p>
+  </div>
+
+  <form id="recipe-form" class="space-y-5" onsubmit="return false;">
+    <!-- Coffee Beans & Roast -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label for="bean-name" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">咖啡豆名稱</label>
+        <input
+          type="text"
+          id="bean-name"
+          placeholder="例如：衣索比亞 耶加雪菲"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="roast-level" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">烘焙度</label>
+        <select
+          id="roast-level"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light appearance-none cursor-pointer"
+        >
+          <option value="light">淺度烘焙 (Roast: Light)</option>
+          <option value="medium" selected>中度烘焙 (Roast: Medium)</option>
+          <option value="dark">深度烘焙 (Roast: Dark)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grind Size & Water Temp -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label for="grind-size" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">研磨刻度</label>
+        <input
+          type="text"
+          id="grind-size"
+          placeholder="例如：手沖中細 (Comandante C40 #24)"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="water-temp" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">熱水溫度 (°C)</label>
+        <div class="relative flex items-center">
+          <input
+            type="number"
+            id="water-temp"
+            min="80"
+            max="100"
+            value="92"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+          />
+          <span class="absolute right-4 text-sm text-coffee-muted">°C</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coffee Ratio & Water Amount Calc -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+      <div class="flex flex-col gap-1.5">
+        <label for="coffee-weight" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">咖啡粉量 (g)</label>
+        <div class="relative flex items-center">
+          <input
+            type="number"
+            id="coffee-weight"
+            min="5"
+            max="100"
+            step="0.5"
+            value="20"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+          />
+          <span class="absolute right-4 text-sm text-coffee-muted">g</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="water-ratio" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">粉水比例 (1:X)</label>
+        <div class="relative flex items-center">
+          <input
+            type="number"
+            id="water-ratio"
+            min="10"
+            max="25"
+            step="0.5"
+            value="15"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+          />
+          <span class="absolute right-4 text-sm text-coffee-muted">1 : X</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="bg-coffee-darker/60 border border-coffee-sand/10 rounded-xl p-4 flex justify-between items-center mt-6">
+      <div>
+        <p class="text-xs text-coffee-muted uppercase tracking-wider">預估總注水量</p>
+        <h3 class="text-3xl font-display font-bold text-coffee-gold mt-1">
+          <span id="total-water">300</span> <span class="text-sm font-sans font-medium text-coffee-light/80">ml (g)</span>
+        </h3>
+      </div>
+      <div class="text-right">
+        <p class="text-xs text-coffee-muted uppercase tracking-wider">金杯萃取區間</p>
+        <p class="text-sm text-coffee-sand font-medium mt-1">1:15 經典黃金比</p>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="button"
+      id="btn-apply-recipe"
+      class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer text-center text-sm gold-glow-hover"
+    >
+      套用設定並同步計時器
+    </button>
+  </form>
+</div>
+
+<script>
+  function updateCalculations() {
+    const weightInput = document.getElementById('coffee-weight') as HTMLInputElement;
+    const ratioInput = document.getElementById('water-ratio') as HTMLInputElement;
+    const totalWaterEl = document.getElementById('total-water');
+
+    if (weightInput && ratioInput && totalWaterEl) {
+      const weight = parseFloat(weightInput.value) || 0;
+      const ratio = parseFloat(ratioInput.value) || 0;
+      const totalWater = Math.round(weight * ratio);
+      totalWaterEl.textContent = totalWater.toString();
+    }
+  }
+
+  function saveAndApplyRecipe() {
+    const beanName = (document.getElementById('bean-name') as HTMLInputElement)?.value || '自訂精品咖啡豆';
+    const roastLevel = (document.getElementById('roast-level') as HTMLSelectElement)?.value || 'medium';
+    const grindSize = (document.getElementById('grind-size') as HTMLInputElement)?.value || '中等';
+    const waterTemp = parseInt((document.getElementById('water-temp') as HTMLInputElement)?.value) || 92;
+    const coffeeWeight = parseFloat((document.getElementById('coffee-weight') as HTMLInputElement)?.value) || 20;
+    const waterRatio = parseFloat((document.getElementById('water-ratio') as HTMLInputElement)?.value) || 15;
+    const totalWater = Math.round(coffeeWeight * waterRatio);
+
+    const recipe = {
+      beanName,
+      roastLevel,
+      grindSize,
+      waterTemp,
+      coffeeWeight,
+      waterRatio,
+      totalWater
+    };
+
+    // Save to LocalStorage
+    localStorage.setItem('barista_flow_recipe', JSON.stringify(recipe));
+
+    // Dispatch custom event to notify Timer
+    const event = new CustomEvent('coffee-recipe-changed', { detail: recipe });
+    window.dispatchEvent(event);
+
+    // Visual effect on button
+    const btn = document.getElementById('btn-apply-recipe');
+    if (btn) {
+      const originalText = btn.textContent;
+      btn.textContent = '✓ 已同步設定！';
+      btn.classList.add('bg-green-600');
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.classList.remove('bg-green-600');
+      }, 1500);
+    }
+  }
+
+  // Bind Listeners
+  document.addEventListener('DOMContentLoaded', () => {
+    const weightInput = document.getElementById('coffee-weight');
+    const ratioInput = document.getElementById('water-ratio');
+    const btnApply = document.getElementById('btn-apply-recipe');
+
+    if (weightInput) weightInput.addEventListener('input', updateCalculations);
+    if (ratioInput) ratioInput.addEventListener('input', updateCalculations);
+    if (btnApply) btnApply.addEventListener('click', saveAndApplyRecipe);
+
+    // Initial Load from LocalStorage
+    const savedRecipeStr = localStorage.getItem('barista_flow_recipe');
+    if (savedRecipeStr) {
+      try {
+        const recipe = JSON.parse(savedRecipeStr);
+        if (document.getElementById('bean-name')) (document.getElementById('bean-name') as HTMLInputElement).value = recipe.beanName || '';
+        if (document.getElementById('roast-level')) (document.getElementById('roast-level') as HTMLSelectElement).value = recipe.roastLevel || 'medium';
+        if (document.getElementById('grind-size')) (document.getElementById('grind-size') as HTMLInputElement).value = recipe.grindSize || '';
+        if (document.getElementById('water-temp')) (document.getElementById('water-temp') as HTMLInputElement).value = recipe.waterTemp || 92;
+        if (document.getElementById('coffee-weight')) (document.getElementById('coffee-weight') as HTMLInputElement).value = recipe.coffeeWeight || 20;
+        if (document.getElementById('water-ratio')) (document.getElementById('water-ratio') as HTMLInputElement).value = recipe.waterRatio || 15;
+        updateCalculations();
+      } catch (e) {
+        console.error('Failed to parse saved recipe', e);
+      }
+    }
+  });
+</script>

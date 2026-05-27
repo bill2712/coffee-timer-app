@@ -1,0 +1,244 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+// Generate Schema.org BlogPosting JSON-LD for premium Google SEO
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaflow.com');
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": entry.data.title,
+  "description": entry.data.description,
+  "datePublished": entry.data.pubDate.toISOString(),
+  "author": {
+    "@type": "Organization",
+    "name": entry.data.author
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL.toString()
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Barista Flow",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://baristaflow.com/favicon.svg"
+    }
+  }
+};
+---
+
+<Layout
+  title={`${entry.data.title} | Barista Flow 咖啡科學`}
+  description={entry.data.description}
+>
+  <!-- Inject JSON-LD to Head -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <article class="max-w-3xl mx-auto">
+    <!-- Back to Blog Button -->
+    <a href="/blog" class="inline-flex items-center gap-2 text-xs font-semibold text-coffee-sand hover:text-coffee-gold transition-colors mb-8 group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      返回知識庫列表
+    </a>
+
+    <!-- Header info -->
+    <header class="mb-10 sm:mb-12">
+      <div class="flex flex-wrap gap-2 items-center text-xs text-coffee-sand mb-4">
+        <span>{formatDate(entry.data.pubDate)}</span>
+        <span class="text-coffee-muted">•</span>
+        <span>作者：{entry.data.author}</span>
+      </div>
+
+      <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-coffee-light leading-tight">
+        {entry.data.title}
+      </h1>
+
+      <div class="flex flex-wrap gap-1.5 mt-6">
+        {entry.data.tags.map((tag: string) => (
+          <span class="text-xs px-3 py-1 rounded-full bg-coffee-gray border border-coffee-sand/15 text-coffee-sand">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    <!-- Main Content Container with Premium Styles -->
+    <div class="blog-content border-t border-coffee-sand/10 pt-10 text-coffee-light/95 leading-relaxed text-sm sm:text-base">
+      <Content />
+    </div>
+
+    <!-- CTA & Footer of Post -->
+    <div class="mt-16 border-t border-coffee-sand/10 pt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div>
+        <h4 class="font-display text-lg font-bold text-coffee-light">喜歡這篇文章嗎？</h4>
+        <p class="text-xs text-coffee-muted mt-1">使用 Barista Flow 的專業計時器，立刻將沖煮科學化為舌尖上的極致美味！</p>
+      </div>
+
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 bg-gradient-to-r from-coffee-accent to-coffee-gold text-coffee-dark font-bold tracking-wide rounded-xl px-6 py-3 shadow-lg hover:from-coffee-gold hover:to-coffee-gold-hover transition-all active:scale-[0.98] cursor-pointer text-sm gold-glow"
+      >
+        立刻開啟沖煮計時器
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+  </article>
+</Layout>
+
+<!-- Markdown Specific Custom Styles for Premium Look -->
+<style is:global>
+  .blog-content {
+    /* Headings */
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-coffee-gold);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.025em;
+    }
+    
+    @media (min-width: 640px) {
+      h2 {
+        font-size: 1.75rem;
+      }
+    }
+
+    h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--color-coffee-sand);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Paragraphs and spacing */
+    p {
+      margin-bottom: 1.5rem;
+      color: rgba(245, 242, 235, 0.85);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    strong {
+      color: var(--color-coffee-light);
+      font-weight: 600;
+    }
+
+    /* Lists */
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: rgba(245, 242, 235, 0.85);
+      font-weight: 300;
+    }
+
+    ul li::before {
+      content: "•";
+      color: var(--color-coffee-gold);
+      font-weight: bold;
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+    }
+
+    ol {
+      list-style-type: decimal;
+      padding-left: 1.25rem;
+      margin-bottom: 1.5rem;
+      color: rgba(245, 242, 235, 0.85);
+    }
+
+    ol li {
+      margin-bottom: 0.75rem;
+      padding-left: 0.25rem;
+      font-weight: 300;
+    }
+
+    ol li::marker {
+      color: var(--color-coffee-gold);
+      font-weight: 600;
+    }
+
+    /* Blockquote */
+    blockquote {
+      border-left: 3px solid var(--color-coffee-gold);
+      padding-left: 1.5rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: var(--color-coffee-sand);
+    }
+
+    /* Divider */
+    hr {
+      border: 0;
+      border-top: 1px solid rgba(197, 168, 128, 0.15);
+      margin: 3rem 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.875rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(197, 168, 128, 0.15);
+    }
+
+    th {
+      font-family: var(--font-display);
+      color: var(--color-coffee-gold);
+      font-weight: 600;
+      background-color: rgba(42, 36, 32, 0.4);
+    }
+
+    td {
+      color: rgba(245, 242, 235, 0.8);
+      font-weight: 300;
+    }
+
+    tr:hover td {
+      color: var(--color-coffee-light);
+      background-color: rgba(197, 168, 128, 0.02);
+    }
+  }
+</style>

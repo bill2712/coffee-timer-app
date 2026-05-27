@@ -1,0 +1,131 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = "Barista Flow | 專業精品咖啡三階段注水計時器",
+  description = "Barista Flow 提供精品咖啡沖煮參數計算與互動式三階段注水計時器，助您精準控制悶蒸、主要萃取與後段強度，沖煮出極致風味的咖啡。",
+  ogImage = "/images/og-default.jpg"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaflow.com');
+---
+
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Google Fonts Preconnect and Links -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
+
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Google AdSense Placeholder (Required for approval) -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  </head>
+  <body class="coffee-bg-gradient min-h-screen flex flex-col selection:bg-coffee-gold selection:text-coffee-dark">
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 w-full glass-card border-b border-coffee-sand/10">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+          <div class="flex-shrink-0 flex items-center">
+            <a href="/" class="flex items-center gap-2 group">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-coffee-gold transition-transform group-hover:rotate-12 duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+                <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
+                <line x1="6" y1="2" x2="6" y2="4" />
+                <line x1="10" y1="2" x2="10" y2="4" />
+                <line x1="14" y1="2" x2="14" y2="4" />
+              </svg>
+              <span class="font-display text-xl sm:text-2xl font-bold tracking-wider bg-gradient-to-r from-coffee-gold to-coffee-sand bg-clip-text text-transparent">
+                BARISTA FLOW
+              </span>
+            </a>
+          </div>
+          
+          <nav class="flex items-center gap-6 sm:gap-8">
+            <a href="/" class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              沖煮計時器
+            </a>
+            <a href="/blog" class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              咖啡知識庫
+            </a>
+            <a href="/privacy" class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              隱私權政策
+            </a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-coffee-darker border-t border-coffee-sand/5 py-8 sm:py-12 mt-auto">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex flex-col items-center md:items-start gap-2">
+            <div class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-coffee-gold/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+                <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
+              </svg>
+              <span class="font-display font-semibold tracking-widest text-coffee-sand/80 text-sm">BARISTA FLOW</span>
+            </div>
+            <p class="text-xs text-coffee-muted italic text-center md:text-left mt-1">
+              "Coffee is a language in itself." — Jackie Chan
+            </p>
+          </div>
+          
+          <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-coffee-muted">
+            <a href="/" class="hover:text-coffee-gold transition-colors">首頁計時器</a>
+            <a href="/blog" class="hover:text-coffee-gold transition-colors">專業部落格</a>
+            <a href="/privacy" class="hover:text-coffee-gold transition-colors">隱私權聲明</a>
+          </div>
+        </div>
+        
+        <div class="border-t border-coffee-gray/40 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-xs text-coffee-muted">
+            &copy; {new Date().getFullYear()} Barista Flow. 保留所有權利。
+          </p>
+          <p class="text-xs text-coffee-muted flex items-center gap-1">
+            Made for Specialty Coffee Lovers ☕
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
