@@ -11,8 +11,9 @@
     <!-- Sound Toggle -->
     <button
       id="btn-sound-toggle"
-      class="p-2.5 rounded-lg bg-coffee-darker border border-coffee-sand/10 text-coffee-sand hover:text-coffee-gold hover:border-coffee-gold/40 transition-all duration-200 ease-out active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark focus-visible:ring-coffee-gold"
+      class="p-2.5 min-w-[44px] min-h-[44px] rounded-lg bg-coffee-darker border border-coffee-sand/10 text-coffee-sand hover:text-coffee-gold hover:border-coffee-gold/40 transition-all duration-200 ease-out active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark focus-visible:ring-coffee-gold flex items-center justify-center"
       title="切換聲音提示"
+      aria-label="切換聲音提示"
     >
       <svg id="icon-sound-on" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
@@ -84,7 +85,7 @@
     <!-- Inside Content -->
     <div class="text-center flex flex-col items-center z-10">
       <span id="timer-stage-title" class="text-xs uppercase font-semibold tracking-widest text-coffee-sand">點擊開始</span>
-      <span id="timer-time" class="font-display text-5xl sm:text-6xl font-bold tracking-tight text-coffee-light my-2">02:30</span>
+      <span id="timer-time" class="font-display tabular-nums w-[200px] text-center text-5xl sm:text-6xl font-bold tracking-tight text-coffee-light my-2">02:30</span>
       
       <!-- Target Weight Tracker -->
       <div class="bg-coffee-darker/60 border border-coffee-sand/10 rounded-full px-4 py-1.5 mt-1 flex items-center gap-1.5">
@@ -492,27 +493,28 @@
 
     synth.init(); // Warm up Audio Context
 
-    function tick(now: number) {
+    function tick() {
       if (!isRunning) return;
       
+      const now = performance.now();
       const delta = (now - lastTimestamp) / 1000;
       lastTimestamp = now;
       
       remainingTime = Math.max(0, remainingTime - delta);
       updateDisplay();
 
-      if (remainingTime > 0) {
-        timerId = requestAnimationFrame(tick);
+      if (remainingTime <= 0 && timerId !== null) {
+        window.clearInterval(timerId);
       }
     }
 
-    timerId = requestAnimationFrame(tick);
+    timerId = window.setInterval(tick, 100);
   }
 
   function stopTimer(completed = false) {
     isRunning = false;
-    if (timerId) {
-      cancelAnimationFrame(timerId);
+    if (timerId !== null) {
+      window.clearInterval(timerId);
       timerId = null;
     }
 

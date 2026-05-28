@@ -228,27 +228,24 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
   function updateCalculations() {
     let isValid = true;
     if (weightInput && ratioInput && totalWaterEl) {
-      const weight = parseFloat(weightInput.value);
-      const ratio = parseFloat(ratioInput.value);
+      let weight = parseFloat(weightInput.value);
+      let ratio = parseFloat(ratioInput.value);
       
-      // Validation Logic
+      // Validation Logic & Fail-safes
       const weightError = document.getElementById('weight-error');
       const ratioError = document.getElementById('ratio-error');
 
+      // Gracefully override if malicious/invalid input is detected (fail-safe defaults)
       if (isNaN(weight) || weight <= 0) {
-        isValid = false;
-        weightError?.classList.remove('hidden');
-        weightInput.classList.add('border-red-500/50', 'focus:border-red-500/50');
-      } else {
+        weightInput.value = "5"; // Fail-safe default
+        weight = 5;
         weightError?.classList.add('hidden');
         weightInput.classList.remove('border-red-500/50', 'focus:border-red-500/50');
       }
 
       if (isNaN(ratio) || ratio <= 0) {
-        isValid = false;
-        ratioError?.classList.remove('hidden');
-        ratioInput.classList.add('border-red-500/50', 'focus:border-red-500/50');
-      } else {
+        ratioInput.value = "10"; // Fail-safe default
+        ratio = 10;
         ratioError?.classList.add('hidden');
         ratioInput.classList.remove('border-red-500/50', 'focus:border-red-500/50');
       }
@@ -411,7 +408,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
             ${item.coffeeWeight}g 粉 | 1:${item.waterRatio} | ${item.waterTemp}°C | ${roastText}
           </p>
         </div>
-        <button onclick="window.deleteHistoryItem('${item.id}')" class="p-2 text-coffee-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all" title="刪除">
+        <button onclick="window.deleteHistoryItem('${item.id}')" class="p-2 text-coffee-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all" title="刪除" aria-label="刪除歷史紀錄">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
