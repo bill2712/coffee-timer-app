@@ -23,19 +23,31 @@
     </button>
   </div>
 
-  <!-- Stage Indicators -->
-  <div class="flex justify-between w-full max-w-sm px-2 mb-6">
-    <div id="step-0" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300">
-      <span class="w-7 h-7 rounded-full bg-coffee-gray border border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light">1</span>
-      <span class="text-[10px] sm:text-xs font-medium text-coffee-sand">悶蒸 (40s)</span>
+  <!-- Stage Indicators (Stepper Wizard) -->
+  <div class="relative flex justify-between w-full max-w-sm px-2 mb-6 z-0">
+    <!-- Connecting Line -->
+    <div class="absolute top-3.5 left-6 right-6 h-[2px] bg-coffee-sand/10 -z-10"></div>
+    
+    <div id="step-0" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
+      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors">1</span>
+      <div class="flex flex-col items-center text-center">
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">悶蒸 (40s)</span>
+        <span id="step-target-0" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
+      </div>
     </div>
-    <div id="step-1" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300">
-      <span class="w-7 h-7 rounded-full bg-coffee-gray border border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light">2</span>
-      <span class="text-[10px] sm:text-xs font-medium text-coffee-sand">一注 (50s)</span>
+    <div id="step-1" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
+      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors">2</span>
+      <div class="flex flex-col items-center text-center">
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">一注 (50s)</span>
+        <span id="step-target-1" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
+      </div>
     </div>
-    <div id="step-2" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300">
-      <span class="w-7 h-7 rounded-full bg-coffee-gray border border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light">3</span>
-      <span class="text-[10px] sm:text-xs font-medium text-coffee-sand">二注 (60s)</span>
+    <div id="step-2" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
+      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors">3</span>
+      <div class="flex flex-col items-center text-center">
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">二注 (60s)</span>
+        <span id="step-target-2" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
+      </div>
     </div>
   </div>
 
@@ -118,17 +130,23 @@
 <script>
   // Timing parameters (in seconds)
   const STAGES = [
-    { name: '悶蒸階段 (Blooming)', duration: 40, weightMultiplier: 2.5, desc: '均勻注入粉量 2.5 倍的水量，等待排氣，喚醒咖啡豆風味。' },
-    { name: '第一次注水 (Sweetness)', duration: 50, weightMultiplier: 0.60, desc: '繞圈注水，帶出咖啡明亮的酸甜感與優雅的香氣。' },
-    { name: '第二次注水 (Strength)', duration: 60, weightMultiplier: 1.00, desc: '中心注水或溫和繞圈，調整整體厚實度，控制在金杯萃取區間。' }
+    { name: '悶蒸階段', duration: 40, weightMultiplier: 2.5, desc: '均勻注入粉量 2.5 倍的水量，等待排氣，喚醒咖啡豆風味。', speech: '開始悶蒸' },
+    { name: '第一次注水', duration: 50, weightMultiplier: 0.60, desc: '繞圈注水，帶出咖啡明亮的酸甜感與優雅的香氣。', speech: '第一次注水' },
+    { name: '第二次注水', duration: 60, weightMultiplier: 1.00, desc: '中心注水或溫和繞圈，調整整體厚實度，控制在金杯萃取區間。', speech: '第二次注水' }
   ];
 
   const TOTAL_DURATION = STAGES.reduce((acc, stage) => acc + stage.duration, 0);
 
-  // Audio synthesis helper
+  // Audio & Speech synthesis helper
   class CoffeeSynth {
     ctx: AudioContext | null = null;
     isMuted: boolean = false;
+    speechSynth = window.speechSynthesis;
+
+    constructor() {
+      const savedMute = localStorage.getItem('barista_flow_muted');
+      if (savedMute === 'true') this.isMuted = true;
+    }
 
     init() {
       if (!this.ctx) {
@@ -181,6 +199,18 @@
         osc.stop(now + 0.8);
       });
     }
+
+    speak(text: string) {
+      if (this.isMuted) return;
+      if (!this.speechSynth) return;
+      
+      this.speechSynth.cancel(); // Interrupt any playing speech
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-TW';
+      utterance.rate = 1.05; // Slightly faster to sound pro
+      utterance.pitch = 1.0;
+      this.speechSynth.speak(utterance);
+    }
   }
 
   const synth = new CoffeeSynth();
@@ -198,6 +228,8 @@
   let remainingTime = TOTAL_DURATION;
   let isRunning = false;
   let lastTimestamp = 0;
+  let lastSpokenStageIndex = -1; // Prevent repeating voice
+  let lastCompletedBeep = false;
 
   // DOM Elements
   let timerProgress: SVGCircleElement | null = null;
@@ -219,6 +251,14 @@
       const offset = strokeDashArray - (percent / 100) * strokeDashArray;
       timerProgress.style.strokeDashoffset = offset.toString();
     }
+  }
+
+  function getTargetWeights() {
+    return [
+      Math.round(recipe.coffeeWeight * STAGES[0].weightMultiplier),
+      Math.round(recipe.totalWater * STAGES[1].weightMultiplier),
+      recipe.totalWater
+    ];
   }
 
   function formatTime(seconds: number): string {
@@ -259,26 +299,45 @@
     const currentStage = STAGES[currentStageIndex];
     const stageElapsed = elapsed - stageStartAccumulator;
     const stageRemaining = currentStage.duration - stageElapsed;
+    
+    const targets = getTargetWeights();
 
-    // Highlights step headers
+    // Update Step Indicators (Stepper)
     for (let i = 0; i < STAGES.length; i++) {
       const el = document.getElementById(`step-${i}`);
+      const targetEl = document.getElementById(`step-target-${i}`);
+      if (targetEl) {
+        targetEl.textContent = `${targets[i]}g`;
+      }
+
       if (el) {
+        const circle = el.querySelector('span');
         if (i === currentStageIndex && isRunning) {
-          el.classList.remove('opacity-40');
+          el.classList.remove('opacity-40', 'opacity-60');
           el.classList.add('opacity-100', 'scale-105');
-          const circle = el.querySelector('span');
-          if (circle) circle.style.borderColor = 'var(--color-coffee-gold)';
-        } else if (i < currentStageIndex) {
+          if (circle) {
+            circle.style.borderColor = 'var(--color-coffee-gold)';
+            circle.style.backgroundColor = 'var(--color-coffee-darker)';
+            circle.style.color = 'var(--color-coffee-gold)';
+          }
+        } else if (i < currentStageIndex || (i === currentStageIndex && !isRunning && elapsed > 0)) {
+          // Completed steps
           el.classList.remove('opacity-40', 'scale-105');
           el.classList.add('opacity-60');
-          const circle = el.querySelector('span');
-          if (circle) circle.style.borderColor = 'var(--color-coffee-accent)';
+          if (circle) {
+            circle.style.borderColor = 'var(--color-coffee-accent)';
+            circle.style.backgroundColor = 'var(--color-coffee-accent)';
+            circle.style.color = 'var(--color-coffee-dark)';
+          }
         } else {
+          // Upcoming steps
           el.classList.remove('opacity-100', 'scale-105', 'opacity-60');
           el.classList.add('opacity-40');
-          const circle = el.querySelector('span');
-          if (circle) circle.style.borderColor = 'rgba(197, 168, 128, 0.3)';
+          if (circle) {
+            circle.style.borderColor = 'rgba(197, 168, 128, 0.3)';
+            circle.style.backgroundColor = 'var(--color-coffee-dark)';
+            circle.style.color = 'var(--color-coffee-light)';
+          }
         }
       }
     }
@@ -289,20 +348,10 @@
     }
 
     // Calculate dynamic weights
-    let targetWeight = 0;
-    if (currentStageIndex === 0) {
-      // Blooming: 2.5x coffee weight
-      targetWeight = Math.round(recipe.coffeeWeight * STAGES[0].weightMultiplier);
-    } else if (currentStageIndex === 1) {
-      // 1st Pour: 60% of total water
-      targetWeight = Math.round(recipe.totalWater * STAGES[1].weightMultiplier);
-    } else {
-      // 2nd Pour: 100% of total water
-      targetWeight = recipe.totalWater;
-    }
+    const targetWeight = targets[currentStageIndex];
 
     if (timerStageTitle) {
-      timerStageTitle.textContent = isRunning ? currentStage.name : '咖啡計時已暫停';
+      timerStageTitle.textContent = isRunning ? currentStage.name : (elapsed > 0 ? '咖啡計時已暫停' : '點擊開始');
     }
 
     if (timerWeightHint) {
@@ -310,15 +359,21 @@
     }
 
     if (timerInstruction) {
-      timerInstruction.textContent = isRunning ? currentStage.desc : '準備就緒，點擊下方「開始沖煮」';
+      timerInstruction.textContent = isRunning ? currentStage.desc : (elapsed > 0 ? '計時暫停中' : '準備就緒，點擊下方「開始沖煮」');
     }
 
     // Set Circle Progress
     const totalPercent = (remainingTime / TOTAL_DURATION) * 100;
     setProgress(totalPercent);
 
-    // Audio alerts (countdown + chord)
+    // Audio alerts (countdown + chord + speech)
     if (isRunning) {
+      // Speak on stage change
+      if (currentStageIndex !== lastSpokenStageIndex) {
+        synth.speak(`${currentStage.speech}，目標水量 ${targetWeight} 克`);
+        lastSpokenStageIndex = currentStageIndex;
+      }
+
       // If exactly at stage boundary (stageElapsed == 0 and not at the very beginning)
       if (stageElapsed === 0 && elapsed > 0) {
         synth.playChord();
@@ -333,9 +388,11 @@
         }
       }
 
-      // Complete beep
-      if (remainingTime <= 0) {
+      // Complete beep and speech
+      if (remainingTime <= 0 && !lastCompletedBeep) {
+        lastCompletedBeep = true;
         synth.playChord();
+        synth.speak('萃取完成，請享用您的咖啡');
         setTimeout(() => synth.playChord(), 400);
         stopTimer(true);
       }
@@ -402,6 +459,8 @@
   function resetTimer() {
     stopTimer();
     remainingTime = TOTAL_DURATION;
+    lastSpokenStageIndex = -1;
+    lastCompletedBeep = false;
     if (btnStart) {
       btnStart.textContent = '開始沖煮';
       btnStart.disabled = false;
@@ -534,19 +593,31 @@
 
     // Sound toggle
     if (btnSoundToggle) {
+      const iconOn = document.getElementById('icon-sound-on');
+      const iconOff = document.getElementById('icon-sound-off');
+      
+      // Init UI state from constructor
+      if (synth.isMuted) {
+        iconOn?.classList.add('hidden');
+        iconOff?.classList.remove('hidden');
+        btnSoundToggle.classList.add('border-red-500/30', 'text-red-400');
+      }
+
       btnSoundToggle.addEventListener('click', () => {
         synth.isMuted = !synth.isMuted;
-        const iconOn = document.getElementById('icon-sound-on');
-        const iconOff = document.getElementById('icon-sound-off');
+        localStorage.setItem('barista_flow_muted', synth.isMuted.toString());
+        
         if (iconOn && iconOff) {
           if (synth.isMuted) {
             iconOn.classList.add('hidden');
             iconOff.classList.remove('hidden');
             btnSoundToggle!.classList.add('border-red-500/30', 'text-red-400');
+            synth.speechSynth?.cancel();
           } else {
             iconOn.classList.remove('hidden');
             iconOff.classList.add('hidden');
             btnSoundToggle!.classList.remove('border-red-500/30', 'text-red-400');
+            synth.speak("語音提示已開啟");
           }
         }
       });
