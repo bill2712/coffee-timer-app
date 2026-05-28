@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SEO from '../components/SEO.astro';
 import AdSlot from '../components/AdSlot.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 
 interface Props {
   title?: string;
@@ -63,13 +64,13 @@ const base = import.meta.env.BASE_URL;
           
           <nav class="flex items-center gap-6 sm:gap-8">
             <a href={base} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              沖煮計時器
+              首頁
             </a>
             <a href={base + "blog"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              咖啡知識庫
+              知識庫
             </a>
-            <a href={base + "privacy"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              隱私權政策
+            <a href={base + "about"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              關於我們
             </a>
           </nav>
         </div>
@@ -102,9 +103,10 @@ const base = import.meta.env.BASE_URL;
           </div>
           
           <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-coffee-muted">
-            <a href={base} class="hover:text-coffee-gold transition-colors">首頁計時器</a>
-            <a href={base + "blog"} class="hover:text-coffee-gold transition-colors">專業部落格</a>
-            <a href={base + "privacy"} class="hover:text-coffee-gold transition-colors">隱私權聲明</a>
+            <a href={base + "about"} class="hover:text-coffee-gold transition-colors">關於我們</a>
+            <a href={base + "contact"} class="hover:text-coffee-gold transition-colors">聯絡我們</a>
+            <a href={base + "terms-of-service"} class="hover:text-coffee-gold transition-colors">服務條款</a>
+            <a href={base + "privacy-policy"} class="hover:text-coffee-gold transition-colors">隱私權政策</a>
           </div>
         </div>
         
@@ -118,5 +120,8 @@ const base = import.meta.env.BASE_URL;
         </div>
       </div>
     </footer>
+
+    <!-- Global Cookie Consent Banner -->
+    <CookieBanner />
   </body>
 </html>
