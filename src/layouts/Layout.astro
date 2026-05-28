@@ -1,19 +1,23 @@
 ---
 import '../styles/global.css';
+import SEO from '../components/SEO.astro';
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  article?: boolean;
+  jsonld?: any;
 }
 
 const {
   title = "Barista Flow | 專業精品咖啡三階段注水計時器",
   description = "Barista Flow 提供精品咖啡沖煮參數計算與互動式三階段注水計時器，助您精準控制悶蒸、主要萃取與後段強度，沖煮出極致風味的咖啡。",
-  ogImage = "/images/og-default.jpg"
+  ogImage = "/images/og-default.jpg",
+  article = false,
+  jsonld
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaflow.com');
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -29,25 +33,7 @@ const base = import.meta.env.BASE_URL;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     
-    <!-- Primary Meta Tags -->
-    <title>{title}</title>
-    <meta name="title" content={title} />
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={ogImage} />
+    <SEO title={title} description={description} image={ogImage} article={article} jsonld={jsonld} />
 
     <meta name="generator" content={Astro.generator} />
     
