@@ -13,7 +13,8 @@ const { items, class: className = "" } = Astro.props;
 
 // Generate JSON-LD
 const siteUrl = import.meta.env.SITE || 'https://baristaflow.com';
-const baseUrl = import.meta.env.BASE_URL;
+const rawBase = import.meta.env.BASE_URL;
+const baseUrl = rawBase.endsWith('/') ? rawBase : rawBase + '/';
 
 const breadcrumbList = {
   "@context": "https://schema.org",
@@ -46,7 +47,7 @@ const breadcrumbList = {
           </svg>
           {item.url && index !== items.length - 1 ? (
             <a 
-              href={item.url.startsWith('/') ? item.url : import.meta.env.BASE_URL + item.url} 
+              href={item.url.startsWith('/') ? baseUrl + item.url.slice(1) : baseUrl + item.url} 
               class="ml-1 text-coffee-muted hover:text-coffee-gold md:ml-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold rounded"
             >
               {item.label}
