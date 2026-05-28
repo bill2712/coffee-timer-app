@@ -1,12 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import SearchBar from '../../components/SearchBar.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
 // Fetch all posts from content collections, sorted by publish date descending
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const posts = (await getCollection('blog'))
+  .filter((entry) => !entry.data.tags?.includes('Glossary'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('zh-TW', {
@@ -35,6 +36,9 @@ function formatDate(date: Date) {
       手沖咖啡是一門結合物理與化學的精緻藝術。在這裡，我們為您解密研磨度、水溫、三階段注水法背後的科學規律，陪伴您的咖啡師修煉之路。
     </p>
   </section>
+
+  <!-- Search Bar -->
+  <SearchBar />
 
   <!-- Blog Layout with Sidebar -->
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">

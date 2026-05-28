@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import ParameterForm from '../../components/ParameterForm.astro';
 import Timer from '../../components/Timer.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const defaultFrenchPressRecipe = {
   beanName: '哥倫比亞 水洗',
@@ -29,6 +30,12 @@ const jsonLd = {
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">
+    <div class="flex justify-center">
+      <Breadcrumbs items={[
+        { label: '首頁', url: '/' },
+        { label: '法式濾壓壺計算機' }
+      ]} />
+    </div>
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
       French Press Master
     </div>

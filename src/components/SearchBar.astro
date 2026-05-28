@@ -1,0 +1,164 @@
+---
+---
+
+<div class="relative w-full max-w-xl mx-auto mb-12 group z-40" id="search-container">
+  <div class="relative flex items-center w-full h-12 rounded-full focus-within:shadow-lg bg-coffee-darker overflow-hidden border border-coffee-sand/20 transition-all duration-300 focus-within:border-coffee-gold/50">
+    <div class="grid place-items-center h-full w-12 text-coffee-sand/50">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+    
+    <input
+      type="text"
+      id="search-input"
+      class="peer h-full w-full outline-none text-sm text-coffee-sand bg-transparent pr-4 font-light placeholder-coffee-sand/40"
+      placeholder="搜尋知識庫與百科... (例如: 悶蒸, 通道效應)"
+      autocomplete="off"
+    />
+  </div>
+
+  <!-- Search Results Dropdown -->
+  <div id="search-results" class="absolute top-full left-0 right-0 mt-2 bg-coffee-darker/95 backdrop-blur-md border border-coffee-sand/10 rounded-2xl shadow-2xl overflow-hidden opacity-0 translate-y-[-10px] pointer-events-none transition-all duration-300 max-h-[60vh] overflow-y-auto">
+    <!-- Results injected here by JS -->
+    <ul id="search-results-list" class="divide-y divide-coffee-sand/5"></ul>
+    
+    <!-- Empty State -->
+    <div id="search-empty" class="hidden p-8 text-center text-coffee-muted text-sm font-light">
+      找不到符合「<span id="search-term-display" class="text-coffee-gold"></span>」的結果
+    </div>
+    
+    <!-- Loading State -->
+    <div id="search-loading" class="hidden p-6 flex justify-center items-center">
+      <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-coffee-gold"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const searchContainer = document.getElementById('search-container');
+    const searchResults = document.getElementById('search-results');
+    const resultsList = document.getElementById('search-results-list');
+    const searchEmpty = document.getElementById('search-empty');
+    const searchTermDisplay = document.getElementById('search-term-display');
+    const searchLoading = document.getElementById('search-loading');
+    
+    if (!searchInput || !searchResults || !resultsList) return;
+
+    let searchIndex: any[] = [];
+    let isIndexLoaded = false;
+    let isFetching = false;
+    
+    const baseUrl = import.meta.env.BASE_URL;
+
+    // Load search index dynamically
+    const fetchSearchIndex = async () => {
+      if (isIndexLoaded || isFetching) return;
+      isFetching = true;
+      searchLoading?.classList.remove('hidden');
+      
+      try {
+        const response = await fetch(`${baseUrl}api/search.json`);
+        searchIndex = await response.json();
+        isIndexLoaded = true;
+      } catch (error) {
+        console.error('Failed to load search index:', error);
+      } finally {
+        isFetching = false;
+        searchLoading?.classList.add('hidden');
+        // trigger search if there's already text
+        if (searchInput.value) performSearch(searchInput.value);
+      }
+    };
+
+    const performSearch = (query: string) => {
+      if (!isIndexLoaded) return;
+      
+      const q = query.toLowerCase().trim();
+      
+      if (!q) {
+        resultsList.innerHTML = '';
+        searchEmpty?.classList.add('hidden');
+        closeResults();
+        return;
+      }
+
+      const results = searchIndex.filter(item => {
+        return (
+          item.title.toLowerCase().includes(q) ||
+          item.description.toLowerCase().includes(q) ||
+          item.term.toLowerCase().includes(q) ||
+          item.tags.some((tag: string) => tag.toLowerCase().includes(q))
+        );
+      });
+
+      openResults();
+
+      if (results.length === 0) {
+        resultsList.innerHTML = '';
+        if (searchTermDisplay) searchTermDisplay.textContent = q;
+        searchEmpty?.classList.remove('hidden');
+      } else {
+        searchEmpty?.classList.add('hidden');
+        resultsList.innerHTML = results.slice(0, 8).map(item => {
+          const isGlossary = item.tags.includes('Glossary');
+          const badge = isGlossary 
+            ? `<span class="px-2 py-0.5 text-[10px] rounded bg-coffee-dark border border-coffee-sand/20 text-coffee-sand uppercase">百科</span>`
+            : `<span class="px-2 py-0.5 text-[10px] rounded bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold uppercase">文章</span>`;
+            
+          const link = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) + item.url : baseUrl + item.url;
+            
+          return `
+            <li>
+              <a href="${link}" class="block p-4 hover:bg-coffee-sand/5 transition-colors group">
+                <div class="flex items-start justify-between gap-4 mb-1">
+                  <h4 class="text-coffee-light text-sm font-semibold group-hover:text-coffee-gold transition-colors line-clamp-1">${item.title}</h4>
+                  ${badge}
+                </div>
+                <p class="text-xs text-coffee-muted line-clamp-2">${item.description}</p>
+              </a>
+            </li>
+          `;
+        }).join('');
+      }
+    };
+
+    const openResults = () => {
+      searchResults.classList.remove('opacity-0', 'translate-y-[-10px]', 'pointer-events-none');
+      searchResults.classList.add('opacity-100', 'translate-y-0');
+    };
+
+    const closeResults = () => {
+      searchResults.classList.add('opacity-0', 'translate-y-[-10px]', 'pointer-events-none');
+      searchResults.classList.remove('opacity-100', 'translate-y-0');
+    };
+
+    // Events
+    searchInput.addEventListener('focus', () => {
+      fetchSearchIndex();
+      if (searchInput.value.trim().length > 0) openResults();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      performSearch(target.value);
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!searchContainer?.contains(e.target as Node)) {
+        closeResults();
+      }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeResults();
+        searchInput.blur();
+      }
+    });
+  });
+</script>

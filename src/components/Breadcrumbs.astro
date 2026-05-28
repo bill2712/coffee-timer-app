@@ -1,0 +1,63 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  url?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+  class?: string;
+}
+
+const { items, class: className = "" } = Astro.props;
+
+// Generate JSON-LD
+const siteUrl = import.meta.env.SITE || 'https://baristaflow.com';
+const baseUrl = import.meta.env.BASE_URL;
+
+const breadcrumbList = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": items.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.label,
+    "item": item.url ? new URL(item.url.startsWith('/') ? item.url : `${baseUrl}${item.url}`, siteUrl).toString() : undefined
+  }))
+};
+---
+
+<nav class={`flex text-xs text-coffee-muted mb-8 ${className}`} aria-label="Breadcrumb">
+  <ol class="inline-flex flex-wrap items-center space-x-1 md:space-x-2">
+    <li class="inline-flex items-center">
+      <a href={import.meta.env.BASE_URL} class="inline-flex items-center hover:text-coffee-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold rounded">
+        <svg class="w-3 h-3 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+        </svg>
+        首頁
+      </a>
+    </li>
+    
+    {items.map((item, index) => (
+      <li aria-current={index === items.length - 1 ? "page" : undefined}>
+        <div class="flex items-center">
+          <svg class="rtl:rotate-180 w-2 h-2 text-coffee-sand/40 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+          </svg>
+          {item.url && index !== items.length - 1 ? (
+            <a 
+              href={item.url.startsWith('/') ? item.url : import.meta.env.BASE_URL + item.url} 
+              class="ml-1 text-coffee-muted hover:text-coffee-gold md:ml-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold rounded"
+            >
+              {item.label}
+            </a>
+          ) : (
+            <span class="ml-1 text-coffee-sand font-medium md:ml-2 line-clamp-1 max-w-[200px] sm:max-w-xs">{item.label}</span>
+          )}
+        </div>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />

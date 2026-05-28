@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import ParameterForm from '../../components/ParameterForm.astro';
 import Timer from '../../components/Timer.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const defaultV60Recipe = {
   beanName: '衣索比亞 耶加雪菲',
@@ -29,6 +30,12 @@ const jsonLd = {
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">
+    <div class="flex justify-center">
+      <Breadcrumbs items={[
+        { label: '首頁', url: '/' },
+        { label: 'V60 手沖計算機' }
+      ]} />
+    </div>
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
       Hario V60 Specialist
     </div>
