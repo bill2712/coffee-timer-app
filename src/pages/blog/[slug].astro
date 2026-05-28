@@ -56,7 +56,7 @@ const jsonLd = {
   article={true}
   jsonld={jsonLd}
 >
-  <article class="max-w-3xl mx-auto">
+  <article class="max-w-6xl mx-auto">
     <!-- Breadcrumbs -->
     <Breadcrumbs items={[
       { label: '知識庫', url: 'blog' },
@@ -85,17 +85,23 @@ const jsonLd = {
     </header>
 
     <!-- Main Content Container with Premium Styles -->
-    <div class="blog-content border-t border-coffee-sand/10 pt-10 text-coffee-light/95 leading-relaxed text-sm sm:text-base">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 blog-content border-t border-coffee-sand/10 pt-10 text-coffee-light/95 leading-relaxed text-sm sm:text-base">
       
-      <!-- Google AdSense Article Inline Banner Placeholder -->
-      <AdSlot type="leaderboard" id="adsense-article-inline" class="mb-10" />
+      <div class="lg:col-span-3">
+        <!-- Google AdSense Article Inline Banner Placeholder -->
+        <AdSlot type="top-leaderboard" id="adsense-article-inline" class="mb-10" />
 
-      <article class="prose prose-invert prose-coffee max-w-none mb-12">
-        <Content />
-      </article>
+        <article class="prose prose-invert prose-coffee max-w-none mb-12">
+          <Content components={{ AdSlot }} />
+        </article>
 
-      <!-- Google AdSense Bottom Article Banner Placeholder (Prevents CLS) -->
-      <AdSlot type="responsive" id="adsense-article-bottom" class="my-10" />
+        <!-- Google AdSense Bottom Article Banner Placeholder (Prevents CLS) -->
+        <AdSlot type="in-article" id="adsense-article-bottom" class="my-10" />
+      </div>
+
+      <aside class="lg:col-span-1">
+        <AdSlot type="sidebar-skyscraper" id="adsense-article-sidebar" class="sticky top-28" />
+      </aside>
     </div>
 
     <!-- CTA & Footer of Post -->

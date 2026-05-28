@@ -29,7 +29,7 @@ const jsonLd = {
   description={entry.data.description}
   jsonld={jsonLd}
 >
-  <div class="max-w-3xl mx-auto">
+  <div class="max-w-6xl mx-auto py-12">
     <!-- Breadcrumb -->
     <Breadcrumbs items={[
       { label: '百科', url: 'glossary' },
@@ -37,7 +37,7 @@ const jsonLd = {
     ]} />
 
     <!-- Header -->
-    <header class="mb-12 border-b border-coffee-sand/10 pb-8 relative">
+    <header class="mb-12 border-b border-coffee-sand/10 pb-8 relative mt-8">
       <div class="absolute -top-12 -right-4 text-8xl font-display font-black text-coffee-gold/5 select-none -z-10">
         {entry.data.term?.charAt(0).toUpperCase()}
       </div>
@@ -52,34 +52,29 @@ const jsonLd = {
       </p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-      <!-- Main Content -->
-      <article class="lg:col-span-8 blog-content prose prose-invert prose-coffee prose-headings:font-display">
-        <Content />
-      </article>
+    <!-- Main Content Container -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div class="lg:col-span-3">
+        <!-- Main Definition Card -->
+        <article class="glass-card p-8 sm:p-12 rounded-3xl border border-coffee-sand/10 relative overflow-hidden mb-12">
+          <!-- Decorative Background -->
+          <div class="absolute top-0 right-0 w-64 h-64 bg-coffee-gold/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+
+          <div class="prose prose-invert prose-coffee max-w-none">
+             <Content components={{ AdSlot }} />
+             
+             <AdSlot type="in-article" id={`glossary-side-ad-${entry.id || entry.slug}`} />
+          </div>
+        </article>
+
+        <!-- Google AdSense Bottom Article Banner Placeholder -->
+        <AdSlot type="top-leaderboard" id={`glossary-btm-ad-${entry.id || entry.slug}`} />
+      </div>
 
       <!-- Sidebar -->
-      <aside class="lg:col-span-4 space-y-8">
-        <div class="glass-card p-6 rounded-2xl sticky top-24">
-          <h3 class="font-display text-lg font-bold text-coffee-gold mb-4 border-b border-coffee-sand/10 pb-2">
-            相關工具
-          </h3>
-          <p class="text-sm text-coffee-muted mb-4">
-            想要親自體驗 {entry.data.title} 的影響？立即使用我們的專業計時器與配方計算機：
-          </p>
-          <a href={import.meta.env.BASE_URL} class="block w-full bg-gradient-to-r from-coffee-accent to-coffee-gold text-coffee-dark font-bold text-center py-3 rounded-lg shadow-lg hover:shadow-coffee-gold/20 transition-all active:scale-95 text-sm">
-            開啟沖煮計算機
-          </a>
-          
-          <div class="mt-8 pt-8 border-t border-coffee-sand/10">
-             <AdSlot type="responsive" id={`glossary-side-ad-${entry.id || entry.slug}`} />
-          </div>
-        </div>
+      <aside class="lg:col-span-1">
+        <AdSlot type="sidebar-skyscraper" id="adsense-glossary-sidebar" class="sticky top-28" />
       </aside>
-    </div>
-    
-    <div class="mt-16 pt-12 border-t border-coffee-sand/10">
-      <AdSlot type="leaderboard" id={`glossary-btm-ad-${entry.id || entry.slug}`} />
     </div>
   </div>
 </Layout>

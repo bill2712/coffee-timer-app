@@ -1,6 +1,6 @@
 ---
 export interface Props {
-  type: 'leaderboard' | 'skyscraper' | 'responsive';
+  type: 'top-leaderboard' | 'sidebar-skyscraper' | 'in-article' | 'bottom-utility';
   id?: string;
   class?: string;
 }
@@ -14,33 +14,34 @@ const { type, id, class: className = '' } = Astro.props;
 let dimensionClasses = '';
 
 switch (type) {
-  case 'leaderboard':
-    // Top Banner: Typically 728x90 on Desktop, 320x100 on Mobile
-    dimensionClasses = 'w-full max-w-[728px] min-h-[90px] sm:min-h-[100px] mx-auto';
+  case 'top-leaderboard':
+    // Top Banner: 728x90 on Desktop, 320x50 on Mobile
+    dimensionClasses = 'w-full max-w-[728px] min-h-[50px] md:min-h-[90px] mx-auto';
     break;
-  case 'skyscraper':
-    // Sidebar: Typically 300x600
-    dimensionClasses = 'w-[300px] min-h-[600px] mx-auto';
+  case 'sidebar-skyscraper':
+    // Sidebar: 300x600 Desktop only
+    dimensionClasses = 'hidden lg:flex w-[300px] min-h-[600px] mx-auto';
     break;
-  case 'responsive':
-    // In-article or bottom: Typically 300x250 minimum
-    dimensionClasses = 'w-full max-w-[728px] min-h-[250px] mx-auto';
+  case 'in-article':
+  case 'bottom-utility':
+    // In-article or bottom: Responsive rectangular
+    dimensionClasses = 'w-full min-h-[250px] mx-auto';
     break;
 }
 ---
 
 <div
   id={id}
-  class={`ad-slot relative flex items-center justify-center bg-coffee-darker/40 border border-coffee-sand/10 rounded-xl overflow-hidden -mx-4 sm:mx-auto w-[calc(100%+2rem)] sm:w-full max-w-[728px] ${dimensionClasses} ${className}`}
+  class={`ad-slot relative flex items-center justify-center bg-gray-50/50 border border-gray-200/50 rounded-xl overflow-hidden ${dimensionClasses} ${className}`}
   aria-hidden="true"
   data-ad-type={type}
 >
   <!-- Skeleton Pulse Animation Background -->
-  <div class="absolute inset-0 w-full h-full animate-pulse bg-gradient-to-r from-coffee-darker/10 via-coffee-sand/5 to-coffee-darker/10"></div>
+  <div class="absolute inset-0 w-full h-full animate-pulse bg-gradient-to-r from-gray-100/20 via-gray-200/30 to-gray-100/20"></div>
   
   <!-- Subtle Placeholder Text -->
-  <span class="text-[10px] font-semibold tracking-[0.2em] uppercase text-coffee-muted/40 z-10 pointer-events-none select-none">
-    - Advertisement -
+  <span class="absolute top-2 left-3 text-[10px] font-medium tracking-wider text-gray-400 z-10 pointer-events-none select-none">
+    Advertisement
   </span>
 
   <!-- In the future, you will inject the AdSense script and <ins> tag right here -->
