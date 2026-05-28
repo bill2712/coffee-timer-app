@@ -82,4 +82,31 @@ import Timer from '../components/Timer.astro';
       </div>
     </div>
   </section>
+
+  <!-- Explore Other Brewers (Internal Linking for SEO) -->
+  <section class="mt-20 border-t border-coffee-sand/10 pt-16 mb-8">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <h2 class="font-display text-3xl font-bold tracking-wide text-coffee-light">探索專屬沖煮工具</h2>
+      <p class="text-xs text-coffee-muted mt-2">尋找專為您手邊的咖啡器具量身打造的配方計算機與進階教學。</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <a href={import.meta.env.BASE_URL + "tools/v60-pour-over"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">V60 手沖計算機</h3>
+        <p class="text-[10px] text-coffee-muted">1:15 錐形濾杯專用</p>
+      </a>
+      <a href={import.meta.env.BASE_URL + "tools/french-press"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">法壓壺助理</h3>
+        <p class="text-[10px] text-coffee-muted">1:12 濃郁全浸泡法</p>
+      </a>
+      <a href={import.meta.env.BASE_URL + "tools/aeropress"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">愛樂壓計算機</h3>
+        <p class="text-[10px] text-coffee-muted">1:14 低溫壓力萃取</p>
+      </a>
+      <a href={import.meta.env.BASE_URL + "tools/cold-brew"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">冷萃冰滴助手</h3>
+        <p class="text-[10px] text-coffee-muted">1:10 長時間低溫慢萃</p>
+      </a>
+    </div>
+  </section>
 </Layout>

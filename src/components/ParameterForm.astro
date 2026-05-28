@@ -1,4 +1,17 @@
 ---
+export interface Props {
+  defaultRecipe?: {
+    beanName?: string;
+    roastLevel?: string;
+    grindSize?: string;
+    waterTemp?: number;
+    coffeeWeight?: number;
+    waterRatio?: number;
+  };
+  ignoreLocalStorage?: boolean;
+}
+
+const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
 ---
 
 <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
@@ -12,7 +25,7 @@
     <p class="text-xs text-coffee-muted mt-1">調整您的咖啡豆與沖煮細節，計時器將會自動調整比例。</p>
   </div>
 
-  <form id="recipe-form" class="space-y-5" onsubmit="return false;">
+  <form id="recipe-form" class="space-y-5" onsubmit="return false;" data-default-recipe={JSON.stringify(defaultRecipe || null)} data-ignore-local={ignoreLocalStorage ? "true" : "false"}>
     <!-- Coffee Beans & Roast -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="flex flex-col gap-1.5">
@@ -412,13 +425,32 @@
     // 1. Try Load from URL Query first
     const loadedFromUrl = loadFromUrlQuery();
     
-    // 2. If no URL query, load from last saved state
+    // 2. If no URL query, check data attributes
     if (!loadedFromUrl) {
-      const savedRecipeStr = localStorage.getItem('barista_flow_recipe');
-      if (savedRecipeStr) {
-        try {
-          applyRecipeData(JSON.parse(savedRecipeStr));
-        } catch (e) {}
+      const formEl = document.getElementById('recipe-form');
+      const ignoreLocal = formEl?.getAttribute('data-ignore-local') === 'true';
+      const defaultRecipeRaw = formEl?.getAttribute('data-default-recipe');
+      let defaultRecipeObj = null;
+      if (defaultRecipeRaw && defaultRecipeRaw !== 'null') {
+        try { defaultRecipeObj = JSON.parse(defaultRecipeRaw); } catch(e){}
+      }
+
+      if (ignoreLocal && defaultRecipeObj) {
+        // SEO Landing Page logic: forcefully load default recipe
+        applyRecipeData(defaultRecipeObj);
+        syncWithTimer(getRecipeData());
+      } else {
+        // Normal behavior: load from localStorage
+        const savedRecipeStr = localStorage.getItem('barista_flow_recipe');
+        if (savedRecipeStr) {
+          try {
+            applyRecipeData(JSON.parse(savedRecipeStr));
+          } catch (e) {}
+        } else if (defaultRecipeObj) {
+          // If no local storage but we have defaults (e.g. first visit)
+          applyRecipeData(defaultRecipeObj);
+          syncWithTimer(getRecipeData());
+        }
       }
     }
 
