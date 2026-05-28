@@ -35,9 +35,11 @@ function formatDate(date: Date) {
     </p>
   </section>
 
-  <!-- Blog Cards Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {posts.map((post) => (
+  <!-- Blog Layout with Sidebar -->
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Main Content: Blog Posts -->
+    <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8">
+      {posts.map((post) => (
       <article class="glass-card-interactive rounded-2xl overflow-hidden flex flex-col h-full">
         <a href={`/blog/${post.id}`} class="flex flex-col h-full p-6 sm:p-8 justify-between">
           <div class="flex flex-col gap-4">
@@ -78,5 +80,13 @@ function formatDate(date: Date) {
         </a>
       </article>
     ))}
+    </div>
+
+    <!-- Sidebar AdSense Placeholder -->
+    <aside class="hidden lg:flex flex-col items-center justify-start w-full">
+      <div id="adsense-sidebar" class="sticky top-28 w-full min-h-[600px] bg-coffee-darker/30 border border-coffee-sand/5 rounded-xl flex items-center justify-center" aria-hidden="true">
+        <span class="text-xs text-coffee-muted/50 font-mono tracking-widest uppercase text-center leading-loose">Sidebar<br/>Ad Space</span>
+      </div>
+    </aside>
   </div>
 </Layout>
