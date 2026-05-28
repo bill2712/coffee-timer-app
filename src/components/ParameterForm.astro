@@ -14,7 +14,7 @@ export interface Props {
 const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
 ---
 
-<div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
+<div class="glass-card rounded-2xl p-4 sm:p-6 md:p-8 flex flex-col gap-6">
   <div>
     <h2 class="font-display text-2xl font-bold tracking-wide text-coffee-gold flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -34,7 +34,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
           type="text"
           id="bean-name"
           placeholder="例如：衣索比亞 耶加雪菲"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
         />
       </div>
 
@@ -42,7 +42,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
         <label for="roast-level" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">烘焙度</label>
         <select
           id="roast-level"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light appearance-none cursor-pointer"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light appearance-none cursor-pointer"
         >
           <option value="light">淺度烘焙 (Roast: Light)</option>
           <option value="medium" selected>中度烘焙 (Roast: Medium)</option>
@@ -59,7 +59,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
           type="text"
           id="grind-size"
           placeholder="例如：手沖中細 (Comandante C40 #24)"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
         />
       </div>
 
@@ -72,7 +72,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
             min="80"
             max="100"
             value="92"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
           />
           <span class="absolute right-4 text-sm text-coffee-muted">°C</span>
         </div>
@@ -91,7 +91,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
             max="100"
             step="0.5"
             value="20"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
           />
           <span class="absolute right-4 text-sm text-coffee-muted">g</span>
         </div>
@@ -107,7 +107,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
             max="25"
             step="0.5"
             value="15"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
           />
           <span class="absolute right-4 text-sm text-coffee-muted">1 : X</span>
         </div>
@@ -133,7 +133,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
       <button
         type="button"
         id="btn-apply-recipe"
-        class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer text-center text-sm gold-glow-hover"
+        class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 min-h-[48px] shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer text-center text-sm gold-glow-hover"
       >
         套用設定並同步計時器
       </button>
@@ -142,7 +142,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
         <button
           type="button"
           id="btn-save-history"
-          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-2.5 text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-3 min-h-[48px] text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
@@ -152,7 +152,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
         <button
           type="button"
           id="btn-share-url"
-          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-2.5 text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-3 min-h-[48px] text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />

@@ -62,7 +62,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
             </a>
           </div>
           
-          <nav class="flex items-center gap-6 sm:gap-8">
+          <nav class="flex items-center gap-4 sm:gap-8 overflow-x-auto whitespace-nowrap hide-scrollbar ml-4 min-w-0">
             <a href={base} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
               首頁
             </a>
@@ -105,7 +105,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
             </p>
           </div>
           
-          <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-coffee-muted">
+          <div class="flex flex-wrap justify-center gap-x-4 sm:gap-x-8 gap-y-3 text-xs text-coffee-muted">
             <a href={base + "about"} class="hover:text-coffee-gold transition-colors">關於我們</a>
             <a href={base + "faq"} class="hover:text-coffee-gold transition-colors">常見問題</a>
             <a href={base + "contact"} class="hover:text-coffee-gold transition-colors">聯絡我們</a>

@@ -20,7 +20,7 @@ switch (type) {
     break;
   case 'skyscraper':
     // Sidebar: Typically 300x600
-    dimensionClasses = 'w-full max-w-[300px] min-h-[600px] mx-auto';
+    dimensionClasses = 'w-[300px] min-h-[600px] mx-auto';
     break;
   case 'responsive':
     // In-article or bottom: Typically 300x250 minimum
@@ -31,7 +31,7 @@ switch (type) {
 
 <div
   id={id}
-  class={`ad-slot relative flex items-center justify-center bg-coffee-darker/40 border border-coffee-sand/10 rounded-xl overflow-hidden ${dimensionClasses} ${className}`}
+  class={`ad-slot relative flex items-center justify-center bg-coffee-darker/40 border border-coffee-sand/10 rounded-xl overflow-hidden -mx-4 sm:mx-auto w-[calc(100%+2rem)] sm:w-full max-w-[728px] ${dimensionClasses} ${className}`}
   aria-hidden="true"
   data-ad-type={type}
 >
