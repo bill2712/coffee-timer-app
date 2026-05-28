@@ -90,6 +90,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaf
 
     <!-- Main Content -->
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <!-- Google AdSense Top Banner Placeholder (Prevents CLS) -->
+      <div class="w-full max-w-4xl mx-auto flex justify-center mb-10 min-h-[90px] bg-coffee-darker/30 border border-coffee-sand/5 rounded-xl flex items-center" aria-hidden="true">
+        <span class="text-[10px] text-coffee-muted/50 font-mono tracking-widest uppercase">Advertisement Space</span>
+      </div>
+      
       <slot />
     </main>
 

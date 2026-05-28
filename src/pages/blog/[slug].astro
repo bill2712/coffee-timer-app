@@ -87,7 +87,14 @@ const jsonLd = {
 
     <!-- Main Content Container with Premium Styles -->
     <div class="blog-content border-t border-coffee-sand/10 pt-10 text-coffee-light/95 leading-relaxed text-sm sm:text-base">
-      <Content />
+      <article class="prose prose-invert prose-coffee max-w-none mb-12">
+        <Content />
+      </article>
+
+      <!-- Google AdSense Bottom Article Banner Placeholder (Prevents CLS) -->
+      <div class="w-full flex justify-center my-10 min-h-[250px] bg-coffee-darker/30 border border-coffee-sand/5 rounded-xl flex items-center" aria-hidden="true">
+        <span class="text-xs text-coffee-muted/50 font-mono tracking-widest uppercase">Advertisement Space</span>
+      </div>
     </div>
 
     <!-- CTA & Footer of Post -->
