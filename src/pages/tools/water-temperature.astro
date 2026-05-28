@@ -1,0 +1,436 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "智慧水溫降溫預測器 (Cool-Down Predictor)",
+  "description": "基於牛頓冷卻定律的咖啡水溫降溫預測器。精準計算手沖壺從沸騰降溫至理想萃取溫度的等待時間。",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+};
+---
+
+<Layout 
+  title="智慧水溫降溫預測器 | 免溫度計精準控溫 | Barista Flow"
+  description="手邊沒有溫度計？透過我們的智慧水溫降溫預測器，利用牛頓冷卻定律，為您精準預估手沖壺、玻璃壺降溫至 90°C 所需的精確秒數。"
+  jsonld={jsonLd}
+>
+  <!-- Background Color Overlay that will transition via JS -->
+  <div id="temp-bg-overlay" class="fixed inset-0 pointer-events-none opacity-0 transition-opacity duration-[2000ms] ease-in-out z-[-1]"></div>
+
+  <div class="max-w-4xl mx-auto py-8 sm:py-12 transition-all duration-500" id="main-container">
+    
+    <!-- SETUP PANEL -->
+    <div id="setup-panel" class="opacity-100 transition-opacity duration-500">
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
+          Physics-Based Tool
+        </div>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
+          智慧水溫降溫預測器
+        </h1>
+        <p class="text-sm text-coffee-muted max-w-2xl mx-auto leading-relaxed">
+          基於「牛頓冷卻定律」，精準預測熱水從沸騰 (100°C) 降至理想沖煮溫度的所需時間。手邊沒有溫度計也能完美控溫。
+        </p>
+      </div>
+
+      <div class="mb-12">
+        <AdSlot type="top-leaderboard" id="water-temp-top-ad" />
+      </div>
+
+      <div class="glass-card rounded-3xl p-6 sm:p-10 border border-coffee-sand/10 relative overflow-hidden mb-16">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-coffee-gold/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+          
+          <!-- Parameters -->
+          <div class="space-y-6">
+            <h3 class="font-display text-xl font-bold text-coffee-sand border-b border-coffee-sand/10 pb-3 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              環境與器材設定
+            </h3>
+
+            <!-- Ambient Temp -->
+            <div class="flex flex-col gap-2">
+              <label for="ambient-slider" class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-muted">
+                <span>目前室溫 (Ambient)</span>
+                <span id="ambient-val" class="text-coffee-light font-bold text-sm">22 °C</span>
+              </label>
+              <input type="range" id="ambient-slider" min="10" max="35" value="22" step="1" class="w-full accent-coffee-gold h-2 bg-coffee-darker rounded-lg appearance-none cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-coffee-muted/50 font-mono mt-1">
+                <span>10°C (寒冷)</span>
+                <span>35°C (炎熱)</span>
+              </div>
+            </div>
+
+            <!-- Target Temp -->
+            <div class="flex flex-col gap-2">
+              <label for="target-slider" class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-muted">
+                <span>目標水溫 (Target)</span>
+                <span id="target-val" class="text-coffee-gold font-bold text-sm">90 °C</span>
+              </label>
+              <input type="range" id="target-slider" min="70" max="98" value="90" step="1" class="w-full accent-orange-500 h-2 bg-coffee-darker rounded-lg appearance-none cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-coffee-muted/50 font-mono mt-1">
+                <span>70°C (深焙)</span>
+                <span>98°C (極淺焙)</span>
+              </div>
+            </div>
+
+            <!-- Kettle Type -->
+            <div class="flex flex-col gap-2 pt-2">
+              <label for="kettle-select" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">使用器材 (保溫性)</label>
+              <select id="kettle-select" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer">
+                <option value="stainless">標準不鏽鋼手沖壺 (開蓋)</option>
+                <option value="ceramic">厚實陶瓷壺 (保溫佳)</option>
+                <option value="glass">薄玻璃下壺 (散熱快)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Estimation Result -->
+          <div class="flex flex-col items-center justify-center space-y-6">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-coffee-muted text-center">預估降溫時間 (100°C → <span id="target-display-text">90</span>°C)</h3>
+            
+            <div class="relative flex items-center justify-center w-48 h-48 rounded-full border-4 border-coffee-sand/10 bg-coffee-darker/50 shadow-inner">
+              <!-- Glow -->
+              <div class="absolute inset-0 rounded-full shadow-[0_0_30px_rgba(197,168,128,0.1)]"></div>
+              
+              <div class="text-center z-10">
+                <div id="estimated-time" class="text-5xl font-display font-bold text-coffee-gold tracking-tight">03:15</div>
+                <div class="text-xs font-medium text-coffee-muted mt-2 tracking-widest">MIN : SEC</div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              id="btn-start"
+              class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-bold tracking-wide rounded-xl shadow-[0_0_20px_rgba(197,168,128,0.3)] transition-all active:scale-[0.98] cursor-pointer text-sm sm:text-base gold-glow flex items-center justify-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+              </svg>
+              開始降溫倒數
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose prose-invert prose-coffee max-w-none bg-coffee-darker/30 p-8 rounded-3xl border border-coffee-sand/5">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold mb-6 border-b border-coffee-sand/10 pb-4">牛頓冷卻定律與咖啡萃取</h2>
+        <p>
+          當我們將剛沸騰的水 (100°C) 倒入常溫的手沖壺中，熱水會開始向環境散熱。根據物理學的**牛頓冷卻定律 (Newton's Law of Cooling)**，熱量散失的速度與「水溫」和「環境溫度」的溫差成正比。這意味著：剛沸騰時降溫極快，但越接近室溫時，降溫速度會變得越慢。
+        </p>
+        <p>
+          在咖啡萃取中，溫度是決定萃取率的關鍵。水溫越高，溶解物質的速度越快；如果使用沸水直接沖煮深焙豆，極易萃取出焦苦味。反之，如果水溫過低（例如低於 85°C）來沖煮淺焙豆，則會導致尖銳的酸味與水感。
+        </p>
+        <p>
+          這款工具根據不同的材質特性賦予了不同的散熱常數（$k$ 值）。您只需要將剛沸騰的熱水倒入選擇的器具中，不需插入溫度計，當系統發出提示音時，就是最完美的沖煮時機！
+        </p>
+      </div>
+    </div>
+
+    <!-- COUNTDOWN PANEL (Hidden initially) -->
+    <div id="countdown-panel" class="hidden opacity-0 transition-opacity duration-1000">
+      
+      <div class="flex justify-between items-center mb-8">
+        <button id="btn-cancel" class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-white transition-colors duration-200 flex items-center gap-1 bg-black/20 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+          </svg>
+          放棄倒數
+        </button>
+        <div class="text-sm font-bold text-white/90 bg-black/20 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
+          目標溫度: <span id="cd-target-display" class="text-coffee-gold">90°C</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Countdown UI -->
+        <div class="lg:col-span-2 flex flex-col items-center justify-center py-12 glass-card rounded-3xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl relative overflow-hidden">
+          
+          <h2 class="text-lg font-medium text-white/80 mb-8 tracking-widest uppercase">目前預估水溫</h2>
+          
+          <div class="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80">
+            <!-- SVG Progress Ring -->
+            <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+              <circle id="cd-progress-ring" cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="283" stroke-dashoffset="0" class="text-white transition-all duration-1000 ease-linear" stroke-linecap="round" />
+            </svg>
+            
+            <div class="text-center z-10 flex flex-col items-center">
+              <div class="flex items-start justify-center">
+                <span id="cd-current-temp" class="text-7xl sm:text-8xl font-display font-black text-white tracking-tighter drop-shadow-lg tabular-nums">100</span>
+                <span class="text-2xl sm:text-3xl font-bold text-white/80 mt-2">.0</span>
+                <span class="text-2xl sm:text-3xl font-bold text-white/60 mt-2 ml-1">°C</span>
+              </div>
+              <div id="cd-time-left" class="text-xl font-mono text-white/80 mt-6 tracking-widest">03:15</div>
+            </div>
+          </div>
+
+          <p class="mt-10 text-sm text-white/60 font-medium">請保持容器開蓋，以利散熱</p>
+        </div>
+
+        <!-- Right Side: AdSense & Info -->
+        <div class="lg:col-span-1 flex flex-col gap-6">
+          <div class="glass-card rounded-2xl p-6 border border-white/10 bg-black/20 backdrop-blur-md">
+            <h3 class="text-sm font-bold text-white/90 mb-4 uppercase tracking-wider border-b border-white/10 pb-2">參數資訊</h3>
+            <ul class="space-y-3 text-sm text-white/70">
+              <li class="flex justify-between"><span>環境室溫</span> <span id="info-ambient" class="font-mono text-white">22°C</span></li>
+              <li class="flex justify-between"><span>起始溫度</span> <span class="font-mono text-white">100°C</span></li>
+              <li class="flex justify-between"><span>容器材質</span> <span id="info-material" class="text-white font-medium">不鏽鋼手沖壺</span></li>
+            </ul>
+          </div>
+          
+          <!-- Sticky Sidebar Ad -->
+          <div class="sticky top-24">
+            <AdSlot type="sidebar-skyscraper" id="water-temp-sidebar-ad" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</Layout>
+
+<script>
+  // --- Newton's Law of Cooling Constants (k values in seconds^-1) ---
+  const KETTLE_CONSTANTS: Record<string, number> = {
+    glass: 0.0012,       // Fast
+    stainless: 0.0007,   // Moderate
+    ceramic: 0.00045     // Slow
+  };
+
+  const INITIAL_TEMP = 100;
+
+  // --- UI Elements ---
+  const setupPanel = document.getElementById('setup-panel') as HTMLDivElement;
+  const countdownPanel = document.getElementById('countdown-panel') as HTMLDivElement;
+  const bgOverlay = document.getElementById('temp-bg-overlay') as HTMLDivElement;
+  
+  const ambientSlider = document.getElementById('ambient-slider') as HTMLInputElement;
+  const targetSlider = document.getElementById('target-slider') as HTMLInputElement;
+  const kettleSelect = document.getElementById('kettle-select') as HTMLSelectElement;
+  
+  const ambientVal = document.getElementById('ambient-val') as HTMLSpanElement;
+  const targetVal = document.getElementById('target-val') as HTMLSpanElement;
+  const targetDisplayText = document.getElementById('target-display-text') as HTMLSpanElement;
+  const estimatedTime = document.getElementById('estimated-time') as HTMLDivElement;
+  
+  const btnStart = document.getElementById('btn-start') as HTMLButtonElement;
+  const btnCancel = document.getElementById('btn-cancel') as HTMLButtonElement;
+  
+  const cdCurrentTemp = document.getElementById('cd-current-temp') as HTMLSpanElement;
+  const cdCurrentTempDec = cdCurrentTemp.nextElementSibling as HTMLSpanElement;
+  const cdTimeLeft = document.getElementById('cd-time-left') as HTMLDivElement;
+  const cdTargetDisplay = document.getElementById('cd-target-display') as HTMLSpanElement;
+  const cdProgressRing = document.getElementById('cd-progress-ring') as SVGCircleElement;
+  
+  const infoAmbient = document.getElementById('info-ambient') as HTMLSpanElement;
+  const infoMaterial = document.getElementById('info-material') as HTMLSpanElement;
+
+  // State
+  let totalSecondsRequired = 0;
+  let currentCountdownTimer: number | null = null;
+  let startTime = 0;
+  let isCounting = false;
+
+  // --- Audio Synthesis (Double Chime) ---
+  const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  
+  function playChime() {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    function createBeep(freq: number, startTimeOffset: number) {
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTimeOffset);
+      
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime + startTimeOffset);
+      gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + startTimeOffset + 0.05);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + startTimeOffset + 1.5);
+      
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      osc.start(audioCtx.currentTime + startTimeOffset);
+      osc.stop(audioCtx.currentTime + startTimeOffset + 1.5);
+    }
+    
+    // Play a nice major 3rd interval chime (C6 -> E6)
+    createBeep(1046.50, 0);       // C6
+    createBeep(1318.51, 0.15);    // E6
+  }
+
+  // --- Logic ---
+  function calculateTime(): number {
+    const Ta = parseInt(ambientSlider.value);
+    const Tt = parseInt(targetSlider.value);
+    const k = KETTLE_CONSTANTS[kettleSelect.value];
+    
+    if (Tt >= INITIAL_TEMP) return 0;
+    if (Tt <= Ta) return 9999; // Impossible via passive cooling
+    
+    // Newton's Law of Cooling solved for t: t = (-1/k) * ln((Tt - Ta) / (T0 - Ta))
+    const ratio = (Tt - Ta) / (INITIAL_TEMP - Ta);
+    const tSeconds = (-1 / k) * Math.log(ratio);
+    
+    return Math.max(0, Math.round(tSeconds));
+  }
+
+  function formatTime(totalSecs: number): string {
+    if (totalSecs >= 9999) return "無法達成";
+    const m = Math.floor(totalSecs / 60).toString().padStart(2, '0');
+    const s = (totalSecs % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  function updateSetupUI() {
+    ambientVal.textContent = `${ambientSlider.value} °C`;
+    targetVal.textContent = `${targetSlider.value} °C`;
+    targetDisplayText.textContent = targetSlider.value;
+    
+    // Safety check: target must be higher than ambient
+    if (parseInt(targetSlider.value) <= parseInt(ambientSlider.value)) {
+      targetSlider.value = (parseInt(ambientSlider.value) + 1).toString();
+      targetVal.textContent = `${targetSlider.value} °C`;
+      targetDisplayText.textContent = targetSlider.value;
+    }
+    
+    totalSecondsRequired = calculateTime();
+    estimatedTime.textContent = formatTime(totalSecondsRequired);
+    
+    btnStart.disabled = totalSecondsRequired === 0;
+  }
+
+  function interpolateColor(temp: number, target: number): string {
+    // Temp maps from 100 to target
+    // 100 = Crimson/Red: rgb(220, 38, 38)
+    // Target = Amber/Gold: rgb(217, 119, 6)
+    const range = INITIAL_TEMP - target;
+    if (range <= 0) return 'rgb(217, 119, 6)';
+    
+    const progress = Math.max(0, Math.min(1, (temp - target) / range));
+    
+    const r = Math.round(217 + (220 - 217) * progress);
+    const g = Math.round(119 + (38 - 119) * progress);
+    const b = Math.round(6 + (38 - 6) * progress);
+    
+    return `rgba(${r}, ${g}, ${b}, 0.8)`;
+  }
+
+  function startCountdown() {
+    isCounting = true;
+    totalSecondsRequired = calculateTime();
+    startTime = Date.now();
+    
+    const Ta = parseInt(ambientSlider.value);
+    const Tt = parseInt(targetSlider.value);
+    const k = KETTLE_CONSTANTS[kettleSelect.value];
+    
+    // Update Info Display
+    cdTargetDisplay.textContent = `${Tt}°C`;
+    infoAmbient.textContent = `${Ta}°C`;
+    infoMaterial.textContent = kettleSelect.options[kettleSelect.selectedIndex].text;
+    
+    // UI Transitions
+    setupPanel.classList.replace('opacity-100', 'opacity-0');
+    setTimeout(() => {
+      setupPanel.classList.add('hidden');
+      countdownPanel.classList.remove('hidden');
+      // Trigger reflow
+      void countdownPanel.offsetWidth;
+      countdownPanel.classList.replace('opacity-0', 'opacity-100');
+      
+      // Initialize background
+      bgOverlay.style.background = `radial-gradient(circle at center, ${interpolateColor(100, Tt)} 0%, rgba(20, 16, 14, 1) 100%)`;
+      bgOverlay.classList.remove('opacity-0');
+      bgOverlay.classList.add('opacity-100');
+    }, 500);
+
+    // Render Loop
+    function updateFrame() {
+      if (!isCounting) return;
+      
+      const elapsedSecs = (Date.now() - startTime) / 1000;
+      const remainingSecs = Math.max(0, totalSecondsRequired - elapsedSecs);
+      
+      // Calculate current temp: T(t) = Ta + (T0 - Ta) * e^(-k*t)
+      const currentTemp = Ta + (INITIAL_TEMP - Ta) * Math.exp(-k * elapsedSecs);
+      
+      // Format Temperature
+      const tempStr = currentTemp.toFixed(1).split('.');
+      cdCurrentTemp.textContent = tempStr[0];
+      cdCurrentTempDec.textContent = `.${tempStr[1]}`;
+      
+      // Format Time
+      cdTimeLeft.textContent = formatTime(Math.ceil(remainingSecs));
+      
+      // Update Ring Progress (Stroke Dasharray = 283)
+      const progressRatio = elapsedSecs / totalSecondsRequired;
+      const offset = Math.max(0, Math.min(1, progressRatio)) * 283;
+      cdProgressRing.style.strokeDashoffset = offset.toString();
+      
+      // Update Background
+      bgOverlay.style.background = `radial-gradient(circle at center, ${interpolateColor(currentTemp, Tt)} 0%, rgba(20, 16, 14, 1) 100%)`;
+
+      if (remainingSecs <= 0 || currentTemp <= Tt) {
+        finishCountdown();
+      } else {
+        currentCountdownTimer = requestAnimationFrame(updateFrame);
+      }
+    }
+    
+    currentCountdownTimer = requestAnimationFrame(updateFrame);
+  }
+
+  function finishCountdown() {
+    isCounting = false;
+    cdCurrentTemp.textContent = targetSlider.value;
+    cdCurrentTempDec.textContent = `.0`;
+    cdTimeLeft.textContent = "00:00";
+    cdProgressRing.style.strokeDashoffset = "283";
+    playChime();
+    
+    // Add pulsing animation to background
+    bgOverlay.classList.add('animate-pulse');
+  }
+
+  function cancelCountdown() {
+    isCounting = false;
+    if (currentCountdownTimer) cancelAnimationFrame(currentCountdownTimer);
+    
+    bgOverlay.classList.remove('animate-pulse');
+    bgOverlay.classList.replace('opacity-100', 'opacity-0');
+    
+    countdownPanel.classList.replace('opacity-100', 'opacity-0');
+    setTimeout(() => {
+      countdownPanel.classList.add('hidden');
+      setupPanel.classList.remove('hidden');
+      void setupPanel.offsetWidth;
+      setupPanel.classList.replace('opacity-0', 'opacity-100');
+    }, 500);
+  }
+
+  // --- Event Listeners ---
+  document.addEventListener('DOMContentLoaded', () => {
+    updateSetupUI();
+    
+    ambientSlider.addEventListener('input', updateSetupUI);
+    targetSlider.addEventListener('input', updateSetupUI);
+    kettleSelect.addEventListener('change', updateSetupUI);
+    
+    btnStart.addEventListener('click', startCountdown);
+    btnCancel.addEventListener('click', cancelCountdown);
+  });
+</script>
