@@ -2,6 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import ParameterForm from '../components/ParameterForm.astro';
 import Timer from '../components/Timer.astro';
+import AdSlot from '../components/AdSlot.astro';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 ---
 
 <Layout>
@@ -29,6 +32,9 @@ import Timer from '../components/Timer.astro';
     <!-- Parameters Input Panel -->
     <div class="lg:col-span-5 order-2 lg:order-1">
       <ParameterForm />
+      <div class="mt-8">
+        <AdSlot />
+      </div>
     </div>
 
     <!-- Live Timer Panel -->
@@ -90,22 +96,22 @@ import Timer from '../components/Timer.astro';
       <p class="text-xs text-coffee-muted mt-2">尋找專為您手邊的咖啡器具量身打造的配方計算機與進階教學。</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <a href={import.meta.env.BASE_URL + "/tools/v60-pour-over"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
-        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">V60 手沖計算機</h3>
-        <p class="text-[10px] text-coffee-muted">1:15 錐形濾杯專用</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-16">
+      <a href={base + "tools/v60-pour-over"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">☕</span>
+        <span class="font-display font-semibold text-coffee-light">V60 濾杯</span>
       </a>
-      <a href={import.meta.env.BASE_URL + "/tools/french-press"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
-        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">法壓壺助理</h3>
-        <p class="text-[10px] text-coffee-muted">1:12 濃郁全浸泡法</p>
+      <a href={base + "tools/french-press"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🫖</span>
+        <span class="font-display font-semibold text-coffee-light">法式濾壓壺</span>
       </a>
-      <a href={import.meta.env.BASE_URL + "/tools/aeropress"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
-        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">愛樂壓計算機</h3>
-        <p class="text-[10px] text-coffee-muted">1:14 低溫壓力萃取</p>
+      <a href={base + "tools/aeropress"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🪄</span>
+        <span class="font-display font-semibold text-coffee-light">愛樂壓</span>
       </a>
-      <a href={import.meta.env.BASE_URL + "/tools/cold-brew"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
-        <h3 class="font-display text-lg font-bold text-coffee-gold group-hover:scale-105 transition-transform">冷萃冰滴助手</h3>
-        <p class="text-[10px] text-coffee-muted">1:10 長時間低溫慢萃</p>
+      <a href={base + "tools/cold-brew"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🧊</span>
+        <span class="font-display font-semibold text-coffee-light">冷萃咖啡</span>
       </a>
     </div>
   </section>

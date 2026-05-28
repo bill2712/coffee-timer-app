@@ -3,10 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+
 const faqs = [
   {
     question: "為什麼我的手沖咖啡喝起來很苦澀？",
-    answer: "咖啡苦澀通常是因為「過度萃取」。這可能肇因於水溫過高、研磨刻度太細導致細粉過多，或者是萃取時間過長。建議您嘗試將研磨度調粗一到兩格，或是使用我們的 <a href=\"/\" class=\"text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium\">專業沖煮計時器</a> 來精準控制各階段的注水時間，避免後段的焦苦物質溶出。"
+    answer: `咖啡苦澀通常是因為「過度萃取」。這可能肇因於水溫過高、研磨刻度太細導致細粉過多，或者是萃取時間過長。建議您嘗試將研磨度調粗一到兩格，或是使用我們的 <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">專業沖煮計時器</a> 來精準控制各階段的注水時間，避免後段的焦苦物質溶出。`
   },
   {
     question: "咖啡豆應該要怎麼保存才能維持新鮮？",
@@ -14,7 +16,7 @@ const faqs = [
   },
   {
     question: "淺焙和深焙咖啡在沖煮上有什麼不同？",
-    answer: "淺焙咖啡豆質地較硬，風味偏向花果酸香，需要較高的水溫（約 91°C-94°C）與較細的研磨來充分萃取；深焙咖啡豆結構較鬆散，焦糖化深，容易釋放苦味，因此建議使用較低的水溫（約 85°C-88°C）與較粗的研磨。如果您不確定如何調整，可以試試我們的 <a href=\"/\" class=\"text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium\">沖煮配方計算機</a> 為不同烘焙度量身打造參數。"
+    answer: `淺焙咖啡豆質地較硬，風味偏向花果酸香，需要較高的水溫（約 91°C-94°C）與較細的研磨來充分萃取；深焙咖啡豆結構較鬆散，焦糖化深，容易釋放苦味，因此建議使用較低的水溫（約 85°C-88°C）與較粗的研磨。如果您不確定如何調整，可以試試我們的 <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">沖煮配方計算機</a> 為不同烘焙度量身打造參數。`
   },
   {
     question: "什麼是「通道效應 (Channeling)」，該如何避免？",
@@ -22,7 +24,7 @@ const faqs = [
   },
   {
     question: "粉水比（Brew Ratio）到底該怎麼抓？",
-    answer: "標準的精品手沖咖啡粉水比通常落在 1:15 到 1:17 之間（即 1 克咖啡粉對應 15 到 17 克的水）。1:15 口感較為濃郁醇厚，1:17 則清爽明亮。您可以根據個人口味微調。利用我們的 <a href=\"/\" class=\"text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium\">咖啡比例助理</a>，只要輸入您手邊的咖啡豆克數，系統就會自動幫您計算出完美的水量。"
+    answer: `標準的精品手沖咖啡粉水比通常落在 1:15 到 1:17 之間（即 1 克咖啡粉對應 15 到 17 克的水）。1:15 口感較為濃郁醇厚，1:17 則清爽明亮。您可以根據個人口味微調。利用我們的 <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">咖啡比例助理</a>，只要輸入您手邊的咖啡豆克數，系統就會自動幫您計算出完美的水量。`
   },
   {
     question: "為什麼悶蒸（Blooming）時咖啡粉沒有膨脹？",
