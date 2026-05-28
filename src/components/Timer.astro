@@ -125,6 +125,78 @@
   </div>
 </div>
 
+<!-- Post-Brew Tasting Log Modal -->
+<div id="tasting-log-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-coffee-dark/80 backdrop-blur-md transition-opacity duration-300 opacity-0" id="tasting-modal-backdrop"></div>
+  
+  <!-- Modal Content -->
+  <div class="relative w-full max-w-md glass-card border border-coffee-gold/20 rounded-2xl p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-300" id="tasting-modal-content">
+    <div class="text-center mb-6">
+      <h3 class="font-display text-2xl font-bold text-coffee-light mb-2">沖煮完成！☕</h3>
+      <p class="text-sm text-coffee-sand/80">紀錄這次的萃取參數與風味體驗，打造您的專屬咖啡日誌。</p>
+    </div>
+
+    <form id="tasting-form" class="space-y-5">
+      <!-- Acidity -->
+      <div>
+        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
+          <span>酸度 (Acidity)</span>
+          <span id="val-acidity" class="text-coffee-gold">3</span>
+        </label>
+        <input type="range" id="rating-acidity" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-darker rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
+        <div class="flex justify-between text-[10px] text-coffee-muted mt-1">
+          <span>平淡</span><span>明亮</span>
+        </div>
+      </div>
+
+      <!-- Bitterness -->
+      <div>
+        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
+          <span>苦度 (Bitterness)</span>
+          <span id="val-bitterness" class="text-coffee-gold">3</span>
+        </label>
+        <input type="range" id="rating-bitterness" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-darker rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
+        <div class="flex justify-between text-[10px] text-coffee-muted mt-1">
+          <span>柔和</span><span>強烈</span>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div>
+        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
+          <span>醇厚度 (Body)</span>
+          <span id="val-body" class="text-coffee-gold">3</span>
+        </label>
+        <input type="range" id="rating-body" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-darker rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
+        <div class="flex justify-between text-[10px] text-coffee-muted mt-1">
+          <span>清爽 (Tea-like)</span><span>濃郁 (Syrupy)</span>
+        </div>
+      </div>
+
+      <!-- Quick Notes -->
+      <div>
+        <label for="tasting-notes" class="block text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">品飲心得 (Notes)</label>
+        <textarea 
+          id="tasting-notes" 
+          rows="2" 
+          placeholder="例如：研磨稍微太細，尾段略帶澀感..."
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light resize-none"
+        ></textarea>
+      </div>
+
+      <div class="pt-4 flex gap-3">
+        <button type="button" id="btn-skip-log" class="flex-1 py-2.5 rounded-xl bg-coffee-dark border border-coffee-sand/20 text-coffee-sand hover:text-coffee-light hover:border-coffee-sand/40 text-sm font-semibold transition-all">
+          略過
+        </button>
+        <button type="submit" class="flex-2 py-2.5 rounded-xl bg-gradient-to-r from-coffee-accent to-coffee-gold text-coffee-dark hover:from-coffee-gold hover:to-coffee-gold-hover text-sm font-bold tracking-wide transition-all gold-glow">
+          儲存紀錄
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -242,6 +314,13 @@
   let btnSoundToggle: HTMLButtonElement | null = null;
   let beanDisplay: HTMLSpanElement | null = null;
   let roastDisplay: HTMLHeadingElement | null = null;
+  
+  // Modal Elements
+  let tastingModal: HTMLDivElement | null = null;
+  let modalBackdrop: HTMLDivElement | null = null;
+  let modalContent: HTMLDivElement | null = null;
+  let tastingForm: HTMLFormElement | null = null;
+  let btnSkipLog: HTMLButtonElement | null = null;
 
   // Circle stroke offset helper
   const strokeDashArray = 800; // Match SVG r="44%" stroke-dasharray
@@ -395,6 +474,7 @@
         synth.speak('萃取完成，請享用您的咖啡');
         setTimeout(() => synth.playChord(), 400);
         stopTimer(true);
+        setTimeout(showTastingModal, 1500); // Trigger modal slightly after completion
       }
     }
   }
@@ -478,6 +558,79 @@
     if (roastDisplay) roastDisplay.textContent = getRoastText(recipe.roastLevel);
 
     resetTimer();
+  }
+
+  // --- Modal & Logging Logic ---
+  function showTastingModal() {
+    if (!tastingModal || !modalBackdrop || !modalContent) return;
+    tastingModal.classList.remove('hidden');
+    tastingModal.classList.add('flex');
+    
+    // Animate in
+    setTimeout(() => {
+      modalBackdrop!.classList.remove('opacity-0');
+      modalContent!.classList.remove('opacity-0', 'scale-95');
+      modalContent!.classList.add('scale-100');
+    }, 10);
+  }
+
+  function hideTastingModal() {
+    if (!tastingModal || !modalBackdrop || !modalContent) return;
+    
+    // Animate out
+    modalBackdrop.classList.add('opacity-0');
+    modalContent.classList.remove('scale-100');
+    modalContent.classList.add('opacity-0', 'scale-95');
+    
+    setTimeout(() => {
+      tastingModal!.classList.add('hidden');
+      tastingModal!.classList.remove('flex');
+      if(tastingForm) tastingForm.reset();
+      updateSliderValues();
+    }, 300);
+  }
+
+  function updateSliderValues() {
+    ['acidity', 'bitterness', 'body'].forEach(id => {
+      const input = document.getElementById(`rating-${id}`) as HTMLInputElement;
+      const display = document.getElementById(`val-${id}`);
+      if (input && display) display.textContent = input.value;
+    });
+  }
+
+  function saveTastingLog(e: Event) {
+    e.preventDefault();
+    
+    const acidity = (document.getElementById('rating-acidity') as HTMLInputElement)?.value || '3';
+    const bitterness = (document.getElementById('rating-bitterness') as HTMLInputElement)?.value || '3';
+    const body = (document.getElementById('rating-body') as HTMLInputElement)?.value || '3';
+    const notes = (document.getElementById('tasting-notes') as HTMLTextAreaElement)?.value || '';
+
+    const newLog = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      recipe: { ...recipe },
+      evaluation: {
+        acidity: parseInt(acidity),
+        bitterness: parseInt(bitterness),
+        body: parseInt(body),
+        notes: notes
+      }
+    };
+
+    try {
+      const existingLogsStr = localStorage.getItem('barista_flow_logs');
+      let logs = [];
+      if (existingLogsStr) {
+        logs = JSON.parse(existingLogsStr);
+      }
+      logs.unshift(newLog); // Add to beginning
+      localStorage.setItem('barista_flow_logs', JSON.stringify(logs));
+    } catch (err) {
+      console.error('Failed to save log', err);
+    }
+
+    hideTastingModal();
   }
 
   // --- Chart.js Integration ---
@@ -574,6 +727,12 @@
     btnSoundToggle = document.getElementById('btn-sound-toggle') as HTMLButtonElement;
     beanDisplay = document.getElementById('bean-display');
     roastDisplay = document.getElementById('roast-display') as HTMLHeadingElement;
+    
+    tastingModal = document.getElementById('tasting-log-modal') as HTMLDivElement;
+    modalBackdrop = document.getElementById('tasting-modal-backdrop') as HTMLDivElement;
+    modalContent = document.getElementById('tasting-modal-content') as HTMLDivElement;
+    tastingForm = document.getElementById('tasting-form') as HTMLFormElement;
+    btnSkipLog = document.getElementById('btn-skip-log') as HTMLButtonElement;
 
     // Start / Pause toggle
     if (btnStart) {
@@ -622,6 +781,22 @@
         }
       });
     }
+
+    // Modal bindings
+    if (tastingForm) {
+      tastingForm.addEventListener('submit', saveTastingLog);
+    }
+    if (btnSkipLog) {
+      btnSkipLog.addEventListener('click', hideTastingModal);
+    }
+    
+    // Live update slider values
+    ['acidity', 'bitterness', 'body'].forEach(id => {
+      const input = document.getElementById(`rating-${id}`);
+      if (input) {
+        input.addEventListener('input', updateSliderValues);
+      }
+    });
 
     // Listen to custom recipe event
     window.addEventListener('coffee-recipe-changed', ((e: CustomEvent) => {
