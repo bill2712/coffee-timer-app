@@ -14,6 +14,7 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaflow.com');
+const base = import.meta.env.BASE_URL;
 ---
 
 <!doctype html>
@@ -21,7 +22,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaf
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={base + "favicon.svg"} />
     
     <!-- Google Fonts Preconnect and Links -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -59,7 +60,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaf
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 sm:h-20">
           <div class="flex-shrink-0 flex items-center">
-            <a href="/" class="flex items-center gap-2 group">
+            <a href={base} class="flex items-center gap-2 group">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-coffee-gold transition-transform group-hover:rotate-12 duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
                 <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
@@ -74,13 +75,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaf
           </div>
           
           <nav class="flex items-center gap-6 sm:gap-8">
-            <a href="/" class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+            <a href={base} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
               沖煮計時器
             </a>
-            <a href="/blog" class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+            <a href={base + "blog"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
               咖啡知識庫
             </a>
-            <a href="/privacy" class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+            <a href={base + "privacy"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
               隱私權政策
             </a>
           </nav>
@@ -116,9 +117,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaf
           </div>
           
           <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-coffee-muted">
-            <a href="/" class="hover:text-coffee-gold transition-colors">首頁計時器</a>
-            <a href="/blog" class="hover:text-coffee-gold transition-colors">專業部落格</a>
-            <a href="/privacy" class="hover:text-coffee-gold transition-colors">隱私權聲明</a>
+            <a href={base} class="hover:text-coffee-gold transition-colors">首頁計時器</a>
+            <a href={base + "blog"} class="hover:text-coffee-gold transition-colors">專業部落格</a>
+            <a href={base + "privacy"} class="hover:text-coffee-gold transition-colors">隱私權聲明</a>
           </div>
         </div>
         
