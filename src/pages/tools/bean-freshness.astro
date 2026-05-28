@@ -1,0 +1,369 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+// FAQ Structured Data for SEO Rich Snippets
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "什麼是咖啡豆的「養豆」(Degassing) 過程？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "咖啡豆在烘焙過程中會產生大量的二氧化碳並被鎖在細胞結構內。剛烘好的咖啡豆排氣非常劇烈，如果立刻沖煮，大量的氣泡會阻礙熱水與咖啡粉的接觸，導致萃取不足與風味單薄。所謂的「養豆」，就是將咖啡豆靜置數天，讓過多的二氧化碳自然釋放，使咖啡風味達到最佳平衡的過程。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "如何正確保存咖啡豆以維持新鮮度？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "保存咖啡豆的三大敵人是：氧氣、光線與濕氣。最好的保存方式是將咖啡豆放在單向排氣閥的密封袋或不透明的真空罐中，置於陰涼、乾燥且沒有日曬的櫥櫃內。絕對不要將日常頻繁使用的咖啡豆放入冷藏室，因為開關冰箱時溫差產生的水氣會讓咖啡豆快速受潮並吸附異味。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "我可以把咖啡豆放在冰箱冷凍嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，但有嚴格的條件。如果您買了大量的咖啡豆無法在一個月內喝完，可以將其「分裝」成單次沖煮的小份量（如試管或真空小袋），然後放入冷凍庫深處。要沖煮時，直接拿出需要的份量「不需退冰」，立刻進行研磨。切忌將整大包豆子反覆進出冷凍庫，這會徹底摧毀咖啡的風味。"
+      }
+    }
+  ]
+};
+
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "咖啡養豆與新鮮度計算機 (Bean Freshness Calculator)",
+  "description": "根據咖啡豆的烘焙日期與烘焙度，精準計算目前是否處於黃金風味期，並提供專業的沖煮參數調整建議。",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+};
+---
+
+<Layout 
+  title="咖啡養豆與新鮮度計算機 | 黃金風味期預測 | Barista Flow"
+  description="您的咖啡豆養好了嗎？輸入烘焙日期，我們的智慧計算機會告訴您目前咖啡豆是處於排氣期、黃金風味期還是衰退期，並給予最佳的沖煮建議。"
+  jsonld={[pageSchema, faqSchema]}
+>
+  <div class="max-w-4xl mx-auto py-8 sm:py-12 transition-all duration-500">
+    
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
+        Freshness Tracker
+      </div>
+      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
+        咖啡養豆與新鮮度計算機
+      </h1>
+      <p class="text-sm text-coffee-muted max-w-2xl mx-auto leading-relaxed">
+        掌握最佳萃取時機。輸入烘豆日期與烘焙度，了解您的咖啡豆目前的風味狀態與排氣狀況。
+      </p>
+    </div>
+
+    <!-- Top Leaderboard Ad -->
+    <div class="mb-12">
+      <AdSlot type="top-leaderboard" id="bean-fresh-top-ad" />
+    </div>
+
+    <div class="glass-card rounded-3xl p-6 sm:p-10 border border-coffee-sand/10 relative overflow-hidden mb-16">
+      <div class="absolute top-0 left-0 w-full h-2 bg-coffee-darker" id="status-top-bar"></div>
+      <div class="absolute top-0 right-0 w-64 h-64 bg-coffee-gold/5 blur-[100px] rounded-full -z-10 pointer-events-none" id="status-glow"></div>
+
+      <!-- INPUT PANEL -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 border-b border-coffee-sand/10 pb-10">
+        <div class="flex flex-col gap-2">
+          <label for="roast-date" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">包裝上的烘焙日期 (Roast Date)</label>
+          <div class="relative">
+            <input type="date" id="roast-date" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer" />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="roast-level" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">烘焙度 (Roast Level)</label>
+          <select id="roast-level" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer">
+            <option value="light">淺度烘焙 (Light Roast) - 養豆期較長</option>
+            <option value="medium" selected>中度烘焙 (Medium Roast) - 標準</option>
+            <option value="dark">深度烘焙 (Dark Roast) - 需盡快飲用</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- OUTPUT PANEL -->
+      <div id="result-panel" class="hidden animate-fade-in-up">
+        
+        <!-- Status Header -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
+          <div>
+            <p class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-1">距離烘焙日已過</p>
+            <div class="flex items-baseline gap-2">
+              <span id="days-elapsed" class="text-5xl md:text-6xl font-display font-black text-coffee-light drop-shadow-md tabular-nums">7</span>
+              <span class="text-xl font-medium text-coffee-muted">天</span>
+            </div>
+          </div>
+
+          <div class="flex-1 max-w-sm w-full bg-coffee-darker/60 rounded-2xl p-5 border border-coffee-sand/10 shadow-inner">
+            <p class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-2">目前風味狀態</p>
+            <h2 id="status-title" class="text-2xl font-bold text-coffee-gold mb-2">黃金風味期</h2>
+            <p id="status-desc" class="text-sm text-coffee-light/80 leading-relaxed">
+              排氣已經完成，風味物質發展達到顛峰。現在正是這包咖啡豆最美味的時刻。
+            </p>
+          </div>
+        </div>
+
+        <!-- Visual Timeline -->
+        <div class="mb-10">
+          <h3 class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-6 text-center">咖啡豆生命週期曲線</h3>
+          
+          <div class="relative w-full h-8 bg-coffee-darker rounded-full border border-coffee-sand/10 overflow-hidden mb-2 shadow-inner">
+            <!-- Zones -->
+            <div class="absolute inset-0 flex h-full">
+              <div id="zone-fresh" class="h-full bg-blue-900/40 border-r border-coffee-darker relative group" style="width: 15%;">
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">排氣期</div>
+              </div>
+              <div id="zone-peak" class="h-full bg-coffee-gold/40 border-r border-coffee-darker relative group" style="width: 35%;">
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">黃金風味期</div>
+              </div>
+              <div id="zone-matured" class="h-full bg-orange-900/40 border-r border-coffee-darker relative group" style="width: 25%;">
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">成熟穩定期</div>
+              </div>
+              <div id="zone-stale" class="h-full bg-red-900/20 relative group flex-1">
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">風味衰退期</div>
+              </div>
+            </div>
+
+            <!-- Current Marker -->
+            <div id="timeline-marker" class="absolute top-0 bottom-0 w-1.5 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10 transition-all duration-700 ease-out" style="left: 0%;">
+              <div class="absolute -top-6 left-1/2 -translate-x-1/2">
+                <span class="bg-white text-black text-[9px] font-bold px-1.5 py-0.5 rounded shadow-lg whitespace-nowrap">TODAY</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between text-[10px] font-mono text-coffee-muted/50 px-2">
+            <span>Day 0</span>
+            <span>Day 15</span>
+            <span>Day 30</span>
+            <span>Day 45+</span>
+          </div>
+        </div>
+
+        <!-- Actionable Advice -->
+        <div class="bg-coffee-dark border border-coffee-gold/20 rounded-2xl p-6 relative">
+          <div class="absolute -top-3 left-6 bg-coffee-dark px-2 text-xs font-bold text-coffee-gold uppercase tracking-widest">
+            沖煮策略建議
+          </div>
+          <p id="action-advice" class="text-sm text-coffee-light/90 leading-relaxed mt-2">
+            <!-- Injected via JS -->
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="text-center py-12 opacity-100 transition-opacity">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-coffee-sand/20 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p class="text-coffee-muted text-sm">請選擇包裝上的烘焙日期以進行計算</p>
+      </div>
+    </div>
+
+    <!-- In-Article Ad Placement -->
+    <AdSlot type="in-article" id="bean-fresh-mid-ad" class="mb-16" />
+
+    <!-- FAQ Accordion -->
+    <div class="mt-8 mb-16">
+      <h2 class="font-display text-2xl font-bold text-coffee-gold mb-8 text-center border-b border-coffee-sand/10 pb-4">關於咖啡養豆的常見問題</h2>
+      
+      <div class="space-y-4">
+        <!-- FAQ 1 -->
+        <details class="group bg-coffee-darker/60 border border-coffee-sand/10 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer p-6 font-medium text-coffee-light hover:text-coffee-gold transition-colors">
+            什麼是咖啡豆的「養豆」(Degassing) 過程？
+            <span class="transition duration-300 group-open:-rotate-180">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 text-sm text-coffee-muted leading-relaxed">
+            咖啡豆在烘焙過程中會產生大量的二氧化碳並被鎖在細胞結構內。剛烘好的咖啡豆排氣非常劇烈，如果立刻沖煮，大量的氣泡會阻礙熱水與咖啡粉的接觸，導致萃取不足與風味單薄（即常見的水流通道效應）。所謂的「養豆」，就是將咖啡豆靜置數天，讓過多的二氧化碳自然釋放，使咖啡風味達到最佳平衡的物理過程。
+          </div>
+        </details>
+
+        <!-- FAQ 2 -->
+        <details class="group bg-coffee-darker/60 border border-coffee-sand/10 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer p-6 font-medium text-coffee-light hover:text-coffee-gold transition-colors">
+            如何正確保存咖啡豆以維持新鮮度？
+            <span class="transition duration-300 group-open:-rotate-180">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 text-sm text-coffee-muted leading-relaxed">
+            保存咖啡豆的三大敵人是：氧氣、光線與濕氣。最好的保存方式是將咖啡豆放在單向排氣閥的密封袋或不透明的真空罐中，置於陰涼、乾燥且沒有日曬的櫥櫃內。絕對不要將日常頻繁使用的咖啡豆放入冷藏室，因為開關冰箱時溫差產生的水氣會讓咖啡豆快速受潮並吸附冰箱中的異味。
+          </div>
+        </details>
+
+        <!-- FAQ 3 -->
+        <details class="group bg-coffee-darker/60 border border-coffee-sand/10 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer p-6 font-medium text-coffee-light hover:text-coffee-gold transition-colors">
+            我可以把咖啡豆放在冰箱冷凍嗎？
+            <span class="transition duration-300 group-open:-rotate-180">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 text-sm text-coffee-muted leading-relaxed">
+            可以，但有嚴格的條件。如果您買了大量的咖啡豆無法在一個月內喝完，可以將其「分裝」成單次沖煮的小份量（例如離心管或真空小袋），然後放入冷凍庫深處。要沖煮時，直接拿出需要的份量「不需退冰」，立刻進行研磨。切忌將整大包豆子反覆進出冷凍庫，凝結的水氣會徹底摧毀整包咖啡的風味。
+          </div>
+        </details>
+      </div>
+    </div>
+
+  </div>
+</Layout>
+
+<style>
+  /* Custom Details Animation fallback */
+  details > div {
+    animation: slideDown 0.3s ease-out;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  // Elements
+  const roastDateInput = document.getElementById('roast-date') as HTMLInputElement;
+  const roastLevelSelect = document.getElementById('roast-level') as HTMLSelectElement;
+  
+  const emptyState = document.getElementById('empty-state') as HTMLDivElement;
+  const resultPanel = document.getElementById('result-panel') as HTMLDivElement;
+  
+  const daysElapsedEl = document.getElementById('days-elapsed') as HTMLSpanElement;
+  const statusTitle = document.getElementById('status-title') as HTMLHeadingElement;
+  const statusDesc = document.getElementById('status-desc') as HTMLParagraphElement;
+  const actionAdvice = document.getElementById('action-advice') as HTMLParagraphElement;
+  
+  const timelineMarker = document.getElementById('timeline-marker') as HTMLDivElement;
+  const topBar = document.getElementById('status-top-bar') as HTMLDivElement;
+  const glow = document.getElementById('status-glow') as HTMLDivElement;
+  
+  const zoneFresh = document.getElementById('zone-fresh') as HTMLDivElement;
+  const zonePeak = document.getElementById('zone-peak') as HTMLDivElement;
+  const zoneMatured = document.getElementById('zone-matured') as HTMLDivElement;
+
+  // Set max date to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  roastDateInput.max = todayStr;
+
+  function calculateFreshness() {
+    if (!roastDateInput.value) {
+      resultPanel.classList.add('hidden');
+      emptyState.classList.remove('hidden');
+      return;
+    }
+
+    const roastDate = new Date(roastDateInput.value);
+    const today = new Date();
+    
+    // Calculate difference in days
+    const diffTime = Math.abs(today.getTime() - roastDate.getTime());
+    const daysElapsed = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    daysElapsedEl.textContent = daysElapsed.toString();
+
+    // Logic Rules based on Roast Level
+    const roastLvl = roastLevelSelect.value;
+    
+    // Baseline: Light Roast needs more time to degas, Dark Roast degasses very fast.
+    let boundaries = {
+      freshEnd: 4,      // 0-4 days
+      peakEnd: 18,      // 5-18 days
+      matureEnd: 35,    // 19-35 days
+    };
+
+    if (roastLvl === 'light') {
+      boundaries = { freshEnd: 7, peakEnd: 24, matureEnd: 45 };
+    } else if (roastLvl === 'dark') {
+      boundaries = { freshEnd: 2, peakEnd: 10, matureEnd: 21 };
+    }
+
+    // Update Visual Timeline Zones proportionally (Mapping 0 to 45 days max scale for the UI)
+    // 45 days is our absolute 100% width reference for the bar.
+    const maxDays = 45;
+    
+    const wFresh = (boundaries.freshEnd / maxDays) * 100;
+    const wPeak = ((boundaries.peakEnd - boundaries.freshEnd) / maxDays) * 100;
+    const wMatured = ((boundaries.matureEnd - boundaries.peakEnd) / maxDays) * 100;
+    
+    zoneFresh.style.width = `${Math.min(100, wFresh)}%`;
+    zonePeak.style.width = `${Math.min(100, wPeak)}%`;
+    zoneMatured.style.width = `${Math.min(100, wMatured)}%`;
+
+    // Calculate Marker Position
+    let markerPercent = (daysElapsed / maxDays) * 100;
+    markerPercent = Math.max(0, Math.min(100, markerPercent)); // Clamp between 0-100%
+    timelineMarker.style.left = `${markerPercent}%`;
+
+    // Determine Status Text and Styling
+    let title = "";
+    let desc = "";
+    let advice = "";
+    let colorClass = ""; // For top bar and glow
+
+    if (daysElapsed <= boundaries.freshEnd) {
+      title = "二氧化碳過多 (Too Fresh)";
+      desc = "咖啡豆剛剛烘焙完成，細胞內含有大量二氧化碳氣體。此時排氣過於劇烈，風味尚未穩定。";
+      advice = "⚠️ **強行沖煮策略**：如果您現在必須沖煮，請務必將「悶蒸 (Bloom) 時間」延長至 45 到 60 秒，讓氣體有足夠時間排出，避免通道效應導致萃取不足。";
+      colorClass = "bg-blue-500";
+    } else if (daysElapsed <= boundaries.peakEnd) {
+      title = "黃金風味期 (Peak Flavor Window)";
+      desc = "排氣已經趨緩，咖啡的酸甜平衡度與芳香物質發展達到最完美的顛峰。現在正是這包咖啡豆最美味的時刻。";
+      advice = "✨ **最佳沖煮策略**：直接使用標準參數沖煮即可。水溫、研磨度皆可照您的常規習慣進行。盡情享受！";
+      colorClass = "bg-coffee-gold";
+    } else if (daysElapsed <= boundaries.matureEnd) {
+      title = "成熟穩定期 (Matured)";
+      desc = "咖啡豆已完全排氣，雖然最活潑的香氣稍微減弱，但甜感會變得非常集中且醇厚度佳。";
+      advice = "☕ **穩定沖煮策略**：由於排氣量減少，水流通過粉床的阻力會降低。建議將研磨度「調細 1 到 2 格」，或是稍微增加水溫 1°C 來維持足夠的萃取率。";
+      colorClass = "bg-orange-600";
+    } else {
+      title = "風味衰退期 (Fading / Stale)";
+      desc = "芳香物質已大量揮發，表面油脂可能開始氧化，風味變得單調甚至帶有些許木質或油耗味。";
+      advice = "🆘 **搶救沖煮策略**：為了榨出剩餘的芳香物質，請大幅調高水溫（例如 94-95°C）並使用較細的研磨。或者，將這些豆子用來製作「冷萃咖啡 (Cold Brew)」，冷萃能有效掩蓋老豆的缺點。";
+      colorClass = "bg-red-600";
+    }
+
+    statusTitle.textContent = title;
+    statusDesc.textContent = desc;
+    
+    // Simple markdown parsing for advice
+    advice = advice.replace(/\*\*(.*?)\*\*/g, '<strong class="text-coffee-gold">$1</strong>');
+    actionAdvice.innerHTML = advice;
+
+    // Apply color themes
+    topBar.className = `absolute top-0 left-0 w-full h-2 transition-colors duration-500 ${colorClass}`;
+    glow.className = `absolute top-0 right-0 w-64 h-64 blur-[100px] rounded-full -z-10 pointer-events-none transition-colors duration-500 ${colorClass.replace('bg-', 'bg-').concat('/10')}`;
+
+    // Show Results
+    emptyState.classList.add('hidden');
+    resultPanel.classList.remove('hidden');
+  }
+
+  roastDateInput.addEventListener('change', calculateFreshness);
+  roastLevelSelect.addEventListener('change', calculateFreshness);
+
+</script>
