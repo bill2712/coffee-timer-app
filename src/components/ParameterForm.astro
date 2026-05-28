@@ -228,8 +228,12 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
   function updateCalculations() {
     let isValid = true;
     if (weightInput && ratioInput && totalWaterEl) {
-      let weight = parseFloat(weightInput.value);
-      let ratio = parseFloat(ratioInput.value);
+      // Force sanitize input strings: remove everything except numbers and decimals, then take absolute value.
+      let weightRaw = weightInput.value.replace(/[^0-9.]/g, '');
+      let ratioRaw = ratioInput.value.replace(/[^0-9.]/g, '');
+      
+      let weight = Math.abs(parseFloat(weightRaw));
+      let ratio = Math.abs(parseFloat(ratioRaw));
       
       // Validation Logic & Fail-safes
       const weightError = document.getElementById('weight-error');
@@ -499,5 +503,33 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
       historyPanel.classList.remove('hidden');
       renderHistory();
     }
+
+    // --- Timer State Lock (Mid-Brew Protection) ---
+    window.addEventListener('timer-state', (e: any) => {
+      const isRunning = e.detail?.running || false;
+      const inputs = [weightInput, ratioInput, beanNameInput, roastLevelInput, grindSizeInput, waterTempInput];
+      
+      inputs.forEach(input => {
+        if (input) {
+          input.disabled = isRunning;
+          if (isRunning) {
+            input.classList.add('opacity-50', 'cursor-not-allowed');
+          } else {
+            input.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+        }
+      });
+      
+      if (btnApply) {
+        btnApply.disabled = isRunning;
+        if (isRunning) {
+          btnApply.textContent = '沖煮中：參數已鎖定';
+          btnApply.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+          btnApply.textContent = '套用設定並同步計時器';
+          btnApply.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      }
+    });
   });
 </script>

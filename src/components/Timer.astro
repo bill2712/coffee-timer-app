@@ -484,6 +484,7 @@
     if (isRunning) return;
     isRunning = true;
     lastTimestamp = performance.now();
+    window.dispatchEvent(new CustomEvent('timer-state', { detail: { running: true } }));
 
     if (btnStart) {
       btnStart.textContent = '暫停';
@@ -513,6 +514,7 @@
 
   function stopTimer(completed = false) {
     isRunning = false;
+    window.dispatchEvent(new CustomEvent('timer-state', { detail: { running: false } }));
     if (timerId !== null) {
       window.clearInterval(timerId);
       timerId = null;
