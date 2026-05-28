@@ -34,7 +34,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
           type="text"
           id="bean-name"
           placeholder="例如：衣索比亞 耶加雪菲"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
         />
       </div>
 
@@ -42,7 +42,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
         <label for="roast-level" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">烘焙度</label>
         <select
           id="roast-level"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light appearance-none cursor-pointer"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light appearance-none cursor-pointer"
         >
           <option value="light">淺度烘焙 (Roast: Light)</option>
           <option value="medium" selected>中度烘焙 (Roast: Medium)</option>
@@ -59,7 +59,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
           type="text"
           id="grind-size"
           placeholder="例如：手沖中細 (Comandante C40 #24)"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
         />
       </div>
 
@@ -72,7 +72,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
             min="80"
             max="100"
             value="92"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
           />
           <span class="absolute right-4 text-sm text-coffee-muted">°C</span>
         </div>
@@ -91,10 +91,11 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
             max="100"
             step="0.5"
             value="20"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
           />
           <span class="absolute right-4 text-sm text-coffee-muted">g</span>
         </div>
+        <span id="weight-error" class="text-red-400 text-xs hidden mt-1">請輸入有效的正數</span>
       </div>
 
       <div class="flex flex-col gap-1.5">
@@ -107,10 +108,11 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
             max="25"
             step="0.5"
             value="15"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
+            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
           />
           <span class="absolute right-4 text-sm text-coffee-muted">1 : X</span>
         </div>
+        <span id="ratio-error" class="text-red-400 text-xs hidden mt-1">請輸入有效的比例</span>
       </div>
     </div>
 
@@ -133,7 +135,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
       <button
         type="button"
         id="btn-apply-recipe"
-        class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 min-h-[48px] shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer text-center text-sm gold-glow-hover"
+        class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 min-h-[48px] shadow-lg transition-all duration-200 ease-out transform active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark focus-visible:ring-coffee-gold cursor-pointer text-center text-sm gold-glow-hover disabled:opacity-50 disabled:cursor-not-allowed"
       >
         套用設定並同步計時器
       </button>
@@ -142,7 +144,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
         <button
           type="button"
           id="btn-save-history"
-          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-3 min-h-[48px] text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-3 min-h-[48px] text-xs font-medium transition-all duration-200 ease-out flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark focus-visible:ring-coffee-gold active:scale-[0.98]"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
@@ -152,7 +154,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
         <button
           type="button"
           id="btn-share-url"
-          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-3 min-h-[48px] text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+          class="bg-coffee-darker border border-coffee-sand/20 hover:border-coffee-gold text-coffee-sand hover:text-coffee-light rounded-lg py-3 min-h-[48px] text-xs font-medium transition-all duration-200 ease-out flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark focus-visible:ring-coffee-gold active:scale-[0.98]"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -174,7 +176,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-4 right-4 bg-coffee-dark text-coffee-light border border-coffee-gold/50 px-4 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+    <div id="toast" class="fixed bottom-4 right-4 bg-coffee-dark text-coffee-light border border-coffee-gold/50 px-4 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-200 ease-out z-50 flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-coffee-gold" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
       </svg>
@@ -224,12 +226,43 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
 
   // --- Core Functions ---
   function updateCalculations() {
+    let isValid = true;
     if (weightInput && ratioInput && totalWaterEl) {
-      const weight = parseFloat(weightInput.value) || 0;
-      const ratio = parseFloat(ratioInput.value) || 0;
-      const totalWater = Math.round(weight * ratio);
-      totalWaterEl.textContent = totalWater.toString();
+      const weight = parseFloat(weightInput.value);
+      const ratio = parseFloat(ratioInput.value);
+      
+      // Validation Logic
+      const weightError = document.getElementById('weight-error');
+      const ratioError = document.getElementById('ratio-error');
+
+      if (isNaN(weight) || weight <= 0) {
+        isValid = false;
+        weightError?.classList.remove('hidden');
+        weightInput.classList.add('border-red-500/50', 'focus:border-red-500/50');
+      } else {
+        weightError?.classList.add('hidden');
+        weightInput.classList.remove('border-red-500/50', 'focus:border-red-500/50');
+      }
+
+      if (isNaN(ratio) || ratio <= 0) {
+        isValid = false;
+        ratioError?.classList.remove('hidden');
+        ratioInput.classList.add('border-red-500/50', 'focus:border-red-500/50');
+      } else {
+        ratioError?.classList.add('hidden');
+        ratioInput.classList.remove('border-red-500/50', 'focus:border-red-500/50');
+      }
+
+      if (isValid) {
+        const totalWater = Math.round(weight * ratio);
+        totalWaterEl.textContent = totalWater.toString();
+        if (btnApply) btnApply.disabled = false;
+      } else {
+        totalWaterEl.textContent = '0';
+        if (btnApply) btnApply.disabled = true;
+      }
     }
+    return isValid;
   }
 
   function getRecipeData() {
@@ -350,7 +383,15 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
     if (!historyList) return;
     
     if (history.length === 0) {
-      historyList.innerHTML = '<p class="text-xs text-coffee-muted italic text-center py-4">目前沒有儲存的配方</p>';
+      historyList.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-6 text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-coffee-sand/30 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <p class="text-xs text-coffee-muted font-medium">目前沒有儲存的配方</p>
+          <p class="text-[10px] text-coffee-muted/70 mt-1">調整參數並點擊「存入我的最愛」即可儲存！</p>
+        </div>
+      `;
       return;
     }
 
@@ -403,6 +444,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
     
     if (btnApply) {
       btnApply.addEventListener('click', () => {
+        if (!updateCalculations()) return;
         syncWithTimer(getRecipeData());
         btnApply.textContent = '✓ 已同步設定！';
         btnApply.classList.add('bg-green-600');
