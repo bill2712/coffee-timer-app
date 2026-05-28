@@ -96,7 +96,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
       <p class="text-xs text-coffee-muted mt-2">尋找專為您手邊的咖啡器具量身打造的配方計算機與進階教學。</p>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-16">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-16">
       <a href={base + "tools/v60-pour-over"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
         <span class="text-3xl group-hover:scale-110 transition-transform duration-300">☕</span>
         <span class="font-display font-semibold text-coffee-light">V60 濾杯</span>
@@ -112,6 +112,11 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
       <a href={base + "tools/cold-brew"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3">
         <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🧊</span>
         <span class="font-display font-semibold text-coffee-light">冷萃咖啡</span>
+      </a>
+      <a href={base + "tools/grind-converter"} class="glass-card-interactive rounded-xl p-6 text-center group flex flex-col items-center gap-3 md:col-span-1 col-span-2 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-coffee-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">⚙️</span>
+        <span class="font-display font-semibold text-coffee-light">刻度轉換器</span>
       </a>
     </div>
   </section>
