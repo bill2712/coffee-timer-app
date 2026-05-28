@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog');
@@ -88,18 +89,14 @@ const jsonLd = {
     <div class="blog-content border-t border-coffee-sand/10 pt-10 text-coffee-light/95 leading-relaxed text-sm sm:text-base">
       
       <!-- Google AdSense Article Inline Banner Placeholder -->
-      <div id="adsense-article-inline" class="w-full flex justify-center mb-10 min-h-[90px] bg-coffee-darker/30 border border-coffee-sand/5 rounded-xl flex items-center" aria-hidden="true">
-        <span class="text-xs text-coffee-muted/50 font-mono tracking-widest uppercase">Inline Ad</span>
-      </div>
+      <AdSlot type="leaderboard" id="adsense-article-inline" class="mb-10" />
 
       <article class="prose prose-invert prose-coffee max-w-none mb-12">
         <Content />
       </article>
 
       <!-- Google AdSense Bottom Article Banner Placeholder (Prevents CLS) -->
-      <div id="adsense-article-bottom" class="w-full flex justify-center my-10 min-h-[250px] bg-coffee-darker/30 border border-coffee-sand/5 rounded-xl flex items-center" aria-hidden="true">
-        <span class="text-xs text-coffee-muted/50 font-mono tracking-widest uppercase">Advertisement Space</span>
-      </div>
+      <AdSlot type="responsive" id="adsense-article-bottom" class="my-10" />
     </div>
 
     <!-- CTA & Footer of Post -->

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import SEO from '../components/SEO.astro';
+import AdSlot from '../components/AdSlot.astro';
 
 interface Props {
   title?: string;
@@ -78,9 +79,7 @@ const base = import.meta.env.BASE_URL;
     <!-- Main Content -->
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <!-- Google AdSense Top Banner Placeholder (Prevents CLS) -->
-      <div id="adsense-top-banner" class="w-full max-w-4xl mx-auto flex justify-center mb-10 min-h-[90px] bg-coffee-darker/30 border border-coffee-sand/5 rounded-xl flex items-center" aria-hidden="true">
-        <span class="text-[10px] text-coffee-muted/50 font-mono tracking-widest uppercase">Advertisement Space</span>
-      </div>
+      <AdSlot type="leaderboard" id="adsense-top-banner" class="mb-10" />
       
       <slot />
     </main>

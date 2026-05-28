@@ -1,0 +1,47 @@
+---
+export interface Props {
+  type: 'leaderboard' | 'skyscraper' | 'responsive';
+  id?: string;
+  class?: string;
+}
+
+const { type, id, class: className = '' } = Astro.props;
+
+// Determine dimensions and styles based on the ad type
+// These explicit min-heights and max-widths prevent Cumulative Layout Shift (CLS)
+// by reserving the exact space required for standard AdSense units.
+
+let dimensionClasses = '';
+
+switch (type) {
+  case 'leaderboard':
+    // Top Banner: Typically 728x90 on Desktop, 320x100 on Mobile
+    dimensionClasses = 'w-full max-w-[728px] min-h-[90px] sm:min-h-[100px] mx-auto';
+    break;
+  case 'skyscraper':
+    // Sidebar: Typically 300x600
+    dimensionClasses = 'w-full max-w-[300px] min-h-[600px] mx-auto';
+    break;
+  case 'responsive':
+    // In-article or bottom: Typically 300x250 minimum
+    dimensionClasses = 'w-full max-w-[728px] min-h-[250px] mx-auto';
+    break;
+}
+---
+
+<div
+  id={id}
+  class={`ad-slot relative flex items-center justify-center bg-coffee-darker/40 border border-coffee-sand/10 rounded-xl overflow-hidden ${dimensionClasses} ${className}`}
+  aria-hidden="true"
+  data-ad-type={type}
+>
+  <!-- Skeleton Pulse Animation Background -->
+  <div class="absolute inset-0 w-full h-full animate-pulse bg-gradient-to-r from-coffee-darker/10 via-coffee-sand/5 to-coffee-darker/10"></div>
+  
+  <!-- Subtle Placeholder Text -->
+  <span class="text-[10px] font-semibold tracking-[0.2em] uppercase text-coffee-muted/40 z-10 pointer-events-none select-none">
+    - Advertisement -
+  </span>
+
+  <!-- In the future, you will inject the AdSense script and <ins> tag right here -->
+</div>

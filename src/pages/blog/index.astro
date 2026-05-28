@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
 
 // Fetch all posts from content collections, sorted by publish date descending
 const posts = (await getCollection('blog')).sort(
@@ -84,9 +85,7 @@ function formatDate(date: Date) {
 
     <!-- Sidebar AdSense Placeholder -->
     <aside class="hidden lg:flex flex-col items-center justify-start w-full">
-      <div id="adsense-sidebar" class="sticky top-28 w-full min-h-[600px] bg-coffee-darker/30 border border-coffee-sand/5 rounded-xl flex items-center justify-center" aria-hidden="true">
-        <span class="text-xs text-coffee-muted/50 font-mono tracking-widest uppercase text-center leading-loose">Sidebar<br/>Ad Space</span>
-      </div>
+      <AdSlot type="skyscraper" id="adsense-sidebar" class="sticky top-28" />
     </aside>
   </div>
 </Layout>
