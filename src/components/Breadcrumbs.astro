@@ -12,19 +12,35 @@ interface Props {
 const { items, class: className = "" } = Astro.props;
 
 // Generate JSON-LD
-const siteUrl = import.meta.env.SITE || 'https://baristaflow.com';
-const rawBase = import.meta.env.BASE_URL;
-const baseUrl = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://bill2712.github.io';
+const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
+const baseUrl = basePath.endsWith('/') ? basePath : basePath + '/';
+
+// Prepend home to the items explicitly for the schema
+const schemaItems = [
+  { label: '首頁', url: baseUrl },
+  ...items
+];
 
 const breadcrumbList = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": items.map((item, index) => ({
-    "@type": "ListItem",
-    "position": index + 1,
-    "name": item.label,
-    "item": item.url ? new URL(item.url.startsWith('/') ? item.url : `${baseUrl}${item.url}`, siteUrl).toString() : undefined
-  }))
+  "itemListElement": schemaItems.map((item, index) => {
+    let finalUrl = item.url || '';
+    if (finalUrl && !finalUrl.startsWith('http')) {
+      if (!finalUrl.startsWith(baseUrl) && finalUrl !== baseUrl) {
+        finalUrl = baseUrl + finalUrl.replace(/^\//, '');
+      }
+      finalUrl = new URL(finalUrl, siteUrl).toString();
+    }
+
+    return {
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.label,
+      "item": finalUrl || undefined
+    };
+  })
 };
 ---
 

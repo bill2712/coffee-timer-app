@@ -5,9 +5,24 @@ import Timer from '../components/Timer.astro';
 import AdSlot from '../components/AdSlot.astro';
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+
+const webAppJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Barista Flow",
+  "operatingSystem": "All",
+  "applicationCategory": "UtilityApplication",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "url": "https://bill2712.github.io/coffee-timer-app/",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+};
 ---
 
-<Layout>
+<Layout jsonld={webAppJsonLd}>
   <!-- Hero Section -->
   <section class="text-center max-w-4xl mx-auto mb-12 sm:mb-16 animate-float px-4">
     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-6">
