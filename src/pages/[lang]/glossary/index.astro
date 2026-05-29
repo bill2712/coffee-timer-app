@@ -1,21 +1,22 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import SearchBar from '../../components/SearchBar.astro';
-import AdSlot from '../../components/AdSlot.astro';
+import Layout from '../../../layouts/Layout.astro';
+import SearchBar from '../../../components/SearchBar.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
 
 const allGlossary = await getCollection('blog', (entry) => entry.data.tags?.includes('Glossary')) || [];
 
 // Sort by term (A-Z)
 const sortedGlossary = [...allGlossary].sort((a, b) => {
-  const termA = a.data.term || a.data.title;
-  const termB = b.data.term || b.data.title;
+  const termA = (a.data as any).term || a.data.title;
+  const termB = (b.data as any).term || b.data.title;
   return termA.localeCompare(termB);
 });
 
 // Group by first letter
 const groupedGlossary = sortedGlossary.reduce((acc, entry) => {
-  const term = entry.data.term || entry.data.title;
+  const term = (entry.data as any).term || entry.data.title;
   const firstLetter = term.charAt(0).toUpperCase();
   if (!acc[firstLetter]) {
     acc[firstLetter] = [];
@@ -32,6 +33,10 @@ const jsonLd = {
   "name": "Barista Flow Coffee Glossary",
   "description": "Comprehensive encyclopedia of specialty coffee terms, techniques, and chemistry.",
 };
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
 ---
 
 <Layout
@@ -67,7 +72,7 @@ const jsonLd = {
     <div class="space-y-16">
       {letters.map((letter) => (
         <section id={`letter-${letter}`} class="scroll-mt-32 relative">
-          <div class="absolute -left-4 sm:-left-12 top-0 text-5xl sm:text-7xl font-display font-black text-coffee-sand/10 select-none -z-10">
+          <div class="absolute -start-4 sm:-start-12 top-0 text-5xl sm:text-7xl font-display font-black text-coffee-sand/10 select-none -z-10">
             {letter}
           </div>
           <h2 class="text-3xl font-display font-bold text-coffee-gold border-b border-coffee-sand/10 pb-4 mb-8">
@@ -78,7 +83,7 @@ const jsonLd = {
               <a href={`${import.meta.env.BASE_URL}/glossary/${entry.id}`} class="glass-card-interactive p-6 rounded-xl group flex flex-col justify-between h-full">
                 <div>
                   <h3 class="text-xl font-bold text-coffee-light mb-1 group-hover:text-coffee-gold transition-colors">
-                    {entry.data.term || entry.data.title}
+                    {(entry.data as any).term || entry.data.title}
                   </h3>
                   <p class="text-xs text-coffee-muted uppercase tracking-wider mb-3">{entry.data.title}</p>
                   <p class="text-sm text-coffee-sand/80 leading-relaxed line-clamp-3">
@@ -86,7 +91,7 @@ const jsonLd = {
                   </p>
                 </div>
                 <div class="mt-4 flex items-center text-xs text-coffee-gold font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  閱讀完整定義 <span class="ml-1">→</span>
+                  閱讀完整定義 <span class="ms-1">→</span>
                 </div>
               </a>
             ))}

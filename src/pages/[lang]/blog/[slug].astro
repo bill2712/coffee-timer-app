@@ -1,16 +1,21 @@
 ---
-import { SITE_URL } from '../../config.js';
+import { SITE_URL } from '../../../config';
 import { getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import AdSlot from '../../components/AdSlot.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Layout from '../../../layouts/Layout.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { languages } from '../../../i18n/ui';
+
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog', (entry) => !entry.data.tags?.includes('Glossary'));
-  return blogEntries.map(entry => ({
-    params: { slug: entry.id },
-    props: { entry },
-  }));
+  const locales = Object.keys(languages);
+  return locales.flatMap(lang => 
+    blogEntries.map(entry => ({
+      params: { lang, slug: entry.id },
+      props: { entry },
+    }))
+  );
 }
 
 const { entry } = Astro.props;

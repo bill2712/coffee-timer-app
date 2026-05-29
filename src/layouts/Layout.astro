@@ -3,6 +3,9 @@ import '../styles/global.css';
 import SEO from '../components/SEO.astro';
 import AdSlot from '../components/AdSlot.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import LanguagePicker from '../components/LanguagePicker.astro';
+import { getLangFromUrl, useTranslations, rtlLanguages } from '../i18n/utils';
+
 
 interface Props {
   title?: string;
@@ -13,18 +16,24 @@ interface Props {
 }
 
 const {
-  title = "Barista Flow | 專業精品咖啡三階段注水計時器",
-  description = "Barista Flow 提供精品咖啡沖煮參數計算與互動式三階段注水計時器，助您精準控制悶蒸、主要萃取與後段強度，沖煮出極致風味的咖啡。",
+  title,
+  description,
   ogImage = "/images/og-default.jpg",
   article = false,
   jsonld
 } = Astro.props;
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const isRTL = rtlLanguages.includes(lang);
+
+const finalTitle = title || t('seo.title');
+const finalDescription = description || t('seo.description');
 ---
 
 <!doctype html>
-<html lang="zh-Hant-TW">
+<html lang={lang} dir={isRTL ? "rtl" : "ltr"}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -35,7 +44,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     
-    <SEO title={title} description={description} image={ogImage} article={article} jsonld={jsonld} />
+    <SEO title={finalTitle} description={finalDescription} image={ogImage} article={article} jsonld={jsonld} />
 
     <meta name="generator" content={Astro.generator} />
     
@@ -62,40 +71,42 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
             </a>
           </div>
           
-          <nav class="hidden lg:flex items-center gap-8 ml-auto min-w-0">
-            <a href={base} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              首頁
+          <nav class="hidden lg:flex items-center gap-8 ms-auto min-w-0">
+            <a href={`/${lang}/`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              {t('nav.home')}
             </a>
-            <a href={base + "blog"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              知識庫
+            <a href={`/${lang}/blog`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              {t('nav.glossary')}
             </a>
-            <a href={base + "about"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              關於我們
+            <a href={`/${lang}/about`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              {t('nav.about')}
             </a>
-            <a href={base + "tools/grind-converter"} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200 flex items-center gap-1">
+            <a href={`/${lang}/tools/grind-converter`} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200 flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
               </svg>
-              研磨度轉換
+              {t('nav.grindConverter')}
             </a>
-            <a href={base + "tools/water-temperature"} class="text-sm font-medium tracking-wide text-orange-400 hover:text-orange-300 transition-colors duration-200 flex items-center gap-1">
+            <a href={`/${lang}/tools/water-temperature`} class="text-sm font-medium tracking-wide text-orange-400 hover:text-orange-300 transition-colors duration-200 flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
               </svg>
-              水溫預測
+              {t('nav.waterTemp')}
             </a>
-            <a href={base + "tools/bean-freshness"} class="text-sm font-medium tracking-wide text-green-400 hover:text-green-300 transition-colors duration-200 flex items-center gap-1">
+            <a href={`/${lang}/tools/bean-freshness`} class="text-sm font-medium tracking-wide text-green-400 hover:text-green-300 transition-colors duration-200 flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clip-rule="evenodd" />
               </svg>
-              養豆計算
+              {t('nav.beanFreshness')}
             </a>
-            <a href={base + "history"} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200">
-              沖煮紀錄
+            <a href={`/${lang}/history`} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200">
+              {t('nav.history')}
             </a>
-            <a href={base + "faq"} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              常見問題
+            <a href={`/${lang}/faq`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              {t('nav.faq')}
             </a>
+            <div class="border-s border-coffee-sand/20 h-6 mx-2 hidden lg:block"></div>
+            <LanguagePicker />
           </nav>
 
           <!-- Mobile Menu Toggle Button (Hamburger-to-X) -->
@@ -109,20 +120,28 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 
     <!-- Mobile Glassmorphic Overlay Drawer -->
     <div id="mobile-menu-drawer" class="fixed inset-0 z-[55] backdrop-blur-xl bg-coffee-dark/95 flex flex-col justify-center opacity-0 -translate-y-full pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
-      <nav class="flex flex-col items-center space-y-8 px-6">
-        <a href={base} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">首頁</a>
-        <a href={base + "blog"} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">知識庫</a>
-        <a href={base + "about"} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">關於我們</a>
-        <a href={base + "tools/grind-converter"} class="mobile-link text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-110 active:scale-95">研磨度轉換</a>
-        <a href={base + "tools/water-temperature"} class="mobile-link text-3xl font-light tracking-wide text-orange-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-orange-300 hover:scale-110 active:scale-95">水溫預測</a>
-        <a href={base + "tools/bean-freshness"} class="mobile-link text-3xl font-light tracking-wide text-green-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-green-300 hover:scale-110 active:scale-95">養豆計算</a>
-        <a href={base + "history"} class="mobile-link text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-110 active:scale-95">沖煮紀錄</a>
-        <a href={base + "faq"} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">常見問題</a>
+      <nav class="flex flex-col items-center space-y-6 px-6">
+        <a href={`/${lang}/`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.home')}</a>
+        <a href={`/${lang}/blog`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.glossary')}</a>
+        <a href={`/${lang}/about`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.about')}</a>
+        <a href={`/${lang}/tools/grind-converter`} class="mobile-link text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-110 active:scale-95">{t('nav.grindConverter')}</a>
+        <a href={`/${lang}/tools/water-temperature`} class="mobile-link text-3xl font-light tracking-wide text-orange-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-orange-300 hover:scale-110 active:scale-95">{t('nav.waterTemp')}</a>
+        <a href={`/${lang}/tools/bean-freshness`} class="mobile-link text-3xl font-light tracking-wide text-green-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-green-300 hover:scale-110 active:scale-95">{t('nav.beanFreshness')}</a>
+        <a href={`/${lang}/history`} class="mobile-link text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-110 active:scale-95">{t('nav.history')}</a>
+        <a href={`/${lang}/faq`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.faq')}</a>
+        
+        <div class="mobile-link opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] pt-4">
+          <LanguagePicker />
+        </div>
       </nav>
     </div>
 
     <!-- Main Content -->
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
+      <!-- Ambient Glow for Desktop -->
+      <div class="fixed top-[-10%] start-[-5%] w-[500px] h-[500px] bg-coffee-gold/10 blur-[120px] rounded-full -z-10 pointer-events-none hidden lg:block"></div>
+      <div class="fixed bottom-[-10%] end-[-5%] w-[600px] h-[600px] bg-coffee-accent/10 blur-[150px] rounded-full -z-10 pointer-events-none hidden lg:block"></div>
+
       <!-- Top Leaderboard Ad Slot (Global) -->
       <AdSlot type="top-leaderboard" id="adsense-top-banner" class="my-6" />
 
@@ -141,23 +160,23 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
               </svg>
               <span class="font-display font-semibold tracking-widest text-coffee-sand/80 text-sm">BARISTA FLOW</span>
             </div>
-            <p class="text-xs text-coffee-muted italic text-center md:text-left mt-1">
+            <p class="text-xs text-coffee-muted italic text-center md:text-start mt-1">
               "Coffee is a language in itself." — Jackie Chan
             </p>
           </div>
           
           <div class="flex flex-wrap justify-center gap-x-4 sm:gap-x-8 gap-y-3 text-xs text-coffee-muted">
-            <a href={base + "about"} class="hover:text-coffee-gold transition-colors">關於我們</a>
-            <a href={base + "faq"} class="hover:text-coffee-gold transition-colors">常見問題</a>
-            <a href={base + "contact"} class="hover:text-coffee-gold transition-colors">聯絡我們</a>
-            <a href={base + "terms-of-service"} class="hover:text-coffee-gold transition-colors">服務條款</a>
-            <a href={base + "privacy-policy"} class="hover:text-coffee-gold transition-colors">隱私權政策</a>
+            <a href={`/${lang}/about`} class="hover:text-coffee-gold transition-colors">{t('nav.about')}</a>
+            <a href={`/${lang}/faq`} class="hover:text-coffee-gold transition-colors">{t('nav.faq')}</a>
+            <a href={`/${lang}/contact`} class="hover:text-coffee-gold transition-colors">{t('nav.contact')}</a>
+            <a href={`/${lang}/terms-of-service`} class="hover:text-coffee-gold transition-colors">{t('nav.terms')}</a>
+            <a href={`/${lang}/privacy-policy`} class="hover:text-coffee-gold transition-colors">{t('nav.privacy')}</a>
           </div>
         </div>
         
         <div class="border-t border-coffee-gray/40 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p class="text-xs text-coffee-muted">
-            &copy; {new Date().getFullYear()} Barista Flow. 保留所有權利。
+            &copy; {new Date().getFullYear()} Barista Flow. {t('footer.rights')}
           </p>
           <p class="text-xs text-coffee-muted flex items-center gap-1">
             Made for Specialty Coffee Lovers ☕

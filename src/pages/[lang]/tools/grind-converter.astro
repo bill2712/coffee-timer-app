@@ -1,7 +1,8 @@
 ---
-import { SITE_URL } from '../../config.js';
-import Layout from '../../layouts/Layout.astro';
-import AdSlot from '../../components/AdSlot.astro';
+import { SITE_URL } from '../../../config';
+import Layout from '../../../layouts/Layout.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -18,6 +19,10 @@ const jsonLd = {
     "priceCurrency": "USD"
   }
 };
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
 ---
 
 <Layout 
@@ -44,7 +49,7 @@ const jsonLd = {
     </div>
 
     <div class="glass-card rounded-3xl p-6 sm:p-10 border border-coffee-sand/10 relative overflow-hidden mb-16">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-coffee-gold/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+      <div class="absolute top-0 end-0 w-64 h-64 bg-coffee-gold/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
         <!-- Source Grinder -->
@@ -89,7 +94,7 @@ const jsonLd = {
           </div>
 
           <div class="flex flex-col items-center justify-center h-[90px] bg-coffee-darker/50 rounded-xl border border-coffee-sand/10 relative">
-            <span class="text-xs font-semibold uppercase tracking-wider text-coffee-muted absolute top-2 left-3">轉換結果</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-coffee-muted absolute top-2 start-3">轉換結果</span>
             <div class="flex items-baseline gap-2 mt-2">
               <span id="target-value" class="text-5xl font-display font-bold text-coffee-gold gold-glow drop-shadow-md">--</span>
               <span id="target-unit" class="text-sm font-medium text-coffee-muted"></span>

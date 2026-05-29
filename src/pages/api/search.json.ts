@@ -10,7 +10,7 @@ export async function GET({ request }: any) {
     return {
       title: entry.data.title,
       description: entry.data.description,
-      term: entry.data.term || '',
+      term: (entry.data as any).term || '',
       tags: entry.data.tags || [],
       url: `${prefix}${entry.id}/`
     };

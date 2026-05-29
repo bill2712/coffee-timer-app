@@ -1,8 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import SearchBar from '../../components/SearchBar.astro';
-import AdSlot from '../../components/AdSlot.astro';
+import Layout from '../../../layouts/Layout.astro';
+import SearchBar from '../../../components/SearchBar.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
 
 // Fetch all posts from content collections, sorted by publish date descending
 const posts = (await getCollection('blog'))
@@ -15,6 +16,10 @@ function formatDate(date: Date) {
     month: 'long',
     day: 'numeric',
   });
+}
+
+export function getStaticPaths() {
+  return getLanguagePaths();
 }
 ---
 

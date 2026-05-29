@@ -1,5 +1,10 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getLanguagePaths } from '../../i18n/routes';
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
 ---
 
 <Layout
@@ -45,7 +50,7 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- Contact Form -->
       <div class="md:col-span-3 glass-card rounded-2xl p-6 sm:p-8">
-        <form id="contact-form" class="space-y-5" onsubmit="event.preventDefault(); alert('感謝您的來信！這是一個展示用的表單，實際營運時請串接後端 API。'); this.reset();">
+        <form id="contact-form" class="space-y-5" onsubmit="alert('感謝您的來信！這是一個展示用的表單，實際營運時請串接後端 API。'); this.reset(); return false;">
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div class="flex flex-col gap-1.5">

@@ -8,7 +8,7 @@ Allow: /
 Sitemap: ${sitemapURL.href}
 `;
 
-export const GET: APIRoute = ({ site }) => {
+export const GET: APIRoute = () => {
   const siteParsed = new URL(SITE_URL);
   const siteOrigin = siteParsed.origin;
   const basePath = siteParsed.pathname === '/' ? '' : siteParsed.pathname;

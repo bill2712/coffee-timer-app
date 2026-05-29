@@ -1,9 +1,10 @@
 ---
-import { SITE_URL } from '../../config.js';
-import Layout from '../../layouts/Layout.astro';
-import ParameterForm from '../../components/ParameterForm.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import AdSlot from '../../components/AdSlot.astro';
+import { SITE_URL } from '../../../config';
+import Layout from '../../../layouts/Layout.astro';
+import ParameterForm from '../../../components/ParameterForm.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
 
 const defaultColdBrewRecipe = {
   beanName: '深焙 巧克力調綜合豆',
@@ -29,6 +30,10 @@ const jsonLd = {
     "priceCurrency": "USD"
   }
 };
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
 ---
 
 <Layout

@@ -1,0 +1,113 @@
+---
+import { languages } from '../i18n/ui';
+import { getLangFromUrl } from '../i18n/utils';
+
+const currentLang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname.replace(new RegExp(`^/${currentLang}/?`), '/');
+---
+
+<div class="relative inline-block text-start" id="lang-picker-container">
+  <button
+    type="button"
+    class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-coffee-darker border border-coffee-sand/20 text-coffee-sand hover:text-coffee-gold hover:border-coffee-gold/50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-coffee-dark focus:ring-coffee-gold"
+    id="lang-menu-button"
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label="Change Language"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  </button>
+
+  <div
+    class="origin-top-right absolute end-0 mt-2 w-48 rounded-xl shadow-2xl shadow-black/50 bg-coffee-darker border border-coffee-sand/20 ring-1 ring-black ring-opacity-5 divide-y divide-coffee-sand/10 focus:outline-none transition-all duration-200 opacity-0 scale-95 pointer-events-none z-50 max-h-[60vh] overflow-y-auto custom-scrollbar"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="lang-menu-button"
+    tabindex="-1"
+    id="lang-menu"
+  >
+    <div class="py-1" role="none">
+      {Object.entries(languages).map(([langCode, langName]) => (
+        <a
+          href={`/${langCode}${currentPath.startsWith('/') ? currentPath : '/' + currentPath}`}
+          class={`group flex items-center px-4 py-2.5 text-sm transition-colors ${currentLang === langCode ? 'text-coffee-gold bg-coffee-gold/10 font-bold' : 'text-coffee-light hover:bg-coffee-sand/10 hover:text-white'}`}
+          role="menuitem"
+          tabindex="-1"
+          data-lang={langCode}
+        >
+          {currentLang === langCode && (
+            <svg class="w-4 h-4 me-2 text-coffee-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+          <span class={currentLang === langCode ? '' : 'ms-6'}>{langName}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(42, 36, 32, 0.5);
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(197, 168, 128, 0.3);
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(197, 168, 128, 0.6);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('lang-menu-button');
+    const menu = document.getElementById('lang-menu');
+    const links = menu?.querySelectorAll('a[data-lang]');
+
+    if (button && menu) {
+      let isOpen = false;
+
+      const toggleMenu = () => {
+        isOpen = !isOpen;
+        button.setAttribute('aria-expanded', isOpen.toString());
+        if (isOpen) {
+          menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+          menu.classList.add('opacity-100', 'scale-100');
+        } else {
+          menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+          menu.classList.remove('opacity-100', 'scale-100');
+        }
+      };
+
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (event) => {
+        if (isOpen && !button.contains(event.target as Node) && !menu.contains(event.target as Node)) {
+          toggleMenu();
+        }
+      });
+      
+      // Save user preference to localStorage when they pick a language
+      links?.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const targetLang = (e.currentTarget as HTMLElement).getAttribute('data-lang');
+          if (targetLang) {
+            localStorage.setItem('preferred_language', targetLang);
+          }
+        });
+      });
+    }
+  });
+</script>

@@ -1,7 +1,34 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const timerDict = {
+  bloomName: t('timer.stage.blooming'),
+  pour1Name: t('timer.stage.pour1'),
+  pour2Name: t('timer.stage.pour2'),
+  descBloom: t('timer.desc.blooming'),
+  descPour1: t('timer.desc.pour1'),
+  descPour2: t('timer.desc.pour2'),
+  speechBloom: t('timer.speech.blooming'),
+  speechPour1: t('timer.speech.pour1'),
+  speechPour2: t('timer.speech.pour2'),
+  speechTarget: t('timer.speech.target'),
+  speechComplete: t('timer.speech.complete'),
+  paused: t('timer.paused'),
+  clickStart: t('timer.clickToStart'),
+  readyText: t('timer.readyText'),
+  completeMessage: t('timer.completeMessage'),
+  enjoy: t('timer.enjoy'),
+  btnStart: t('timer.start'),
+  btnPause: t('timer.pause'),
+  btnResume: t('timer.resume'),
+  targetWeightPrefix: t('timer.targetWeightPrefix'),
+  lang: lang
+};
 ---
 
-<div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-between min-h-[480px] transition-all duration-500 relative overflow-hidden group">
+<div id="timer-root" data-dict={JSON.stringify(timerDict)} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-between min-h-[480px] transition-all duration-500 relative overflow-hidden group">
   <!-- Timer Header -->
   <div class="w-full flex justify-between items-center border-b border-coffee-sand/10 pb-4 mb-4">
     <div>
@@ -27,26 +54,26 @@
   <!-- Stage Indicators (Stepper Wizard) -->
   <div class="relative flex justify-between w-full max-w-sm px-2 mb-6 z-0">
     <!-- Connecting Line -->
-    <div class="absolute top-3.5 left-6 right-6 h-[2px] bg-coffee-sand/10 -z-10"></div>
+    <div class="absolute top-3.5 start-6 end-6 h-[2px] bg-coffee-sand/10 -z-10"></div>
     
     <div id="step-0" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
       <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">1</span>
       <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">悶蒸 (40s)</span>
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">{t('timer.stage.blooming')} (40s)</span>
         <span id="step-target-0" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
       </div>
     </div>
     <div id="step-1" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
       <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">2</span>
       <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">一注 (50s)</span>
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">{t('timer.stage.pour1')} (50s)</span>
         <span id="step-target-1" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
       </div>
     </div>
     <div id="step-2" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
       <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">3</span>
       <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">二注 (60s)</span>
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">{t('timer.stage.pour2')} (60s)</span>
         <span id="step-target-2" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
       </div>
     </div>
@@ -83,23 +110,23 @@
     </svg>
 
     <!-- Inside Content -->
-    <div class="text-center flex flex-col items-center z-10">
-      <span id="timer-stage-title" class="text-xs uppercase font-semibold tracking-widest text-[#B47B4B]">點擊開始</span>
-      <span id="timer-time" class="font-display tabular-nums w-[200px] text-center text-5xl sm:text-6xl font-light font-mono tracking-tight text-coffee-light my-2">02:30</span>
+    <div class="text-center flex flex-col items-center z-10 w-full px-2">
+      <span id="timer-stage-title" class="text-xs uppercase font-semibold tracking-widest text-[#B47B4B] w-full break-words whitespace-normal leading-tight h-8 flex items-end justify-center">{t('timer.clickToStart')}</span>
+      <span id="timer-time" class="font-display tabular-nums w-full max-w-[240px] text-center text-5xl sm:text-6xl font-light font-mono tracking-tight text-coffee-light my-2">02:30</span>
       
       <!-- Target Weight Tracker -->
       <div class="bg-coffee-darker/60 border border-coffee-sand/10 rounded-full px-4 py-1.5 mt-1 flex items-center gap-1.5">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-coffee-gold animate-pulse" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
         </svg>
-        <span class="text-xs font-semibold text-coffee-sand/90" id="timer-weight-hint">目標水重: 0 g</span>
+        <span class="text-xs font-semibold text-coffee-sand/90 break-words whitespace-normal text-center" id="timer-weight-hint">{t('timer.targetWeightPrefix')} 0 g</span>
       </div>
     </div>
   </div>
 
   <!-- Instruction Box -->
   <div class="w-full max-w-sm text-center bg-coffee-darker/40 border border-coffee-sand/5 rounded-xl py-3 px-4 mb-4 min-h-[80px] flex items-center justify-center">
-    <p id="timer-instruction" class="text-sm font-medium text-coffee-light/80 italic">準備就緒，點擊下方「開始沖煮」進入咖啡極致風味的世界。</p>
+    <p id="timer-instruction" class="text-sm font-medium text-coffee-light/80 italic break-words whitespace-normal">{t('timer.readyText')}</p>
   </div>
 
   <!-- Dynamic Extraction Chart -->
@@ -121,7 +148,7 @@
       id="btn-start"
       class="flex-2 py-4 px-6 min-h-[56px] rounded-2xl bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold text-sm font-bold tracking-wide shadow-lg shadow-coffee-gold/20 hover:shadow-xl hover:shadow-coffee-gold/40 hover:-translate-y-1 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-coffee-gold disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      開始沖煮
+      {t('timer.start')}
     </button>
   </div>
 </div>
@@ -134,15 +161,15 @@
   <!-- Modal Content -->
   <div class="relative w-full max-w-md bg-coffee-darker/90 backdrop-blur-xl border border-coffee-gold/20 shadow-2xl rounded-3xl p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]" id="tasting-modal-content">
     <div class="text-center mb-6">
-      <h3 class="font-display text-2xl font-bold text-coffee-light mb-2">沖煮完成！☕</h3>
-      <p class="text-sm text-coffee-sand/80">紀錄這次的萃取參數與風味體驗，打造您的專屬咖啡日誌。</p>
+      <h3 class="font-display text-2xl font-bold text-coffee-light mb-2">{t('timer.modal.title')}</h3>
+      <p class="text-sm text-coffee-sand/80">{t('timer.modal.subtitle')}</p>
     </div>
 
     <form id="tasting-form" class="space-y-5">
       <!-- Acidity -->
       <div>
         <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
-          <span>酸度 (Acidity)</span>
+          <span>{t('timer.modal.acidity')}</span>
           <span id="val-acidity" class="text-coffee-gold">3</span>
         </label>
         <input type="range" id="rating-acidity" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-dark border border-coffee-sand/10 rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
@@ -154,7 +181,7 @@
       <!-- Bitterness -->
       <div>
         <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
-          <span>苦度 (Bitterness)</span>
+          <span>{t('timer.modal.bitterness')}</span>
           <span id="val-bitterness" class="text-coffee-gold">3</span>
         </label>
         <input type="range" id="rating-bitterness" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-dark border border-coffee-sand/10 rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
@@ -166,7 +193,7 @@
       <!-- Body -->
       <div>
         <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
-          <span>醇厚度 (Body)</span>
+          <span>{t('timer.modal.body')}</span>
           <span id="val-body" class="text-coffee-gold">3</span>
         </label>
         <input type="range" id="rating-body" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-dark border border-coffee-sand/10 rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
@@ -177,21 +204,21 @@
 
       <!-- Quick Notes -->
       <div>
-        <label for="tasting-notes" class="block text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">品飲心得 (Notes)</label>
+        <label for="tasting-notes" class="block text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">{t('timer.modal.notes')}</label>
         <textarea 
           id="tasting-notes" 
           rows="2" 
-          placeholder="例如：研磨稍微太細，尾段略帶澀感..."
+          placeholder={t('timer.modal.notesPlaceholder')}
           class="w-full bg-coffee-dark border border-coffee-sand/20 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light resize-none placeholder-coffee-sand/40"
         ></textarea>
       </div>
 
       <div class="pt-4 flex gap-3">
         <button type="button" id="btn-skip-log" class="flex-1 py-3 rounded-xl bg-coffee-dark border border-coffee-sand/10 text-coffee-sand hover:text-coffee-light hover:bg-coffee-sand/10 text-sm font-semibold transition-all duration-300">
-          略過
+          {t('timer.modal.skip')}
         </button>
         <button type="submit" class="flex-2 py-3 rounded-xl bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold shadow-lg shadow-coffee-gold/20 hover:shadow-xl hover:shadow-coffee-gold/40 hover:-translate-y-0.5 active:scale-95 text-sm font-bold tracking-wide transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-          儲存紀錄
+          {t('timer.modal.save')}
         </button>
       </div>
     </form>
@@ -201,11 +228,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+  const timerRoot = document.getElementById('timer-root');
+  const dict = timerRoot ? JSON.parse(timerRoot.dataset.dict || '{}') : {};
   // Timing parameters (in seconds)
   const STAGES = [
-    { name: '悶蒸階段', duration: 40, weightMultiplier: 2.5, desc: '均勻注入粉量 2.5 倍的水量，等待排氣，喚醒咖啡豆風味。', speech: '開始悶蒸' },
-    { name: '第一次注水', duration: 50, weightMultiplier: 0.60, desc: '繞圈注水，帶出咖啡明亮的酸甜感與優雅的香氣。', speech: '第一次注水' },
-    { name: '第二次注水', duration: 60, weightMultiplier: 1.00, desc: '中心注水或溫和繞圈，調整整體厚實度，控制在金杯萃取區間。', speech: '第二次注水' }
+    { name: dict.bloomName, duration: 40, weightMultiplier: 2.5, desc: dict.descBloom, speech: dict.speechBloom },
+    { name: dict.pour1Name, duration: 50, weightMultiplier: 0.60, desc: dict.descPour1, speech: dict.speechPour1 },
+    { name: dict.pour2Name, duration: 60, weightMultiplier: 1.00, desc: dict.descPour2, speech: dict.speechPour2 }
   ];
 
   const TOTAL_DURATION = STAGES.reduce((acc, stage) => acc + stage.duration, 0);
@@ -279,7 +308,7 @@
       
       this.speechSynth.cancel(); // Interrupt any playing speech
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-TW';
+      utterance.lang = dict.lang;
       utterance.rate = 1.05; // Slightly faster to sound pro
       utterance.pitch = 1.0;
       this.speechSynth.speak(utterance);
@@ -428,15 +457,15 @@
     const targetWeight = targets[currentStageIndex];
 
     if (timerStageTitle) {
-      timerStageTitle.textContent = isRunning ? currentStage.name : (elapsed > 0 ? '咖啡計時已暫停' : '點擊開始');
+      timerStageTitle.textContent = isRunning ? currentStage.name : (elapsed > 0 ? dict.paused : dict.clickStart);
     }
 
     if (timerWeightHint) {
-      timerWeightHint.textContent = `目標水量: ${targetWeight} g`;
+      timerWeightHint.textContent = `${dict.targetWeightPrefix} ${targetWeight} g`;
     }
 
     if (timerInstruction) {
-      timerInstruction.textContent = isRunning ? currentStage.desc : (elapsed > 0 ? '計時暫停中' : '準備就緒，點擊下方「開始沖煮」');
+      timerInstruction.textContent = isRunning ? currentStage.desc : (elapsed > 0 ? dict.paused : dict.readyText);
     }
 
     // Set Circle Progress
@@ -447,7 +476,7 @@
     if (isRunning) {
       // Speak on stage change
       if (currentStageIndex !== lastSpokenStageIndex) {
-        synth.speak(`${currentStage.speech}，目標水量 ${targetWeight} 克`);
+        synth.speak(`${currentStage.speech}. ${dict.speechTarget.replace('{weight}', targetWeight)}`);
         lastSpokenStageIndex = currentStageIndex;
       }
 
@@ -469,7 +498,7 @@
       if (remainingTime <= 0 && !lastCompletedBeep) {
         lastCompletedBeep = true;
         synth.playChord();
-        synth.speak('萃取完成，請享用您的咖啡');
+        synth.speak(dict.speechComplete);
         setTimeout(() => synth.playChord(), 400);
         stopTimer(true);
         setTimeout(showTastingModal, 1500); // Trigger modal slightly after completion
@@ -484,7 +513,7 @@
     window.dispatchEvent(new CustomEvent('timer-state', { detail: { running: true } }));
 
     if (btnStart) {
-      btnStart.textContent = '暫停';
+      btnStart.textContent = dict.btnPause;
       btnStart.classList.remove('from-[#D9A05B]', 'to-[#B47B4B]');
       btnStart.classList.add('bg-coffee-darker', 'text-coffee-muted');
     }
@@ -546,11 +575,11 @@
 
     if (btnStart) {
       if (completed) {
-        btnStart.textContent = '沖煮完成！';
+        btnStart.textContent = dict.enjoy;
         btnStart.disabled = true;
         btnStart.classList.add('opacity-50');
       } else {
-        btnStart.textContent = '繼續沖煮';
+        btnStart.textContent = dict.btnResume;
         btnStart.classList.remove('bg-coffee-darker', 'text-coffee-muted');
         btnStart.classList.add('from-[#D9A05B]', 'to-[#B47B4B]');
       }
@@ -566,10 +595,10 @@
     }
 
     if (timerStageTitle && completed) {
-      timerStageTitle.textContent = '享用時間 ✨';
+      timerStageTitle.textContent = dict.enjoy;
     }
     if (timerInstruction && completed) {
-      timerInstruction.textContent = '恭喜！萃取已順利完成。讓咖啡稍降溫至 60°C - 65°C，能享受最層次分明的極致甜感與果酸！';
+      timerInstruction.textContent = dict.completeMessage;
     }
   }
 
@@ -579,7 +608,7 @@
     lastSpokenStageIndex = -1;
     lastCompletedBeep = false;
     if (btnStart) {
-      btnStart.textContent = '開始沖煮';
+      btnStart.textContent = dict.btnStart;
       btnStart.disabled = false;
       btnStart.classList.remove('opacity-50', 'bg-coffee-darker', 'text-coffee-muted');
       btnStart.classList.add('from-[#D9A05B]', 'to-[#B47B4B]');
@@ -592,7 +621,7 @@
       btnReset.classList.remove('opacity-50', 'cursor-not-allowed');
     }
     updateDisplay();
-    if (timerStageTitle) timerStageTitle.textContent = '點擊開始';
+    if (timerStageTitle) timerStageTitle.textContent = dict.clickStart;
   }
 
   function handleRecipeUpdate(newRecipe: typeof recipe) {
@@ -766,7 +795,7 @@
     timerTime = document.getElementById('timer-time');
     timerStageTitle = document.getElementById('timer-stage-title');
     timerWeightHint = document.getElementById('timer-weight-hint');
-    timerInstruction = document.getElementById('timer-instruction');
+    timerInstruction = document.getElementById('timer-instruction') as HTMLParagraphElement | null;
     btnStart = document.getElementById('btn-start') as HTMLButtonElement;
     btnReset = document.getElementById('btn-reset') as HTMLButtonElement;
     btnSoundToggle = document.getElementById('btn-sound-toggle') as HTMLButtonElement;

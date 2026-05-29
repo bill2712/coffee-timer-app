@@ -1,21 +1,26 @@
 ---
 import { getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import AdSlot from '../../components/AdSlot.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Layout from '../../../layouts/Layout.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { languages } from '../../../i18n/ui';
+import { SITE_URL } from '../../../config';
+
 
 export async function getStaticPaths() {
   const glossaryEntries = await getCollection('blog', (entry) => entry.data.tags?.includes('Glossary'));
-  return glossaryEntries.map(entry => ({
-    params: { slug: entry.id || entry.slug }, // Handle both Astro legacy and new API
-    props: { entry },
-  }));
+  const locales = Object.keys(languages);
+  return locales.flatMap(lang => 
+    glossaryEntries.map(entry => ({
+      params: { lang, slug: entry.id },
+      props: { entry },
+    }))
+  );
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-import { SITE_URL } from '../../config.js';
 
 const siteParsed = new URL(SITE_URL);
 const siteOrigin = siteParsed.origin;
@@ -24,7 +29,7 @@ const basePath = siteParsed.pathname === '/' ? '' : siteParsed.pathname;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "DefinedTerm",
-  "name": entry.data.term,
+  "name": (entry.data as any).term,
   "description": entry.data.description,
   "inDefinedTermSet": `${siteOrigin}${basePath}/glossary`
 };
@@ -39,16 +44,16 @@ const jsonLd = {
     <!-- Breadcrumb -->
     <Breadcrumbs items={[
       { label: '百科', url: 'glossary' },
-      { label: entry.data.term || entry.data.title }
+      { label: (entry.data as any).term || entry.data.title }
     ]} />
 
     <!-- Header -->
     <header class="mb-12 border-b border-coffee-sand/10 pb-8 relative mt-8">
-      <div class="absolute -top-12 -right-4 text-8xl font-display font-black text-coffee-gold/5 select-none -z-10">
-        {entry.data.term?.charAt(0).toUpperCase()}
+      <div class="absolute -top-12 -end-4 text-8xl font-display font-black text-coffee-gold/5 select-none -z-10">
+        {(entry.data as any).term?.charAt(0).toUpperCase()}
       </div>
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-darker border border-coffee-sand/20 text-coffee-sand text-xs font-semibold uppercase tracking-widest mb-4">
-        {entry.data.term}
+        {(entry.data as any).term}
       </div>
       <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-coffee-light mb-4">
         {entry.data.title}
@@ -64,17 +69,17 @@ const jsonLd = {
         <!-- Main Definition Card -->
         <article class="glass-card p-8 sm:p-12 rounded-3xl border border-coffee-sand/10 relative overflow-hidden mb-12">
           <!-- Decorative Background -->
-          <div class="absolute top-0 right-0 w-64 h-64 bg-coffee-gold/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+          <div class="absolute top-0 end-0 w-64 h-64 bg-coffee-gold/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
 
           <div class="prose prose-invert prose-coffee max-w-none">
              <Content components={{ AdSlot }} />
              
-             <AdSlot type="in-article" id={`glossary-side-ad-${entry.id || entry.slug}`} />
+             <AdSlot type="in-article" id={`glossary-side-ad-${entry.id}`} />
           </div>
         </article>
 
         <!-- Google AdSense Bottom Article Banner Placeholder -->
-        <AdSlot type="top-leaderboard" id={`glossary-btm-ad-${entry.id || entry.slug}`} />
+        <AdSlot type="top-leaderboard" id={`glossary-btm-ad-${entry.id}`} />
       </div>
 
       <!-- Sidebar -->

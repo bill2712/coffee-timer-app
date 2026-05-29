@@ -1,5 +1,10 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getLanguagePaths } from '../../i18n/routes';
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
 ---
 
 <Layout

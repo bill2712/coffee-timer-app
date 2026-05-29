@@ -1,0 +1,158 @@
+---
+import { SITE_URL } from '../../config';
+import Layout from '../../layouts/Layout.astro';
+import ParameterForm from '../../components/ParameterForm.astro';
+import Timer from '../../components/Timer.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLanguagePaths } from '../../i18n/routes';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+
+
+const webAppJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Barista Flow",
+  "operatingSystem": "All",
+  "applicationCategory": "UtilityApplication",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "url": `${SITE_URL}/`,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+};
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
+---
+
+<Layout jsonld={webAppJsonLd}>
+  <!-- Hero Section -->
+  <section class="text-center max-w-4xl mx-auto mb-12 sm:mb-16 animate-float px-4">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-6">
+      <span class="w-2 h-2 rounded-full bg-coffee-gold animate-pulse"></span>
+      {t('index.hero.tagline')}
+    </div>
+    
+    <h1 class="font-display break-keep text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-coffee-light leading-tight">
+      {t('index.hero.title1')}<br class="sm:hidden" />
+      <span class="bg-gradient-to-r from-coffee-gold via-coffee-sand to-coffee-gold bg-clip-text text-transparent">
+        {t('index.hero.title2')}
+      </span>
+    </h1>
+    
+    <p class="text-sm sm:text-base text-coffee-sand/80 max-w-2xl mx-auto mt-6 leading-relaxed px-2">
+      {t('index.hero.desc')}
+    </p>
+  </section>
+
+  <!-- Interactive Grid Area -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Parameters Input Panel -->
+    <div class="lg:col-span-5 order-2 lg:order-1">
+      <ParameterForm />
+      <div class="mt-8">
+        <AdSlot type="bottom-utility" class="my-8" />
+      </div>
+    </div>
+
+    <!-- Live Timer Panel -->
+    <div class="lg:col-span-7 order-1 lg:order-2 lg:sticky lg:top-24">
+      <Timer />
+    </div>
+  </div>
+
+  <!-- Educational Info Cards -->
+  <section class="mt-20 border-t border-coffee-sand/10 pt-16">
+    <div class="text-center max-w-2xl mx-auto mb-12 px-4">
+      <h2 class="font-display text-3xl font-bold tracking-wide text-coffee-light">{t('index.edu.title')}</h2>
+      <p class="text-xs sm:text-sm text-coffee-muted mt-2">{t('index.edu.subtitle')}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+      <div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 rounded-3xl p-6 sm:p-8 flex flex-col gap-4 group">
+        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-11.314l.707.707m11.314 11.314l.707-.707M4 12a8 8 0 1116 0 8 8 0 01-16 0z" />
+          </svg>
+        </div>
+        <h3 class="font-display text-xl font-bold text-coffee-light">{t('index.edu.step1.title')}</h3>
+        <p class="text-sm text-coffee-muted leading-relaxed">
+          {t('index.edu.step1.desc')}
+        </p>
+      </div>
+
+      <div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 rounded-3xl p-6 sm:p-8 flex flex-col gap-4 group">
+        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
+        <h3 class="font-display text-xl font-bold text-coffee-light">{t('index.edu.step2.title')}</h3>
+        <p class="text-sm text-coffee-muted leading-relaxed">
+          {t('index.edu.step2.desc')}
+        </p>
+      </div>
+
+      <div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 rounded-3xl p-6 sm:p-8 flex flex-col gap-4 group">
+        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="font-display text-xl font-bold text-coffee-light">{t('index.edu.step3.title')}</h3>
+        <p class="text-sm text-coffee-muted leading-relaxed">
+          {t('index.edu.step3.desc')}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explore Other Brewers (Internal Linking for SEO) -->
+  <section class="mt-20 border-t border-coffee-sand/10 pt-16 mb-8">
+    <div class="text-center max-w-2xl mx-auto mb-12 px-4">
+      <h2 class="font-display text-3xl font-bold tracking-wide text-coffee-light">{t('index.tools.title')}</h2>
+      <p class="text-xs sm:text-sm text-coffee-muted mt-2">{t('index.tools.subtitle')}</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-16">
+      <a href={`/${lang}/tools/v60-pour-over`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">☕</span>
+        <span class="font-display font-semibold text-coffee-light">{t('index.tools.v60')}</span>
+      </a>
+      <a href={`/${lang}/tools/french-press`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🫖</span>
+        <span class="font-display font-semibold text-coffee-light">{t('index.tools.frenchPress')}</span>
+      </a>
+      <a href={`/${lang}/tools/aeropress`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🪄</span>
+        <span class="font-display font-semibold text-coffee-light">{t('index.tools.aeropress')}</span>
+      </a>
+      <a href={`/${lang}/tools/cold-brew`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🧊</span>
+        <span class="font-display font-semibold text-coffee-light">{t('index.tools.coldBrew')}</span>
+      </a>
+      <a href={`/${lang}/tools/grind-converter`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 md:col-span-1 col-span-2 relative overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#D9A05B]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">⚙️</span>
+        <span class="font-display font-semibold text-coffee-light">{t('index.tools.grind')}</span>
+      </a>
+      <a href={`/${lang}/tools/water-temperature`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 md:col-span-1 col-span-2 relative overflow-hidden hover:border-[#D9A05B]/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div class="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🌡️</span>
+        <span class="font-display font-semibold text-coffee-light">{t('index.tools.temp')}</span>
+      </a>
+      <a href={`/${lang}/tools/bean-freshness`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 md:col-span-1 col-span-2 relative overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🌱</span>
+        <span class="font-display font-semibold text-coffee-light">{t('index.tools.freshness')}</span>
+      </a>
+    </div>
+  </section>
+</Layout>
