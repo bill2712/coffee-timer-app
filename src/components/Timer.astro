@@ -1,7 +1,7 @@
 ---
 ---
 
-<div class="backdrop-blur-xl bg-white/70 dark:bg-stone-900/60 border border-stone-200/50 dark:border-stone-800/50 shadow-xl shadow-stone-200/30 dark:shadow-stone-950/50 rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-between min-h-[480px] transition-all duration-500 relative overflow-hidden group">
+<div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-between min-h-[480px] transition-all duration-500 relative overflow-hidden group">
   <!-- Timer Header -->
   <div class="w-full flex justify-between items-center border-b border-coffee-sand/10 pb-4 mb-4">
     <div>
@@ -55,7 +55,7 @@
   <!-- Circle Progress Timer -->
   <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center my-4">
     <!-- Breath Glow Background -->
-    <div id="timer-breath-bg" class="absolute inset-0 rounded-full border border-stone-200/20 bg-[#D9A05B]/0 scale-100 transition-all duration-1000 ease-in-out pointer-events-none"></div>
+    <div id="timer-breath-bg" class="absolute inset-0 rounded-full border border-coffee-sand/20 bg-[#D9A05B]/0 scale-100 transition-all duration-1000 ease-in-out pointer-events-none"></div>
     
     <!-- SVG Circular Progress -->
     <svg class="absolute w-full h-full transform -rotate-90">
@@ -85,7 +85,7 @@
     <!-- Inside Content -->
     <div class="text-center flex flex-col items-center z-10">
       <span id="timer-stage-title" class="text-xs uppercase font-semibold tracking-widest text-[#B47B4B]">點擊開始</span>
-      <span id="timer-time" class="font-display tabular-nums w-[200px] text-center text-5xl sm:text-6xl font-light font-mono tracking-tight text-stone-800 dark:text-stone-100 my-2">02:30</span>
+      <span id="timer-time" class="font-display tabular-nums w-[200px] text-center text-5xl sm:text-6xl font-light font-mono tracking-tight text-coffee-light my-2">02:30</span>
       
       <!-- Target Weight Tracker -->
       <div class="bg-coffee-darker/60 border border-coffee-sand/10 rounded-full px-4 py-1.5 mt-1 flex items-center gap-1.5">
@@ -486,7 +486,7 @@
     if (btnStart) {
       btnStart.textContent = '暫停';
       btnStart.classList.remove('from-[#D9A05B]', 'to-[#B47B4B]');
-      btnStart.classList.add('bg-stone-300', 'dark:bg-stone-700', 'text-stone-800', 'dark:text-stone-100');
+      btnStart.classList.add('bg-coffee-darker', 'text-coffee-muted');
     }
     
     if (btnReset) {
@@ -551,7 +551,7 @@
         btnStart.classList.add('opacity-50');
       } else {
         btnStart.textContent = '繼續沖煮';
-        btnStart.classList.remove('bg-stone-300', 'dark:bg-stone-700', 'text-stone-800', 'dark:text-stone-100');
+        btnStart.classList.remove('bg-coffee-darker', 'text-coffee-muted');
         btnStart.classList.add('from-[#D9A05B]', 'to-[#B47B4B]');
       }
     }
@@ -581,7 +581,7 @@
     if (btnStart) {
       btnStart.textContent = '開始沖煮';
       btnStart.disabled = false;
-      btnStart.classList.remove('opacity-50', 'bg-stone-300', 'dark:bg-stone-700', 'text-stone-800', 'dark:text-stone-100');
+      btnStart.classList.remove('opacity-50', 'bg-coffee-darker', 'text-coffee-muted');
       btnStart.classList.add('from-[#D9A05B]', 'to-[#B47B4B]');
     }
     if (timerBreathBg) {
