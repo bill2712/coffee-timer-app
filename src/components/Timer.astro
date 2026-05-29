@@ -11,7 +11,7 @@
     <!-- Sound Toggle -->
     <button
       id="btn-sound-toggle"
-      class="p-2.5 min-w-[44px] min-h-[44px] rounded-xl bg-white/50 dark:bg-stone-800/50 border border-stone-200/50 dark:border-stone-700/50 text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-white dark:hover:bg-stone-800 hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#D9A05B] flex items-center justify-center"
+      class="p-2.5 min-w-[44px] min-h-[44px] rounded-xl bg-coffee-darker border border-coffee-sand/10 text-coffee-sand hover:text-coffee-gold hover:border-coffee-gold/40 hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-coffee-gold flex items-center justify-center"
       title="切換聲音提示"
       aria-label="切換聲音提示"
     >
@@ -27,27 +27,27 @@
   <!-- Stage Indicators (Stepper Wizard) -->
   <div class="relative flex justify-between w-full max-w-sm px-2 mb-6 z-0">
     <!-- Connecting Line -->
-    <div class="absolute top-3.5 left-6 right-6 h-[2px] bg-stone-200/50 dark:bg-stone-700/50 -z-10"></div>
+    <div class="absolute top-3.5 left-6 right-6 h-[2px] bg-coffee-sand/10 -z-10"></div>
     
     <div id="step-0" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
-      <span class="w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 flex items-center justify-center text-xs font-bold text-stone-600 dark:text-stone-300 transition-colors duration-300">1</span>
+      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">1</span>
       <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-stone-500 dark:text-stone-400 whitespace-nowrap">悶蒸 (40s)</span>
-        <span id="step-target-0" class="text-[10px] text-[#D9A05B] font-bold mt-0.5">0g</span>
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">悶蒸 (40s)</span>
+        <span id="step-target-0" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
       </div>
     </div>
     <div id="step-1" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
-      <span class="w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 flex items-center justify-center text-xs font-bold text-stone-600 dark:text-stone-300 transition-colors duration-300">2</span>
+      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">2</span>
       <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-stone-500 dark:text-stone-400 whitespace-nowrap">一注 (50s)</span>
-        <span id="step-target-1" class="text-[10px] text-[#D9A05B] font-bold mt-0.5">0g</span>
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">一注 (50s)</span>
+        <span id="step-target-1" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
       </div>
     </div>
     <div id="step-2" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
-      <span class="w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 flex items-center justify-center text-xs font-bold text-stone-600 dark:text-stone-300 transition-colors duration-300">3</span>
+      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">3</span>
       <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-stone-500 dark:text-stone-400 whitespace-nowrap">二注 (60s)</span>
-        <span id="step-target-2" class="text-[10px] text-[#D9A05B] font-bold mt-0.5">0g</span>
+        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">二注 (60s)</span>
+        <span id="step-target-2" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
       </div>
     </div>
   </div>
@@ -112,14 +112,14 @@
     <!-- Reset -->
     <button
       id="btn-reset"
-      class="flex-1 py-4 px-4 min-h-[56px] rounded-2xl bg-white/50 dark:bg-stone-800/50 border border-stone-200/50 dark:border-stone-700/50 text-sm font-semibold tracking-wide text-stone-500 hover:text-stone-800 dark:hover:text-stone-100 hover:bg-white dark:hover:bg-stone-800 shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#D9A05B]"
+      class="flex-1 py-4 px-4 min-h-[56px] rounded-2xl bg-coffee-darker border border-coffee-sand/10 text-sm font-semibold tracking-wide text-coffee-sand hover:text-coffee-light hover:bg-coffee-sand/10 shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-coffee-gold"
     >
       重設
     </button>
     <!-- Start / Pause -->
     <button
       id="btn-start"
-      class="flex-2 py-4 px-6 min-h-[56px] rounded-2xl bg-gradient-to-r from-[#D9A05B] to-[#B47B4B] text-white hover:from-[#EBB673] hover:to-[#D9A05B] text-sm font-bold tracking-wide shadow-lg shadow-[#D9A05B]/20 hover:shadow-xl hover:shadow-[#D9A05B]/40 hover:-translate-y-1 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#D9A05B] disabled:opacity-50 disabled:cursor-not-allowed"
+      class="flex-2 py-4 px-6 min-h-[56px] rounded-2xl bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold text-sm font-bold tracking-wide shadow-lg shadow-coffee-gold/20 hover:shadow-xl hover:shadow-coffee-gold/40 hover:-translate-y-1 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-coffee-gold disabled:opacity-50 disabled:cursor-not-allowed"
     >
       開始沖煮
     </button>
@@ -129,68 +129,68 @@
 <!-- Post-Brew Tasting Log Modal -->
 <div id="tasting-log-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
   <!-- Backdrop -->
-  <div class="absolute inset-0 bg-stone-900/40 backdrop-blur-md transition-opacity duration-300 opacity-0" id="tasting-modal-backdrop"></div>
+  <div class="absolute inset-0 bg-coffee-dark/80 backdrop-blur-md transition-opacity duration-300 opacity-0" id="tasting-modal-backdrop"></div>
   
   <!-- Modal Content -->
-  <div class="relative w-full max-w-md bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border border-stone-200/50 dark:border-stone-800/50 shadow-2xl rounded-3xl p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]" id="tasting-modal-content">
+  <div class="relative w-full max-w-md bg-coffee-darker/90 backdrop-blur-xl border border-coffee-gold/20 shadow-2xl rounded-3xl p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]" id="tasting-modal-content">
     <div class="text-center mb-6">
-      <h3 class="font-display text-2xl font-bold text-stone-800 dark:text-stone-100 mb-2">沖煮完成！☕</h3>
-      <p class="text-sm text-stone-500 dark:text-stone-400">紀錄這次的萃取參數與風味體驗，打造您的專屬咖啡日誌。</p>
+      <h3 class="font-display text-2xl font-bold text-coffee-light mb-2">沖煮完成！☕</h3>
+      <p class="text-sm text-coffee-sand/80">紀錄這次的萃取參數與風味體驗，打造您的專屬咖啡日誌。</p>
     </div>
 
     <form id="tasting-form" class="space-y-5">
       <!-- Acidity -->
       <div>
-        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2">
+        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
           <span>酸度 (Acidity)</span>
-          <span id="val-acidity" class="text-[#D9A05B]">3</span>
+          <span id="val-acidity" class="text-coffee-gold">3</span>
         </label>
-        <input type="range" id="rating-acidity" min="1" max="5" value="3" class="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-[#D9A05B]" />
-        <div class="flex justify-between text-[10px] text-stone-400 mt-1">
+        <input type="range" id="rating-acidity" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-dark border border-coffee-sand/10 rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
+        <div class="flex justify-between text-[10px] text-coffee-muted mt-1">
           <span>平淡</span><span>明亮</span>
         </div>
       </div>
 
       <!-- Bitterness -->
       <div>
-        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2">
+        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
           <span>苦度 (Bitterness)</span>
-          <span id="val-bitterness" class="text-[#D9A05B]">3</span>
+          <span id="val-bitterness" class="text-coffee-gold">3</span>
         </label>
-        <input type="range" id="rating-bitterness" min="1" max="5" value="3" class="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-[#D9A05B]" />
-        <div class="flex justify-between text-[10px] text-stone-400 mt-1">
+        <input type="range" id="rating-bitterness" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-dark border border-coffee-sand/10 rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
+        <div class="flex justify-between text-[10px] text-coffee-muted mt-1">
           <span>柔和</span><span>強烈</span>
         </div>
       </div>
 
       <!-- Body -->
       <div>
-        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2">
+        <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
           <span>醇厚度 (Body)</span>
-          <span id="val-body" class="text-[#D9A05B]">3</span>
+          <span id="val-body" class="text-coffee-gold">3</span>
         </label>
-        <input type="range" id="rating-body" min="1" max="5" value="3" class="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-[#D9A05B]" />
-        <div class="flex justify-between text-[10px] text-stone-400 mt-1">
+        <input type="range" id="rating-body" min="1" max="5" value="3" class="w-full h-1.5 bg-coffee-dark border border-coffee-sand/10 rounded-lg appearance-none cursor-pointer accent-coffee-gold" />
+        <div class="flex justify-between text-[10px] text-coffee-muted mt-1">
           <span>清爽 (Tea-like)</span><span>濃郁 (Syrupy)</span>
         </div>
       </div>
 
       <!-- Quick Notes -->
       <div>
-        <label for="tasting-notes" class="block text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2">品飲心得 (Notes)</label>
+        <label for="tasting-notes" class="block text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">品飲心得 (Notes)</label>
         <textarea 
           id="tasting-notes" 
           rows="2" 
           placeholder="例如：研磨稍微太細，尾段略帶澀感..."
-          class="w-full bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-700/80 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#D9A05B]/50 focus:border-[#D9A05B] transition-colors duration-200 ease-out text-stone-800 dark:text-stone-100 resize-none placeholder-stone-400"
+          class="w-full bg-coffee-dark border border-coffee-sand/20 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light resize-none placeholder-coffee-sand/40"
         ></textarea>
       </div>
 
       <div class="pt-4 flex gap-3">
-        <button type="button" id="btn-skip-log" class="flex-1 py-3 rounded-xl bg-stone-100 dark:bg-stone-800 border border-transparent text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-100 hover:bg-stone-200 dark:hover:bg-stone-700 text-sm font-semibold transition-all duration-300">
+        <button type="button" id="btn-skip-log" class="flex-1 py-3 rounded-xl bg-coffee-dark border border-coffee-sand/10 text-coffee-sand hover:text-coffee-light hover:bg-coffee-sand/10 text-sm font-semibold transition-all duration-300">
           略過
         </button>
-        <button type="submit" class="flex-2 py-3 rounded-xl bg-gradient-to-r from-[#D9A05B] to-[#B47B4B] text-white hover:from-[#EBB673] hover:to-[#D9A05B] shadow-lg shadow-[#D9A05B]/20 hover:shadow-xl hover:shadow-[#D9A05B]/40 hover:-translate-y-0.5 active:scale-95 text-sm font-bold tracking-wide transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+        <button type="submit" class="flex-2 py-3 rounded-xl bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold shadow-lg shadow-coffee-gold/20 hover:shadow-xl hover:shadow-coffee-gold/40 hover:-translate-y-0.5 active:scale-95 text-sm font-bold tracking-wide transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
           儲存紀錄
         </button>
       </div>
@@ -396,24 +396,24 @@
           el.classList.remove('opacity-40', 'opacity-60');
           el.classList.add('opacity-100', 'scale-110');
           if (circle) {
-            circle.classList.remove('bg-white', 'dark:bg-stone-800', 'border-stone-200', 'dark:border-stone-700', 'text-stone-600', 'dark:text-stone-300', 'bg-stone-200', 'dark:bg-stone-700', 'text-stone-400');
-            circle.classList.add('bg-[#D9A05B]', 'border-[#D9A05B]', 'text-white', 'shadow-lg', 'shadow-[#D9A05B]/30');
+            circle.classList.remove('bg-coffee-dark', 'border-coffee-sand/30', 'text-coffee-light', 'bg-coffee-darker', 'text-coffee-sand');
+            circle.classList.add('bg-coffee-gold', 'border-coffee-gold', 'text-coffee-dark', 'shadow-lg', 'shadow-coffee-gold/30');
           }
         } else if (i < currentStageIndex || (i === currentStageIndex && !isRunning && elapsed > 0)) {
           // Completed steps
           el.classList.remove('opacity-40', 'scale-110');
           el.classList.add('opacity-100');
           if (circle) {
-            circle.classList.remove('bg-[#D9A05B]', 'border-[#D9A05B]', 'text-white', 'shadow-lg', 'shadow-[#D9A05B]/30', 'bg-white', 'dark:bg-stone-800', 'border-stone-200', 'dark:border-stone-700', 'text-stone-600', 'dark:text-stone-300');
-            circle.classList.add('bg-stone-200', 'dark:bg-stone-700', 'border-stone-200', 'dark:border-stone-700', 'text-stone-400');
+            circle.classList.remove('bg-coffee-gold', 'border-coffee-gold', 'text-coffee-dark', 'shadow-lg', 'shadow-coffee-gold/30', 'bg-coffee-dark', 'border-coffee-sand/30', 'text-coffee-light');
+            circle.classList.add('bg-coffee-darker', 'border-coffee-sand/10', 'text-coffee-sand');
           }
         } else {
           // Upcoming steps
           el.classList.remove('opacity-100', 'scale-110', 'opacity-60', 'opacity-100');
           el.classList.add('opacity-40');
           if (circle) {
-            circle.classList.remove('bg-[#D9A05B]', 'border-[#D9A05B]', 'text-white', 'shadow-lg', 'shadow-[#D9A05B]/30', 'bg-stone-200', 'dark:bg-stone-700', 'text-stone-400');
-            circle.classList.add('bg-white', 'dark:bg-stone-800', 'border-stone-200', 'dark:border-stone-700', 'text-stone-600', 'dark:text-stone-300');
+            circle.classList.remove('bg-coffee-gold', 'border-coffee-gold', 'text-coffee-dark', 'shadow-lg', 'shadow-coffee-gold/30', 'bg-coffee-darker', 'text-coffee-sand');
+            circle.classList.add('bg-coffee-dark', 'border-coffee-sand/30', 'text-coffee-light');
           }
         }
       }

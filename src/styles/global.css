@@ -4,13 +4,13 @@
 @theme {
   --color-coffee-dark: #12100E;
   --color-coffee-darker: #0A0807;
-  --color-coffee-gold: #D9A05B;
-  --color-coffee-gold-hover: #F2C272;
-  --color-coffee-sand: #B47B4B;
-  --color-coffee-accent: #2C1A11;
+  --color-coffee-gold: #D4AF37;
+  --color-coffee-gold-hover: #E6C250;
+  --color-coffee-sand: #C5A880;
+  --color-coffee-accent: #8B5A2B;
   --color-coffee-light: #F5F2EB;
-  --color-coffee-gray: #44403C;
-  --color-coffee-muted: #78716C;
+  --color-coffee-gray: #2A2420;
+  --color-coffee-muted: #8E8279;
 
   --font-display: "Playfair Display", serif;
   --font-sans: "Outfit", sans-serif;

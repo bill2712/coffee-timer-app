@@ -14,7 +14,7 @@ export interface Props {
 const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
 ---
 
-<div class="backdrop-blur-xl bg-white/70 dark:bg-stone-900/60 border border-stone-200/50 dark:border-stone-800/50 shadow-xl shadow-stone-200/30 dark:shadow-stone-950/50 rounded-3xl p-5 sm:p-8 flex flex-col gap-7 transition-all duration-500">
+<div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-3xl p-5 sm:p-8 flex flex-col gap-7 transition-all duration-500">
   <div>
     <h2 class="font-display text-2xl font-bold tracking-wide text-coffee-gold flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -28,59 +28,76 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
   <form id="recipe-form" class="space-y-5" onsubmit="return false;" data-default-recipe={JSON.stringify(defaultRecipe || null)} data-ignore-local={ignoreLocalStorage ? "true" : "false"}>
     <!-- Coffee Beans & Roast -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
+      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="text"
           id="bean-name"
-          class="peer w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
-          placeholder="例如：衣索比亞 耶加雪菲"
+          class="peer w-full bg-transparent font-display text-base text-coffee-light focus:outline-none placeholder-transparent"
+          placeholder="咖啡豆名稱"
+          aria-label="咖啡豆名稱"
         />
-        <label for="bean-name" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-focus:top-4 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:origin-left peer-focus:text-[#D9A05B] peer-not-placeholder-shown:top-4 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:origin-left cursor-text pointer-events-none">
-          咖啡豆名稱
+        <label
+          for="bean-name"
+          class="absolute left-3 top-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-coffee-sand transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-5 peer-placeholder-shown:text-coffee-muted peer-focus:top-2 peer-focus:text-[10px] peer-focus:text-coffee-gold cursor-text"
+        >
+          咖啡豆 (Beans)
         </label>
       </div>
 
-      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
-        <select
-          id="roast-level"
-          class="w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none appearance-none cursor-pointer"
-        >
+      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
+        <select id="roast-level" class="peer w-full bg-transparent font-display text-base text-coffee-light focus:outline-none appearance-none" aria-label="烘焙度">
           <option value="light">淺度烘焙 (Roast: Light)</option>
           <option value="medium" selected>中度烘焙 (Roast: Medium)</option>
           <option value="dark">深度烘焙 (Roast: Dark)</option>
         </select>
-        <label for="roast-level" class="absolute left-3 top-4 -translate-y-1/2 scale-75 origin-left text-sm font-semibold uppercase tracking-wider text-stone-500 transition-all duration-300 pointer-events-none">
-          烘焙度
+        <label for="roast-level" class="absolute left-3 top-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-coffee-gold pointer-events-none">
+          烘焙度 (Roast)
         </label>
       </div>
     </div>
 
-    <!-- Grind Size & Water Temp -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
+    <!-- Numbers Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
-          type="text"
-          id="grind-size"
-          class="peer w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
-          placeholder="例如：手沖中細 (Comandante C40 #24)"
+          type="number"
+          id="coffee-weight"
+          step="0.1"
+          min="1"
+          class="peer w-full bg-transparent font-mono text-lg text-coffee-light focus:outline-none text-right"
+          value="15"
+          aria-label="粉重 (g)"
         />
-        <label for="grind-size" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-focus:top-4 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:origin-left peer-focus:text-[#D9A05B] peer-not-placeholder-shown:top-4 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:origin-left cursor-text pointer-events-none">
-          研磨刻度
-        </label>
+        <label class="absolute left-3 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand">粉重 (g)</label>
+        <span class="absolute right-3 top-2 text-[10px] text-coffee-muted">Weight</span>
       </div>
 
-      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
+      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
+        <input
+          type="number"
+          id="water-ratio"
+          step="0.5"
+          min="5"
+          class="peer w-full bg-transparent font-mono text-lg text-coffee-light focus:outline-none text-right"
+          value="15"
+          aria-label="粉水比 (1:X)"
+        />
+        <label class="absolute left-3 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand">粉水比 (1:X)</label>
+        <span class="absolute right-3 top-2 text-[10px] text-coffee-muted">Ratio</span>
+      </div>
+
+      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="number"
           id="water-temp"
           min="80" max="100" value="92"
-          class="peer w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
+          class="peer w-full bg-transparent font-display text-base text-coffee-light focus:outline-none placeholder-transparent"
           placeholder="92"
         />
-        <label for="water-temp" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-focus:top-4 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:origin-left peer-focus:text-[#D9A05B] peer-not-placeholder-shown:top-4 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:origin-left cursor-text pointer-events-none">
+        <label for="water-temp" class="absolute left-3 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand">
           熱水溫度 (°C)
         </label>
-        <span class="absolute right-4 bottom-2 text-stone-400 text-sm font-medium">°C</span>
+        <span class="absolute right-4 bottom-2 text-coffee-muted text-sm font-medium">°C</span>
       </div>
     </div>
 
@@ -88,8 +105,8 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
       <!-- Coffee Weight Stepper -->
       <div>
-        <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-center px-1 hover:shadow-md">
-          <button type="button" id="btn-weight-minus" aria-label="減少咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+        <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-center px-1 hover:shadow-md">
+          <button type="button" id="btn-weight-minus" aria-label="減少咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
           </button>
           
@@ -98,15 +115,15 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
               type="number"
               id="coffee-weight"
               min="5" max="100" step="0.5" value="20"
-              class="peer w-full bg-transparent text-center font-display text-xl font-bold text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
+              class="peer w-full bg-transparent text-center font-display text-xl font-bold text-coffee-light focus:outline-none placeholder-transparent"
               placeholder="20"
             />
-            <label for="coffee-weight" class="absolute left-1/2 -translate-x-1/2 top-4 -translate-y-1/2 scale-75 text-sm font-semibold uppercase tracking-wider text-[#B47B4B] transition-all duration-300 pointer-events-none whitespace-nowrap">
+            <label for="coffee-weight" class="absolute left-1/2 -translate-x-1/2 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand transition-all duration-300 pointer-events-none whitespace-nowrap">
               咖啡粉量 (g)
             </label>
           </div>
 
-          <button type="button" id="btn-weight-plus" aria-label="增加咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+          <button type="button" id="btn-weight-plus" aria-label="增加咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
           </button>
         </div>
@@ -115,8 +132,8 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
 
       <!-- Water Ratio Stepper -->
       <div>
-        <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-center px-1 hover:shadow-md">
-          <button type="button" id="btn-ratio-minus" aria-label="減少粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+        <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-center px-1 hover:shadow-md">
+          <button type="button" id="btn-ratio-minus" aria-label="減少粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
           </button>
           
@@ -125,15 +142,15 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
               type="number"
               id="water-ratio"
               min="10" max="25" step="0.5" value="15"
-              class="peer w-full bg-transparent text-center font-display text-xl font-bold text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
+              class="peer w-full bg-transparent text-center font-display text-xl font-bold text-coffee-light focus:outline-none placeholder-transparent"
               placeholder="15"
             />
-            <label for="water-ratio" class="absolute left-1/2 -translate-x-1/2 top-4 -translate-y-1/2 scale-75 text-sm font-semibold uppercase tracking-wider text-[#B47B4B] transition-all duration-300 pointer-events-none whitespace-nowrap">
+            <label for="water-ratio" class="absolute left-1/2 -translate-x-1/2 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand transition-all duration-300 pointer-events-none whitespace-nowrap">
               粉水比例 (1:X)
             </label>
           </div>
 
-          <button type="button" id="btn-ratio-plus" aria-label="增加粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+          <button type="button" id="btn-ratio-plus" aria-label="增加粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
           </button>
         </div>
@@ -160,7 +177,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
       <button
         type="button"
         id="btn-apply-recipe"
-        class="w-full bg-gradient-to-r from-[#D9A05B] to-[#B47B4B] hover:from-[#EBB673] hover:to-[#D9A05B] text-white font-semibold tracking-wide rounded-2xl py-4 shadow-lg shadow-[#D9A05B]/20 hover:shadow-xl hover:shadow-[#D9A05B]/40 hover:-translate-y-1 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#D9A05B] cursor-pointer text-center text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full bg-gradient-to-r from-coffee-gold to-coffee-sand hover:from-coffee-gold-hover hover:to-coffee-gold text-coffee-dark font-semibold tracking-wide rounded-2xl py-4 shadow-lg shadow-coffee-gold/20 hover:shadow-xl hover:shadow-coffee-gold/40 hover:-translate-y-1 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-coffee-gold cursor-pointer text-center text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         套用設定並同步計時器
       </button>
