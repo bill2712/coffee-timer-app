@@ -480,7 +480,7 @@
   function startTimer() {
     if (isRunning) return;
     isRunning = true;
-    lastTimestamp = performance.now();
+    lastTimestamp = Date.now();
     window.dispatchEvent(new CustomEvent('timer-state', { detail: { running: true } }));
 
     if (btnStart) {
@@ -503,7 +503,7 @@
     function tick() {
       if (!isRunning) return;
       
-      const now = performance.now();
+      const now = Date.now();
       const delta = (now - lastTimestamp) / 1000;
       lastTimestamp = now;
       
@@ -517,6 +517,24 @@
 
     timerId = window.setInterval(tick, 100);
   }
+
+  function handleVisibilityChange() {
+    if (document.hidden || !isRunning) return;
+    // When tab becomes visible again, instantly process the time delta that occurred while asleep/backgrounded
+    const now = Date.now();
+    const delta = (now - lastTimestamp) / 1000;
+    lastTimestamp = now;
+    
+    if (delta > 0) {
+      remainingTime = Math.max(0, remainingTime - delta);
+      updateDisplay();
+      if (remainingTime <= 0 && timerId !== null) {
+        window.clearInterval(timerId);
+      }
+    }
+  }
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
   function stopTimer(completed = false) {
     isRunning = false;

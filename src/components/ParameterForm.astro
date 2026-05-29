@@ -275,51 +275,49 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
   function updateCalculations() {
     let isValid = true;
     if (weightInput && ratioInput && totalWaterEl) {
-      // Force sanitize input strings: remove everything except numbers and decimals, then take absolute value.
-      let weightRaw = weightInput.value.replace(/[^0-9.]/g, '');
-      let ratioRaw = ratioInput.value.replace(/[^0-9.]/g, '');
+      // Force sanitize input strings: handle multiple decimals, empty strings
+      let weightRaw = weightInput.value;
+      let ratioRaw = ratioInput.value;
       
-      let weight = Math.abs(parseFloat(weightRaw));
-      let ratio = Math.abs(parseFloat(ratioRaw));
+      let weight = parseFloat(weightRaw);
+      let ratio = parseFloat(ratioRaw);
       
       // Validation Logic & Fail-safes
       const weightError = document.getElementById('weight-error');
       const ratioError = document.getElementById('ratio-error');
 
       // Check if input is empty or invalid mid-typing
-      if (weightRaw === '' || isNaN(weight)) {
-        weight = 0; // Temporary state for calc
-      } else if (weight <= 0) {
-        if (weightError) {
-          weightError.textContent = "咖啡粉量不能小於等於 0，已重置";
+      if (weightRaw === '' || isNaN(weight) || weight <= 0) {
+        if (weightError && weightRaw !== '' && weightRaw !== '-') { // Only show error if they typed something invalid
+          weightError.textContent = "咖啡粉量必須為正數，已重置";
           weightError.classList.remove('hidden');
+          weightInput.classList.add('text-red-500');
+          setTimeout(() => {
+            weightInput.value = "15";
+            weightInput.classList.remove('text-red-500');
+            weightError?.classList.add('hidden');
+            updateCalculations();
+          }, 1500);
         }
-        weightInput.classList.add('text-red-500');
-        setTimeout(() => {
-          weightInput.value = "5";
-          weightInput.classList.remove('text-red-500');
-          weightError?.classList.add('hidden');
-          updateCalculations();
-        }, 1500);
+        weight = 0; // Temporary state for calc so it doesn't output NaN
       } else {
         weightError?.classList.add('hidden');
         weightInput.classList.remove('text-red-500');
       }
 
-      if (ratioRaw === '' || isNaN(ratio)) {
-        ratio = 0;
-      } else if (ratio <= 0) {
-        if (ratioError) {
-          ratioError.textContent = "粉水比例不能小於等於 0，已重置";
+      if (ratioRaw === '' || isNaN(ratio) || ratio <= 0) {
+        if (ratioError && ratioRaw !== '' && ratioRaw !== '-') {
+          ratioError.textContent = "粉水比例必須為正數，已重置";
           ratioError.classList.remove('hidden');
+          ratioInput.classList.add('text-red-500');
+          setTimeout(() => {
+            ratioInput.value = "15";
+            ratioInput.classList.remove('text-red-500');
+            ratioError?.classList.add('hidden');
+            updateCalculations();
+          }, 1500);
         }
-        ratioInput.classList.add('text-red-500');
-        setTimeout(() => {
-          ratioInput.value = "10";
-          ratioInput.classList.remove('text-red-500');
-          ratioError?.classList.add('hidden');
-          updateCalculations();
-        }, 1500);
+        ratio = 0;
       } else {
         ratioError?.classList.add('hidden');
         ratioInput.classList.remove('text-red-500');
