@@ -8,6 +8,8 @@ interface Props {
   keywords?: string;
 }
 
+import { SITE_URL } from '../config.js';
+
 const {
   title,
   description,
@@ -17,25 +19,25 @@ const {
   keywords = "coffee timer, pour over ratio calculator, V60 brewing assistant, coffee weight calculator, 手沖計時器, 精品咖啡, 粉水比計算"
 } = Astro.props;
 
-// Determine canonical URL dynamically
-// We explicitly use the configured site and ensure the base path is correct
-const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://bill2712.github.io';
-const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
+// Determine canonical URL dynamically using the central config
+// Parse the base URL out of the central SITE_URL
+const siteParsed = new URL(SITE_URL);
+const siteOrigin = siteParsed.origin;
+const basePath = siteParsed.pathname === '/' ? '' : siteParsed.pathname;
 
 // Reconstruct the exact canonical URL based on the current pathname
 let currentPath = Astro.url.pathname;
-// Ensure we don't duplicate the base path if it's already there
 if (!currentPath.startsWith(basePath)) {
   currentPath = basePath + currentPath;
 }
 
-const canonicalURL = new URL(currentPath, siteUrl).toString();
+const canonicalURL = new URL(currentPath, siteOrigin).toString();
 
 // Ensure image path respects the base URL
 const base = basePath.endsWith('/') ? basePath : basePath + '/';
 const safeImage = image.startsWith('/') ? base + image.slice(1) : image;
 // Absolute image URL is required for OpenGraph
-const ogImageUrl = new URL(safeImage, siteUrl).toString();
+const ogImageUrl = new URL(safeImage, siteOrigin).toString();
 ---
 
 <!-- Primary Meta Tags -->

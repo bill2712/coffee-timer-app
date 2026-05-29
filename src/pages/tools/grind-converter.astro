@@ -1,4 +1,5 @@
 ---
+import { SITE_URL } from '../../config.js';
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
@@ -9,7 +10,7 @@ const jsonLd = {
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": "https://bill2712.github.io/coffee-timer-app/",
+  "url": `${SITE_URL}/`,
   "description": "精準轉換各大品牌磨豆機（Comandante C40, Timemore, Fellow Ode, Baratza Encore, Kalita）的研磨刻度，找到最完美的沖煮參數。",
   "offers": {
     "@type": "Offer",

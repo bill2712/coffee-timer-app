@@ -1,4 +1,5 @@
 ---
+import { SITE_URL } from '../../config.js';
 import Layout from '../../layouts/Layout.astro';
 import ParameterForm from '../../components/ParameterForm.astro';
 import Timer from '../../components/Timer.astro';
@@ -21,7 +22,7 @@ const jsonLd = {
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": "https://bill2712.github.io/coffee-timer-app/",
+  "url": `${SITE_URL}/`,
   "description": "專業愛樂壓 (AeroPress) 沖煮參數計算機與倒數計時器。包含正壓與倒置法教學，精準掌控壓力萃取。",
   "offers": {
     "@type": "Offer",

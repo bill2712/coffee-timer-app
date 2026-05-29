@@ -11,9 +11,12 @@ interface Props {
 
 const { items, class: className = "" } = Astro.props;
 
-// Generate JSON-LD
-const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://bill2712.github.io';
-const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
+import { SITE_URL } from '../config.js';
+
+// Parse the central config
+const siteParsed = new URL(SITE_URL);
+const siteOrigin = siteParsed.origin;
+const basePath = siteParsed.pathname === '/' ? '' : siteParsed.pathname;
 const baseUrl = basePath.endsWith('/') ? basePath : basePath + '/';
 
 // Prepend home to the items explicitly for the schema
@@ -31,7 +34,7 @@ const breadcrumbList = {
       if (!finalUrl.startsWith(baseUrl) && finalUrl !== baseUrl) {
         finalUrl = baseUrl + finalUrl.replace(/^\//, '');
       }
-      finalUrl = new URL(finalUrl, siteUrl).toString();
+      finalUrl = new URL(finalUrl, siteOrigin).toString();
     }
 
     return {

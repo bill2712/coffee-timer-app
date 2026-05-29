@@ -1,4 +1,5 @@
 ---
+import { SITE_URL } from '../../config.js';
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
@@ -24,7 +25,14 @@ function formatDate(date: Date) {
 }
 
 // Generate Schema.org BlogPosting JSON-LD for premium Google SEO
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://baristaflow.com');
+const siteParsed = new URL(SITE_URL);
+const siteOrigin = siteParsed.origin;
+const basePath = siteParsed.pathname === '/' ? '' : siteParsed.pathname;
+let currentPath = Astro.url.pathname;
+if (!currentPath.startsWith(basePath)) {
+  currentPath = basePath + currentPath;
+}
+const canonicalURL = new URL(currentPath, siteOrigin);
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",

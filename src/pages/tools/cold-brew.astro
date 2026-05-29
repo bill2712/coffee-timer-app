@@ -1,4 +1,5 @@
 ---
+import { SITE_URL } from '../../config.js';
 import Layout from '../../layouts/Layout.astro';
 import ParameterForm from '../../components/ParameterForm.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
@@ -20,7 +21,7 @@ const jsonLd = {
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": "https://bill2712.github.io/coffee-timer-app/",
+  "url": `${SITE_URL}/`,
   "description": "專業冷萃咖啡 (Cold Brew) 粉水比計算機。協助您調配 1:10 冰咖啡或 1:5 濃縮液比例，計算低溫浸泡所需的精確水量。",
   "offers": {
     "@type": "Offer",

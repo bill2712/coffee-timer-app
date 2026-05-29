@@ -1,4 +1,5 @@
 ---
+import { SITE_URL } from '../../config.js';
 import Layout from '../../layouts/Layout.astro';
 import ParameterForm from '../../components/ParameterForm.astro';
 import Timer from '../../components/Timer.astro';
@@ -21,7 +22,7 @@ const jsonLd = {
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": "https://bill2712.github.io/coffee-timer-app/",
+  "url": `${SITE_URL}/`,
   "description": "精準的法式濾壓壺 (French Press) 咖啡粉水比計算機與計時器。掌握 1:12 濃郁比例，完美浸泡萃取。",
   "offers": {
     "@type": "Offer",

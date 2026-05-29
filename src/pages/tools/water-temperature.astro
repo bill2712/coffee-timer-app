@@ -1,4 +1,5 @@
 ---
+import { SITE_URL } from '../../config.js';
 import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
@@ -9,7 +10,7 @@ const jsonLd = {
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": "https://bill2712.github.io/coffee-timer-app/",
+  "url": `${SITE_URL}/`,
   "description": "基於牛頓冷卻定律的咖啡水溫降溫預測器。精準計算手沖壺從沸騰降溫至理想萃取溫度的等待時間。",
   "offers": {
     "@type": "Offer",
