@@ -14,7 +14,7 @@ export interface Props {
 const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
 ---
 
-<div class="glass-card rounded-2xl p-4 sm:p-6 md:p-8 flex flex-col gap-6">
+<div class="backdrop-blur-xl bg-white/70 dark:bg-stone-900/60 border border-stone-200/50 dark:border-stone-800/50 shadow-xl shadow-stone-200/30 dark:shadow-stone-950/50 rounded-3xl p-5 sm:p-8 flex flex-col gap-7 transition-all duration-500">
   <div>
     <h2 class="font-display text-2xl font-bold tracking-wide text-coffee-gold flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -28,91 +28,116 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
   <form id="recipe-form" class="space-y-5" onsubmit="return false;" data-default-recipe={JSON.stringify(defaultRecipe || null)} data-ignore-local={ignoreLocalStorage ? "true" : "false"}>
     <!-- Coffee Beans & Roast -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="flex flex-col gap-1.5">
-        <label for="bean-name" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">咖啡豆名稱</label>
+      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="text"
           id="bean-name"
+          class="peer w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
           placeholder="例如：衣索比亞 耶加雪菲"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
         />
+        <label for="bean-name" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-focus:top-4 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:origin-left peer-focus:text-[#D9A05B] peer-not-placeholder-shown:top-4 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:origin-left cursor-text pointer-events-none">
+          咖啡豆名稱
+        </label>
       </div>
 
-      <div class="flex flex-col gap-1.5">
-        <label for="roast-level" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">烘焙度</label>
+      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <select
           id="roast-level"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light appearance-none cursor-pointer"
+          class="w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none appearance-none cursor-pointer"
         >
           <option value="light">淺度烘焙 (Roast: Light)</option>
           <option value="medium" selected>中度烘焙 (Roast: Medium)</option>
           <option value="dark">深度烘焙 (Roast: Dark)</option>
         </select>
+        <label for="roast-level" class="absolute left-3 top-4 -translate-y-1/2 scale-75 origin-left text-sm font-semibold uppercase tracking-wider text-stone-500 transition-all duration-300 pointer-events-none">
+          烘焙度
+        </label>
       </div>
     </div>
 
     <!-- Grind Size & Water Temp -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="flex flex-col gap-1.5">
-        <label for="grind-size" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">研磨刻度</label>
+      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="text"
           id="grind-size"
+          class="peer w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
           placeholder="例如：手沖中細 (Comandante C40 #24)"
-          class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
         />
+        <label for="grind-size" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-focus:top-4 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:origin-left peer-focus:text-[#D9A05B] peer-not-placeholder-shown:top-4 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:origin-left cursor-text pointer-events-none">
+          研磨刻度
+        </label>
       </div>
 
-      <div class="flex flex-col gap-1.5">
-        <label for="water-temp" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">熱水溫度 (°C)</label>
-        <div class="relative flex items-center">
-          <input
-            type="number"
-            id="water-temp"
-            min="80"
-            max="100"
-            value="92"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
-          />
-          <span class="absolute right-4 text-sm text-coffee-muted">°C</span>
-        </div>
+      <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-end pb-2 px-3 hover:shadow-md">
+        <input
+          type="number"
+          id="water-temp"
+          min="80" max="100" value="92"
+          class="peer w-full bg-transparent font-display text-base text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
+          placeholder="92"
+        />
+        <label for="water-temp" class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-focus:top-4 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:origin-left peer-focus:text-[#D9A05B] peer-not-placeholder-shown:top-4 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:origin-left cursor-text pointer-events-none">
+          熱水溫度 (°C)
+        </label>
+        <span class="absolute right-4 bottom-2 text-stone-400 text-sm font-medium">°C</span>
       </div>
     </div>
 
     <!-- Coffee Ratio & Water Amount Calc -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-      <div class="flex flex-col gap-1.5">
-        <label for="coffee-weight" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">咖啡粉量 (g)</label>
-        <div class="relative flex items-center">
-          <input
-            type="number"
-            id="coffee-weight"
-            min="5"
-            max="100"
-            step="0.5"
-            value="20"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
-          />
-          <span class="absolute right-4 text-sm text-coffee-muted">g</span>
+      <!-- Coffee Weight Stepper -->
+      <div>
+        <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-center px-1 hover:shadow-md">
+          <button type="button" id="btn-weight-minus" aria-label="減少咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
+          </button>
+          
+          <div class="relative flex-1 h-full flex flex-col justify-end pb-2">
+            <input
+              type="number"
+              id="coffee-weight"
+              min="5" max="100" step="0.5" value="20"
+              class="peer w-full bg-transparent text-center font-display text-xl font-bold text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
+              placeholder="20"
+            />
+            <label for="coffee-weight" class="absolute left-1/2 -translate-x-1/2 top-4 -translate-y-1/2 scale-75 text-sm font-semibold uppercase tracking-wider text-[#B47B4B] transition-all duration-300 pointer-events-none whitespace-nowrap">
+              咖啡粉量 (g)
+            </label>
+          </div>
+
+          <button type="button" id="btn-weight-plus" aria-label="增加咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+          </button>
         </div>
-        <span id="weight-error" class="text-red-400 text-xs hidden mt-1">請輸入有效的正數</span>
+        <span id="weight-error" class="text-red-400 text-xs hidden ml-2 mt-1">請輸入有效的正數</span>
       </div>
 
-      <div class="flex flex-col gap-1.5">
-        <label for="water-ratio" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">粉水比例 (1:X)</label>
-        <div class="relative flex items-center">
-          <input
-            type="number"
-            id="water-ratio"
-            min="10"
-            max="25"
-            step="0.5"
-            value="15"
-            class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-3 min-h-[48px] text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light"
-          />
-          <span class="absolute right-4 text-sm text-coffee-muted">1 : X</span>
+      <!-- Water Ratio Stepper -->
+      <div>
+        <div class="relative bg-white dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#D9A05B]/50 focus-within:border-[#D9A05B] h-16 flex items-center px-1 hover:shadow-md">
+          <button type="button" id="btn-ratio-minus" aria-label="減少粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
+          </button>
+          
+          <div class="relative flex-1 h-full flex flex-col justify-end pb-2">
+            <input
+              type="number"
+              id="water-ratio"
+              min="10" max="25" step="0.5" value="15"
+              class="peer w-full bg-transparent text-center font-display text-xl font-bold text-stone-800 dark:text-stone-100 focus:outline-none placeholder-transparent"
+              placeholder="15"
+            />
+            <label for="water-ratio" class="absolute left-1/2 -translate-x-1/2 top-4 -translate-y-1/2 scale-75 text-sm font-semibold uppercase tracking-wider text-[#B47B4B] transition-all duration-300 pointer-events-none whitespace-nowrap">
+              粉水比例 (1:X)
+            </label>
+          </div>
+
+          <button type="button" id="btn-ratio-plus" aria-label="增加粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-stone-500 dark:text-stone-400 hover:text-[#D9A05B] hover:bg-stone-100 dark:hover:bg-stone-700 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+          </button>
         </div>
-        <span id="ratio-error" class="text-red-400 text-xs hidden mt-1">請輸入有效的比例</span>
+        <span id="ratio-error" class="text-red-400 text-xs hidden ml-2 mt-1">請輸入有效的比例</span>
       </div>
     </div>
 
@@ -135,7 +160,7 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
       <button
         type="button"
         id="btn-apply-recipe"
-        class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 min-h-[48px] shadow-lg transition-all duration-200 ease-out transform active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark focus-visible:ring-coffee-gold cursor-pointer text-center text-sm gold-glow-hover disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full bg-gradient-to-r from-[#D9A05B] to-[#B47B4B] hover:from-[#EBB673] hover:to-[#D9A05B] text-white font-semibold tracking-wide rounded-2xl py-4 shadow-lg shadow-[#D9A05B]/20 hover:shadow-xl hover:shadow-[#D9A05B]/40 hover:-translate-y-1 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#D9A05B] cursor-pointer text-center text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         套用設定並同步計時器
       </button>
@@ -212,6 +237,11 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
   const grindSizeInput = document.getElementById('grind-size') as HTMLInputElement;
   const waterTempInput = document.getElementById('water-temp') as HTMLInputElement;
   
+  const btnWeightMinus = document.getElementById('btn-weight-minus');
+  const btnWeightPlus = document.getElementById('btn-weight-plus');
+  const btnRatioMinus = document.getElementById('btn-ratio-minus');
+  const btnRatioPlus = document.getElementById('btn-ratio-plus');
+  
   const totalWaterEl = document.getElementById('total-water');
   const btnApply = document.getElementById('btn-apply-recipe');
   const btnSaveHistory = document.getElementById('btn-save-history');
@@ -239,19 +269,43 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
       const weightError = document.getElementById('weight-error');
       const ratioError = document.getElementById('ratio-error');
 
-      // Gracefully override if malicious/invalid input is detected (fail-safe defaults)
-      if (isNaN(weight) || weight <= 0) {
-        weightInput.value = "5"; // Fail-safe default
-        weight = 5;
+      // Check if input is empty or invalid mid-typing
+      if (weightRaw === '' || isNaN(weight)) {
+        weight = 0; // Temporary state for calc
+      } else if (weight <= 0) {
+        if (weightError) {
+          weightError.textContent = "咖啡粉量不能小於等於 0，已重置";
+          weightError.classList.remove('hidden');
+        }
+        weightInput.classList.add('text-red-500');
+        setTimeout(() => {
+          weightInput.value = "5";
+          weightInput.classList.remove('text-red-500');
+          weightError?.classList.add('hidden');
+          updateCalculations();
+        }, 1500);
+      } else {
         weightError?.classList.add('hidden');
-        weightInput.classList.remove('border-red-500/50', 'focus:border-red-500/50');
+        weightInput.classList.remove('text-red-500');
       }
 
-      if (isNaN(ratio) || ratio <= 0) {
-        ratioInput.value = "10"; // Fail-safe default
-        ratio = 10;
+      if (ratioRaw === '' || isNaN(ratio)) {
+        ratio = 0;
+      } else if (ratio <= 0) {
+        if (ratioError) {
+          ratioError.textContent = "粉水比例不能小於等於 0，已重置";
+          ratioError.classList.remove('hidden');
+        }
+        ratioInput.classList.add('text-red-500');
+        setTimeout(() => {
+          ratioInput.value = "10";
+          ratioInput.classList.remove('text-red-500');
+          ratioError?.classList.add('hidden');
+          updateCalculations();
+        }, 1500);
+      } else {
         ratioError?.classList.add('hidden');
-        ratioInput.classList.remove('border-red-500/50', 'focus:border-red-500/50');
+        ratioInput.classList.remove('text-red-500');
       }
 
       if (isValid) {
@@ -442,6 +496,44 @@ const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
     // Bind base listeners
     if (weightInput) weightInput.addEventListener('input', updateCalculations);
     if (ratioInput) ratioInput.addEventListener('input', updateCalculations);
+    
+    // Stepper logic
+    if (btnWeightMinus && weightInput) {
+      btnWeightMinus.addEventListener('click', () => {
+        let val = parseFloat(weightInput.value) || 20;
+        if (val > parseFloat(weightInput.min)) {
+          weightInput.value = (val - 0.5).toString();
+          updateCalculations();
+        }
+      });
+    }
+    if (btnWeightPlus && weightInput) {
+      btnWeightPlus.addEventListener('click', () => {
+        let val = parseFloat(weightInput.value) || 20;
+        if (val < parseFloat(weightInput.max)) {
+          weightInput.value = (val + 0.5).toString();
+          updateCalculations();
+        }
+      });
+    }
+    if (btnRatioMinus && ratioInput) {
+      btnRatioMinus.addEventListener('click', () => {
+        let val = parseFloat(ratioInput.value) || 15;
+        if (val > parseFloat(ratioInput.min)) {
+          ratioInput.value = (val - 0.5).toString();
+          updateCalculations();
+        }
+      });
+    }
+    if (btnRatioPlus && ratioInput) {
+      btnRatioPlus.addEventListener('click', () => {
+        let val = parseFloat(ratioInput.value) || 15;
+        if (val < parseFloat(ratioInput.max)) {
+          ratioInput.value = (val + 0.5).toString();
+          updateCalculations();
+        }
+      });
+    }
     
     if (btnApply) {
       btnApply.addEventListener('click', () => {

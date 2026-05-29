@@ -4,19 +4,33 @@
 @theme {
   --color-coffee-dark: #12100E;
   --color-coffee-darker: #0A0807;
-  --color-coffee-gold: #D4AF37;
-  --color-coffee-gold-hover: #E6C250;
-  --color-coffee-sand: #C5A880;
-  --color-coffee-accent: #8B5A2B;
+  --color-coffee-gold: #D9A05B;
+  --color-coffee-gold-hover: #F2C272;
+  --color-coffee-sand: #B47B4B;
+  --color-coffee-accent: #2C1A11;
   --color-coffee-light: #F5F2EB;
-  --color-coffee-gray: #2A2420;
-  --color-coffee-muted: #8E8279;
+  --color-coffee-gray: #44403C;
+  --color-coffee-muted: #78716C;
 
   --font-display: "Playfair Display", serif;
   --font-sans: "Outfit", sans-serif;
 
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-float: float 6s ease-in-out infinite;
+  --animate-breath: breath 4s ease-in-out infinite;
+}
+
+@keyframes breath {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+    filter: drop-shadow(0 0 10px rgba(217, 160, 91, 0.3));
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+    filter: drop-shadow(0 0 25px rgba(217, 160, 91, 0.6));
+  }
 }
 
 /* Utility for hiding scrollbar on horizontal scrolling navs */

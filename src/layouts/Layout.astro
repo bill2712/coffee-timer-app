@@ -42,12 +42,12 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <!-- Google AdSense Placeholder (Required for approval) -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
   </head>
-  <body class="coffee-bg-gradient min-h-screen flex flex-col selection:bg-coffee-gold selection:text-coffee-dark overflow-x-hidden">
+  <body class="bg-[#FDFBF7] dark:bg-stone-950 text-stone-800 dark:text-stone-100 min-h-screen flex flex-col selection:bg-[#D9A05B] selection:text-white overflow-x-hidden transition-colors duration-500">
     <!-- Navbar -->
-    <header class="sticky top-0 z-50 w-full glass-card border-b border-coffee-sand/10">
+    <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/60 dark:bg-stone-900/60 border-b border-stone-200/50 dark:border-stone-800/50 shadow-sm transition-all duration-300">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 sm:h-20">
-          <div class="flex-shrink-0 flex items-center">
+          <div class="flex-shrink-0 flex items-center relative z-[60]">
             <a href={base} class="flex items-center gap-2 group">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-coffee-gold transition-transform group-hover:rotate-12 duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
@@ -56,13 +56,13 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
                 <line x1="10" y1="2" x2="10" y2="4" />
                 <line x1="14" y1="2" x2="14" y2="4" />
               </svg>
-              <span class="font-display text-xl sm:text-2xl font-bold tracking-wider bg-gradient-to-r from-coffee-gold to-coffee-sand bg-clip-text text-transparent">
+              <span class="font-display text-xl sm:text-2xl font-bold tracking-wider bg-gradient-to-r from-[#D9A05B] to-[#B47B4B] bg-clip-text text-transparent">
                 BARISTA FLOW
               </span>
             </a>
           </div>
           
-          <nav class="flex items-center gap-4 sm:gap-8 overflow-x-auto whitespace-nowrap hide-scrollbar ml-4 min-w-0">
+          <nav class="hidden lg:flex items-center gap-8 ml-auto min-w-0">
             <a href={base} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
               首頁
             </a>
@@ -97,9 +97,29 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
               常見問題
             </a>
           </nav>
+
+          <!-- Mobile Menu Toggle Button (Hamburger-to-X) -->
+          <button id="mobile-menu-toggle" aria-label="切換選單" class="lg:hidden relative z-[60] w-12 h-12 flex flex-col justify-center items-end gap-[6px] outline-none group" aria-label="Toggle Menu">
+            <span class="line-1 block h-[2px] bg-coffee-gold rounded-full w-7 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-8"></span>
+            <span class="line-2 block h-[2px] bg-coffee-gold rounded-full w-5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-8"></span>
+          </button>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Glassmorphic Overlay Drawer -->
+    <div id="mobile-menu-drawer" class="fixed inset-0 z-[55] backdrop-blur-xl bg-coffee-dark/95 flex flex-col justify-center opacity-0 -translate-y-full pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+      <nav class="flex flex-col items-center space-y-8 px-6">
+        <a href={base} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">首頁</a>
+        <a href={base + "blog"} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">知識庫</a>
+        <a href={base + "about"} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">關於我們</a>
+        <a href={base + "tools/grind-converter"} class="mobile-link text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-110 active:scale-95">研磨度轉換</a>
+        <a href={base + "tools/water-temperature"} class="mobile-link text-3xl font-light tracking-wide text-orange-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-orange-300 hover:scale-110 active:scale-95">水溫預測</a>
+        <a href={base + "tools/bean-freshness"} class="mobile-link text-3xl font-light tracking-wide text-green-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-green-300 hover:scale-110 active:scale-95">養豆計算</a>
+        <a href={base + "history"} class="mobile-link text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-110 active:scale-95">沖煮紀錄</a>
+        <a href={base + "faq"} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">常見問題</a>
+      </nav>
+    </div>
 
     <!-- Main Content -->
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
@@ -110,7 +130,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     </main>
 
     <!-- Footer -->
-    <footer class="w-full bg-coffee-darker border-t border-coffee-sand/5 py-8 sm:py-12 mt-auto">
+    <footer class="w-full bg-stone-100 dark:bg-stone-950/80 border-t border-stone-200/50 dark:border-stone-800/50 py-8 sm:py-12 mt-auto transition-colors duration-500">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
           <div class="flex flex-col items-center md:items-start gap-2">
@@ -148,5 +168,75 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 
     <!-- Global Cookie Consent Banner -->
     <CookieBanner />
+
+    <!-- Mobile Navigation Logic -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('mobile-menu-toggle');
+        const drawer = document.getElementById('mobile-menu-drawer');
+        const line1 = toggleBtn?.querySelector('.line-1');
+        const line2 = toggleBtn?.querySelector('.line-2');
+        const links = document.querySelectorAll('.mobile-link');
+        
+        let isOpen = false;
+
+        function toggleMenu() {
+          isOpen = !isOpen;
+          
+          if (isOpen) {
+            // Morph Hamburger to X
+            line1?.classList.add('w-6', 'rotate-45', 'translate-y-[8px]');
+            line1?.classList.remove('w-7', 'group-hover:w-8');
+            
+            line2?.classList.add('w-6', '-rotate-45', '-translate-y-[8px]');
+            line2?.classList.remove('w-5', 'group-hover:w-8');
+
+            // Show Drawer
+            drawer?.classList.remove('opacity-0', '-translate-y-full', 'pointer-events-none');
+            drawer?.classList.add('opacity-100', 'translate-y-0');
+            
+            // Lock body scroll
+            document.body.style.overflow = 'hidden';
+
+            // Animate links in staggered
+            links.forEach((link, index) => {
+              setTimeout(() => {
+                link.classList.remove('opacity-0', 'translate-y-12');
+                link.classList.add('opacity-100', 'translate-y-0');
+              }, 100 + (index * 75));
+            });
+          } else {
+            // Morph X to Hamburger
+            line1?.classList.remove('w-6', 'rotate-45', 'translate-y-[8px]');
+            line1?.classList.add('w-7', 'group-hover:w-8');
+            
+            line2?.classList.remove('w-6', '-rotate-45', '-translate-y-[8px]');
+            line2?.classList.add('w-5', 'group-hover:w-8');
+
+            // Hide Drawer
+            drawer?.classList.remove('opacity-100', 'translate-y-0');
+            drawer?.classList.add('opacity-0', '-translate-y-full', 'pointer-events-none');
+            
+            // Unlock body scroll
+            document.body.style.overflow = '';
+
+            // Reset links
+            links.forEach((link) => {
+              link.classList.add('opacity-0', 'translate-y-12');
+              link.classList.remove('opacity-100', 'translate-y-0');
+            });
+          }
+        }
+
+        toggleBtn?.addEventListener('click', toggleMenu);
+
+        // Close menu when clicking a link
+        links.forEach(link => {
+          link.addEventListener('click', () => {
+            if (isOpen) toggleMenu();
+          });
+        });
+      });
+    </script>
   </body>
 </html>
