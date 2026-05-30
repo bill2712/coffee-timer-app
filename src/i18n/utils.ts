@@ -16,7 +16,7 @@ export function getLangFromUrl(url: URL) {
 export function useTranslations(lang: keyof typeof ui) {
   return function t(key: keyof typeof ui[typeof defaultLang], params?: Record<string, string | number>) {
     // @ts-ignore
-    let str: string = ui[lang][key] || ui[defaultLang][key];
+    let str: string = ui[lang]?.[key] || ui['en']?.[key] || ui[defaultLang][key] || key;
     if (params) {
       for (const [k, v] of Object.entries(params)) {
         str = str.replace(`{${k}}`, String(v));

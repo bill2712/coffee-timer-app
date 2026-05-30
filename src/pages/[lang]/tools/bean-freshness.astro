@@ -32,7 +32,7 @@ const faqSchema = {
       "name": t("tools.bean.faq.1.q"),
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": t("tools.bean.faq.1.a")
+        "text": t("tools.bean.faq.1.a", { daysLabel: t("tools.bean.status.days2") })
       }
     },
     {
@@ -104,7 +104,7 @@ export function getStaticPaths() {
       <!-- INPUT PANEL -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 border-b border-coffee-sand/10 pb-10">
         <div class="flex flex-col gap-2">
-          <label for="roast-date" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('tools.bean.label.date')}</label>
+          <label for="roast-date" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('tools.bean.label.date', { dateLabel: t('tools.bean.setup.date') })}</label>
           <div class="relative">
             <input type="date" id="roast-date" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer" />
           </div>
