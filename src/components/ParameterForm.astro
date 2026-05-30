@@ -260,6 +260,8 @@ const formDict = {
 </style>
 
 <script>
+  import { escapeHTML } from '../utils/sanitize';
+
   const formRoot = document.getElementById('form-root');
   const dict = formRoot ? JSON.parse(formRoot.dataset.dict || '{}') : {};
   // --- UI Elements ---
@@ -492,7 +494,7 @@ const formDict = {
 
       div.innerHTML = `
         <div class="flex-1 min-w-0" onclick="window.loadHistoryItem('${item.id}')">
-          <h4 class="text-sm font-semibold text-coffee-light truncate">${item.beanName}</h4>
+          <h4 class="text-sm font-semibold text-coffee-light truncate">${escapeHTML(item.beanName)}</h4>
           <p class="text-[10px] sm:text-xs text-coffee-muted mt-0.5">
             ${item.coffeeWeight}g 粉 | 1:${item.waterRatio} | ${item.waterTemp}°C | ${roastText}
           </p>

@@ -87,6 +87,8 @@ export function getStaticPaths() {
   window.historyDict = dict;
 </script>
 <script>
+  import { escapeHTML } from '../../../utils/sanitize';
+
   // Setup data interfaces
   interface LogEntry {
     id: string;
@@ -168,7 +170,7 @@ export function getStaticPaths() {
           
           <div class="mb-4 pe-8">
             <span class="text-[10px] text-coffee-muted mb-1 block">${dateStr}</span>
-            <h3 class="font-display font-bold text-lg text-coffee-light truncate">${log.recipe.beanName || window.historyDict.unknownBean}</h3>
+            <h3 class="font-display font-bold text-lg text-coffee-light truncate">${escapeHTML(log.recipe.beanName) || window.historyDict.unknownBean}</h3>
             <p class="text-xs text-coffee-sand/80 mt-1">${log.recipe.coffeeWeight}g ${window.historyDict.powder} | 1:${ratio} | ${log.recipe.totalWater}g ${window.historyDict.water}</p>
           </div>
 
@@ -192,7 +194,7 @@ export function getStaticPaths() {
 
           ${log.evaluation.notes ? `
           <div class="mt-4 pt-4 border-t border-coffee-sand/10">
-            <p class="text-xs text-coffee-sand/80 italic line-clamp-2">"${log.evaluation.notes}"</p>
+            <p class="text-xs text-coffee-sand/80 italic line-clamp-2">"${escapeHTML(log.evaluation.notes)}"</p>
           </div>` : ''}
         `;
 

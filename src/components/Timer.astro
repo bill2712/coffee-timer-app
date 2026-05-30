@@ -539,10 +539,6 @@ const timerDict = {
       
       remainingTime = Math.max(0, remainingTime - delta);
       updateDisplay();
-
-      if (remainingTime <= 0 && timerId !== null) {
-        window.clearInterval(timerId);
-      }
     }
 
     timerId = window.setInterval(tick, 100);
@@ -558,9 +554,6 @@ const timerDict = {
     if (delta > 0) {
       remainingTime = Math.max(0, remainingTime - delta);
       updateDisplay();
-      if (remainingTime <= 0 && timerId !== null) {
-        window.clearInterval(timerId);
-      }
     }
   }
 
