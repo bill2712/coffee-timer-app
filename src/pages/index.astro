@@ -4,6 +4,8 @@ import { defaultLang, languages } from '../i18n/ui';
 
 // We do NOT use Astro.redirect here because this is a statically generated site.
 // A static redirect requires a meta refresh or client-side JavaScript.
+const rawBase = import.meta.env.BASE_URL || '/';
+const baseUrl = rawBase.endsWith('/') ? rawBase : rawBase + '/';
 ---
 
 <!DOCTYPE html>
@@ -13,12 +15,12 @@ import { defaultLang, languages } from '../i18n/ui';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirecting... | Barista Flow</title>
   
-  <script is:inline define:vars={{ supportedLanguages: Object.keys(languages), defaultLang }}>
+  <script is:inline define:vars={{ supportedLanguages: Object.keys(languages), defaultLang, baseUrl }}>
     (function() {
       // Check localStorage first
       const savedLang = localStorage.getItem('barista-flow-lang');
       if (savedLang && supportedLanguages.includes(savedLang)) {
-        window.location.replace('/' + savedLang + '/');
+        window.location.replace(baseUrl + savedLang + '/');
         return;
       }
       
@@ -35,13 +37,13 @@ import { defaultLang, languages } from '../i18n/ui';
       
       // Save and redirect
       localStorage.setItem('barista-flow-lang', targetLang);
-      window.location.replace('/' + targetLang + '/');
+      window.location.replace(baseUrl + targetLang + '/');
     })();
   </script>
   
   <!-- Fallback meta refresh for non-JS browsers -->
   <noscript>
-    <meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} />
+    <meta http-equiv="refresh" content={`0;url=${baseUrl}${defaultLang}/`} />
   </noscript>
 </head>
 <body class="bg-[#1C120C] flex items-center justify-center min-h-screen">
