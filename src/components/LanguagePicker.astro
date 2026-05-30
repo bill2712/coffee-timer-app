@@ -109,7 +109,7 @@ const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/
         link.addEventListener('click', (e) => {
           const targetLang = (e.currentTarget as HTMLElement).getAttribute('data-lang');
           if (targetLang) {
-            localStorage.setItem('preferred_language', targetLang);
+            localStorage.setItem('barista-flow-lang', targetLang);
           }
         });
       });
