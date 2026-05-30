@@ -12,8 +12,8 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="Terms of Service 服務條款 | Barista Flow"
-  description="Barista Flow 的服務條款。規範本網站的使用條例、智慧財產權與免責聲明。"
+  title={t('terms.meta.title')}
+  description={t('terms.meta.desc')}
 >
   <div class="max-w-3xl mx-auto py-8 sm:py-12">
     <div class="mb-10 text-center">
@@ -22,7 +22,7 @@ export function getStaticPaths() {
     </div>
 
     <p class="text-coffee-light/90 leading-relaxed mb-10 text-center max-w-2xl mx-auto">
-      歡迎您使用 Barista Flow（以下簡稱「本網站」）。當您瀏覽、存取或使用本網站提供的任何工具與內容時，即表示您完全同意並接受以下服務條款。如果您不同意本條款的任何部分，請勿使用本網站。
+      {t('terms.intro')}
     </p>
 
     <div class="space-y-6">
@@ -33,7 +33,7 @@ export function getStaticPaths() {
           {t('terms.s1.title')}
         </h2>
         <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
-          <p>Barista Flow 提供免費的線上咖啡沖煮計時器、參數計算工具，以及咖啡科學相關的知識文章。本網站旨在提供個人、非商業用途的參考與協助。</p>
+          <p>{t('terms.s1.p1')}</p>
         </div>
       </section>
 
@@ -41,13 +41,13 @@ export function getStaticPaths() {
         <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
         <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
           <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">2</span>
-          智慧財產權聲明
+          {t('terms.s2.title')}
         </h2>
         <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11 space-y-4">
-          <p>本網站的所有內容，包含但不限於文字、標誌、圖片、圖表、應用程式碼、UI 設計及架構，其著作權、商標權及其他智慧財產權皆屬於 Barista Flow 團隊所有，或已取得合法授權。</p>
+          <p>{t('terms.s2.p1')}</p>
           <ul class="list-disc list-outside ms-4 space-y-1">
-            <li>未經我們事先的書面許可，您不得對本網站內容進行複製、修改、散佈、出版、展示或用於任何商業行為。</li>
-            <li>您可以為了個人學習目的分享本網站的連結（例如使用我們的「分享此配方」功能）。</li>
+            <li>{t('terms.s2.l1')}</li>
+            <li>{t('terms.s2.l2')}</li>
           </ul>
         </div>
       </section>
@@ -59,10 +59,10 @@ export function getStaticPaths() {
           {t('terms.s3.title')}
         </h2>
         <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11 space-y-4">
-          <p>本網站提供的所有咖啡參數、教學文章與計時工具皆「按原樣」提供。雖然我們力求資訊的科學性與準確性，但咖啡沖煮受到諸多實體變數（如水質、豆種、氣溫等）影響。</p>
+          <p>{t('terms.s3.p1')}</p>
           <ul class="list-disc list-outside ms-4 space-y-1">
-            <li>我們對本網站內容的絕對準確性、完整性或適用性不作任何明示或暗示的保證。</li>
-            <li>對於因使用本網站工具或依賴本網站資訊而造成的任何直接、間接或附帶損失（包括但不限於咖啡豆的損耗或設備的損壞），Barista Flow 概不負責。</li>
+            <li>{t('terms.s3.l1')}</li>
+            <li>{t('terms.s3.l2')}</li>
           </ul>
         </div>
       </section>
@@ -71,14 +71,14 @@ export function getStaticPaths() {
         <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
         <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
           <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">4</span>
-          使用者行為規範
+          {t('terms.s4.title')}
         </h2>
         <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11 space-y-4">
-          <p>在使用本網站時，您同意遵守所有適用的法律法規，並且不得：</p>
+          <p>{t('terms.s4.p1')}</p>
           <ul class="list-disc list-outside ms-4 space-y-1">
-            <li>以任何可能導致本網站伺服器或網路負載過重、受損或中斷的方式使用本網站（例如進行 DDoS 攻擊或惡意爬蟲擷取）。</li>
-            <li>試圖未經授權存取本網站的後台系統或原始碼。</li>
-            <li>利用本網站從事任何違法或欺詐行為。</li>
+            <li>{t('terms.s4.l1')}</li>
+            <li>{t('terms.s4.l2')}</li>
+            <li>{t('terms.s4.l3')}</li>
           </ul>
         </div>
       </section>
@@ -87,10 +87,10 @@ export function getStaticPaths() {
         <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
         <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
           <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">5</span>
-          第三方服務與廣告
+          {t('terms.s5.title')}
         </h2>
         <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
-          <p>本網站可能包含第三方網站的連結或展示第三方廣告（如 Google AdSense）。我們無法控制這些第三方網站的內容與隱私政策。點擊廣告或外部連結產生的任何風險，由使用者自行承擔。</p>
+          <p>{t('terms.s5.p1')}</p>
         </div>
       </section>
 
@@ -98,10 +98,10 @@ export function getStaticPaths() {
         <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
         <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
           <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">6</span>
-          條款的修改與終止
+          {t('terms.s6.title')}
         </h2>
         <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
-          <p>我們保留隨時修改、暫停或終止本網站服務及本服務條款的權利，恕不另行通知。您繼續使用本網站即表示您接受任何修改後的條款。</p>
+          <p>{t('terms.s6.p1')}</p>
         </div>
       </section>
     </div>
