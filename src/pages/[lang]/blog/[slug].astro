@@ -10,13 +10,16 @@ import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog', (entry) => !entry.data.tags?.includes('Glossary'));
-  const locales = Object.keys(languages);
-  return locales.flatMap(lang => 
-    blogEntries.map(entry => ({
-      params: { lang, slug: entry.id },
+  
+  return blogEntries.map(entry => {
+    const parts = entry.id.split('/');
+    const entryLang = parts[0];
+    const slug = parts.slice(1).join('/');
+    return {
+      params: { lang: entryLang, slug },
       props: { entry },
-    }))
-  );
+    };
+  });
 }
 
 const { entry } = Astro.props;
