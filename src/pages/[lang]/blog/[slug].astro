@@ -5,6 +5,7 @@ import Layout from '../../../layouts/Layout.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { languages } from '../../../i18n/ui';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
 
 
 export async function getStaticPaths() {
@@ -19,6 +20,8 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const { Content } = await render(entry);
 
 function formatDate(date: Date) {
@@ -64,7 +67,7 @@ const jsonLd = {
 ---
 
 <Layout
-  title={`${entry.data.title} | Barista Flow 咖啡科學`}
+  title={`${entry.data.title}${t('blog.post.meta.suffix')}`}
   description={entry.data.description}
   article={true}
   jsonld={jsonLd}
@@ -72,7 +75,7 @@ const jsonLd = {
   <article class="max-w-6xl mx-auto">
     <!-- Breadcrumbs -->
     <Breadcrumbs items={[
-      { label: '知識庫', url: 'blog' },
+      { label: t('blog.breadcrumb'), url: 'blog' },
       { label: entry.data.title }
     ]} />
 
@@ -81,7 +84,7 @@ const jsonLd = {
       <div class="flex flex-wrap gap-2 items-center text-xs text-coffee-sand mb-4">
         <span>{formatDate(entry.data.pubDate)}</span>
         <span class="text-coffee-muted">•</span>
-        <span>作者：{entry.data.author}</span>
+        <span>{t('blog.author')}{entry.data.author}</span>
       </div>
 
       <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-coffee-light leading-tight">
@@ -120,15 +123,15 @@ const jsonLd = {
     <!-- CTA & Footer of Post -->
     <div class="mt-16 border-t border-coffee-sand/10 pt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div>
-        <h4 class="font-display text-lg font-bold text-coffee-light">喜歡這篇文章嗎？</h4>
-        <p class="text-xs text-coffee-muted mt-1">使用 Barista Flow 的專業計時器，立刻將沖煮科學化為舌尖上的極致美味！</p>
+        <h4 class="font-display text-lg font-bold text-coffee-light">{t('blog.cta.title')}</h4>
+        <p class="text-xs text-coffee-muted mt-1">{t('blog.cta.desc')}</p>
       </div>
 
       <a
         href={import.meta.env.BASE_URL}
         class="inline-flex items-center gap-2 bg-gradient-to-r from-coffee-accent to-coffee-gold text-coffee-dark font-bold tracking-wide rounded-xl px-6 py-3 shadow-lg hover:from-coffee-gold hover:to-coffee-gold-hover transition-all active:scale-[0.98] cursor-pointer text-sm gold-glow"
       >
-        立刻開啟沖煮計時器
+        {t('blog.cta.btn')}
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
         </svg>

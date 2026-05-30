@@ -12,9 +12,9 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const defaultAeroPressRecipe = {
-  beanName: '瓜地馬拉 薇薇特南果',
+  beanName: t('tools.default.bean.aeropress'),
   roastLevel: 'medium',
-  grindSize: '中細研磨 (如細砂)',
+  grindSize: t('tools.default.grind.aeropress'),
   waterTemp: 85,
   coffeeWeight: 15,
   waterRatio: 14
@@ -49,7 +49,7 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto mb-12 text-center">
     <div class="flex justify-center">
       <Breadcrumbs items={[
-        { label: '首頁', url: '/' },
+        { label: t('nav.home'), url: '/' },
         { label: t('tools.aeropress.breadcrumb') }
       ]} />
     </div>

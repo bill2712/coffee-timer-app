@@ -4,6 +4,7 @@ import Layout from '../../../layouts/Layout.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { languages } from '../../../i18n/ui';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
 import { SITE_URL } from '../../../config';
 
 
@@ -19,6 +20,8 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const { Content } = await render(entry);
 
 
@@ -36,14 +39,14 @@ const jsonLd = {
 ---
 
 <Layout 
-  title={`${entry.data.title} | 咖啡百科全書`}
+  title={`${entry.data.title}${t('glossary.post.meta.suffix')}`}
   description={entry.data.description}
   jsonld={jsonLd}
 >
   <div class="max-w-6xl mx-auto py-12">
     <!-- Breadcrumb -->
     <Breadcrumbs items={[
-      { label: '百科', url: 'glossary' },
+      { label: t('glossary.breadcrumb'), url: 'glossary' },
       { label: (entry.data as any).term || entry.data.title }
     ]} />
 

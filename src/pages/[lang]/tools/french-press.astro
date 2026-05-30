@@ -12,9 +12,9 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const defaultFrenchPressRecipe = {
-  beanName: '哥倫比亞 水洗',
+  beanName: t('tools.default.bean.frenchpress'),
   roastLevel: 'dark',
-  grindSize: '粗研磨 (如粗鹽)',
+  grindSize: t('tools.default.grind.frenchpress'),
   waterTemp: 90,
   coffeeWeight: 30,
   waterRatio: 12
@@ -49,7 +49,7 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto mb-12 text-center">
     <div class="flex justify-center">
       <Breadcrumbs items={[
-        { label: '首頁', url: '/' },
+        { label: t('nav.home'), url: '/' },
         { label: t('tools.frenchpress.title') }
       ]} />
     </div>

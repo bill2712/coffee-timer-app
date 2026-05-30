@@ -11,9 +11,9 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const defaultColdBrewRecipe = {
-  beanName: '深焙 巧克力調綜合豆',
+  beanName: t('tools.default.bean.coldbrew'),
   roastLevel: 'dark',
-  grindSize: '極粗研磨',
+  grindSize: t('tools.default.grind.coldbrew'),
   waterTemp: 4,
   coffeeWeight: 50,
   waterRatio: 10
@@ -48,7 +48,7 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto mb-12 text-center">
     <div class="flex justify-center">
       <Breadcrumbs items={[
-        { label: '首頁', url: '/' },
+        { label: t('nav.home'), url: '/' },
         { label: t('tools.coldbrew.title') }
       ]} />
     </div>

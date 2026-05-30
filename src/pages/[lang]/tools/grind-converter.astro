@@ -16,7 +16,7 @@ const jsonLd = {
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "精準轉換各大品牌磨豆機（Comandante C40, Timemore, Fellow Ode, Baratza Encore, Kalita）的研磨刻度，找到最完美的沖煮參數。",
+  "description": t("grind.meta.desc"),
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -119,20 +119,20 @@ export function getStaticPaths() {
         <div class="relative w-full h-12 bg-coffee-darker rounded-xl border border-coffee-sand/10 overflow-hidden">
           <!-- Background Zones -->
           <div class="absolute inset-0 flex">
-            <div class="h-full bg-red-900/20 border-r border-coffee-darker" style="width: 20%;" title="極細 (土耳其)"></div>
-            <div class="h-full bg-orange-900/20 border-r border-coffee-darker" style="width: 20%;" title="細 (義式)"></div>
-            <div class="h-full bg-yellow-900/20 border-r border-coffee-darker" style="width: 20%;" title="中細 (AeroPress/V60)"></div>
-            <div class="h-full bg-green-900/20 border-r border-coffee-darker" style="width: 20%;" title="中粗 (濾壓壺)"></div>
-            <div class="h-full bg-blue-900/20" style="width: 20%;" title="極粗 (冷萃)"></div>
+            <div class="h-full bg-red-900/20 border-r border-coffee-darker" style="width: 20%;" title={t("grind.tooltip.turkish")}></div>
+            <div class="h-full bg-orange-900/20 border-r border-coffee-darker" style="width: 20%;" title={t("grind.tooltip.espresso")}></div>
+            <div class="h-full bg-yellow-900/20 border-r border-coffee-darker" style="width: 20%;" title={t("grind.tooltip.aeropress")}></div>
+            <div class="h-full bg-green-900/20 border-r border-coffee-darker" style="width: 20%;" title={t("grind.tooltip.frenchpress")}></div>
+            <div class="h-full bg-blue-900/20" style="width: 20%;" title={t("grind.tooltip.coldbrew")}></div>
           </div>
           
           <!-- Method Labels -->
           <div class="absolute inset-0 flex text-[9px] sm:text-[10px] font-semibold text-coffee-muted/50 pointer-events-none select-none">
-            <div class="flex-1 flex items-center justify-center">土耳其</div>
-            <div class="flex-1 flex items-center justify-center">義式濃縮</div>
-            <div class="flex-1 flex items-center justify-center">手沖</div>
-            <div class="flex-1 flex items-center justify-center">法壓壺</div>
-            <div class="flex-1 flex items-center justify-center">冷萃</div>
+            <div class="flex-1 flex items-center justify-center">{t("grind.label.turkish")}</div>
+            <div class="flex-1 flex items-center justify-center">{t("grind.label.espresso")}</div>
+            <div class="flex-1 flex items-center justify-center">{t("grind.label.v60")}</div>
+            <div class="flex-1 flex items-center justify-center">{t("grind.label.frenchpress")}</div>
+            <div class="flex-1 flex items-center justify-center">{t("grind.label.coldbrew")}</div>
           </div>
 
           <!-- Indicator Pointer -->
@@ -160,33 +160,43 @@ export function getStaticPaths() {
 
     <!-- SEO Rich Text Content -->
     <article class="prose prose-invert prose-coffee max-w-none bg-coffee-darker/30 p-8 rounded-3xl border border-coffee-sand/5">
-      <h2 class="font-display text-2xl font-bold text-coffee-gold mb-6 border-b border-coffee-sand/10 pb-4">為什麼研磨刻度轉換如此重要？</h2>
+      <h2 class="font-display text-2xl font-bold text-coffee-gold mb-6 border-b border-coffee-sand/10 pb-4">{t("grind.h2_1")}</h2>
       
       <p>
-        在精品咖啡的世界裡，研磨度（Grind Size）是決定萃取率（Extraction Yield）最關鍵的物理變數。不同的磨豆機使用了截然不同的刀盤幾何（平刀 Flat Burrs、錐刀 Conical Burrs）以及不同的微調螺距，這意味著「Comandante C40 的 20 格」絕對不等於「Timemore C2 的 20 格」。
+        {t("grind.p1")}
       </p>
 
-      <h3>通用研磨區間 (Universal Grind Ranges)</h3>
+      <h3>{t("grind.h3_1")}</h3>
       <p>
-        我們的演算法並非單純的線性乘法，而是基於各個磨豆機在不同沖煮法（Brewing Methods）下的「甜蜜點區間」進行相對位置（Percentage Interpolation）的轉換：
+        {t("grind.p2")}
       </p>
       <ul>
-        <li><strong>極細 (Extra Fine)</strong>：如麵粉般細緻。專為土耳其咖啡（Cezve/Ibrik）設計。</li>
-        <li><strong>細 (Fine)</strong>：如食鹽般大小。適合義式濃縮咖啡（Espresso），能提供極大的水流阻力以建立 9 Bar 的壓力。</li>
-        <li><strong>中細 (Medium-Fine)</strong>：最適合手沖咖啡（V60, Kalita Wave）與愛樂壓（AeroPress）。能在 2-3 分鐘內萃取出完美的酸甜平衡。</li>
-        <li><strong>中粗 (Medium-Coarse)</strong>：如粗海鹽。適合法式濾壓壺（French Press）或是 Chemex，避免過度浸泡導致苦澀。</li>
-        <li><strong>極粗 (Extra Coarse)</strong>：適合長時間低溫浸泡的冷萃咖啡（Cold Brew），將雜質萃取降到最低。</li>
+        <li><span set:html={t("grind.li1")} /></li>
+        <li><span set:html={t("grind.li2")} /></li>
+        <li><span set:html={t("grind.li3")} /></li>
+        <li><span set:html={t("grind.li4")} /></li>
+        <li><span set:html={t("grind.li5")} /></li>
       </ul>
 
-      <h3>免責聲明與微調建議</h3>
+      <h3>{t("grind.h3_2")}</h3>
       <p>
-        請注意，即便是同一款型號的磨豆機，也會因為<strong>刀盤的磨損程度</strong>、<strong>歸零點 (Zero Point) 的設定差異</strong>以及<strong>咖啡豆的烘焙度</strong>而有所偏差。本轉換器提供的數值為基準起點（Starting Point）。<br/>
-        我們強烈建議您：如果沖煮出來的咖啡感覺過於酸澀（萃取不足），請將刻度調細 1-2 格；如果感覺焦苦或水流停滯（過度萃取），請調粗 1-2 格。
+        <span set:html={t("grind.p3")} />
       </p>
     </article>
   </div>
 </Layout>
 
+
+<script is:inline define:vars={{ dict: { 
+  turkish: t('grind.script.turkish'),
+  espresso: t('grind.script.espresso'),
+  aeropress: t('grind.script.aeropress'),
+  v60: t('grind.script.v60'),
+  frenchpress: t('grind.script.frenchpress'),
+  coldbrew: t('grind.script.coldbrew')
+} }}>
+  window.grindDict = dict;
+</script>
 <script>
   interface MethodRanges {
     espresso: [number, number];
@@ -412,25 +422,25 @@ export function getStaticPaths() {
 
     switch(method) {
       case 'espresso':
-        if (cp < 0) { position = 10 + (cp * 10); label = "極細 (Turkish)"; }
-        else { position = 20 + (cp * 20); label = "細粉 (Espresso)"; }
+        if (cp < 0) { position = 10 + (cp * 10); label = window.grindDict.turkish; }
+        else { position = 20 + (cp * 20); label = window.grindDict.espresso; }
         break;
       case 'aeropress':
         // aero press bridges espresso and v60
         position = 40 + (cp * 10);
-        label = "中細 (AeroPress)";
+        label = window.grindDict.aeropress;
         break;
       case 'v60':
         position = 50 + (cp * 10);
-        label = "中等 (V60 手沖)";
+        label = window.grindDict.v60;
         break;
       case 'frenchPress':
         position = 60 + (cp * 20);
-        label = "中粗 (法式濾壓壺)";
+        label = window.grindDict.frenchpress;
         break;
       case 'coldBrew':
         position = 80 + (cp * 20);
-        label = "極粗 (冷萃咖啡)";
+        label = window.grindDict.coldbrew;
         break;
     }
 

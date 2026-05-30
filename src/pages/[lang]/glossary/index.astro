@@ -4,6 +4,10 @@ import Layout from '../../../layouts/Layout.astro';
 import SearchBar from '../../../components/SearchBar.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const allGlossary = await getCollection('blog', (entry) => entry.data.tags?.includes('Glossary')) || [];
 
@@ -40,19 +44,19 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="Coffee Glossary | 咖啡百科全書"
-  description="精品咖啡術語百科全書。從悶蒸、通道效應到梅納反應，為您深入解析手沖與義式咖啡背後的科學與實務技巧。"
+  title={t('glossary.meta.title')}
+  description={t('glossary.meta.desc')}
   jsonld={jsonLd}
 >
   <div class="max-w-4xl mx-auto mb-16 text-center">
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
-      Knowledge Base
+      {t('glossary.tag')}
     </div>
     <h1 class="font-display text-4xl sm:text-6xl font-bold tracking-tight text-coffee-light">
-      咖啡百科全書
+      {t('glossary.title')}
     </h1>
     <p class="text-coffee-muted mt-6 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-      掌握術語，才能掌握沖煮的靈魂。這是一份專為咖啡愛好者打造的 A-Z 百科辭典，為您深入解析每一次沖煮背後的化學、物理與技巧。
+      {t('glossary.subtitle')}
     </p>
   </div>
 
@@ -91,7 +95,7 @@ export function getStaticPaths() {
                   </p>
                 </div>
                 <div class="mt-4 flex items-center text-xs text-coffee-gold font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  閱讀完整定義 <span class="ms-1">→</span>
+                  {t('glossary.readMore')} <span class="ms-1">→</span>
                 </div>
               </a>
             ))}

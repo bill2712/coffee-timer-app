@@ -2,6 +2,10 @@
 import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 export function getStaticPaths() {
   return getLanguagePaths();
@@ -9,15 +13,15 @@ export function getStaticPaths() {
 ---
 
 <Layout 
-  title="我的沖煮紀錄 | Barista Flow"
-  description="檢視您所有的咖啡沖煮紀錄與風味品鑑，打造專屬您的咖啡日誌。"
+  title={t('history.meta.title')}
+  description={t('history.meta.desc')}
 >
   <div class="max-w-4xl mx-auto py-12">
     <!-- Breadcrumb -->
     <div class="flex justify-center">
       <Breadcrumbs items={[
-        { label: '首頁', url: '/' },
-        { label: '我的沖煮紀錄' }
+        { label: t('nav.home'), url: '/' },
+        { label: t('history.title') }
       ]} />
     </div>
 
@@ -25,10 +29,10 @@ export function getStaticPaths() {
     <header class="text-center mb-12 relative mt-4 flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="text-start">
         <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-2">
-          沖煮<span class="text-transparent bg-clip-text bg-gradient-to-r from-coffee-gold to-coffee-sand">日誌</span>
+          {t('history.h1.brew')}<span class="text-transparent bg-clip-text bg-gradient-to-r from-coffee-gold to-coffee-sand">{t('history.h1.log')}</span>
         </h1>
         <p class="text-sm text-coffee-sand/80 font-light">
-          記錄每次萃取的風味細節，尋找您的完美金杯。
+          {t('history.subtitle')}
         </p>
       </div>
       
@@ -37,7 +41,7 @@ export function getStaticPaths() {
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
-          匯出 CSV
+          {t('history.export')}
         </button>
       </div>
     </header>
@@ -57,18 +61,31 @@ export function getStaticPaths() {
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-coffee-sand/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
-        <h3 class="text-xl font-bold text-coffee-light mb-2">目前沒有沖煮紀錄</h3>
+        <h3 class="text-xl font-bold text-coffee-light mb-2">{t('history.empty.title')}</h3>
         <p class="text-sm text-coffee-sand/80 max-w-md mx-auto mb-8 leading-relaxed">
-          完成一次咖啡沖煮並填寫風味品鑑後，您的日誌將會顯示在這裡。
+          {t('history.empty.desc')}
         </p>
         <a href={`${import.meta.env.BASE_URL}/`} class="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold shadow-lg shadow-coffee-gold/20 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 text-sm font-bold tracking-wide">
-          開始沖煮
+          {t('history.empty.btn')}
         </a>
       </div>
     </div>
   </div>
 </Layout>
 
+
+<script is:inline define:vars={{ dict: { 
+  unknownBean: t('history.script.unknownBean'),
+  powder: t('history.script.powder'),
+  water: t('history.script.water'),
+  acidity: t('history.script.acidity'),
+  bitterness: t('history.script.bitterness'),
+  body: t('history.script.body'),
+  delete: t('history.script.delete'),
+  confirm: t('history.script.confirm')
+} }}>
+  window.historyDict = dict;
+</script>
 <script>
   // Setup data interfaces
   interface LogEntry {
@@ -143,7 +160,7 @@ export function getStaticPaths() {
         card.className = 'log-card backdrop-blur-md bg-coffee-darker/60 p-6 rounded-3xl border border-coffee-sand/10 hover:shadow-lg hover:border-coffee-gold/30 hover:-translate-y-1 transition-all duration-300 relative group';
         
         card.innerHTML = `
-          <button class="absolute top-4 end-4 p-2 text-coffee-sand/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all duration-200 delete-btn" data-id="${log.id}" title="刪除紀錄">
+          <button class="absolute top-4 end-4 p-2 text-coffee-sand/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all duration-200 delete-btn" data-id="${log.id}" title="${window.historyDict.delete}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
@@ -151,24 +168,24 @@ export function getStaticPaths() {
           
           <div class="mb-4 pe-8">
             <span class="text-[10px] text-coffee-muted mb-1 block">${dateStr}</span>
-            <h3 class="font-display font-bold text-lg text-coffee-light truncate">${log.recipe.beanName || '未知咖啡豆'}</h3>
-            <p class="text-xs text-coffee-sand/80 mt-1">${log.recipe.coffeeWeight}g 粉 | 1:${ratio} | ${log.recipe.totalWater}g 水</p>
+            <h3 class="font-display font-bold text-lg text-coffee-light truncate">${log.recipe.beanName || window.historyDict.unknownBean}</h3>
+            <p class="text-xs text-coffee-sand/80 mt-1">${log.recipe.coffeeWeight}g ${window.historyDict.powder} | 1:${ratio} | ${log.recipe.totalWater}g ${window.historyDict.water}</p>
           </div>
 
           <div class="space-y-3 mb-4">
             <!-- Metric: Acidity -->
             <div class="flex items-center gap-3">
-              <span class="text-xs text-coffee-muted w-10">酸度</span>
+              <span class="text-xs text-coffee-muted w-10">${window.historyDict.acidity}</span>
               <div class="flex-1 flex gap-1">${renderDots(log.evaluation.acidity)}</div>
             </div>
             <!-- Metric: Bitterness -->
             <div class="flex items-center gap-3">
-              <span class="text-xs text-coffee-muted w-10">苦度</span>
+              <span class="text-xs text-coffee-muted w-10">${window.historyDict.bitterness}</span>
               <div class="flex-1 flex gap-1">${renderDots(log.evaluation.bitterness)}</div>
             </div>
             <!-- Metric: Body -->
             <div class="flex items-center gap-3">
-              <span class="text-xs text-coffee-muted w-10">醇厚</span>
+              <span class="text-xs text-coffee-muted w-10">${window.historyDict.body}</span>
               <div class="flex-1 flex gap-1">${renderDots(log.evaluation.body)}</div>
             </div>
           </div>
@@ -202,7 +219,7 @@ export function getStaticPaths() {
     }
 
     function deleteLog(id: string) {
-      if (!confirm('確定要刪除這筆紀錄嗎？')) return;
+      if (!confirm(window.historyDict.confirm)) return;
       
       logs = logs.filter(log => log.id !== id);
       localStorage.setItem('barista_flow_logs', JSON.stringify(logs));

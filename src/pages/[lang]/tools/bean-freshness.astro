@@ -29,18 +29,18 @@ const faqSchema = {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "什麼是咖啡豆的「養豆」(Degassing) 過程？",
+      "name": t("tools.bean.faq.1.q"),
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "咖啡豆在烘焙過程中會產生大量的二氧化碳並被鎖在細胞結構內。剛烘好的咖啡豆排氣非常劇烈，如果立刻沖煮，大量的氣泡會阻礙熱水與咖啡粉的接觸，導致萃取不足與風味單薄。所謂的「養豆」，就是將咖啡豆靜置數{t('tools.bean.status.days2')}，讓過多的二氧化碳自然釋放，使咖啡風味達到最佳平衡的過程。"
+        "text": t("tools.bean.faq.1.a")
       }
     },
     {
       "@type": "Question",
-      "name": "如何正確保存咖啡豆以維持新鮮度？",
+      "name": t("tools.bean.faq.2.q"),
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "保存咖啡豆的三大敵人是：氧氣、光線與濕氣。最好的保存方式是將咖啡豆放在單向排氣閥的密封袋或不透明的真空罐中，置於陰涼、乾燥且沒有日曬的櫥櫃內。絕對不要將日常頻繁使用的咖啡豆放入冷藏室，因為開關冰箱時溫差產生的水氣會讓咖啡豆快速受潮並吸附異味。"
+        "text": t("tools.bean.faq.2.a")
       }
     },
     {
@@ -48,7 +48,7 @@ const faqSchema = {
       "name": "{t('tools.bean.h3_3')}",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "可以，但有嚴格的條件。如果您買了大量的咖啡豆無法在一個月內喝完，可以將其「分裝」成單次沖煮的小份量（如試管或真空小袋），然後放入冷凍庫深處。要沖煮時，直接拿出需要的份量「不需退冰」，立刻進行研磨。切忌將整大包豆子反覆進出冷凍庫，這會徹底摧毀咖啡的風味。"
+        "text": t("tools.bean.faq.3.a")
       }
     }
   ]
@@ -57,8 +57,8 @@ const faqSchema = {
 const pageSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "咖啡養豆與新鮮度計算機 (Bean Freshness Calculator)",
-  "description": "根據咖啡豆的烘焙日期與烘焙度，精準計算目前是否處於黃金風味期，並提供專業的沖煮參數調整建議。",
+  "name": t("tools.bean.jsonld.name"),
+  "description": t("tools.bean.jsonld.desc"),
   "applicationCategory": "Utility",
   "operatingSystem": "Web",
   "offers": {
@@ -74,8 +74,8 @@ export function getStaticPaths() {
 ---
 
 <Layout 
-  title="咖啡養豆與新鮮度計算機 | 黃金風味期預測 | Barista Flow"
-  description="您的咖啡豆養好了嗎？輸入烘焙日期，我們的智慧計算機會告訴您目前咖啡豆是處於排氣期、黃金風味期還是衰退期，並給予最佳的沖煮建議。"
+  title={t("tools.bean.meta.title")}
+  description={t("tools.bean.meta.desc")}
   jsonld={[pageSchema, faqSchema]}
 >
   <div class="max-w-4xl mx-auto py-8 sm:py-12 transition-all duration-500">
@@ -85,10 +85,10 @@ export function getStaticPaths() {
         Freshness Tracker
       </div>
       <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
-        咖啡養豆與新鮮度計算機
+        {t("tools.bean.title")}
       </h1>
       <p class="text-sm text-coffee-muted max-w-2xl mx-auto leading-relaxed">
-        掌握最佳萃取時機。輸入烘豆日期與烘焙度，了解您的咖啡豆目前的風味狀態與排氣狀況。
+        {t("tools.bean.subtitle")}
       </p>
     </div>
 
@@ -104,18 +104,18 @@ export function getStaticPaths() {
       <!-- INPUT PANEL -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 border-b border-coffee-sand/10 pb-10">
         <div class="flex flex-col gap-2">
-          <label for="roast-date" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">包裝上的{t('tools.bean.setup.date')}</label>
+          <label for="roast-date" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('tools.bean.label.date')}</label>
           <div class="relative">
             <input type="date" id="roast-date" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer" />
           </div>
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="roast-level" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">烘焙度 (Roast Level)</label>
+          <label for="roast-level" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t("tools.bean.label.level")}</label>
           <select id="roast-level" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer">
-            <option value="light">淺度烘焙 (Light Roast) - 養豆期較長</option>
-            <option value="medium" selected>中度烘焙 (Medium Roast) - 標準</option>
-            <option value="dark">深度烘焙 (Dark Roast) - 需盡快飲用</option>
+            <option value="light">{t("tools.bean.opt.light")}</option>
+            <option value="medium" selected>{t("tools.bean.opt.medium")}</option>
+            <option value="dark">{t("tools.bean.opt.dark")}</option>
           </select>
         </div>
       </div>
@@ -126,40 +126,40 @@ export function getStaticPaths() {
         <!-- Status Header -->
         <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
           <div>
-            <p class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-1">距離烘焙日已過</p>
+            <p class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-1">{t("tools.bean.status.passed")}</p>
             <div class="flex items-baseline gap-2">
               <span id="days-elapsed" class="text-5xl md:text-6xl font-display font-black text-coffee-light drop-shadow-md tabular-nums">7</span>
-              <span class="text-xl font-medium text-coffee-muted">天</span>
+              <span class="text-xl font-medium text-coffee-muted">{t("tools.bean.status.days")}</span>
             </div>
           </div>
 
           <div class="flex-1 max-w-sm w-full bg-coffee-darker/60 rounded-2xl p-5 border border-coffee-sand/10 shadow-inner">
-            <p class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-2">目前風味狀態</p>
-            <h2 id="status-title" class="text-2xl font-bold text-coffee-gold mb-2">黃金風味期</h2>
+            <p class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-2">{t("tools.bean.status.current")}</p>
+            <h2 id="status-title" class="text-2xl font-bold text-coffee-gold mb-2">{t("tools.bean.status.golden")}</h2>
             <p id="status-desc" class="text-sm text-coffee-light/80 leading-relaxed">
-              排氣已經完成，風味物質發展達到顛峰。現在正是這包咖啡豆最美味的時刻。
+              {t("tools.bean.status.golden.desc")}
             </p>
           </div>
         </div>
 
         <!-- Visual Timeline -->
         <div class="mb-10">
-          <h3 class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-6 text-center">咖啡豆生命週期曲線</h3>
+          <h3 class="text-xs font-semibold tracking-widest text-coffee-muted uppercase mb-6 text-center">{t("tools.bean.graph.title")}</h3>
           
           <div class="relative w-full h-8 bg-coffee-darker rounded-full border border-coffee-sand/10 overflow-hidden mb-2 shadow-inner">
             <!-- Zones -->
             <div class="absolute inset-0 flex h-full">
               <div id="zone-fresh" class="h-full bg-blue-900/40 border-r border-coffee-darker relative group" style="width: 15%;">
-                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">排氣期</div>
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">{t("tools.bean.graph.phase1")}</div>
               </div>
               <div id="zone-peak" class="h-full bg-coffee-gold/40 border-r border-coffee-darker relative group" style="width: 35%;">
-                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">黃金風味期</div>
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">{t("tools.bean.status.golden")}</div>
               </div>
               <div id="zone-matured" class="h-full bg-orange-900/40 border-r border-coffee-darker relative group" style="width: 25%;">
-                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">成熟穩定期</div>
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">{t("tools.bean.graph.phase3")}</div>
               </div>
               <div id="zone-stale" class="h-full bg-red-900/20 relative group flex-1">
-                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">風味衰退期</div>
+                <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 whitespace-nowrap bg-coffee-dark text-coffee-light text-[10px] px-2 py-1 rounded">{t("tools.bean.graph.phase4")}</div>
               </div>
             </div>
 
@@ -182,7 +182,7 @@ export function getStaticPaths() {
         <!-- Actionable Advice -->
         <div class="bg-coffee-dark border border-coffee-gold/20 rounded-2xl p-6 relative">
           <div class="absolute -top-3 start-6 bg-coffee-dark px-2 text-xs font-bold text-coffee-gold uppercase tracking-widest">
-            沖煮策略建議
+            {t("tools.bean.advice.title")}
           </div>
           <p id="action-advice" class="text-sm text-coffee-light/90 leading-relaxed mt-2">
             <!-- Injected via JS -->
@@ -196,7 +196,7 @@ export function getStaticPaths() {
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-coffee-sand/20 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        <p class="text-coffee-muted text-sm">請選擇包裝上的烘焙日期以進行計算</p>
+        <p class="text-coffee-muted text-sm">{t("tools.bean.empty.prompt")}</p>
       </div>
     </div>
 
@@ -205,13 +205,13 @@ export function getStaticPaths() {
 
     <!-- FAQ Accordion -->
     <div class="mt-8 mb-16">
-      <h2 class="font-display text-2xl font-bold text-coffee-gold mb-8 text-center border-b border-coffee-sand/10 pb-4">關於咖啡養豆的常見問題</h2>
+      <h2 class="font-display text-2xl font-bold text-coffee-gold mb-8 text-center border-b border-coffee-sand/10 pb-4">{t("tools.bean.faq.title")}</h2>
       
       <div class="space-y-4">
         <!-- FAQ 1 -->
         <details class="group bg-coffee-darker/60 border border-coffee-sand/10 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
           <summary class="flex items-center justify-between cursor-pointer p-6 font-medium text-coffee-light hover:text-coffee-gold transition-colors">
-            什麼是咖啡豆的「養豆」(Degassing) 過程？
+            {t("tools.bean.faq.1.q")}
             <span class="transition duration-300 group-open:-rotate-180">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -219,14 +219,14 @@ export function getStaticPaths() {
             </span>
           </summary>
           <div class="px-6 pb-6 text-sm text-coffee-muted leading-relaxed">
-            咖啡豆在烘焙過程中會產生大量的二氧化碳並被鎖在細胞結構內。剛烘好的咖啡豆排氣非常劇烈，如果立刻沖煮，大量的氣泡會阻礙熱水與咖啡粉的接觸，導致萃取不足與風味單薄（即常見的水流通道效應）。所謂的「養豆」，就是將咖啡豆靜置數天，讓過多的二氧化碳自然釋放，使咖啡風味達到最佳平衡的物理過程。
+            {t("tools.bean.faq.1.a_text")}
           </div>
         </details>
 
         <!-- FAQ 2 -->
         <details class="group bg-coffee-darker/60 border border-coffee-sand/10 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
           <summary class="flex items-center justify-between cursor-pointer p-6 font-medium text-coffee-light hover:text-coffee-gold transition-colors">
-            如何正確保存咖啡豆以維持新鮮度？
+            {t("tools.bean.faq.2.q")}
             <span class="transition duration-300 group-open:-rotate-180">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -241,7 +241,7 @@ export function getStaticPaths() {
         <!-- FAQ 3 -->
         <details class="group bg-coffee-darker/60 border border-coffee-sand/10 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
           <summary class="flex items-center justify-between cursor-pointer p-6 font-medium text-coffee-light hover:text-coffee-gold transition-colors">
-            我可以把咖啡豆放在冰箱冷凍嗎？
+            {t("tools.bean.faq.3.q")}
             <span class="transition duration-300 group-open:-rotate-180">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -269,7 +269,10 @@ export function getStaticPaths() {
   }
 </style>
 
-<script define:vars={{ dictBean }}>
+<script is:inline define:vars={{ dictBean }}>
+  window.dictBean = dictBean;
+</script>
+<script>
   // Elements
   const roastDateInput = document.getElementById('roast-date') as HTMLInputElement;
   const roastLevelSelect = document.getElementById('roast-level') as HTMLSelectElement;
@@ -350,24 +353,24 @@ export function getStaticPaths() {
     let colorClass = ""; // For top bar and glow
 
     if (daysElapsed <= boundaries.freshEnd) {
-      title = dictBean['tools.bean.script.fresh.title'];
-      desc = dictBean['tools.bean.script.fresh.desc'];
-      advice = dictBean['tools.bean.script.fresh.advice'];
+      title = window.dictBean['tools.bean.script.fresh.title'];
+      desc = window.dictBean['tools.bean.script.fresh.desc'];
+      advice = window.dictBean['tools.bean.script.fresh.advice'];
       colorClass = "bg-blue-500";
     } else if (daysElapsed <= boundaries.peakEnd) {
-      title = dictBean['tools.bean.script.peak.title'];
-      desc = dictBean['tools.bean.script.peak.desc'];
-      advice = dictBean['tools.bean.script.peak.advice'];
+      title = window.dictBean['tools.bean.script.peak.title'];
+      desc = window.dictBean['tools.bean.script.peak.desc'];
+      advice = window.dictBean['tools.bean.script.peak.advice'];
       colorClass = "bg-coffee-gold";
     } else if (daysElapsed <= boundaries.matureEnd) {
-      title = dictBean['tools.bean.script.mature.title'];
-      desc = dictBean['tools.bean.script.mature.desc'];
-      advice = dictBean['tools.bean.script.mature.advice'];
+      title = window.dictBean['tools.bean.script.mature.title'];
+      desc = window.dictBean['tools.bean.script.mature.desc'];
+      advice = window.dictBean['tools.bean.script.mature.advice'];
       colorClass = "bg-orange-600";
     } else {
-      title = dictBean['tools.bean.script.stale.title'];
-      desc = dictBean['tools.bean.script.stale.desc'];
-      advice = dictBean['tools.bean.script.stale.advice'];
+      title = window.dictBean['tools.bean.script.stale.title'];
+      desc = window.dictBean['tools.bean.script.stale.desc'];
+      advice = window.dictBean['tools.bean.script.stale.advice'];
       colorClass = "bg-red-600";
     }
 

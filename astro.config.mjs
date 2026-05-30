@@ -43,6 +43,9 @@ export default defineConfig({
     })
   ],
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    esbuild: {
+      drop: ['console', 'debugger'],
+    }
   }
 });
