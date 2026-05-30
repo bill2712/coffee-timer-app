@@ -39,11 +39,13 @@ if (pathWithoutLang.startsWith(`/${currentLang}/`)) {
   pathWithoutLang = '/';
 }
 
-const canonicalURL = new URL(basePath + `/${currentLang}` + (pathWithoutLang === '/' ? '/' : pathWithoutLang), siteOrigin).toString();
+const cleanBasePath = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
+const cleanPathWithoutLang = pathWithoutLang.startsWith('/') ? pathWithoutLang : '/' + pathWithoutLang;
+const canonicalURL = new URL(`${cleanBasePath}/${currentLang}${cleanPathWithoutLang}`.replace(/\/+/g, '/'), siteOrigin).toString();
 
-const base = basePath.endsWith('/') ? basePath : basePath + '/';
-const safeImage = image.startsWith('/') ? base + image.slice(1) : image;
-const ogImageUrl = new URL(safeImage, siteOrigin).toString();
+const base = cleanBasePath + '/';
+const safeImage = image.startsWith('/') ? base + image.slice(1) : base + image;
+const ogImageUrl = new URL(safeImage.replace(/\/+/g, '/'), siteOrigin).toString();
 ---
 
 <!-- Primary Meta Tags -->
@@ -55,9 +57,9 @@ const ogImageUrl = new URL(safeImage, siteOrigin).toString();
 
 <!-- International Hreflang Matrix -->
 {Object.keys(languages).map((l) => (
-  <link rel="alternate" hreflang={l} href={new URL(basePath + `/${l}` + (pathWithoutLang === '/' ? '/' : pathWithoutLang), siteOrigin).toString()} />
+  <link rel="alternate" hreflang={l} href={new URL(`${cleanBasePath}/${l}${cleanPathWithoutLang}`.replace(/\/+/g, '/'), siteOrigin).toString()} />
 ))}
-<link rel="alternate" hreflang="x-default" href={new URL(basePath + '/en' + (pathWithoutLang === '/' ? '/' : pathWithoutLang), siteOrigin).toString()} />
+<link rel="alternate" hreflang="x-default" href={new URL(`${cleanBasePath}/en${cleanPathWithoutLang}`.replace(/\/+/g, '/'), siteOrigin).toString()} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={article ? "article" : "website"} />

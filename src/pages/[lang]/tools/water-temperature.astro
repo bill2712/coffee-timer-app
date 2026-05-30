@@ -3,16 +3,21 @@ import { SITE_URL } from '../../../config';
 import Layout from '../../../layouts/Layout.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const dictImpossible = t('tools.watertemp.impossible');
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "智慧水溫降溫預測器 (Cool-Down Predictor)",
+  "name": "{t('tools.watertemp.jsonld.name')}",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "基於牛頓冷卻定律的咖啡水溫降溫預測器。精準計算手沖壺從沸騰降溫至理想萃取溫度的等待時間。",
+  "description": "{t('tools.watertemp.jsonld.desc')}",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -26,8 +31,8 @@ export function getStaticPaths() {
 ---
 
 <Layout 
-  title="智慧水溫降溫預測器 | 免溫度計精準控溫 | Barista Flow"
-  description="手邊沒有溫度計？透過我們的智慧水溫降溫預測器，利用牛頓冷卻定律，為您精準預估手沖壺、玻璃壺降溫至 90°C 所需的精確秒數。"
+  title="{t('tools.watertemp.meta.title')}"
+  description="{t('tools.watertemp.meta.desc')}"
   jsonld={jsonLd}
 >
   <!-- Background Color Overlay that will transition via JS -->
@@ -42,10 +47,10 @@ export function getStaticPaths() {
           Physics-Based Tool
         </div>
         <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
-          智慧水溫降溫預測器
+          {t('tools.watertemp.title')}
         </h1>
         <p class="text-sm text-coffee-muted max-w-2xl mx-auto leading-relaxed">
-          基於「牛頓冷卻定律」，精準預測熱水從沸騰 (100°C) 降至理想沖煮溫度的所需時間。手邊沒有溫度計也能完美控溫。
+          {t('tools.watertemp.subtitle')}
         </p>
       </div>
 
@@ -64,49 +69,49 @@ export function getStaticPaths() {
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
               </svg>
-              環境與器材設定
+              {t('tools.watertemp.setup.title')}
             </h3>
 
             <!-- Ambient Temp -->
             <div class="flex flex-col gap-2">
               <label for="ambient-slider" class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-muted">
-                <span>目前室溫 (Ambient)</span>
+                <span>{t('tools.watertemp.setup.ambient')}</span>
                 <span id="ambient-val" class="text-coffee-light font-bold text-sm">22 °C</span>
               </label>
               <input type="range" id="ambient-slider" min="10" max="35" value="22" step="1" class="w-full accent-coffee-gold h-2 bg-coffee-darker rounded-lg appearance-none cursor-pointer" />
               <div class="flex justify-between text-[10px] text-coffee-muted/50 font-mono mt-1">
-                <span>10°C (寒冷)</span>
-                <span>35°C (炎熱)</span>
+                <span>{t('tools.watertemp.setup.ambient.cold')}</span>
+                <span>{t('tools.watertemp.setup.ambient.hot')}</span>
               </div>
             </div>
 
             <!-- Target Temp -->
             <div class="flex flex-col gap-2">
               <label for="target-slider" class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-muted">
-                <span>目標水溫 (Target)</span>
+                <span>{t('tools.watertemp.setup.target')}</span>
                 <span id="target-val" class="text-coffee-gold font-bold text-sm">90 °C</span>
               </label>
               <input type="range" id="target-slider" min="70" max="98" value="90" step="1" class="w-full accent-orange-500 h-2 bg-coffee-darker rounded-lg appearance-none cursor-pointer" />
               <div class="flex justify-between text-[10px] text-coffee-muted/50 font-mono mt-1">
-                <span>70°C (深焙)</span>
-                <span>98°C (極淺焙)</span>
+                <span>{t('tools.watertemp.setup.target.dark')}</span>
+                <span>{t('tools.watertemp.setup.target.light')}</span>
               </div>
             </div>
 
             <!-- Kettle Type -->
             <div class="flex flex-col gap-2 pt-2">
-              <label for="kettle-select" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">使用器材 (保溫性)</label>
+              <label for="kettle-select" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('tools.watertemp.setup.kettle')}</label>
               <select id="kettle-select" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer">
-                <option value="stainless">標準不鏽鋼手沖壺 (開蓋)</option>
-                <option value="ceramic">厚實陶瓷壺 (保溫佳)</option>
-                <option value="glass">薄玻璃下壺 (散熱快)</option>
+                <option value="stainless">{t('tools.watertemp.setup.kettle.stainless')}</option>
+                <option value="ceramic">{t('tools.watertemp.setup.kettle.ceramic')}</option>
+                <option value="glass">{t('tools.watertemp.setup.kettle.glass')}</option>
               </select>
             </div>
           </div>
 
           <!-- Estimation Result -->
           <div class="flex flex-col items-center justify-center space-y-6">
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-coffee-muted text-center">預估降溫時間 (100°C → <span id="target-display-text">90</span>°C)</h3>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-coffee-muted text-center">{t('tools.watertemp.setup.esttime')} (100°C → <span id="target-display-text">90</span>°C)</h3>
             
             <div class="relative flex items-center justify-center w-48 h-48 rounded-full border-4 border-coffee-sand/10 bg-coffee-darker/50 shadow-inner">
               <!-- Glow -->
@@ -126,22 +131,22 @@ export function getStaticPaths() {
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
               </svg>
-              開始降溫倒數
+              {t('tools.watertemp.setup.startbtn')}
             </button>
           </div>
         </div>
       </div>
 
       <div class="prose prose-invert prose-coffee max-w-none bg-coffee-darker/30 p-8 rounded-3xl border border-coffee-sand/5">
-        <h2 class="font-display text-2xl font-bold text-coffee-gold mb-6 border-b border-coffee-sand/10 pb-4">牛頓冷卻定律與咖啡萃取</h2>
+        <h2 class="font-display text-2xl font-bold text-coffee-gold mb-6 border-b border-coffee-sand/10 pb-4">{t('tools.watertemp.h2')}</h2>
         <p>
-          當我們將剛沸騰的水 (100°C) 倒入常溫的手沖壺中，熱水會開始向環境散熱。根據物理學的**牛頓冷卻定律 (Newton's Law of Cooling)**，熱量散失的速度與「水溫」和「環境溫度」的溫差成正比。這意味著：剛沸騰時降溫極快，但越接近室溫時，降溫速度會變得越慢。
+          {t('tools.watertemp.p1')}
         </p>
         <p>
-          在咖啡萃取中，溫度是決定萃取率的關鍵。水溫越高，溶解物質的速度越快；如果使用沸水直接沖煮深焙豆，極易萃取出焦苦味。反之，如果水溫過低（例如低於 85°C）來沖煮淺焙豆，則會導致尖銳的酸味與水感。
+          {t('tools.watertemp.p2')}
         </p>
         <p>
-          這款工具根據不同的材質特性賦予了不同的散熱常數（$k$ 值）。您只需要將剛沸騰的熱水倒入選擇的器具中，不需插入溫度計，當系統發出提示音時，就是最完美的沖煮時機！
+          {t('tools.watertemp.p3')}
         </p>
       </div>
     </div>
@@ -154,10 +159,10 @@ export function getStaticPaths() {
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
-          放棄倒數
+          {t('tools.watertemp.cd.cancel')}
         </button>
         <div class="text-sm font-bold text-white/90 bg-black/20 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
-          目標溫度: <span id="cd-target-display" class="text-coffee-gold">90°C</span>
+          {t('tools.watertemp.cd.target')} <span id="cd-target-display" class="text-coffee-gold">90°C</span>
         </div>
       </div>
 
@@ -165,7 +170,7 @@ export function getStaticPaths() {
         <!-- Main Countdown UI -->
         <div class="lg:col-span-2 flex flex-col items-center justify-center py-12 glass-card rounded-3xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl relative overflow-hidden">
           
-          <h2 class="text-lg font-medium text-white/80 mb-8 tracking-widest uppercase">目前預估水溫</h2>
+          <h2 class="text-lg font-medium text-white/80 mb-8 tracking-widest uppercase">{t('tools.watertemp.cd.current')}</h2>
           
           <div class="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80">
             <!-- SVG Progress Ring -->
@@ -184,17 +189,17 @@ export function getStaticPaths() {
             </div>
           </div>
 
-          <p class="mt-10 text-sm text-white/60 font-medium">請保持容器開蓋，以利散熱</p>
+          <p class="mt-10 text-sm text-white/60 font-medium">{t('tools.watertemp.cd.hint')}</p>
         </div>
 
         <!-- Right Side: AdSense & Info -->
         <div class="lg:col-span-1 flex flex-col gap-6">
           <div class="glass-card rounded-2xl p-6 border border-white/10 bg-black/20 backdrop-blur-md">
-            <h3 class="text-sm font-bold text-white/90 mb-4 uppercase tracking-wider border-b border-white/10 pb-2">參數資訊</h3>
+            <h3 class="text-sm font-bold text-white/90 mb-4 uppercase tracking-wider border-b border-white/10 pb-2">{t('tools.watertemp.cd.info')}</h3>
             <ul class="space-y-3 text-sm text-white/70">
-              <li class="flex justify-between"><span>環境室溫</span> <span id="info-ambient" class="font-mono text-white">22°C</span></li>
-              <li class="flex justify-between"><span>起始溫度</span> <span class="font-mono text-white">100°C</span></li>
-              <li class="flex justify-between"><span>容器材質</span> <span id="info-material" class="text-white font-medium">不鏽鋼手沖壺</span></li>
+              <li class="flex justify-between"><span>{t('tools.watertemp.cd.info.ambient')}</span> <span id="info-ambient" class="font-mono text-white">22°C</span></li>
+              <li class="flex justify-between"><span>{t('tools.watertemp.cd.info.start')}</span> <span class="font-mono text-white">100°C</span></li>
+              <li class="flex justify-between"><span>{t('tools.watertemp.cd.info.material')}</span> <span id="info-material" class="text-white font-medium">不鏽鋼手沖壺</span></li>
             </ul>
           </div>
           
@@ -209,7 +214,7 @@ export function getStaticPaths() {
   </div>
 </Layout>
 
-<script>
+<script define:vars={{ dictImpossible }}>
   // --- Newton's Law of Cooling Constants (k values in seconds^-1) ---
   const KETTLE_CONSTANTS: Record<string, number> = {
     glass: 0.0012,       // Fast
@@ -297,7 +302,7 @@ export function getStaticPaths() {
   }
 
   function formatTime(totalSecs: number): string {
-    if (totalSecs >= 9999) return "無法達成";
+    if (totalSecs >= 9999) return dictImpossible || "無法達成";
     const m = Math.floor(totalSecs / 60).toString().padStart(2, '0');
     const s = (totalSecs % 60).toString().padStart(2, '0');
     return `${m}:${s}`;

@@ -6,6 +6,10 @@ import Timer from '../../../components/Timer.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const defaultV60Recipe = {
   beanName: '衣索比亞 耶加雪菲',
@@ -24,7 +28,7 @@ const jsonLd = {
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "專業的 V60 手沖咖啡粉水比計算機與三階段注水計時器，幫助您精準掌握悶蒸與萃取節奏。",
+  "description": "{t('tools.v60.jsonld.desc')}",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -38,25 +42,25 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="V60 Pour Over Calculator & Timer | V60 粉水比計算機"
-  description="專為 Hario V60 手沖設計的咖啡粉水比計算機與三階段互動式計時器。掌握 1:15 黃金比例，精準控制悶蒸與水流，沖出層次豐富的極致風味。"
+  title="{t('tools.v60.meta.title')}"
+  description="{t('tools.v60.meta.desc')}"
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">
     <div class="flex justify-center">
       <Breadcrumbs items={[
         { label: '首頁', url: '/' },
-        { label: 'V60 手沖計算機' }
+        { label: t('tools.v60.title') }
       ]} />
     </div>
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
       Hario V60 Specialist
     </div>
     <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-coffee-light">
-      V60 手沖計算機
+      {t('tools.v60.title')}
     </h1>
     <p class="text-coffee-muted mt-4 text-sm sm:text-base max-w-xl mx-auto">
-      專為 V60 錐形濾杯設計的互動式參數計算機與注水計時器。已為您預載 1:15 黃金比例，直接點擊下方「套用設定」開始沖煮！
+      {t('tools.v60.subtitle')}
     </p>
   </div>
 
@@ -73,41 +77,41 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto blog-content prose prose-invert prose-coffee mt-12 pt-12 border-t border-coffee-sand/10">
     <AdSlot type="top-leaderboard" id="v60-ad-1" class="mb-10" />
 
-    <h2>如何使用這款 V60 計算機？</h2>
+    <h2>{t('tools.v60.h2_1')}</h2>
     <p>
-      Hario V60 是全球最受歡迎的手沖咖啡器具之一，其獨特的 60 度錐形設計、大口徑底孔與螺旋型導水槽，賦予了咖啡師極高的水流控制自由度。但也正因如此，V60 非常吃重注水的節奏與穩定性。這款 <strong>V60 手沖計算機 (V60 Calculator)</strong> 與計時器，就是為了解決這個痛點而生。
+      Hario V60 是全球最受歡迎的手沖咖啡器具之一，其獨特的 60 度錐形設計、大口徑底孔與螺旋型導水槽，賦予了咖啡師極高的水流控制自由度。但也正因如此，V60 非常吃重注水的節奏與穩定性。這款 <strong>{t('tools.v60.title')} (V60 Calculator)</strong> 與計時器，就是為了解決這個痛點而生。
     </p>
     <p>
-      當您進入本頁面時，我們已經預先為您載入了 V60 最經典的參數：<strong>水溫 92°C、粉水比 1:15、中細研磨</strong>。您只需根據手邊的咖啡豆重量（例如 20g），調整「咖啡粉量」，計時器就會自動為您計算出悶蒸（Bloom）、第一段注水與第二段注水的目標水量。
+      {t('tools.v60.p2')}
     </p>
 
-    <h2>V60 沖煮的 3 個專業技巧 (Pro Tips)</h2>
+    <h2>{t('tools.v60.h2_2')}</h2>
     <ol>
-      <li><strong>精準的悶蒸 (The Bloom)</strong>：V60 的流速較快，因此第一段的悶蒸至關重要。使用咖啡粉 2 到 3 倍重的水量（例如 20g 粉用 40-60g 水）均勻打濕咖啡粉，並等待 30-40 秒。這能釋放二氧化碳，避免後續通道效應。</li>
-      <li><strong>控制水柱粗細與高度</strong>：在第二階段（主要萃取）時，水柱應保持垂直且柔和，從中心向外繞圈。盡量不要讓水柱直接沖刷到濾紙邊緣，否則水會直接從邊緣流走，導致萃取不足。</li>
-      <li><strong>觀察水位的下降速度</strong>：V60 的肋骨設計讓排氣順暢，水位下降速度很快。如果您發現水流停滯，可能代表研磨度過細，或是產生了太多的細粉堵塞了濾紙。</li>
+      <li>{t('tools.v60.li1')}</li>
+      <li>{t('tools.v60.li2')}</li>
+      <li>{t('tools.v60.li3')}</li>
     </ol>
 
     <AdSlot type="in-article" id="v60-ad-2" class="my-10" />
 
-    <h2>常見的 V60 沖煮錯誤 (Common Mistakes)</h2>
-    <h3>1. 研磨度不對</h3>
+    <h2>{t('tools.v60.h2_3')}</h2>
+    <h3>{t('tools.v60.h3_1')}</h3>
     <p>
-      這是最常見的錯誤。對於 V60 來說，如果研磨太粗，水流會瞬間通過，咖啡喝起來會水水的且帶有尖銳的酸味；如果太細，會產生苦澀的過度萃取感。請從「中細研磨」（約略粗於食鹽）開始嘗試，並根據風味進行微調。
+      {t('tools.v60.p3')}
     </p>
     
-    <h3>2. 忽略了水溫的影響</h3>
+    <h3>{t('tools.v60.h3_2')}</h3>
     <p>
-      水溫是萃取的引擎。許多人習慣用沸水直接沖煮，這容易烤焦咖啡粉並帶出焦苦味。一般建議淺焙豆使用 92-94°C，中深焙豆則降至 88-90°C，以獲得更圓潤的口感。
+      {t('tools.v60.p4')}
     </p>
 
-    <h3>3. 過度攪拌 (Over-agitation)</h3>
+    <h3>{t('tools.v60.h3_3')}</h3>
     <p>
-      雖然有些手法（如 Rao Spin）提倡適度攪拌以平整粉床，但在 V60 這種流速已經很快的濾杯中，過度搖晃或使用過強的水柱去衝擊粉層，會讓細粉下沉堵死底孔，產生苦澀味。輕柔、穩定的注水才是 V60 的王道。
+      {t('tools.v60.p5')}
     </p>
 
     <p>
-      使用上方的 <strong>V60 Timer</strong>，跟著視覺化的萃取曲線進行注水，您很快就能掌握這款經典濾杯的精髓，沖出一杯香氣撲鼻、層次分明的完美咖啡！
+      {t('tools.v60.p6')}
     </p>
   </div>
 </Layout>

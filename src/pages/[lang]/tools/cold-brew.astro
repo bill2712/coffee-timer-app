@@ -5,6 +5,10 @@ import ParameterForm from '../../../components/ParameterForm.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const defaultColdBrewRecipe = {
   beanName: '深焙 巧克力調綜合豆',
@@ -23,7 +27,7 @@ const jsonLd = {
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "專業冷萃咖啡 (Cold Brew) 粉水比計算機。協助您調配 1:10 冰咖啡或 1:5 濃縮液比例，計算低溫浸泡所需的精確水量。",
+  "description": "{t('tools.coldbrew.jsonld.desc')}",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -37,25 +41,25 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="Cold Brew Coffee Calculator & Ratio Assistant | 冷萃咖啡計算機"
-  description="自製冷萃咖啡 (Cold Brew) 必備的水粉比計算機。掌握 1:10 完美冰咖啡比例或 1:5 濃縮液配方，教您用時間換取極致滑順的甘甜風味。"
+  title="{t('tools.coldbrew.meta.title')}"
+  description="{t('tools.coldbrew.meta.desc')}"
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">
     <div class="flex justify-center">
       <Breadcrumbs items={[
         { label: '首頁', url: '/' },
-        { label: '冷萃咖啡計算機' }
+        { label: t('tools.coldbrew.title') }
       ]} />
     </div>
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
       Cold Brew Specialist
     </div>
     <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-coffee-light">
-      冷萃咖啡計算機
+      {t('tools.coldbrew.title')}
     </h1>
     <p class="text-coffee-muted mt-4 text-sm sm:text-base max-w-xl mx-auto">
-      用時間換取極致滑順！本計算機預設為 1:10 標準冷萃比例與 4°C 冰水浸泡設定，幫助您精確計算大容量冷萃所需的粉水量。
+      {t('tools.coldbrew.subtitle')}
     </p>
   </div>
 
@@ -69,9 +73,9 @@ export function getStaticPaths() {
         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-coffee-gold mb-4 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <h3 class="font-display text-2xl text-coffee-gold font-bold mb-2">冷萃不需要計時器！</h3>
+        <h3 class="font-display text-2xl text-coffee-gold font-bold mb-2">{t('tools.coldbrew.timer.title')}</h3>
         <p class="text-coffee-muted max-w-md mx-auto leading-relaxed">
-          冷萃咖啡 (Cold Brew) 的精髓在於「低溫長時間浸泡」。請將混合好的咖啡液放入冰箱冷藏室 (約 4°C)，靜置 <strong>12 到 24 小時</strong> 後再進行過濾。時間才是冷萃最好的魔法。
+          {t('tools.coldbrew.timer.desc')}
         </p>
       </div>
     </div>
@@ -80,45 +84,45 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto blog-content prose prose-invert prose-coffee mt-12 pt-12 border-t border-coffee-sand/10">
     <AdSlot type="top-leaderboard" id="cb-ad-1" class="mb-10" />
 
-    <h2>如何使用這款 Cold Brew 計算機？</h2>
+    <h2>{t('tools.coldbrew.h2_1')}</h2>
     <p>
-      冷萃咖啡 (Cold Brew) 與冰滴咖啡 (Ice Drip) 或一般手沖冰咖啡不同。它是將咖啡粉直接浸泡在冷水或冰水中，放入冰箱長時間低溫萃取。因為水溫極低，咖啡中許多容易釋放苦味和澀味的大分子物質不會被溶出，造就了冷萃咖啡極度滑順、甘甜且幾乎沒有酸味的迷人特性。
+      {t('tools.coldbrew.p1')}
     </p>
     <p>
-      使用這款 <strong>Cold Brew Calculator</strong> 非常簡單。您只需要決定您想製作「直接飲用」還是「濃縮液 (Concentrate)」：
+      {t('tools.coldbrew.p2')}
     </p>
     <ul>
-      <li><strong>直接飲用版 (預設)</strong>：設定粉水比為 <strong>1:10 到 1:12</strong>。過濾後不需稀釋，可直接加冰塊飲用。</li>
-      <li><strong>濃縮液版</strong>：設定粉水比為 <strong>1:4 到 1:6</strong>。過濾後會得到極濃的咖啡液，飲用時需以 1:1 的比例加入水或牛奶稀釋。</li>
+      <li>{t('tools.coldbrew.li1')}</li>
+      <li>{t('tools.coldbrew.li2')}</li>
     </ul>
 
-    <h2>冷萃咖啡的 3 個專業技巧 (Pro Tips)</h2>
+    <h2>{t('tools.coldbrew.h2_2')}</h2>
     <ol>
-      <li><strong>使用最粗的研磨度</strong>：因為浸泡時間長達 12 小時以上，研磨度必須非常粗（比法式濾壓壺更粗），否則容易過度萃取產生木質味或雜味，且極難過濾。</li>
-      <li><strong>確保粉水完全混合</strong>：在剛加入冷水時，咖啡粉容易漂浮在表面。請務必使用湯匙將粉水充分攪拌均勻，確保所有的咖啡粉都被水分浸濕，然後才放入冰箱。</li>
-      <li><strong>雙重過濾法</strong>：浸泡完成後，過濾是冷萃的一大挑戰。建議先用金屬濾網或濾布進行第一次粗過濾，把大部分的粉渣濾掉；接著再用 V60 濾紙進行第二次細過濾。這樣您會得到一杯極度純淨透亮的冷萃咖啡。</li>
+      <li>{t('tools.coldbrew.li3')}</li>
+      <li>{t('tools.coldbrew.li4')}</li>
+      <li>{t('tools.coldbrew.li5')}</li>
     </ol>
 
     <AdSlot type="in-article" id="cb-ad-2" class="my-10" />
 
-    <h2>常見的冷萃錯誤 (Common Mistakes)</h2>
-    <h3>1. 使用過期的「剩豆」</h3>
+    <h2>{t('tools.coldbrew.h2_3')}</h2>
+    <h3>{t('tools.coldbrew.h3_1')}</h3>
     <p>
-      雖然冷萃確實可以修飾掉不好的苦澀味，但這不代表您可以把放了半年、已經嚴重油耗的咖啡豆拿來做冷萃。如果豆子本身的風味已經劣變，冷萃出來的咖啡依然會有令人不悅的油耗味。
+      {t('tools.coldbrew.p3')}
     </p>
     
-    <h3>2. 室溫浸泡時間過長</h3>
+    <h3>{t('tools.coldbrew.h3_2')}</h3>
     <p>
-      有些人喜歡在室溫下進行冷萃以加快萃取速度（例如室溫放 8 小時）。但室溫浸泡非常容易孳生細菌，且風味容易發酵變酸。強烈建議全程放在 4°C 左右的冰箱中慢速萃取 12-24 小時，風味會更加乾淨穩定。
+      {t('tools.coldbrew.p4')}
     </p>
 
-    <h3>3. 過濾時用力擠壓咖啡粉渣</h3>
+    <h3>{t('tools.coldbrew.h3_3')}</h3>
     <p>
-      在最後過濾時，很多人為了不想浪費，會用力去擠壓濾布或濾袋裡的咖啡渣。千萬不要這麼做！這會把咖啡粉中最苦澀、最混濁的物質擠壓出來，瞬間毀掉一壺完美的冷萃咖啡。請讓它自然滴落即可。
+      {t('tools.coldbrew.p5')}
     </p>
 
     <p>
-      使用上方的計算機確認您的粉水量，把那包美味的咖啡豆做成沁涼的冷萃咖啡，為炎炎夏日做好準備吧！
+      {t('tools.coldbrew.p6')}
     </p>
   </div>
 </Layout>

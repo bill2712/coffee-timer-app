@@ -1,6 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLanguagePaths } from '../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 export function getStaticPaths() {
   return getLanguagePaths();
@@ -13,8 +17,8 @@ export function getStaticPaths() {
 >
   <div class="max-w-3xl mx-auto py-8 sm:py-12">
     <div class="mb-10 text-center">
-      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">服務條款 (Terms of Service)</h1>
-      <p class="text-sm text-coffee-muted">最後更新日期：2026年5月28日</p>
+      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">{t('terms.title')}</h1>
+      <p class="text-sm text-coffee-muted">{t('terms.date')}</p>
     </div>
 
     <div class="glass-card rounded-2xl p-6 sm:p-10 prose prose-invert prose-coffee max-w-none">
@@ -22,7 +26,7 @@ export function getStaticPaths() {
         歡迎您使用 Barista Flow（以下簡稱「本網站」）。當您瀏覽、存取或使用本網站提供的任何工具與內容時，即表示您完全同意並接受以下服務條款。如果您不同意本條款的任何部分，請勿使用本網站。
       </p>
 
-      <h2>1. 服務說明</h2>
+      <h2>{t('terms.s1.title')}</h2>
       <p>
         Barista Flow 提供免費的線上咖啡沖煮計時器、參數計算工具，以及咖啡科學相關的知識文章。本網站旨在提供個人、非商業用途的參考與協助。
       </p>
@@ -36,7 +40,7 @@ export function getStaticPaths() {
         <li>您可以為了個人學習目的分享本網站的連結（例如使用我們的「分享此配方」功能）。</li>
       </ul>
 
-      <h2>3. 免責聲明</h2>
+      <h2>{t('terms.s3.title')}</h2>
       <p>
         本網站提供的所有咖啡參數、教學文章與計時工具皆「按原樣」提供。雖然我們力求資訊的科學性與準確性，但咖啡沖煮受到諸多實體變數（如水質、豆種、氣溫等）影響。
       </p>

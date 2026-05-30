@@ -6,6 +6,10 @@ import Timer from '../../../components/Timer.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const defaultFrenchPressRecipe = {
   beanName: '哥倫比亞 水洗',
@@ -24,7 +28,7 @@ const jsonLd = {
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "精準的法式濾壓壺 (French Press) 咖啡粉水比計算機與計時器。掌握 1:12 濃郁比例，完美浸泡萃取。",
+  "description": "{t('tools.frenchpress.jsonld.desc')}",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -38,25 +42,25 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="French Press Coffee Calculator & Timer | 法壓壺粉水比助理"
-  description="法式濾壓壺 (French Press) 專用咖啡計算機與計時器。教您如何使用 1:12 黃金粉水比與粗研磨，輕鬆泡出醇厚、油脂豐富的經典法壓咖啡。"
+  title="{t('tools.frenchpress.meta.title')}"
+  description="{t('tools.frenchpress.meta.desc')}"
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">
     <div class="flex justify-center">
       <Breadcrumbs items={[
         { label: '首頁', url: '/' },
-        { label: '法式濾壓壺計算機' }
+        { label: t('tools.frenchpress.title') }
       ]} />
     </div>
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
       French Press Master
     </div>
     <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-coffee-light">
-      法式濾壓壺計算機
+      {t('tools.frenchpress.title')}
     </h1>
     <p class="text-coffee-muted mt-4 text-sm sm:text-base max-w-xl mx-auto">
-      最適合新手的全浸泡式沖煮法！已經為您預載了法壓壺專用的 1:12 濃郁水粉比與粗研磨設定，立刻開始您的醇厚萃取。
+      {t('tools.frenchpress.subtitle')}
     </p>
   </div>
 
@@ -73,41 +77,41 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto blog-content prose prose-invert prose-coffee mt-12 pt-12 border-t border-coffee-sand/10">
     <AdSlot type="top-leaderboard" id="fp-ad-1" class="mb-10" />
 
-    <h2>如何使用這款 French Press 計算機？</h2>
+    <h2>{t('tools.frenchpress.h2_1')}</h2>
     <p>
-      法式濾壓壺 (French Press) 是一種歷史悠久且極度受歡迎的沖煮工具。與 V60 的滴濾式不同，法壓壺採用「全浸泡式 (Immersion)」萃取。咖啡粉長時間完全浸泡在熱水中，這使得它能萃取出更多的咖啡油脂與醇厚度 (Body)。這款 <strong>French Press Calculator</strong> 將幫助您精準掌握粉水比與浸泡時間。
+      {t('tools.frenchpress.p1')}
     </p>
     <p>
-      我們預設為您載入了 <strong>1:12 的粉水比</strong>，這是法壓壺最經典的濃郁比例。因為法壓壺不使用濾紙，咖啡油脂得以保留，使用 1:12 到 1:15 的比例能創造出非常厚實的口感。只需在上方輸入您的咖啡豆重量，計算機就會自動算出所需的總水量。
+      {t('tools.frenchpress.p2')}
     </p>
 
-    <h2>法式濾壓壺的 3 個專業技巧 (Pro Tips)</h2>
+    <h2>{t('tools.frenchpress.h2_2')}</h2>
     <ol>
-      <li><strong>使用粗研磨 (Coarse Grind)</strong>：法壓壺的金屬濾網孔隙較大，如果研磨太細，咖啡粉會穿過金屬網跑到您的杯子裡，造成口感混濁。粗研磨（宛如粗海鹽的顆粒大小）是法壓壺成功的關鍵。</li>
-      <li><strong>破殼與撈除浮渣 (Breaking the Crust)</strong>：注水後等待 4 分鐘，咖啡粉會在表面形成一層硬殼 (Crust)。用湯匙輕輕攪拌打破它，讓大部分咖啡粉沉入底部，接著用湯匙把表面殘留的白色泡沫與細粉撈除。這一步被稱為「James Hoffmann 技巧」，能讓您的法壓咖啡變得異常乾淨。</li>
-      <li><strong>不要壓到底</strong>：很多人習慣將壓桿用力壓到底擠壓咖啡粉。這會把苦澀的物質和細粉硬生生擠壓出來。您只需要將壓桿輕輕下壓到剛好碰到咖啡粉表面的位置，作為過濾之用即可。</li>
+      <li>{t('tools.frenchpress.li1')}</li>
+      <li>{t('tools.frenchpress.li2')}</li>
+      <li>{t('tools.frenchpress.li3')}</li>
     </ol>
 
     <AdSlot type="in-article" id="fp-ad-2" class="my-10" />
 
-    <h2>常見的法壓壺錯誤 (Common Mistakes)</h2>
-    <h3>1. 浸泡時間過短或過長</h3>
+    <h2>{t('tools.frenchpress.h2_3')}</h2>
+    <h3>{t('tools.frenchpress.h3_1')}</h3>
     <p>
-      許多人只泡 2 分鐘就急著壓下，這會導致萃取不足，味道酸澀水感。標準的法壓壺浸泡時間是 <strong>4 分鐘</strong>。如果使用了上述的破殼技巧，甚至可以靜置到 5-8 分鐘讓細粉完全沉澱。
+      {t('tools.frenchpress.p3')}
     </p>
     
-    <h3>2. 把最後一滴都倒進杯子裡</h3>
+    <h3>{t('tools.frenchpress.h3_2')}</h3>
     <p>
-      即便金屬濾網能擋下大部分咖啡粉，壺底依然會有許多細粉泥 (Sludge)。在倒咖啡時，請緩慢傾倒，並且<strong>不要把最後一口咖啡倒出來</strong>，將它留在壺底，您的杯中咖啡將會乾淨許多。
+      {t('tools.frenchpress.p4')}
     </p>
 
-    <h3>3. 忘記預熱壺身</h3>
+    <h3>{t('tools.frenchpress.h3_3')}</h3>
     <p>
-      法壓壺通常是玻璃材質，玻璃吸收熱量的能力很強。如果您直接將 90°C 的熱水倒入冷冰冰的玻璃壺中，水溫可能會瞬間掉到 80°C 以下，導致萃取不足。請務必在加入咖啡粉前，先用熱水溫壺。
+      {t('tools.frenchpress.p5')}
     </p>
 
     <p>
-      準備好了嗎？利用上方的計時器設定 4 分鐘的倒數，享受法壓壺帶來的醇厚油脂與原始風味吧！
+      {t('tools.frenchpress.p6')}
     </p>
   </div>
 </Layout>

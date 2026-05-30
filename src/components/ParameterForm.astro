@@ -295,8 +295,8 @@ const formDict = {
       let weightRaw = weightInput.value;
       let ratioRaw = ratioInput.value;
       
-      let weight = parseFloat(weightRaw);
-      let ratio = parseFloat(ratioRaw);
+      let weight = parseFloat(weightRaw.replace(',', '.'));
+      let ratio = parseFloat(ratioRaw.replace(',', '.'));
       
       // Validation Logic & Fail-safes
       const weightError = document.getElementById('weight-error');
@@ -358,9 +358,9 @@ const formDict = {
       roastLevel: roastLevelInput?.value || 'medium',
       grindSize: grindSizeInput?.value || '中等',
       waterTemp: parseInt(waterTempInput?.value) || 92,
-      coffeeWeight: parseFloat(weightInput?.value) || 20,
-      waterRatio: parseFloat(ratioInput?.value) || 15,
-      totalWater: Math.round((parseFloat(weightInput?.value) || 20) * (parseFloat(ratioInput?.value) || 15))
+      coffeeWeight: parseFloat(weightInput?.value?.replace(',', '.')) || 20,
+      waterRatio: parseFloat(ratioInput?.value?.replace(',', '.')) || 15,
+      totalWater: Math.round((parseFloat(weightInput?.value?.replace(',', '.')) || 20) * (parseFloat(ratioInput?.value?.replace(',', '.')) || 15))
     };
   }
 
@@ -420,8 +420,8 @@ const formDict = {
       roastLevel: params.get('roast') || 'medium',
       grindSize: params.get('grind') || '',
       waterTemp: parseInt(params.get('t') as string) || 92,
-      coffeeWeight: parseFloat(params.get('w') as string) || 20,
-      waterRatio: parseFloat(params.get('r') as string) || 15,
+      coffeeWeight: parseFloat((params.get('w') as string)?.replace(',', '.')) || 20,
+      waterRatio: parseFloat((params.get('r') as string)?.replace(',', '.')) || 15,
       totalWater: 0
     };
     queryRecipe.totalWater = Math.round(queryRecipe.coffeeWeight * queryRecipe.waterRatio);

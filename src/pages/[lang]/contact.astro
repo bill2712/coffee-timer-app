@@ -1,6 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLanguagePaths } from '../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 export function getStaticPaths() {
   return getLanguagePaths();
@@ -8,13 +12,13 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="聯絡我們 Contact Us | Barista Flow"
-  description="聯絡 Barista Flow 開發團隊。如果您對我們的咖啡計時器有任何建議、商業合作或功能許願，歡迎隨時與我們聯繫。"
+  title="{t('contact.meta.title')}"
+  description="{t('contact.meta.desc')}"
 >
   <div class="max-w-3xl mx-auto py-8 sm:py-12">
     <div class="mb-10 text-center">
-      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">聯絡我們 (Contact Us)</h1>
-      <p class="text-sm text-coffee-muted">我們非常期待聽到您的回饋，不論是功能許願或商業合作！</p>
+      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">{t('contact.title')}</h1>
+      <p class="text-sm text-coffee-muted">{t('contact.subtitle')}</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
@@ -22,9 +26,9 @@ export function getStaticPaths() {
       <!-- Contact Info -->
       <div class="md:col-span-2 flex flex-col gap-6">
         <div class="glass-card rounded-2xl p-6">
-          <h3 class="font-display text-lg font-bold text-coffee-gold mb-2">商業合作 (Business)</h3>
+          <h3 class="font-display text-lg font-bold text-coffee-gold mb-2">{t('contact.business.title')}</h3>
           <p class="text-sm text-coffee-muted leading-relaxed mb-4">
-            我們開放與精品咖啡廳、烘豆商或相關咖啡器具品牌的廣告合作與贊助。
+            {t('contact.business.desc')}
           </p>
           <a href="mailto:business@baristaflow.com" class="text-sm font-semibold text-coffee-sand hover:text-coffee-light transition-colors flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -35,9 +39,9 @@ export function getStaticPaths() {
         </div>
 
         <div class="glass-card rounded-2xl p-6">
-          <h3 class="font-display text-lg font-bold text-coffee-gold mb-2">技術支援 (Support)</h3>
+          <h3 class="font-display text-lg font-bold text-coffee-gold mb-2">{t('contact.support.title')}</h3>
           <p class="text-sm text-coffee-muted leading-relaxed mb-4">
-            如果您在使用計時器時遇到任何 Bug，或是希望我們加入特定的新功能，請告訴我們。
+            {t('contact.support.desc')}
           </p>
           <a href="mailto:support@baristaflow.com" class="text-sm font-semibold text-coffee-sand hover:text-coffee-light transition-colors flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,52 +54,52 @@ export function getStaticPaths() {
 
       <!-- Contact Form -->
       <div class="md:col-span-3 glass-card rounded-2xl p-6 sm:p-8">
-        <form id="contact-form" class="space-y-5" onsubmit="alert('感謝您的來信！這是一個展示用的表單，實際營運時請串接後端 API。'); this.reset(); return false;">
+        <form id="contact-form" class="space-y-5" onsubmit="alert(t('contact.form.alert')); this.reset(); return false;">
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div class="flex flex-col gap-1.5">
-              <label for="name" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">您的稱呼</label>
+              <label for="name" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.name')}</label>
               <input
                 type="text"
                 id="name"
                 required
-                placeholder="Name"
+                placeholder={t('contact.form.namePlaceholder')}
                 class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
               />
             </div>
             
             <div class="flex flex-col gap-1.5">
-              <label for="email" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">電子信箱</label>
+              <label for="email" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.email')}</label>
               <input
                 type="email"
                 id="email"
                 required
-                placeholder="Email Address"
+                placeholder={t('contact.form.emailPlaceholder')}
                 class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
               />
             </div>
           </div>
 
           <div class="flex flex-col gap-1.5">
-            <label for="subject" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">主旨類別</label>
+            <label for="subject" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.subject')}</label>
             <select
               id="subject"
               class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light appearance-none cursor-pointer"
             >
-              <option value="feedback">功能建議 / 產品回饋</option>
-              <option value="bug">回報 Bug / 問題</option>
-              <option value="business">商業合作 / 廣告洽詢</option>
-              <option value="other">其他</option>
+              <option value="feedback">{t('contact.form.opt.feedback')}</option>
+              <option value="bug">{t('contact.form.opt.bug')}</option>
+              <option value="business">{t('contact.form.opt.business')}</option>
+              <option value="other">{t('contact.form.opt.other')}</option>
             </select>
           </div>
 
           <div class="flex flex-col gap-1.5">
-            <label for="message" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">訊息內容</label>
+            <label for="message" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.message')}</label>
             <textarea
               id="message"
               required
               rows="5"
-              placeholder="請詳細描述您的問題或建議..."
+              placeholder={t('contact.form.messagePlaceholder')}
               class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light resize-none custom-scrollbar"
             ></textarea>
           </div>
@@ -104,7 +108,7 @@ export function getStaticPaths() {
             type="submit"
             class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer text-sm"
           >
-            送出訊息 (Send Message)
+            {t('contact.form.submit')}
           </button>
         </form>
       </div>

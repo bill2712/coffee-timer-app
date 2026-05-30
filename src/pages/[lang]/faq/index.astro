@@ -3,33 +3,37 @@ import Layout from '../../../layouts/Layout.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const baseUrl = '/';
 
 const faqs = [
   {
-    question: "為什麼我的手沖咖啡喝起來很苦澀？",
-    answer: `咖啡苦澀通常是因為「過度萃取」。這可能肇因於水溫過高、研磨刻度太細導致細粉過多，或者是萃取時間過長。建議您嘗試將研磨度調粗一到兩格，或是使用我們的 <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">專業沖煮計時器</a> 來精準控制各階段的注水時間，避免後段的焦苦物質溶出。`
+    question: t('faq.q1'),
+    answer: t('faq.a1') + ` <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">` + t('index.tools.title') + `</a>`
   },
   {
-    question: "咖啡豆應該要怎麼保存才能維持新鮮？",
-    answer: "咖啡豆最大的敵人是氧氣、光線、濕氣與高溫。最理想的保存方式是將咖啡豆放在單向排氣閥的不透明密封罐或密封袋中，並置於陰涼乾燥的櫥櫃內。切勿將日常使用的咖啡豆放進冰箱冷藏，以免溫差產生結露現象加速咖啡豆變質。"
+    question: t('faq.q2'),
+    answer: t('faq.a2')
   },
   {
-    question: "淺焙和深焙咖啡在沖煮上有什麼不同？",
-    answer: `淺焙咖啡豆質地較硬，風味偏向花果酸香，需要較高的水溫（約 91°C-94°C）與較細的研磨來充分萃取；深焙咖啡豆結構較鬆散，焦糖化深，容易釋放苦味，因此建議使用較低的水溫（約 85°C-88°C）與較粗的研磨。如果您不確定如何調整，可以試試我們的 <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">沖煮配方計算機</a> 為不同烘焙度量身打造參數。`
+    question: t('faq.q3'),
+    answer: t('faq.a3') + ` <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">` + t('index.tools.subtitle') + `</a>`
   },
   {
-    question: "什麼是「通道效應 (Channeling)」，該如何避免？",
-    answer: "通道效應是指水流在粉床中尋找阻力最小的捷徑流出，導致部分粉末過度萃取而部分未萃取，造成咖啡同時又酸又苦。要避免通道效應，請確保佈粉平整、使用品質較佳的磨豆機減少細粉，並在注水時保持水流穩定柔和，不要大力沖刷粉床。"
+    question: t('faq.q4'),
+    answer: t('faq.a4')
   },
   {
-    question: "粉水比（Brew Ratio）到底該怎麼抓？",
-    answer: `標準的精品手沖咖啡粉水比通常落在 1:15 到 1:17 之間（即 1 克咖啡粉對應 15 到 17 克的水）。1:15 口感較為濃郁醇厚，1:17 則清爽明亮。您可以根據個人口味微調。利用我們的 <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">咖啡比例助理</a>，只要輸入您手邊的咖啡豆克數，系統就會自動幫您計算出完美的水量。`
+    question: t('faq.q5'),
+    answer: t('faq.a5') + ` <a href="${baseUrl}" class="text-coffee-gold underline underline-offset-4 hover:text-coffee-light transition-colors font-medium">` + t('index.tools.title') + `</a>`
   },
   {
-    question: "為什麼悶蒸（Blooming）時咖啡粉沒有膨脹？",
-    answer: "悶蒸時咖啡粉床會膨脹，是因為豆子排出烘焙時產生的二氧化碳。如果完全沒有膨脹，最常見的原因是咖啡豆已經放置過久，排氣完畢（不新鮮了）；另外，如果是極度淺焙的咖啡，排氣反應本來就會比較微弱。只要確保豆子在烘焙後的一個月內飲用完畢，通常都能保有良好的風味。"
+    question: t('faq.q6'),
+    answer: t('faq.a6')
   }
 ];
 
@@ -42,7 +46,7 @@ const jsonLd = {
     "acceptedAnswer": {
       "@type": "Answer",
       // Strip HTML tags for clean JSON-LD text using a simple regex
-      "text": faq.answer.replace(/<[^>]+>/g, '')
+      "text": (faq.answer || "").replace(/<[^>]+>/g, '')
     }
   }))
 };
@@ -53,8 +57,8 @@ export function getStaticPaths() {
 ---
 
 <Layout 
-  title="常見問題 FAQ | 咖啡沖煮疑難排解"
-  description="為什麼咖啡會苦？粉水比怎麼算？在此找到最專業的手沖咖啡常見問題解答，並學習如何提升您的萃取技術。"
+  title="{t('faq.meta.title')}"
+  description="{t('faq.meta.desc')}"
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto py-12">

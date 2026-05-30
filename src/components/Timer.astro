@@ -23,6 +23,7 @@ const timerDict = {
   btnStart: t('timer.start'),
   btnPause: t('timer.pause'),
   btnResume: t('timer.resume'),
+  btnReset: t('timer.reset'),
   targetWeightPrefix: t('timer.targetWeightPrefix'),
   lang: lang
 };
@@ -141,7 +142,7 @@ const timerDict = {
       id="btn-reset"
       class="flex-1 py-4 px-4 min-h-[56px] rounded-2xl bg-coffee-darker border border-coffee-sand/10 text-sm font-semibold tracking-wide text-coffee-sand hover:text-coffee-light hover:bg-coffee-sand/10 shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-coffee-gold"
     >
-      重設
+      {t('timer.reset') || 'Reset'}
     </button>
     <!-- Start / Pause -->
     <button

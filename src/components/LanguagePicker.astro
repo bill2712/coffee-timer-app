@@ -3,7 +3,12 @@ import { languages } from '../i18n/ui';
 import { getLangFromUrl } from '../i18n/utils';
 
 const currentLang = getLangFromUrl(Astro.url);
-const currentPath = Astro.url.pathname.replace(new RegExp(`^/${currentLang}/?`), '/');
+const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
+let pathWithoutBase = Astro.url.pathname;
+if (basePath && pathWithoutBase.startsWith(basePath)) {
+  pathWithoutBase = pathWithoutBase.slice(basePath.length);
+}
+const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/') || '/';
 ---
 
 <div class="relative inline-block text-start" id="lang-picker-container">
@@ -31,7 +36,7 @@ const currentPath = Astro.url.pathname.replace(new RegExp(`^/${currentLang}/?`),
     <div class="py-1" role="none">
       {Object.entries(languages).map(([langCode, langName]) => (
         <a
-          href={`/${langCode}${currentPath.startsWith('/') ? currentPath : '/' + currentPath}`}
+          href={`${basePath}/${langCode}${currentPath.startsWith('/') ? currentPath : '/' + currentPath}`.replace(/\/+/g, '/')}
           class={`group flex items-center px-4 py-2.5 text-sm transition-colors ${currentLang === langCode ? 'text-coffee-gold bg-coffee-gold/10 font-bold' : 'text-coffee-light hover:bg-coffee-sand/10 hover:text-white'}`}
           role="menuitem"
           tabindex="-1"

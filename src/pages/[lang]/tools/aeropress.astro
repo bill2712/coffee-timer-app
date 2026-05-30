@@ -6,6 +6,10 @@ import Timer from '../../../components/Timer.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const defaultAeroPressRecipe = {
   beanName: '瓜地馬拉 薇薇特南果',
@@ -24,7 +28,7 @@ const jsonLd = {
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "專業愛樂壓 (AeroPress) 沖煮參數計算機與倒數計時器。包含正壓與倒置法教學，精準掌控壓力萃取。",
+  "description": "{t('tools.aeropress.jsonld.desc')}",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -38,25 +42,25 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="AeroPress Recipe Calculator & Timer | 愛樂壓參數計算機"
-  description="專為愛樂壓 (AeroPress) 設計的咖啡粉水比計算機與萃取計時器。掌握 1:14 完美比例與水溫，體驗壓力萃取帶來的乾淨層次與甜感。"
+  title="{t('tools.aeropress.meta.title')}"
+  description="{t('tools.aeropress.meta.desc')}"
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">
     <div class="flex justify-center">
       <Breadcrumbs items={[
         { label: '首頁', url: '/' },
-        { label: 'AeroPress 愛樂壓計算機' }
+        { label: t('tools.aeropress.breadcrumb') }
       ]} />
     </div>
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
       AeroPress Explorer
     </div>
     <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-coffee-light">
-      愛樂壓計算機
+      {t('tools.aeropress.title')}
     </h1>
     <p class="text-coffee-muted mt-4 text-sm sm:text-base max-w-xl mx-auto">
-      結合浸泡與壓力萃取的極致玩具！本計算機預載了 1:14 的經典愛樂壓配方，85°C 低溫慢萃，為您帶來極具甜感的乾淨咖啡。
+      {t('tools.aeropress.subtitle')}
     </p>
   </div>
 
@@ -73,41 +77,41 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto blog-content prose prose-invert prose-coffee mt-12 pt-12 border-t border-coffee-sand/10">
     <AdSlot type="top-leaderboard" id="ap-ad-1" class="mb-10" />
 
-    <h2>如何使用這款 AeroPress 計算機？</h2>
+    <h2>{t('tools.aeropress.h2_1')}</h2>
     <p>
-      愛樂壓 (AeroPress) 是一個結合了「全浸泡法」與「壓力過濾法」的革命性咖啡器具。它能像法式濾壓壺一樣均勻浸泡，又能像義式濃縮機一樣透過空氣壓力擠壓出咖啡精華，同時因為使用了濾紙，口感異常乾淨。使用我們的 <strong>AeroPress Calculator</strong> 可以幫助您精準重現這份美味。
+      {t('tools.aeropress.p1')}
     </p>
     <p>
-      我們預設載入的配方採用了 <strong>15g 咖啡粉、1:14 粉水比、85°C 較低水溫</strong> 的設定。這是愛樂壓發明者 Alan Adler 推薦的低溫萃取概念。較低的水溫能減少苦澀味的釋放，而後續的壓力萃取則能補足低溫造成的萃取率下降，創造出甜感極高的咖啡。
+      {t('tools.aeropress.p2')}
     </p>
 
-    <h2>愛樂壓的 3 個專業技巧 (Pro Tips)</h2>
+    <h2>{t('tools.aeropress.h2_2')}</h2>
     <ol>
-      <li><strong>嘗試倒置法 (Inverted Method)</strong>：傳統的正壓法在注水時，部分咖啡液會立刻從濾紙漏出。倒置法（將愛樂壓反過來放，活塞塞在底部）能確保 100% 的咖啡粉與熱水在密封狀態下浸泡，直到您翻轉它為止。這是各大世界愛樂壓冠軍最愛用的手法。</li>
-      <li><strong>溫柔而穩定的下壓</strong>：當您開始下壓活塞時，不要用蠻力死命往下推。您應該利用手臂的重量，輕柔且穩定地施加壓力，整個下壓過程大約維持 20 到 30 秒。</li>
-      <li><strong>停止在「嘶嘶」聲出現時</strong>：當您聽到空氣穿透咖啡粉餅發出「嘶嘶」聲 (The Hiss) 時，請立刻停止下壓。強行將最後的水分擠出通常會帶出苦味與雜質。</li>
+      <li>{t('tools.aeropress.li1')}</li>
+      <li>{t('tools.aeropress.li2')}</li>
+      <li>{t('tools.aeropress.li3')}</li>
     </ol>
 
     <AdSlot type="in-article" id="ap-ad-2" class="my-10" />
 
-    <h2>常見的愛樂壓錯誤 (Common Mistakes)</h2>
-    <h3>1. 活塞橡膠未預熱或未潤濕</h3>
+    <h2>{t('tools.aeropress.h2_3')}</h2>
+    <h3>{t('tools.aeropress.h3_1')}</h3>
     <p>
-      在下壓前，先將活塞頂部的橡膠部分稍微沾水或預熱。這不僅能讓下壓過程更加滑順，也能延長橡膠墊圈的壽命，避免下壓時卡頓導致壓力不均勻。
+      {t('tools.aeropress.p3')}
     </p>
     
-    <h3>2. 研磨度與浸泡時間不匹配</h3>
+    <h3>{t('tools.aeropress.h3_2')}</h3>
     <p>
-      愛樂壓容錯率極高，從極細研磨（濃縮風）到粗研磨（法壓風）都可以。但原則是：**研磨越細，浸泡時間越短**。如果您使用如食鹽般的中細研磨，浸泡 1 分鐘左右即可；如果使用粗研磨，則需要浸泡 2-3 分鐘以上。
+      {t('tools.aeropress.p4')}
     </p>
 
-    <h3>3. 使用過高的水溫</h3>
+    <h3>{t('tools.aeropress.h3_3')}</h3>
     <p>
-      很多人習慣用剛沸騰的熱水 (98°C) 來沖煮。但在愛樂壓中，因為「壓力」本身就會加速萃取，高溫加上壓力非常容易造成過度萃取（苦澀）。試著將水溫降至 85-88°C，您會驚訝地發現咖啡的果酸與甜感變得無比清晰。
+      {t('tools.aeropress.p5')}
     </p>
 
     <p>
-      立刻點擊上方的「套用設定並同步計時器」，開始您精彩的愛樂壓實驗吧！
+      {t('tools.aeropress.p6')}
     </p>
   </div>
 </Layout>

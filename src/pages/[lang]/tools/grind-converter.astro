@@ -3,11 +3,15 @@ import { SITE_URL } from '../../../config';
 import Layout from '../../../layouts/Layout.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "通用研磨度轉換器 (Grind Size Converter)",
+  "name": "{t('grind.title')} (Grind Size Converter)",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -26,8 +30,8 @@ export function getStaticPaths() {
 ---
 
 <Layout 
-  title="通用研磨度轉換器 | 磨豆機刻度對照表 | Barista Flow"
-  description="精準轉換各大品牌磨豆機（Comandante C40, Timemore C2/C3, Fellow Ode, Baratza Encore 等）的研磨刻度。內建義式、手沖、法壓壺完美參數對照。"
+  title="{t('grind.meta.title')}"
+  description="{t('grind.meta.desc')}"
   jsonld={jsonLd}
 >
   <div class="max-w-4xl mx-auto py-8 sm:py-12">
@@ -36,10 +40,10 @@ export function getStaticPaths() {
         Grinder Calibration Tool
       </div>
       <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
-        通用研磨度轉換器
+        {t('grind.title')}
       </h1>
       <p class="text-sm text-coffee-muted max-w-2xl mx-auto leading-relaxed">
-        換了新磨豆機，不知道以前的配方該用多少刻度嗎？透過我們的演算法，自動幫您將原有的研磨刻度完美映射至全新的磨豆機上。
+        {t('grind.subtitle')}
       </p>
     </div>
 
@@ -56,18 +60,18 @@ export function getStaticPaths() {
         <div class="space-y-6">
           <h3 class="font-display text-xl font-bold text-coffee-sand border-b border-coffee-sand/10 pb-3 flex items-center gap-2">
             <span class="bg-coffee-gold text-coffee-dark w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">1</span> 
-            您目前的磨豆機
+            {t('grind.source.title')}
           </h3>
           
           <div class="flex flex-col gap-2">
-            <label for="source-grinder" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">選擇品牌與型號</label>
+            <label for="source-grinder" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('grind.selectBrand')}</label>
             <select id="source-grinder" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer">
               <!-- Populated by JS -->
             </select>
           </div>
 
           <div class="flex flex-col gap-2">
-            <label for="source-value" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">目前刻度 <span id="source-unit" class="lowercase"></span></label>
+            <label for="source-value" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('grind.currentScale')} <span id="source-unit" class="lowercase"></span></label>
             <div class="flex items-center gap-4">
               <input type="range" id="source-slider" class="flex-grow accent-coffee-gold h-2 bg-coffee-darker rounded-lg appearance-none cursor-pointer" />
               <input type="number" id="source-value" class="w-20 bg-coffee-darker border border-coffee-sand/20 rounded-xl px-3 py-2 text-center text-lg font-bold text-coffee-light focus:ring-2 focus:ring-coffee-gold/50" />
@@ -83,18 +87,18 @@ export function getStaticPaths() {
         <div class="space-y-6">
           <h3 class="font-display text-xl font-bold text-coffee-sand border-b border-coffee-sand/10 pb-3 flex items-center gap-2">
             <span class="bg-coffee-gold text-coffee-dark w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">2</span> 
-            轉換目標磨豆機
+            {t('grind.target.title')}
           </h3>
           
           <div class="flex flex-col gap-2">
-            <label for="target-grinder" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">選擇目標品牌與型號</label>
+            <label for="target-grinder" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('grind.selectTarget')}</label>
             <select id="target-grinder" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer">
               <!-- Populated by JS -->
             </select>
           </div>
 
           <div class="flex flex-col items-center justify-center h-[90px] bg-coffee-darker/50 rounded-xl border border-coffee-sand/10 relative">
-            <span class="text-xs font-semibold uppercase tracking-wider text-coffee-muted absolute top-2 start-3">轉換結果</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-coffee-muted absolute top-2 start-3">{t('grind.result')}</span>
             <div class="flex items-baseline gap-2 mt-2">
               <span id="target-value" class="text-5xl font-display font-bold text-coffee-gold gold-glow drop-shadow-md">--</span>
               <span id="target-unit" class="text-sm font-medium text-coffee-muted"></span>
@@ -107,8 +111,8 @@ export function getStaticPaths() {
       <div class="mt-12 pt-10 border-t border-coffee-sand/10">
         <div class="flex justify-between items-end mb-4">
           <div>
-            <h4 class="text-sm font-bold text-coffee-light">沖煮區間落點</h4>
-            <p id="gauge-label" class="text-xs text-coffee-gold font-medium mt-1">請選擇刻度</p>
+            <h4 class="text-sm font-bold text-coffee-light">{t('grind.gauge.title')}</h4>
+            <p id="gauge-label" class="text-xs text-coffee-gold font-medium mt-1">{t('grind.gauge.select')}</p>
           </div>
         </div>
         
@@ -143,7 +147,7 @@ export function getStaticPaths() {
           id="btn-apply-timer"
           class="inline-flex items-center gap-2 bg-gradient-to-r from-coffee-accent to-coffee-gold text-coffee-dark font-bold tracking-wide rounded-xl px-8 py-4 shadow-lg hover:from-coffee-gold hover:to-coffee-gold-hover transition-all active:scale-[0.98] cursor-pointer text-sm sm:text-base gold-glow disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          套用此刻度至我的計時器
+          {t('grind.apply')}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -363,7 +367,7 @@ export function getStaticPaths() {
   function calculateConversion() {
     const sGrinder = grinders[sourceSelect.value];
     const tGrinder = grinders[targetSelect.value];
-    let val = parseFloat(sourceInput.value);
+    let val = parseFloat(sourceInput.value.replace(',', '.'));
 
     // Bounds checking
     if (isNaN(val)) val = sGrinder.min;

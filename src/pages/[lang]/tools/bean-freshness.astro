@@ -3,6 +3,24 @@ import { SITE_URL } from '../../../config';
 import Layout from '../../../layouts/Layout.astro';
 import AdSlot from '../../../components/AdSlot.astro';
 import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const dictBean = {
+  'tools.bean.script.fresh.title': t('tools.bean.script.fresh.title'),
+  'tools.bean.script.fresh.desc': t('tools.bean.script.fresh.desc'),
+  'tools.bean.script.fresh.advice': t('tools.bean.script.fresh.advice'),
+  'tools.bean.script.peak.title': t('tools.bean.script.peak.title'),
+  'tools.bean.script.peak.desc': t('tools.bean.script.peak.desc'),
+  'tools.bean.script.peak.advice': t('tools.bean.script.peak.advice'),
+  'tools.bean.script.mature.title': t('tools.bean.script.mature.title'),
+  'tools.bean.script.mature.desc': t('tools.bean.script.mature.desc'),
+  'tools.bean.script.mature.advice': t('tools.bean.script.mature.advice'),
+  'tools.bean.script.stale.title': t('tools.bean.script.stale.title'),
+  'tools.bean.script.stale.desc': t('tools.bean.script.stale.desc'),
+  'tools.bean.script.stale.advice': t('tools.bean.script.stale.advice'),
+};
 
 // FAQ Structured Data for SEO Rich Snippets
 const faqSchema = {
@@ -14,7 +32,7 @@ const faqSchema = {
       "name": "什麼是咖啡豆的「養豆」(Degassing) 過程？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "咖啡豆在烘焙過程中會產生大量的二氧化碳並被鎖在細胞結構內。剛烘好的咖啡豆排氣非常劇烈，如果立刻沖煮，大量的氣泡會阻礙熱水與咖啡粉的接觸，導致萃取不足與風味單薄。所謂的「養豆」，就是將咖啡豆靜置數天，讓過多的二氧化碳自然釋放，使咖啡風味達到最佳平衡的過程。"
+        "text": "咖啡豆在烘焙過程中會產生大量的二氧化碳並被鎖在細胞結構內。剛烘好的咖啡豆排氣非常劇烈，如果立刻沖煮，大量的氣泡會阻礙熱水與咖啡粉的接觸，導致萃取不足與風味單薄。所謂的「養豆」，就是將咖啡豆靜置數{t('tools.bean.status.days2')}，讓過多的二氧化碳自然釋放，使咖啡風味達到最佳平衡的過程。"
       }
     },
     {
@@ -27,7 +45,7 @@ const faqSchema = {
     },
     {
       "@type": "Question",
-      "name": "我可以把咖啡豆放在冰箱冷凍嗎？",
+      "name": "{t('tools.bean.h3_3')}",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "可以，但有嚴格的條件。如果您買了大量的咖啡豆無法在一個月內喝完，可以將其「分裝」成單次沖煮的小份量（如試管或真空小袋），然後放入冷凍庫深處。要沖煮時，直接拿出需要的份量「不需退冰」，立刻進行研磨。切忌將整大包豆子反覆進出冷凍庫，這會徹底摧毀咖啡的風味。"
@@ -86,7 +104,7 @@ export function getStaticPaths() {
       <!-- INPUT PANEL -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 border-b border-coffee-sand/10 pb-10">
         <div class="flex flex-col gap-2">
-          <label for="roast-date" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">包裝上的烘焙日期 (Roast Date)</label>
+          <label for="roast-date" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">包裝上的{t('tools.bean.setup.date')}</label>
           <div class="relative">
             <input type="date" id="roast-date" class="w-full bg-coffee-darker border border-coffee-sand/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors text-coffee-light cursor-pointer" />
           </div>
@@ -216,7 +234,7 @@ export function getStaticPaths() {
             </span>
           </summary>
           <div class="px-6 pb-6 text-sm text-coffee-muted leading-relaxed">
-            保存咖啡豆的三大敵人是：氧氣、光線與濕氣。最好的保存方式是將咖啡豆放在單向排氣閥的密封袋或不透明的真空罐中，置於陰涼、乾燥且沒有日曬的櫥櫃內。絕對不要將日常頻繁使用的咖啡豆放入冷藏室，因為開關冰箱時溫差產生的水氣會讓咖啡豆快速受潮並吸附冰箱中的異味。
+            {t('tools.bean.p5')}
           </div>
         </details>
 
@@ -231,7 +249,7 @@ export function getStaticPaths() {
             </span>
           </summary>
           <div class="px-6 pb-6 text-sm text-coffee-muted leading-relaxed">
-            可以，但有嚴格的條件。如果您買了大量的咖啡豆無法在一個月內喝完，可以將其「分裝」成單次沖煮的小份量（例如離心管或真空小袋），然後放入冷凍庫深處。要沖煮時，直接拿出需要的份量「不需退冰」，立刻進行研磨。切忌將整大包豆子反覆進出冷凍庫，凝結的水氣會徹底摧毀整包咖啡的風味。
+            {t('tools.bean.p6')}
           </div>
         </details>
       </div>
@@ -251,7 +269,7 @@ export function getStaticPaths() {
   }
 </style>
 
-<script>
+<script define:vars={{ dictBean }}>
   // Elements
   const roastDateInput = document.getElementById('roast-date') as HTMLInputElement;
   const roastLevelSelect = document.getElementById('roast-level') as HTMLSelectElement;
@@ -332,24 +350,24 @@ export function getStaticPaths() {
     let colorClass = ""; // For top bar and glow
 
     if (daysElapsed <= boundaries.freshEnd) {
-      title = "二氧化碳過多 (Too Fresh)";
-      desc = "咖啡豆剛剛烘焙完成，細胞內含有大量二氧化碳氣體。此時排氣過於劇烈，風味尚未穩定。";
-      advice = "⚠️ **強行沖煮策略**：如果您現在必須沖煮，請務必將「悶蒸 (Bloom) 時間」延長至 45 到 60 秒，讓氣體有足夠時間排出，避免通道效應導致萃取不足。";
+      title = dictBean['tools.bean.script.fresh.title'];
+      desc = dictBean['tools.bean.script.fresh.desc'];
+      advice = dictBean['tools.bean.script.fresh.advice'];
       colorClass = "bg-blue-500";
     } else if (daysElapsed <= boundaries.peakEnd) {
-      title = "黃金風味期 (Peak Flavor Window)";
-      desc = "排氣已經趨緩，咖啡的酸甜平衡度與芳香物質發展達到最完美的顛峰。現在正是這包咖啡豆最美味的時刻。";
-      advice = "✨ **最佳沖煮策略**：直接使用標準參數沖煮即可。水溫、研磨度皆可照您的常規習慣進行。盡情享受！";
+      title = dictBean['tools.bean.script.peak.title'];
+      desc = dictBean['tools.bean.script.peak.desc'];
+      advice = dictBean['tools.bean.script.peak.advice'];
       colorClass = "bg-coffee-gold";
     } else if (daysElapsed <= boundaries.matureEnd) {
-      title = "成熟穩定期 (Matured)";
-      desc = "咖啡豆已完全排氣，雖然最活潑的香氣稍微減弱，但甜感會變得非常集中且醇厚度佳。";
-      advice = "☕ **穩定沖煮策略**：由於排氣量減少，水流通過粉床的阻力會降低。建議將研磨度「調細 1 到 2 格」，或是稍微增加水溫 1°C 來維持足夠的萃取率。";
+      title = dictBean['tools.bean.script.mature.title'];
+      desc = dictBean['tools.bean.script.mature.desc'];
+      advice = dictBean['tools.bean.script.mature.advice'];
       colorClass = "bg-orange-600";
     } else {
-      title = "風味衰退期 (Fading / Stale)";
-      desc = "芳香物質已大量揮發，表面油脂可能開始氧化，風味變得單調甚至帶有些許木質或油耗味。";
-      advice = "🆘 **搶救沖煮策略**：為了榨出剩餘的芳香物質，請大幅調高水溫（例如 94-95°C）並使用較細的研磨。或者，將這些豆子用來製作「冷萃咖啡 (Cold Brew)」，冷萃能有效掩蓋老豆的缺點。";
+      title = dictBean['tools.bean.script.stale.title'];
+      desc = dictBean['tools.bean.script.stale.desc'];
+      advice = dictBean['tools.bean.script.stale.advice'];
       colorClass = "bg-red-600";
     }
 
