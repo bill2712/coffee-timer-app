@@ -940,6 +940,13 @@ export const ui = {
     "seo.description": "Barista Flow offers specialty coffee ratio calculators and an interactive 3-stage pour over timer to precisely control blooming, extraction, and strength."
   },
   "ja": {
+    'cookie.title': '私たちはあなたのプライバシーを尊重します',
+    'cookie.desc': 'この Web サイトは Cookie を使用して、最高のブラウジング エクスペリエンスを確保し、Google AdSense などのサードパーティ パートナーを通じてパーソナライズされた広告を提供します。閲覧を続けると、Cookie ポリシーに同意したことになります。詳細については、いつでも {link} をご覧ください。',
+    'cookie.link': 'プライバシーポリシー',
+    'cookie.decline': '拒否（必須機能を除く）',
+    'cookie.accept': '同意します',
+    'timer.default.method': 'クラシックな手淹れコーヒー',
+    'timer.default.bean': '中煎りのコーヒー豆',
     'about.tag': '抽出の科学',
     'about.belief': '私たちの信念',
     'about.team': '— バリスタフローチーム',
@@ -1860,6 +1867,13 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡冲煮参数计算与互动式三阶段注水计时器，助您精准控制闷蒸、主要萃取与后段强度，冲煮出极致风味的咖啡。"
   },
   "fr": {
+    'cookie.title': 'Nous accordons une grande importance à votre vie privée',
+    'cookie.desc': 'Ce site Web utilise des cookies pour vous garantir la meilleure expérience de navigation et pour proposer des publicités personnalisées via des partenaires tiers tels que Google AdSense. En poursuivant votre navigation, vous acceptez notre politique en matière de cookies. Vous pouvez toujours consulter notre {lien} pour plus de détails.',
+    'cookie.link': 'politique de confidentialité',
+    'cookie.decline': 'Refuser (sauf pour les fonctions essentielles)',
+    'cookie.accept': 'Je suis d\'accord',
+    'timer.default.method': 'Café classique infusé à la main',
+    'timer.default.bean': 'grains de café de torréfaction moyenne',
     'about.tag': 'Science de l\'Infusion',
     'about.belief': 'NOTRE CONVICTION',
     'about.team': '— L\'équipe Barista Flow',
@@ -2320,6 +2334,13 @@ export const ui = {
     "seo.description": "Barista Flow propose des calculateurs de ratio pour café de spécialité et un minuteur interactif en 3 étapes."
   },
   "de": {
+    'cookie.title': 'Wir legen Wert auf Ihre Privatsphäre',
+    'cookie.desc': 'Diese Website verwendet Cookies, um Ihnen das beste Surferlebnis zu gewährleisten und um personalisierte Werbung über Drittanbieter wie Google AdSense bereitzustellen. Indem Sie weitersurfen, stimmen Sie unserer Cookie-Richtlinie zu. Weitere Informationen finden Sie jederzeit unter {link}.',
+    'cookie.link': 'Datenschutzrichtlinie',
+    'cookie.decline': 'Verweigern (außer wesentliche Funktionen)',
+    'cookie.accept': 'Ich stimme zu',
+    'timer.default.method': 'Klassischer handgebrühter Kaffee',
+    'timer.default.bean': 'Kaffeebohnen mittlerer Röstung',
     'about.tag': 'Brühwissenschaft',
     'about.belief': 'UNSER GLAUBE',
     'about.team': '— Das Barista Flow Team',
@@ -2780,6 +2801,13 @@ export const ui = {
     "seo.description": "Barista Flow bietet Spezialitätenkaffee-Rechner und einen interaktiven 3-Stufen-Timer zur Kontrolle von Blooming, Extraktion und Stärke."
   },
   "es": {
+    'cookie.title': 'Valoramos tu privacidad',
+    'cookie.desc': 'Este sitio web utiliza cookies para garantizar que obtenga la mejor experiencia de navegación y para proporcionar publicidad personalizada a través de socios externos como Google AdSense. Al continuar navegando aceptas nuestra Política de Cookies. Siempre puedes consultar nuestro {enlace} para obtener más detalles.',
+    'cookie.link': 'política de privacidad',
+    'cookie.decline': 'Denegar (excepto para funciones esenciales)',
+    'cookie.accept': 'Estoy de acuerdo',
+    'timer.default.method': 'Café clásico hecho a mano',
+    'timer.default.bean': 'granos de cafe tostado medio',
     'about.tag': 'Ciencia de la Extracción',
     'about.belief': 'NUESTRA CREENCIA',
     'about.team': '— El Equipo de Barista Flow',
@@ -3240,6 +3268,13 @@ export const ui = {
     "seo.description": "Barista Flow ofrece calculadoras de proporción para café de especialidad y un temporizador interactivo en 3 etapas."
   },
   "pt": {
+    'cookie.title': 'Valorizamos a sua privacidade',
+    'cookie.desc': 'Este site utiliza cookies para garantir que você obtenha a melhor experiência de navegação e para fornecer publicidade personalizada através de parceiros terceiros, como o Google AdSense. Ao continuar a navegar concorda com a nossa Política de Cookies. Você sempre pode conferir nosso {link} para mais detalhes.',
+    'cookie.link': 'política de Privacidade',
+    'cookie.decline': 'Negar (exceto para funções essenciais)',
+    'cookie.accept': 'Concordo',
+    'timer.default.method': 'Café clássico feito à mão',
+    'timer.default.bean': 'grãos de café torrados médios',
     'about.tag': 'Ciência da Extração',
     'about.belief': 'NOSSA CRENÇA',
     'about.team': '— A Equipe Barista Flow',
@@ -3700,6 +3735,13 @@ export const ui = {
     "seo.description": "O Barista Flow oferece calculadoras e temporizador para café especial."
   },
   "ru": {
+    'cookie.title': 'Мы ценим вашу конфиденциальность',
+    'cookie.desc': 'Этот веб-сайт использует файлы cookie, чтобы обеспечить вам максимальное удобство просмотра и предоставить персонализированную рекламу через сторонних партнеров, таких как Google AdSense. Продолжая просматривать, вы соглашаетесь с нашей Политикой использования файлов cookie. Вы всегда можете проверить нашу {ссылку} для получения более подробной информации.',
+    'cookie.link': 'политика конфиденциальности',
+    'cookie.decline': 'Запретить (за исключением основных функций)',
+    'cookie.accept': 'Я согласен',
+    'timer.default.method': 'Классический кофе, сваренный вручную.',
+    'timer.default.bean': 'кофейные зерна средней обжарки',
     'about.tag': 'Наука Заваривания',
     'about.belief': 'НАШЕ УБЕЖДЕНИЕ',
     'about.team': '— Команда Barista Flow',
@@ -4160,6 +4202,13 @@ export const ui = {
     "seo.description": "Калькуляторы пропорций и таймер для спешелти кофе."
   },
   "hi": {
+    'cookie.title': 'हम आपकी गोपनीयता को महत्व देते हैं',
+    'cookie.desc': 'यह वेबसाइट आपको सर्वोत्तम ब्राउज़िंग अनुभव सुनिश्चित करने और Google AdSense जैसे तृतीय-पक्ष भागीदारों के माध्यम से वैयक्तिकृत विज्ञापन प्रदान करने के लिए कुकीज़ का उपयोग करती है। ब्राउज़ करना जारी रखकर आप हमारी कुकी नीति से सहमत होते हैं। अधिक जानकारी के लिए आप हमेशा हमारा {लिंक} देख सकते हैं।',
+    'cookie.link': 'गोपनीयता नीति',
+    'cookie.decline': 'अस्वीकार करें (आवश्यक कार्यों को छोड़कर)',
+    'cookie.accept': 'मैं सहमत हूं',
+    'timer.default.method': 'क्लासिक हाथ से बनी कॉफ़ी',
+    'timer.default.bean': 'मध्यम भुनी हुई कॉफी बीन्स',
     'about.tag': 'ब्रूइंग साइंस',
     'about.belief': 'हमारा विश्वास',
     'about.team': '- बरिस्ता फ्लो टीम',
@@ -4620,6 +4669,13 @@ export const ui = {
     "seo.description": "स्पेशलिटी कॉफी के लिए अनुपात कैलकुलेटर और टाइमर।"
   },
   "bn": {
+    'cookie.title': 'আমরা আপনার গোপনীয়তা মূল্য',
+    'cookie.desc': 'আপনি সর্বোত্তম ব্রাউজিং অভিজ্ঞতা পান তা নিশ্চিত করতে এবং Google AdSense এর মতো তৃতীয় পক্ষের অংশীদারদের মাধ্যমে ব্যক্তিগতকৃত বিজ্ঞাপন প্রদান করতে এই ওয়েবসাইটটি কুকিজ ব্যবহার করে। ব্রাউজ চালিয়ে যাওয়ার মাধ্যমে আপনি আমাদের কুকি নীতিতে সম্মত হন। আরো বিস্তারিত জানার জন্য আপনি সবসময় আমাদের {link} চেক করতে পারেন।',
+    'cookie.link': 'গোপনীয়তা নীতি',
+    'cookie.decline': 'অস্বীকার (প্রয়োজনীয় ফাংশন ব্যতীত)',
+    'cookie.accept': 'আমি রাজি',
+    'timer.default.method': 'ক্লাসিক হাতে তৈরি কফি',
+    'timer.default.bean': 'মাঝারি রোস্ট কফি মটরশুটি',
     'about.tag': 'ব্রুয়িং সায়েন্স',
     'about.belief': 'আমাদের বিশ্বাস',
     'about.team': '— বারিস্তা ফ্লো টিম',
@@ -5080,6 +5136,13 @@ export const ui = {
     "seo.description": "স্পেশালিটি কফির জন্য অনুপাত ক্যালকুলেটর এবং টাইমার।"
   },
   "ar": {
+    'cookie.title': 'نحن نقدر خصوصيتك',
+    'cookie.desc': 'يستخدم موقع الويب هذا ملفات تعريف الارتباط لضمان حصولك على أفضل تجربة تصفح ولتقديم إعلانات مخصصة من خلال شركاء خارجيين مثل Google AdSense. من خلال الاستمرار في التصفح فإنك توافق على سياسة ملفات تعريف الارتباط الخاصة بنا. يمكنك دائمًا مراجعة {link} الخاص بنا للحصول على مزيد من التفاصيل.',
+    'cookie.link': 'سياسة الخصوصية',
+    'cookie.decline': 'رفض (باستثناء الوظائف الأساسية)',
+    'cookie.accept': 'أنا موافق',
+    'timer.default.method': 'قهوة كلاسيكية معدة يدوياً',
+    'timer.default.bean': 'حبات قهوة متوسطة التحميص',
     'about.tag': 'علم التحضير',
     'about.belief': 'إيماننا',
     'about.team': '— فريق باريستا فلو',
@@ -5540,6 +5603,13 @@ export const ui = {
     "seo.description": "مؤقت وحاسبة للقهوة المختصة."
   },
   "ur": {
+    'cookie.title': 'ہم آپ کی رازداری کی قدر کرتے ہیں۔',
+    'cookie.desc': 'یہ ویب سائٹ کوکیز کا استعمال اس بات کو یقینی بنانے کے لیے کرتی ہے کہ آپ کو براؤزنگ کا بہترین تجربہ حاصل ہو اور تیسرے فریق کے پارٹنرز جیسے کہ گوگل ایڈسینس کے ذریعے ذاتی تشہیر فراہم کی جائے۔ براؤز کرنا جاری رکھ کر آپ ہماری کوکی پالیسی سے اتفاق کرتے ہیں۔ مزید تفصیلات کے لیے آپ ہمیشہ ہمارا {link} دیکھ سکتے ہیں۔',
+    'cookie.link': 'رازداری کی پالیسی',
+    'cookie.decline': 'انکار کریں (سوائے ضروری کاموں کے)',
+    'cookie.accept': 'میں مانتا ہوں۔',
+    'timer.default.method': 'کلاسیکی ہاتھ سے تیار کی گئی کافی',
+    'timer.default.bean': 'درمیانی روسٹ کافی پھلیاں',
     'about.tag': 'بروئنگ سائنس',
     'about.belief': 'ہمارا عقیدہ',
     'about.team': '- باریستا فلو ٹیم',

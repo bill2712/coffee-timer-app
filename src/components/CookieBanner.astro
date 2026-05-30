@@ -1,5 +1,9 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
 // CookieBanner.astro
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
 ---
@@ -11,10 +15,10 @@ const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-coffee-gold" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
         </svg>
-        我們重視您的隱私
+        {t('cookie.title')}
       </h4>
       <p class="text-xs text-coffee-muted leading-relaxed">
-        本網站使用 Cookies 以確保您獲得最佳的瀏覽體驗，並透過第三方合作夥伴（如 Google AdSense）提供個人化廣告。繼續瀏覽即表示您同意我們的 Cookie 使用政策。您可以隨時查看我們的 <a href={base + "privacy-policy"} class="text-coffee-gold hover:underline">隱私權政策</a> 了解更多細節。
+        {t('cookie.desc').split('{link}')[0]}<a href={base + lang + "/privacy-policy"} class="text-coffee-gold hover:underline">{t('cookie.link')}</a>{t('cookie.desc').split('{link}')[1]}
       </p>
     </div>
     
@@ -23,13 +27,13 @@ const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
         id="btn-cookie-decline"
         class="flex-1 md:flex-none px-5 py-2.5 rounded-lg border border-coffee-sand/30 hover:border-coffee-sand/60 text-coffee-sand hover:text-coffee-light text-xs font-semibold tracking-wide transition-colors"
       >
-        拒絕 (必要功能除外)
+        {t('cookie.decline')}
       </button>
       <button
         id="btn-cookie-accept"
         class="flex-1 md:flex-none px-5 py-2.5 rounded-lg bg-coffee-gold hover:bg-coffee-gold-hover text-coffee-dark text-xs font-bold tracking-wide transition-colors"
       >
-        我同意
+        {t('cookie.accept')}
       </button>
     </div>
   </div>

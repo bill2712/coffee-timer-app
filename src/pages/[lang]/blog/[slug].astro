@@ -28,7 +28,7 @@ const t = useTranslations(lang);
 const { Content } = await render(entry);
 
 function formatDate(date: Date) {
-  return date.toLocaleDateString('zh-TW', {
+  return date.toLocaleDateString(lang, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
