@@ -28,7 +28,7 @@ const jsonLd = {
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "{t('tools.v60.jsonld.desc')}",
+  "description": t('tools.v60.jsonld.desc'),
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -42,8 +42,8 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="{t('tools.v60.meta.title')}"
-  description="{t('tools.v60.meta.desc')}"
+  title={t('tools.v60.meta.title')}
+  description={t('tools.v60.meta.desc')}
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">

@@ -27,7 +27,7 @@ const jsonLd = {
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "{t('tools.coldbrew.jsonld.desc')}",
+  "description": t('tools.coldbrew.jsonld.desc'),
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -41,8 +41,8 @@ export function getStaticPaths() {
 ---
 
 <Layout
-  title="{t('tools.coldbrew.meta.title')}"
-  description="{t('tools.coldbrew.meta.desc')}"
+  title={t('tools.coldbrew.meta.title')}
+  description={t('tools.coldbrew.meta.desc')}
   jsonld={jsonLd}
 >
   <div class="max-w-3xl mx-auto mb-12 text-center">

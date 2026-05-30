@@ -11,7 +11,7 @@ const t = useTranslations(lang);
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "{t('grind.title')} (Grind Size Converter)",
+  "name": t('grind.title') + " (Grind Size Converter)",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -30,8 +30,8 @@ export function getStaticPaths() {
 ---
 
 <Layout 
-  title="{t('grind.meta.title')}"
-  description="{t('grind.meta.desc')}"
+  title={t('grind.meta.title')}
+  description={t('grind.meta.desc')}
   jsonld={jsonLd}
 >
   <div class="max-w-4xl mx-auto py-8 sm:py-12">

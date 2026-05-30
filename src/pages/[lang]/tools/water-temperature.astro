@@ -12,12 +12,12 @@ const dictImpossible = t('tools.watertemp.impossible');
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "{t('tools.watertemp.jsonld.name')}",
+  "name": t('tools.watertemp.jsonld.name'),
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/`,
-  "description": "{t('tools.watertemp.jsonld.desc')}",
+  "description": t('tools.watertemp.jsonld.desc'),
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -31,8 +31,8 @@ export function getStaticPaths() {
 ---
 
 <Layout 
-  title="{t('tools.watertemp.meta.title')}"
-  description="{t('tools.watertemp.meta.desc')}"
+  title={t('tools.watertemp.meta.title')}
+  description={t('tools.watertemp.meta.desc')}
   jsonld={jsonLd}
 >
   <!-- Background Color Overlay that will transition via JS -->
