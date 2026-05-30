@@ -21,54 +21,89 @@ export function getStaticPaths() {
       <p class="text-sm text-coffee-muted">{t('privacy.date')}</p>
     </div>
 
-    <div class="glass-card rounded-2xl p-6 sm:p-10 prose prose-invert prose-coffee max-w-none">
-      <p>
-        {t('privacy.p1')}
-      </p>
+    <p class="text-coffee-light/90 leading-relaxed mb-10 text-center max-w-2xl mx-auto">
+      {t('privacy.p1')}
+    </p>
 
-      <h2>{t('privacy.s1.title')}</h2>
-      <p>
-        {t('privacy.s1.p1')}
-      </p>
+    <div class="space-y-6">
+      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
+        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
+        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">1</span>
+          {t('privacy.s1.title')}
+        </h2>
+        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
+          <p>{t('privacy.s1.p1')}</p>
+        </div>
+      </section>
 
-      <h2>{t('privacy.s2.title')}</h2>
-      <p>
-        {t('privacy.s2.p1')}
-      </p>
+      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
+        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
+        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">2</span>
+          {t('privacy.s2.title')}
+        </h2>
+        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11 space-y-4">
+          <p>{t('privacy.s2.p1')}</p>
+          <div>
+            <h3 class="text-coffee-light font-bold mb-2">{t('privacy.s2.sub')}</h3>
+            <p class="mb-2">{t('privacy.s2.p2')}</p>
+            <ul class="list-disc list-outside ms-4 space-y-1">
+              <li>{t('privacy.s2.l1')}</li>
+              <li>{t('privacy.s2.l2')}</li>
+              <li>{t('privacy.s2.l3')}</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-      <h3>{t('privacy.s2.sub')}</h3>
-      <p>
-        {t('privacy.s2.p2')}
-      </p>
-      <ul>
-        <li>{t('privacy.s2.l1')}</li>
-        <li>{t('privacy.s2.l2')}</li>
-        <li>{t('privacy.s2.l3')}</li>
-      </ul>
+      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
+        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
+        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">3</span>
+          {t('privacy.s3.title')}
+        </h2>
+        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11 space-y-4">
+          <p>{t('privacy.s3.p1')}</p>
+          <ul class="list-disc list-outside ms-4 space-y-1">
+            <li>{t('privacy.s3.l1')}</li>
+            <li>{t('privacy.s3.l2')}</li>
+          </ul>
+        </div>
+      </section>
 
-      <h2>{t('privacy.s3.title')}</h2>
-      <p>
-        {t('privacy.s3.p1')}
-      </p>
-      <ul>
-        <li>{t('privacy.s3.l1')}</li>
-        <li>{t('privacy.s3.l2')}</li>
-      </ul>
+      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
+        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
+        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">4</span>
+          {t('privacy.s4.title')}
+        </h2>
+        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
+          <p>{t('privacy.s4.p1')}</p>
+        </div>
+      </section>
 
-      <h2>{t('privacy.s4.title')}</h2>
-      <p>
-        {t('privacy.s4.p1')}
-      </p>
+      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
+        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
+        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">5</span>
+          {t('privacy.s5.title')}
+        </h2>
+        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
+          <p>{t('privacy.s5.p1')}</p>
+        </div>
+      </section>
 
-      <h2>{t('privacy.s5.title')}</h2>
-      <p>
-        {t('privacy.s5.p1')}
-      </p>
-
-      <h2>{t('privacy.s6.title')}</h2>
-      <p>
-        {t('privacy.s6.p1')}
-      </p>
+      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
+        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
+        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">6</span>
+          {t('privacy.s6.title')}
+        </h2>
+        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
+          <p>{t('privacy.s6.p1')}</p>
+        </div>
+      </section>
     </div>
   </div>
 </Layout>
