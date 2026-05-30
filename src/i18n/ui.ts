@@ -20,6 +20,18 @@ export const defaultLang = 'zh-TW';
 
 export const ui = {
   "zh-TW": {
+    'about.tag': '咖啡沖煮科學',
+    'about.belief': '我們的信念',
+    'about.team': '— Barista Flow 團隊',
+    'layout.footer.quote': '"咖啡本身就是一種語言。" — 成龍',
+    'layout.footer.madeFor': '專為精品咖啡愛好者打造 ☕',
+    'faq.breadcrumb': '常見問題 FAQ',
+    'faq.title.prefix': '咖啡沖煮',
+    'faq.title.highlight': '疑難排解',
+    'faq.cta.title': '找不到您要的答案？',
+    'faq.cta.desc': '如果您有其他關於咖啡沖煮的問題，歡迎隨時與我們聯絡！',
+    'faq.cta.button': '聯絡我們',
+
     'about.meta.title': '關於我們 About Us | Barista Flow',
     'about.meta.desc': '了解 Barista Flow 的創立宗旨。我們致力於將咖啡科學數據化，打造全球最專業的精品咖啡沖煮工具。',
     'about.title': '關於我們',
@@ -468,6 +480,18 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡沖煮參數計算與互動式三階段注水計時器，助您精準控制悶蒸、主要萃取與後段強度，沖煮出極致風味的咖啡。"
   },
   "en": {
+    'about.tag': 'Brewing Science',
+    'about.belief': 'OUR BELIEF',
+    'about.team': '— The Barista Flow Team',
+    'layout.footer.quote': '"Coffee is a language in itself." — Jackie Chan',
+    'layout.footer.madeFor': 'Made for Specialty Coffee Lovers ☕',
+    'faq.breadcrumb': 'FAQ',
+    'faq.title.prefix': 'Coffee Brewing',
+    'faq.title.highlight': 'Troubleshooting',
+    'faq.cta.title': 'Can\'t find your answer?',
+    'faq.cta.desc': 'If you have any other questions about coffee brewing, feel free to contact us!',
+    'faq.cta.button': 'Contact Us',
+
     'about.meta.title': 'About Us | Barista Flow',
     'about.meta.desc': 'Discover the mission of Barista Flow. We are dedicated to digitizing coffee science and creating the world\'s most professional specialty coffee brewing tools.',
     'about.title': 'About Us',
@@ -916,6 +940,18 @@ export const ui = {
     "seo.description": "Barista Flow offers specialty coffee ratio calculators and an interactive 3-stage pour over timer to precisely control blooming, extraction, and strength."
   },
   "ja": {
+    'about.tag': '抽出の科学',
+    'about.belief': '私たちの信念',
+    'about.team': '— Barista Flow チーム',
+    'layout.footer.quote': '"コーヒーはそれ自体が言語である。" — ジャッキー・チェン',
+    'layout.footer.madeFor': 'スペシャルティコーヒー愛好家のために ☕',
+    'faq.breadcrumb': 'よくある質問 FAQ',
+    'faq.title.prefix': 'コーヒー抽出の',
+    'faq.title.highlight': 'トラブルシューティング',
+    'faq.cta.title': '答えが見つかりませんか？',
+    'faq.cta.desc': 'コーヒー抽出に関するその他の質問がある場合は、お気軽にお問い合わせください！',
+    'faq.cta.button': 'お問い合わせ',
+
     'about.meta.title': '私たちについて | Barista Flow',
     'about.meta.desc': 'Barista Flow の使命をご覧ください。私たちはコーヒー科学のデジタル化と、世界で最もプロフェッショナルなスペシャルティコーヒー抽出ツールの作成に専念しています。',
     'about.title': '私たちについて',
@@ -1364,6 +1400,18 @@ export const ui = {
     "seo.description": "Barista Flowは、スペシャルティコーヒーの比率計算機とインタラクティブな3段階注水タイマーを提供し、蒸らし、抽出、強さを正確にコントロールします。"
   },
   "zh-CN": {
+    'about.tag': '咖啡冲煮科学',
+    'about.belief': '我们的信念',
+    'about.team': '— Barista Flow 团队',
+    'layout.footer.quote': '"咖啡本身就是一种语言。" — 成龙',
+    'layout.footer.madeFor': '专为精品咖啡爱好者打造 ☕',
+    'faq.breadcrumb': '常见问题 FAQ',
+    'faq.title.prefix': '咖啡冲煮',
+    'faq.title.highlight': '疑难排解',
+    'faq.cta.title': '找不到您要的答案？',
+    'faq.cta.desc': '如果您有其他关于咖啡冲煮的问题，欢迎随时与我们联络！',
+    'faq.cta.button': '联络我们',
+
     'about.meta.title': '关于我们 About Us | Barista Flow',
     'about.meta.desc': '了解 Barista Flow 的创立宗旨。我们致力于将咖啡科学数据化，打造全球最专业的精品咖啡冲煮工具。',
     'about.title': '关于我们',
@@ -1812,6 +1860,18 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡冲煮参数计算与互动式三阶段注水计时器，助您精准控制闷蒸、主要萃取与后段强度，冲煮出极致风味的咖啡。"
   },
   "fr": {
+    'about.tag': 'Science de l\'Infusion',
+    'about.belief': 'NOTRE CONVICTION',
+    'about.team': '— L\'équipe Barista Flow',
+    'layout.footer.quote': '"Le café est une langue en soi." — Jackie Chan',
+    'layout.footer.madeFor': 'Conçu pour les amateurs de café de spécialité ☕',
+    'faq.breadcrumb': 'FAQ',
+    'faq.title.prefix': 'Préparation du Café',
+    'faq.title.highlight': 'Dépannage',
+    'faq.cta.title': 'Vous ne trouvez pas votre réponse ?',
+    'faq.cta.desc': 'Si vous avez d\'autres questions sur la préparation du café, n\'hésitez pas à nous contacter !',
+    'faq.cta.button': 'Contactez-nous',
+
     'about.meta.title': 'À propos de nous | Barista Flow',
     'about.meta.desc': 'Découvrez la mission de Barista Flow. Nous nous consacrons à la numérisation de la science du café et à la création des outils de préparation de café de spécialité les plus professionnels au monde.',
     'about.title': 'À propos de nous',
@@ -2260,6 +2320,18 @@ export const ui = {
     "seo.description": "Barista Flow propose des calculateurs de ratio pour café de spécialité et un minuteur interactif en 3 étapes."
   },
   "de": {
+    'about.tag': 'Brühwissenschaft',
+    'about.belief': 'UNSER GLAUBE',
+    'about.team': '— Das Barista Flow Team',
+    'layout.footer.quote': '"Kaffee ist eine Sprache für sich." — Jackie Chan',
+    'layout.footer.madeFor': 'Gemacht für Liebhaber von Spezialitätenkaffee ☕',
+    'faq.breadcrumb': 'FAQ',
+    'faq.title.prefix': 'Kaffeezubereitung',
+    'faq.title.highlight': 'Fehlerbehebung',
+    'faq.cta.title': 'Antwort nicht gefunden?',
+    'faq.cta.desc': 'Wenn Sie weitere Fragen zur Kaffeezubereitung haben, können Sie uns gerne kontaktieren!',
+    'faq.cta.button': 'Kontaktiere uns',
+
     'about.meta.title': 'Über uns | Barista Flow',
     'about.meta.desc': 'Entdecken Sie die Mission von Barista Flow. Wir widmen uns der Digitalisierung der Kaffeewissenschaft und der Entwicklung der weltweit professionellsten Werkzeuge für die Zubereitung von Spezialitätenkaffee.',
     'about.title': 'Über uns',
@@ -2708,6 +2780,18 @@ export const ui = {
     "seo.description": "Barista Flow bietet Spezialitätenkaffee-Rechner und einen interaktiven 3-Stufen-Timer zur Kontrolle von Blooming, Extraktion und Stärke."
   },
   "es": {
+    'about.tag': 'Ciencia de la Extracción',
+    'about.belief': 'NUESTRA CREENCIA',
+    'about.team': '— El Equipo de Barista Flow',
+    'layout.footer.quote': '"El café es un lenguaje en sí mismo." — Jackie Chan',
+    'layout.footer.madeFor': 'Hecho para los Amantes del Café de Especialidad ☕',
+    'faq.breadcrumb': 'Preguntas Frecuentes',
+    'faq.title.prefix': 'Preparación del Café',
+    'faq.title.highlight': 'Solución de Problemas',
+    'faq.cta.title': '¿No encuentras tu respuesta?',
+    'faq.cta.desc': 'Si tienes otras preguntas sobre la preparación del café, ¡no dudes en contactarnos!',
+    'faq.cta.button': 'Contáctanos',
+
     'about.meta.title': 'Sobre nosotros | Barista Flow',
     'about.meta.desc': 'Descubre la misión de Barista Flow. Nos dedicamos a digitalizar la ciencia del café y crear las herramientas de preparación de café de especialidad más profesionales del mundo.',
     'about.title': 'Sobre nosotros',
@@ -3156,6 +3240,18 @@ export const ui = {
     "seo.description": "Barista Flow ofrece calculadoras de proporción para café de especialidad y un temporizador interactivo en 3 etapas."
   },
   "pt": {
+    'about.tag': 'Ciência da Extração',
+    'about.belief': 'NOSSA CRENÇA',
+    'about.team': '— A Equipe Barista Flow',
+    'layout.footer.quote': '"O café é uma língua em si." — Jackie Chan',
+    'layout.footer.madeFor': 'Feito para Amantes de Cafés Especiais ☕',
+    'faq.breadcrumb': 'FAQ',
+    'faq.title.prefix': 'Preparação de Café',
+    'faq.title.highlight': 'Solução de Problemas',
+    'faq.cta.title': 'Não encontrou sua resposta?',
+    'faq.cta.desc': 'Se você tiver outras perguntas sobre a preparação de café, não hesite em nos contatar!',
+    'faq.cta.button': 'Contate-nos',
+
     'about.meta.title': 'Sobre nós | Barista Flow',
     'about.meta.desc': 'Descubra a missão da Barista Flow. Dedicamo-nos a digitalizar a ciência do café e a criar as ferramentas de preparação de café de especialidade mais profissionais do mundo.',
     'about.title': 'Sobre nós',
@@ -3604,6 +3700,18 @@ export const ui = {
     "seo.description": "O Barista Flow oferece calculadoras e temporizador para café especial."
   },
   "ru": {
+    'about.tag': 'Наука Заваривания',
+    'about.belief': 'НАШЕ УБЕЖДЕНИЕ',
+    'about.team': '— Команда Barista Flow',
+    'layout.footer.quote': '"Кофе — это язык сам по себе." — Джеки Чан',
+    'layout.footer.madeFor': 'Сделано для любителей спешелти кофе ☕',
+    'faq.breadcrumb': 'FAQ',
+    'faq.title.prefix': 'Заваривание кофе',
+    'faq.title.highlight': 'Устранение неполадок',
+    'faq.cta.title': 'Не нашли ответ?',
+    'faq.cta.desc': 'Если у вас есть другие вопросы о заваривании кофе, смело обращайтесь к нам!',
+    'faq.cta.button': 'Связаться с нами',
+
     'about.meta.title': 'О нас | Barista Flow',
     'about.meta.desc': 'Узнайте о миссии Barista Flow. Мы посвятили себя оцифровке кофейной науки и созданию самых профессиональных в мире инструментов для приготовления спешелти кофе.',
     'about.title': 'О нас',
@@ -4052,6 +4160,18 @@ export const ui = {
     "seo.description": "Калькуляторы пропорций и таймер для спешелти кофе."
   },
   "hi": {
+    'about.tag': 'ब्रूइंग साइंस',
+    'about.belief': 'हमारा विश्वास',
+    'about.team': '— Barista Flow टीम',
+    'layout.footer.quote': '"कॉफी अपने आप में एक भाषा है।" — जैकी चैन',
+    'layout.footer.madeFor': 'स्पेशलिटी कॉफी प्रेमियों के लिए बनाया गया ☕',
+    'faq.breadcrumb': 'सामान्य प्रश्न (FAQ)',
+    'faq.title.prefix': 'कॉफी ब्रूइंग',
+    'faq.title.highlight': 'समस्या निवारण',
+    'faq.cta.title': 'अपना जवाब नहीं मिला?',
+    'faq.cta.desc': 'यदि आपके पास कॉफी ब्रूइंग के बारे में कोई अन्य प्रश्न हैं, तो बेझिझक हमसे संपर्क करें!',
+    'faq.cta.button': 'हमसे संपर्क करें',
+
     'about.meta.title': 'हमारे बारे में | Barista Flow',
     'about.meta.desc': 'Barista Flow के मिशन की खोज करें। हम कॉफी विज्ञान को डिजिटल बनाने और दुनिया के सबसे पेशेवर कॉफी ब्रूइंग टूल्स बनाने के लिए समर्पित हैं।',
     'about.title': 'हमारे बारे में',
@@ -4500,6 +4620,18 @@ export const ui = {
     "seo.description": "स्पेशलिटी कॉफी के लिए अनुपात कैलकुलेटर और टाइमर।"
   },
   "bn": {
+    'about.tag': 'ব্রুয়িং সায়েন্স',
+    'about.belief': 'আমাদের বিশ্বাস',
+    'about.team': '— Barista Flow টিম',
+    'layout.footer.quote': '"কফি নিজেই একটি ভাষা।" — জ্যাকি চ্যান',
+    'layout.footer.madeFor': 'স্পেশালিটি কফি প্রেমীদের জন্য তৈরি ☕',
+    'faq.breadcrumb': 'সাধারণ প্রশ্ন (FAQ)',
+    'faq.title.prefix': 'কফি ব্রুয়িং',
+    'faq.title.highlight': 'সমস্যা সমাধান',
+    'faq.cta.title': 'আপনার উত্তর খুঁজে পাননি?',
+    'faq.cta.desc': 'কফি ব্রুয়িং সম্পর্কে আপনার যদি অন্য কোনো প্রশ্ন থাকে, তাহলে নির্দ্বিধায় আমাদের সাথে যোগাযোগ করুন!',
+    'faq.cta.button': 'যোগাযোগ করুন',
+
     'about.meta.title': 'আমাদের সম্পর্কে | Barista Flow',
     'about.meta.desc': 'Barista Flow এর মিশন সম্পর্কে জানুন। আমরা কফি বিজ্ঞানকে ডিজিটাইজ করতে এবং বিশ্বের সবচেয়ে পেশাদার কফি ব্রুইং টুলস তৈরি করতে নিবেদিত।',
     'about.title': 'আমাদের সম্পর্কে',
@@ -4948,6 +5080,18 @@ export const ui = {
     "seo.description": "স্পেশালিটি কফির জন্য অনুপাত ক্যালকুলেটর এবং টাইমার।"
   },
   "ar": {
+    'about.tag': 'علم التحضير',
+    'about.belief': 'إيماننا',
+    'about.team': '— فريق Barista Flow',
+    'layout.footer.quote': '"القهوة لغة في حد ذاتها." — جاكي شان',
+    'layout.footer.madeFor': 'صُنع لعشاق القهوة المختصة ☕',
+    'faq.breadcrumb': 'الأسئلة الشائعة',
+    'faq.title.prefix': 'تحضير القهوة',
+    'faq.title.highlight': 'استكشاف الأخطاء وإصلاحها',
+    'faq.cta.title': 'لم تجد إجابتك؟',
+    'faq.cta.desc': 'إذا كان لديك أي أسئلة أخرى حول تحضير القهوة، فلا تتردد في الاتصال بنا!',
+    'faq.cta.button': 'اتصل بنا',
+
     'about.meta.title': 'معلومات عنا | Barista Flow',
     'about.meta.desc': 'اكتشف مهمة Barista Flow. نحن مكرسون لرقمنة علوم القهوة وإنشاء أدوات تحضير القهوة المختصة الأكثر احترافية في العالم.',
     'about.title': 'معلومات عنا',
@@ -5396,6 +5540,18 @@ export const ui = {
     "seo.description": "مؤقت وحاسبة للقهوة المختصة."
   },
   "ur": {
+    'about.tag': 'بروئنگ سائنس',
+    'about.belief': 'ہمارا عقیدہ',
+    'about.team': '— Barista Flow ٹیم',
+    'layout.footer.quote': '"کافی بذات خود ایک زبان ہے۔" — جیکی چن',
+    'layout.footer.madeFor': 'اسپیشلٹی کافی سے محبت کرنے والوں کے لیے بنایا گیا ☕',
+    'faq.breadcrumb': 'عمومی سوالات (FAQ)',
+    'faq.title.prefix': 'کافی بروئنگ',
+    'faq.title.highlight': 'مسائل کا حل',
+    'faq.cta.title': 'اپنا جواب نہیں ملا؟',
+    'faq.cta.desc': 'اگر آپ کے پاس کافی بروئنگ کے بارے میں کوئی اور سوالات ہیں، تو بلا جھجھک ہم سے رابطہ کریں!',
+    'faq.cta.button': 'ہم سے رابطہ کریں',
+
     'about.meta.title': 'ہمارے بارے میں | Barista Flow',
     'about.meta.desc': 'Barista Flow کے مشن کو دریافت کریں۔ ہم کافی سائنس کو ڈیجیٹائز کرنے اور دنیا کے سب سے زیادہ پیشہ ورانہ کافی بریونگ ٹولز بنانے کے لیے وقف ہیں۔',
     'about.title': 'ہمارے بارے میں',

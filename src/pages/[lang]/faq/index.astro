@@ -65,17 +65,17 @@ export function getStaticPaths() {
   <div class="max-w-3xl mx-auto py-12">
     <!-- Breadcrumb -->
     <div class="flex justify-center">
-      <Breadcrumbs items={[{ label: '首頁', url: '/' }, { label: '常見問題 FAQ' }]} />
+      <Breadcrumbs items={[{ label: t('nav.home'), url: baseUrl }, { label: t('faq.breadcrumb') }]} />
     </div>
 
     <!-- Header -->
     <header class="text-center mb-16 relative">
       <div class="absolute top-0 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-coffee-gold/10 blur-[50px] rounded-full -z-10"></div>
       <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-coffee-light mb-6">
-        咖啡沖煮 <span class="text-transparent bg-clip-text bg-gradient-to-r from-coffee-gold to-coffee-accent">疑難排解</span>
+        {t('faq.title.prefix')} <span class="text-transparent bg-clip-text bg-gradient-to-r from-coffee-gold to-coffee-accent">{t('faq.title.highlight')}</span>
       </h1>
       <p class="text-lg text-coffee-sand/80 max-w-2xl mx-auto font-light leading-relaxed">
-        從苦澀的原因到完美的粉水比例，為您的每一個沖煮疑惑提供科學化的權威解答。
+        {t('faq.subtitle')}
       </p>
     </header>
 
@@ -123,13 +123,13 @@ export function getStaticPaths() {
     <!-- Contact CTA -->
     <div class="mt-16 text-center glass-card-interactive p-8 rounded-2xl">
       <h3 class="font-display text-2xl font-bold text-coffee-light mb-3">
-        找不到您的問題？
+        {t('faq.cta.title')}
       </h3>
       <p class="text-coffee-muted mb-6 text-sm">
-        歡迎隨時與我們的專業團隊聯繫，我們將樂意為您解答任何關於咖啡沖煮的疑問。
+        {t('faq.cta.desc')}
       </p>
       <a href={`${baseUrl}contact`} class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border border-coffee-gold/50 text-coffee-gold hover:bg-coffee-gold/10 transition-colors text-sm font-semibold tracking-wide">
-        聯絡我們
+        {t('faq.cta.button')}
       </a>
     </div>
 

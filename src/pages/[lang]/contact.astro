@@ -54,7 +54,7 @@ export function getStaticPaths() {
 
       <!-- Contact Form -->
       <div class="md:col-span-3 glass-card rounded-2xl p-6 sm:p-8">
-        <form id="contact-form" class="space-y-5" onsubmit="alert(t('contact.form.alert')); this.reset(); return false;">
+        <form id="contact-form" class="space-y-5" onsubmit={`alert('${t('contact.form.alert')}'); this.reset(); return false;`}>
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div class="flex flex-col gap-1.5">

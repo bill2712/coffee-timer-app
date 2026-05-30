@@ -20,7 +20,7 @@ export function getStaticPaths() {
       <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">{t('about.title')}</h1>
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mt-2">
         <span class="w-1.5 h-1.5 rounded-full bg-coffee-gold"></span>
-        Brewing Science
+        {t('about.tag')}
       </div>
     </div>
 
@@ -99,11 +99,11 @@ export function getStaticPaths() {
     <!-- Quote -->
     <div class="mt-12 p-8 bg-gradient-to-br from-coffee-darker to-black border border-coffee-gold/20 rounded-3xl text-center relative shadow-2xl">
       <div class="absolute -top-4 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 bg-coffee-dark border border-coffee-gold/30 px-4 py-1 rounded-full text-coffee-gold text-xs font-bold tracking-widest">
-        OUR BELIEF
+        {t('about.belief')}
       </div>
       <h3 class="font-display text-2xl md:text-3xl font-light text-coffee-light italic my-4 leading-tight">"{t('about.quote')}"</h3>
       <div class="w-16 h-0.5 bg-coffee-gold/30 mx-auto my-4"></div>
-      <p class="text-sm text-coffee-gold font-bold tracking-widest uppercase">— The Barista Flow Team</p>
+      <p class="text-sm text-coffee-gold font-bold tracking-widest uppercase">{t('about.team')}</p>
     </div>
   </div>
 </Layout>
