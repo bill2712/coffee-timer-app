@@ -84,7 +84,7 @@ export function getStaticPaths() {
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {groupedGlossary[letter].map((entry) => (
-              <a href={`${import.meta.env.BASE_URL}/glossary/${entry.id}`} class="glass-card-interactive p-6 rounded-xl group flex flex-col justify-between h-full">
+              <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/glossary/${entry.id}`} class="glass-card-interactive p-6 rounded-xl group flex flex-col justify-between h-full">
                 <div>
                   <h3 class="text-xl font-bold text-coffee-light mb-1 group-hover:text-coffee-gold transition-colors">
                     {(entry.data as any).term || entry.data.title}

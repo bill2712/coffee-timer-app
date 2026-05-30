@@ -65,7 +65,7 @@ export function getStaticPaths() {
         <p class="text-sm text-coffee-sand/80 max-w-md mx-auto mb-8 leading-relaxed">
           {t('history.empty.desc')}
         </p>
-        <a href={`${import.meta.env.BASE_URL}/`} class="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold shadow-lg shadow-coffee-gold/20 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 text-sm font-bold tracking-wide">
+        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`} class="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold shadow-lg shadow-coffee-gold/20 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 text-sm font-bold tracking-wide">
           {t('history.empty.btn')}
         </a>
       </div>
