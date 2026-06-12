@@ -33,29 +33,57 @@ export function getStaticPaths() {
 ---
 
 <Layout jsonld={webAppJsonLd}>
-  <!-- Hero Section -->
-  <section class="text-center max-w-4xl mx-auto mb-12 sm:mb-16 animate-float px-4">
+  <section class="text-center max-w-4xl mx-auto mb-10 sm:mb-14 animate-float px-4">
     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-6">
       <span class="w-2 h-2 rounded-full bg-coffee-gold animate-pulse"></span>
       {t('index.hero.tagline')}
     </div>
     
-    <h1 class="font-display break-keep text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-coffee-light leading-tight">
+    <h1 class="font-display break-keep text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight text-coffee-light leading-tight">
       {t('index.hero.title1')}<br class="sm:hidden" />
       <span class="bg-gradient-to-r from-coffee-gold via-coffee-sand to-coffee-gold bg-clip-text text-transparent">
         {t('index.hero.title2')}
       </span>
     </h1>
     
-    <p class="text-sm sm:text-base text-coffee-sand/80 max-w-2xl mx-auto mt-6 leading-relaxed px-2">
-      {t('index.hero.desc')}
-    </p>
+    <div class="mt-8 relative h-20 sm:h-14 overflow-hidden flex justify-center items-center">
+      <div id="motivation-banner" aria-live="polite" class="absolute w-full text-lg md:text-xl font-medium italic text-coffee-gold/90 drop-shadow-md transition-opacity duration-1000 opacity-0 px-2 leading-relaxed"></div>
+    </div>
+  </section>
+
+  <!-- Quick-Start User Guide -->
+  <section class="mb-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <a href="#tool-selector" class="backdrop-blur-xl bg-coffee-dark/40 border border-coffee-sand/10 shadow-lg rounded-2xl p-6 text-center group flex flex-col items-center gap-4 cursor-pointer hover:bg-coffee-dark/60 hover:-translate-y-1 hover:border-[#D9A05B]/50 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 flex items-center justify-center text-coffee-gold group-hover:scale-110 transition-transform">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-coffee-light">{t('onboarding.step1.title')}</h3>
+        <p class="text-xs text-coffee-muted leading-relaxed">{t('onboarding.step1.desc')}</p>
+      </a>
+
+      <a href="#parameter-form" class="backdrop-blur-xl bg-coffee-dark/40 border border-coffee-sand/10 shadow-lg rounded-2xl p-6 text-center group flex flex-col items-center gap-4 cursor-pointer hover:bg-coffee-dark/60 hover:-translate-y-1 hover:border-[#D9A05B]/50 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 flex items-center justify-center text-coffee-gold group-hover:scale-110 transition-transform">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-coffee-light">{t('onboarding.step2.title')}</h3>
+        <p class="text-xs text-coffee-muted leading-relaxed">{t('onboarding.step2.desc')}</p>
+      </a>
+
+      <a href="#timer-interface" class="backdrop-blur-xl bg-coffee-dark/40 border border-coffee-sand/10 shadow-lg rounded-2xl p-6 text-center group flex flex-col items-center gap-4 cursor-pointer hover:bg-coffee-dark/60 hover:-translate-y-1 hover:border-[#D9A05B]/50 transition-all duration-300">
+        <div class="w-12 h-12 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 flex items-center justify-center text-coffee-gold group-hover:scale-110 transition-transform">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+        </div>
+        <h3 class="font-display text-lg font-bold text-coffee-light">{t('onboarding.step3.title')}</h3>
+        <p class="text-xs text-coffee-muted leading-relaxed">{t('onboarding.step3.desc')}</p>
+      </a>
+    </div>
   </section>
 
   <!-- Interactive Grid Area -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start scroll-mt-24">
     <!-- Parameters Input Panel -->
-    <div class="lg:col-span-5 order-2 lg:order-1">
+    <div id="parameter-form" class="lg:col-span-5 order-2 lg:order-1 scroll-mt-24">
       <ParameterForm />
       <div class="mt-8">
         <AdSlot type="bottom-utility" class="my-8" />
@@ -63,7 +91,7 @@ export function getStaticPaths() {
     </div>
 
     <!-- Live Timer Panel -->
-    <div class="lg:col-span-7 order-1 lg:order-2 lg:sticky lg:top-24">
+    <div id="timer-interface" class="lg:col-span-7 order-1 lg:order-2 lg:sticky lg:top-24 scroll-mt-24">
       <Timer />
     </div>
   </div>
@@ -115,7 +143,7 @@ export function getStaticPaths() {
   </section>
 
   <!-- Explore Other Brewers (Internal Linking for SEO) -->
-  <section class="mt-20 border-t border-coffee-sand/10 pt-16 mb-8">
+  <section id="tool-selector" class="mt-20 border-t border-coffee-sand/10 pt-16 mb-8 scroll-mt-24">
     <div class="text-center max-w-2xl mx-auto mb-12 px-4">
       <h2 class="font-display text-3xl font-bold tracking-wide text-coffee-light">{t('index.tools.title')}</h2>
       <p class="text-xs sm:text-sm text-coffee-muted mt-2">{t('index.tools.subtitle')}</p>
@@ -156,3 +184,58 @@ export function getStaticPaths() {
     </div>
   </section>
 </Layout>
+
+<script define:vars={{
+  m1: t('motivation.1'), m2: t('motivation.2'), m3: t('motivation.3'),
+  m4: t('motivation.4'), m5: t('motivation.5'), m6: t('motivation.6'),
+  m7: t('motivation.7'), m8: t('motivation.8'), m9: t('motivation.9')
+}}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const slogans = [m1, m2, m3, m4, m5, m6, m7, m8, m9];
+    const banner = document.getElementById('motivation-banner');
+    if (!banner) return;
+    
+    let currentIndex = Math.floor(Math.random() * slogans.length);
+    let isPaused = false;
+    let autoRotateInterval;
+    
+    const showSlogan = () => {
+      if (isPaused) return;
+      banner.style.opacity = '0';
+      setTimeout(() => {
+        if (isPaused) return;
+        banner.textContent = `"${slogans[currentIndex]}"`;
+        banner.style.opacity = '1';
+        currentIndex = (currentIndex + 1) % slogans.length;
+      }, 1000); // Wait for fade out to complete before changing text
+    };
+    
+    // Hover-to-Pause Logic
+    const pauseRotation = () => isPaused = true;
+    const resumeRotation = () => isPaused = false;
+    
+    banner.addEventListener('mouseenter', pauseRotation);
+    banner.addEventListener('mouseleave', resumeRotation);
+    banner.addEventListener('touchstart', pauseRotation, {passive: true});
+    banner.addEventListener('touchend', resumeRotation, {passive: true});
+    
+    // Initial display
+    setTimeout(showSlogan, 100);
+    autoRotateInterval = setInterval(showSlogan, 6000); // Change slogan every 6 seconds
+
+    // Smooth Scrolling for Hash Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElem = document.getElementById(targetId);
+        if (targetElem) {
+          targetElem.scrollIntoView({ behavior: 'smooth' });
+          // Optional focus for accessibility
+          targetElem.setAttribute('tabindex', '-1');
+          targetElem.focus({ preventScroll: true });
+        }
+      });
+    });
+  });
+</script>
