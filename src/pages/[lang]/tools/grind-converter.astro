@@ -463,8 +463,10 @@ export function getStaticPaths() {
     localStorage.setItem('barista_flow_recipe', JSON.stringify(recipe));
 
     // Redirect to home timer
+    // Redirect to home timer preserving language
+    const currentLang = document.documentElement.lang || 'en';
     const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
-    window.location.href = baseUrl;
+    window.location.href = `${baseUrl}${currentLang}/`;
   }
 
   // Bind Events
