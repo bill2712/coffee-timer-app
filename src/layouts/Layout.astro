@@ -3,6 +3,7 @@ import '../styles/global.css';
 import SEO from '../components/SEO.astro';
 import AdSlot from '../components/AdSlot.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import InstallPrompt from '../components/InstallPrompt.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
 import { getLangFromUrl, useTranslations, rtlLanguages } from '../i18n/utils';
 
@@ -38,6 +39,7 @@ const finalDescription = description || t('seo.description');
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href={base + "favicon.svg"} />
+    <link rel="manifest" href={base + "manifest.json"} />
     
     <!-- Google Fonts Preconnect and Links -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -187,6 +189,20 @@ const finalDescription = description || t('seo.description');
 
     <!-- Global Cookie Consent Banner -->
     <CookieBanner />
+
+    <!-- PWA Install Prompt -->
+    <InstallPrompt />
+
+    <!-- Service Worker Registration -->
+    <script define:vars={{ base }}>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register(`${base}sw.js`).catch((error) => {
+            console.error('ServiceWorker registration failed: ', error);
+          });
+        });
+      }
+    </script>
 
     <!-- Mobile Navigation Logic -->
     <script>

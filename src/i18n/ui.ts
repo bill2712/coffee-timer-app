@@ -20,6 +20,11 @@ export const defaultLang = 'zh-TW';
 
 export const ui = {
   "zh-TW": {
+    "pwa.install": "安裝 App",
+    "pwa.iosInstructions1": "要在 iPhone 或 iPad 上安裝此應用程式：",
+    "pwa.iosInstructions2": "請點擊底部的「分享」圖示，然後選擇「加入主畫面」。",
+    "pwa.close": "關閉",
+
     "motivation.1": "沖咖啡，沖出你嘅完美人生！",
     "motivation.2": "從新手到達人，一杯咖啡開始！",
     "motivation.3": "學沖咖啡，品味生活每一天！",
@@ -503,6 +508,11 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡沖煮參數計算與互動式三階段注水計時器，助您精準控制悶蒸、主要萃取與後段強度，沖煮出極致風味的咖啡。"
   },
   "en": {
+    "pwa.install": "Install App",
+    "pwa.iosInstructions1": "To install this app on your iPhone or iPad:",
+    "pwa.iosInstructions2": "Tap the Share icon at the bottom, then select 'Add to Home Screen'.",
+    "pwa.close": "Close",
+
     "motivation.1": "Brew coffee, brew your perfect life!",
     "motivation.2": "From novice to master, it all starts with one cup!",
     "motivation.3": "Learn to brew, and taste the richness of every day!",
@@ -986,6 +996,11 @@ export const ui = {
     "seo.description": "Barista Flow offers specialty coffee ratio calculators and an interactive 3-stage pour over timer to precisely control blooming, extraction, and strength."
   },
   "ja": {
+    "pwa.install": "アプリをインストール",
+    "pwa.iosInstructions1": "iPhoneまたはiPadにこのアプリをインストールするには：",
+    "pwa.iosInstructions2": "下部の「共有」アイコンをタップし、「ホーム画面に追加」を選択します。",
+    "pwa.close": "閉じる",
+
     "motivation.1": "コーヒーを淹れて、完璧な人生を淹れよう！",
     "motivation.2": "初心者から達人へ、すべては1杯のコーヒーから始まります！",
     "motivation.3": "淹れ方を学び、毎日の豊かさを味わおう！",
@@ -1469,6 +1484,11 @@ export const ui = {
     "seo.description": "Barista Flowは、スペシャルティコーヒーの比率計算機とインタラクティブな3段階注水タイマーを提供し、蒸らし、抽出、強さを正確にコントロールします。"
   },
   "zh-CN": {
+    "pwa.install": "安装 App",
+    "pwa.iosInstructions1": "要在 iPhone 或 iPad 上安装此应用程序：",
+    "pwa.iosInstructions2": "请点击底部的“分享”图标，然后选择“添加到主屏幕”。",
+    "pwa.close": "关闭",
+
     "motivation.1": "冲咖啡，冲出你的完美人生！",
     "motivation.2": "从新手到达人，一杯咖啡开始！",
     "motivation.3": "学冲咖啡，品味生活每一天！",
@@ -1952,6 +1972,11 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡冲煮参数计算与互动式三阶段注水计时器，助您精准控制闷蒸、主要萃取与后段强度，冲煮出极致风味的咖啡。"
   },
   "fr": {
+    "pwa.install": "Installer l'application",
+    "pwa.iosInstructions1": "Pour installer cette application sur votre iPhone ou iPad :",
+    "pwa.iosInstructions2": "Appuyez sur l'icône Partager en bas, puis sélectionnez 'Sur l'écran d'accueil'.",
+    "pwa.close": "Fermer",
+
     "motivation.1": "Préparez votre café, préparez votre vie parfaite !",
     "motivation.2": "De novice à maître, tout commence avec une seule tasse !",
     "motivation.3": "Apprenez à préparer le café et savourez chaque jour !",
@@ -2435,6 +2460,11 @@ export const ui = {
     "seo.description": "Barista Flow propose des calculateurs de ratio pour café de spécialité et un minuteur interactif en 3 étapes."
   },
   "de": {
+    "pwa.install": "App installieren",
+    "pwa.iosInstructions1": "Um diese App auf Ihrem iPhone oder iPad zu installieren:",
+    "pwa.iosInstructions2": "Tippen Sie unten auf das Teilen-Symbol und wählen Sie 'Zum Home-Bildschirm'.",
+    "pwa.close": "Schließen",
+
     "motivation.1": "Brühe Kaffee, brühe dein perfektes Leben!",
     "motivation.2": "Vom Anfänger zum Meister – alles beginnt mit einer Tasse!",
     "motivation.3": "Lerne zu brühen und schmecke den Reichtum jeden Tages!",
@@ -2918,6 +2948,11 @@ export const ui = {
     "seo.description": "Barista Flow bietet Spezialitätenkaffee-Rechner und einen interaktiven 3-Stufen-Timer zur Kontrolle von Blooming, Extraktion und Stärke."
   },
   "es": {
+    "pwa.install": "Instalar aplicación",
+    "pwa.iosInstructions1": "Para instalar esta aplicación en su iPhone o iPad:",
+    "pwa.iosInstructions2": "Toque el ícono Compartir en la parte inferior y luego seleccione 'Agregar a la pantalla de inicio'.",
+    "pwa.close": "Cerrar",
+
     "motivation.1": "¡Prepara café, prepara tu vida perfecta!",
     "motivation.2": "¡De principiante a maestro, todo comienza con una taza!",
     "motivation.3": "¡Aprende a preparar y saborea la riqueza de cada día!",
@@ -3401,6 +3436,11 @@ export const ui = {
     "seo.description": "Barista Flow ofrece calculadoras de proporción para café de especialidad y un temporizador interactivo en 3 etapas."
   },
   "pt": {
+    "pwa.install": "Instalar aplicativo",
+    "pwa.iosInstructions1": "Para instalar este aplicativo no seu iPhone ou iPad:",
+    "pwa.iosInstructions2": "Toque no ícone Compartilhar na parte inferior e selecione 'Adicionar à Tela de Início'.",
+    "pwa.close": "Fechar",
+
     "motivation.1": "Prepare café, prepare a sua vida perfeita!",
     "motivation.2": "De iniciante a mestre, tudo começa com uma xícara!",
     "motivation.3": "Aprenda a preparar e saboreie a riqueza de cada dia!",
@@ -3884,6 +3924,11 @@ export const ui = {
     "seo.description": "O Barista Flow oferece calculadoras e temporizador para café especial."
   },
   "ru": {
+    "pwa.install": "Установить приложение",
+    "pwa.iosInstructions1": "Чтобы установить это приложение на ваш iPhone или iPad:",
+    "pwa.iosInstructions2": "Нажмите значок «Поделиться» внизу, затем выберите «На экран «Домой»».",
+    "pwa.close": "Закрыть",
+
     "motivation.1": "Заваривайте кофе, заваривайте свою идеальную жизнь!",
     "motivation.2": "От новичка до мастера — всё начинается с одной чашки!",
     "motivation.3": "Научитесь заваривать и наслаждайтесь каждым днем!",
@@ -4367,6 +4412,11 @@ export const ui = {
     "seo.description": "Калькуляторы пропорций и таймер для спешелти кофе."
   },
   "hi": {
+    "pwa.install": "ऐप इंस्टॉल करें",
+    "pwa.iosInstructions1": "अपने iPhone या iPad पर इस ऐप को इंस्टॉल करने के लिए:",
+    "pwa.iosInstructions2": "नीचे शेयर आइकन पर टैप करें, फिर 'होम स्क्रीन में जोड़ें' चुनें।",
+    "pwa.close": "बंद करें",
+
     "motivation.1": "कॉफ़ी बनाएँ, अपना संपूर्ण जीवन बनाएँ!",
     "motivation.2": "नौसिखिए से उस्ताद तक, यह सब एक कप से शुरू होता है!",
     "motivation.3": "ब्रू करना सीखें, और हर दिन की समृद्धि का स्वाद लें!",
@@ -4850,6 +4900,11 @@ export const ui = {
     "seo.description": "स्पेशलिटी कॉफी के लिए अनुपात कैलकुलेटर और टाइमर।"
   },
   "bn": {
+    "pwa.install": "অ্যাপ ইনস্টল করুন",
+    "pwa.iosInstructions1": "আপনার iPhone বা iPad এ এই অ্যাপটি ইনস্টল করতে:",
+    "pwa.iosInstructions2": "নীচের শেয়ার আইকনে আলতো চাপুন, তারপর 'হোম স্ক্রিনে যোগ করুন' নির্বাচন করুন।",
+    "pwa.close": "বন্ধ করুন",
+
     "motivation.1": "কফি তৈরি করুন, আপনার নিখুঁত জীবন তৈরি করুন!",
     "motivation.2": "নতুন থেকে মাস্টার পর্যন্ত, সবই এক কাপ থেকে শুরু হয়!",
     "motivation.3": "কীভাবে ব্রু করতে হয় তা শিখুন এবং প্রতিদিনের স্বাদ উপভোগ করুন!",
@@ -5333,6 +5388,11 @@ export const ui = {
     "seo.description": "স্পেশালিটি কফির জন্য অনুপাত ক্যালকুলেটর এবং টাইমার।"
   },
   "ar": {
+    "pwa.install": "تثبيت التطبيق",
+    "pwa.iosInstructions1": "لتثبيت هذا التطبيق على جهاز iPhone أو iPad:",
+    "pwa.iosInstructions2": "اضغط على أيقونة المشاركة في الأسفل، ثم حدد 'إضافة إلى الشاشة الرئيسية'.",
+    "pwa.close": "إغلاق",
+
     "motivation.1": "اصنع القهوة، واصنع حياتك المثالية!",
     "motivation.2": "من مبتدئ إلى محترف، يبدأ الأمر كله بكوب واحد!",
     "motivation.3": "تعلم كيفية التحضير، وتذوق ثراء كل يوم!",
@@ -5816,6 +5876,11 @@ export const ui = {
     "seo.description": "مؤقت وحاسبة للقهوة المختصة."
   },
   "ur": {
+    "pwa.install": "ایپ انسٹال کریں",
+    "pwa.iosInstructions1": "اس ایپ کو اپنے آئی فون یا آئی پیڈ پر انسٹال کرنے کے لیے:",
+    "pwa.iosInstructions2": "نیچے شیئر آئیکن پر ٹیپ کریں، پھر 'ہوم اسکرین میں شامل کریں' کو منتخب کریں۔",
+    "pwa.close": "بند کریں",
+
     "motivation.1": "کافی بنائیں، اپنی کامل زندگی بنائیں!",
     "motivation.2": "ابتدائی سے ماہر تک، سب ایک کپ سے شروع ہوتا ہے!",
     "motivation.3": "بنانا سیکھیں، اور ہر دن کی لذت کا مزہ لیں!",
