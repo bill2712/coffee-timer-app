@@ -21,18 +21,54 @@ const defaultColdBrewRecipe = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Cold Brew Coffee Calculator & Ratio Assistant",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": `${SITE_URL}/`,
-  "description": t('tools.coldbrew.jsonld.desc'),
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Cold Brew Coffee Calculator & Ratio Assistant",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "url": `${SITE_URL}/${lang}/tools/cold-brew`,
+      "description": t('schema.desc.coldbrew'),
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "HowTo",
+      "name": t('tools.coldbrew.title'),
+      "description": t('schema.desc.coldbrew'),
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Preparation",
+          "text": t('schema.coldbrew.step1')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Mix",
+          "text": t('schema.coldbrew.step2')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Steep",
+          "text": t('schema.coldbrew.step3')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Filter",
+          "text": t('schema.coldbrew.step4')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Serve",
+          "text": t('schema.coldbrew.step5')
+        }
+      ]
+    }
+  ]
 };
 
 export function getStaticPaths() {

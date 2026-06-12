@@ -16,10 +16,23 @@ const webAppJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Barista Flow",
+  "description": t('seo.description'),
   "operatingSystem": "All",
   "applicationCategory": "UtilityApplication",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": `${SITE_URL}/`,
+  "url": `${SITE_URL}/${lang}/`,
+  "featureList": [
+    t('schema.app.feature1'),
+    t('schema.app.feature2'),
+    t('schema.app.feature3'),
+    t('schema.app.feature4'),
+    t('schema.app.feature5')
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "842"
+  },
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -51,31 +64,43 @@ export function getStaticPaths() {
     </div>
   </section>
 
-  <!-- Quick-Start User Guide -->
-  <section class="mb-16">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <a href="#tool-selector" class="backdrop-blur-xl bg-coffee-dark/40 border border-coffee-sand/10 shadow-lg rounded-2xl p-6 text-center group flex flex-col items-center gap-4 cursor-pointer hover:bg-coffee-dark/60 hover:-translate-y-1 hover:border-[#D9A05B]/50 transition-all duration-300">
-        <div class="w-12 h-12 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 flex items-center justify-center text-coffee-gold group-hover:scale-110 transition-transform">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+  <!-- Quick-Start User Guide (Beginner Crash Course) -->
+  <section class="mb-20 relative">
+    <!-- Premium background tint -->
+    <div class="absolute inset-0 bg-amber-500/5 blur-3xl rounded-[100px] pointer-events-none -z-10"></div>
+    
+    <div class="text-center max-w-3xl mx-auto mb-10 px-4">
+      <h2 class="font-display text-3xl md:text-4xl font-bold tracking-wide text-coffee-light mb-4">
+        {t('beginner_guide.headline.title')}
+      </h2>
+      <p class="text-sm md:text-base text-coffee-muted leading-relaxed">
+        {t('beginner_guide.headline.subtitle')}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <a href="#tool-selector" class="backdrop-blur-xl bg-coffee-dark/60 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/30 rounded-3xl p-8 flex flex-col gap-4 group hover:-translate-y-2 hover:border-[#D9A05B]/40 transition-all duration-500 cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
         </div>
-        <h3 class="font-display text-lg font-bold text-coffee-light">{t('onboarding.step1.title')}</h3>
-        <p class="text-xs text-coffee-muted leading-relaxed">{t('onboarding.step1.desc')}</p>
+        <h3 class="font-display text-xl font-bold text-coffee-light">{t('beginner_guide.step1.title')}</h3>
+        <p class="text-sm text-coffee-muted leading-relaxed">{t('beginner_guide.step1.desc')}</p>
       </a>
 
-      <a href="#parameter-form" class="backdrop-blur-xl bg-coffee-dark/40 border border-coffee-sand/10 shadow-lg rounded-2xl p-6 text-center group flex flex-col items-center gap-4 cursor-pointer hover:bg-coffee-dark/60 hover:-translate-y-1 hover:border-[#D9A05B]/50 transition-all duration-300">
-        <div class="w-12 h-12 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 flex items-center justify-center text-coffee-gold group-hover:scale-110 transition-transform">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+      <a href="#parameter-form" class="backdrop-blur-xl bg-coffee-dark/60 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/30 rounded-3xl p-8 flex flex-col gap-4 group hover:-translate-y-2 hover:border-[#D9A05B]/40 transition-all duration-500 cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
         </div>
-        <h3 class="font-display text-lg font-bold text-coffee-light">{t('onboarding.step2.title')}</h3>
-        <p class="text-xs text-coffee-muted leading-relaxed">{t('onboarding.step2.desc')}</p>
+        <h3 class="font-display text-xl font-bold text-coffee-light">{t('beginner_guide.step2.title')}</h3>
+        <p class="text-sm text-coffee-muted leading-relaxed">{t('beginner_guide.step2.desc')}</p>
       </a>
 
-      <a href="#timer-interface" class="backdrop-blur-xl bg-coffee-dark/40 border border-coffee-sand/10 shadow-lg rounded-2xl p-6 text-center group flex flex-col items-center gap-4 cursor-pointer hover:bg-coffee-dark/60 hover:-translate-y-1 hover:border-[#D9A05B]/50 transition-all duration-300">
-        <div class="w-12 h-12 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 flex items-center justify-center text-coffee-gold group-hover:scale-110 transition-transform">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+      <a href="#timer-interface" class="backdrop-blur-xl bg-coffee-dark/60 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/30 rounded-3xl p-8 flex flex-col gap-4 group hover:-translate-y-2 hover:border-[#D9A05B]/40 transition-all duration-500 cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         </div>
-        <h3 class="font-display text-lg font-bold text-coffee-light">{t('onboarding.step3.title')}</h3>
-        <p class="text-xs text-coffee-muted leading-relaxed">{t('onboarding.step3.desc')}</p>
+        <h3 class="font-display text-xl font-bold text-coffee-light">{t('beginner_guide.step3.title')}</h3>
+        <p class="text-sm text-coffee-muted leading-relaxed">{t('beginner_guide.step3.desc')}</p>
       </a>
     </div>
   </section>

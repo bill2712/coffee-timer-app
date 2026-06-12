@@ -22,18 +22,54 @@ const defaultFrenchPressRecipe = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "French Press Coffee Calculator & Ratio Assistant",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": `${SITE_URL}/`,
-  "description": t('tools.frenchpress.jsonld.desc'),
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "French Press Coffee Calculator & Ratio Assistant",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "url": `${SITE_URL}/${lang}/tools/french-press`,
+      "description": t('schema.desc.frenchpress'),
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "HowTo",
+      "name": t('tools.frenchpress.title'),
+      "description": t('schema.desc.frenchpress'),
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Preparation",
+          "text": t('schema.frenchpress.step1')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Pour",
+          "text": t('schema.frenchpress.step2')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Steep",
+          "text": t('schema.frenchpress.step3')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Break Crust",
+          "text": t('schema.frenchpress.step4')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Plunge & Serve",
+          "text": t('schema.frenchpress.step5')
+        }
+      ]
+    }
+  ]
 };
 
 export function getStaticPaths() {

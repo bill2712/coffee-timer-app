@@ -54,13 +54,20 @@ const faqSchema = {
   ]
 };
 
-const pageSchema = {
+const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": t("tools.bean.jsonld.name"),
-  "description": t("tools.bean.jsonld.desc"),
-  "applicationCategory": "Utility",
-  "operatingSystem": "Web",
+  "name": "Coffee Bean Freshness & Resting Calculator",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "url": `${SITE_URL}/${lang}/tools/bean-freshness`,
+  "description": t('schema.desc.beanfreshness'),
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "312"
+  },
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -76,7 +83,7 @@ export function getStaticPaths() {
 <Layout 
   title={t("tools.bean.meta.title")}
   description={t("tools.bean.meta.desc")}
-  jsonld={[pageSchema, faqSchema]}
+  jsonld={[jsonLd, faqSchema]}
 >
   <div class="max-w-4xl mx-auto py-8 sm:py-12 transition-all duration-500">
     

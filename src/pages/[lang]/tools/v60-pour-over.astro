@@ -22,18 +22,54 @@ const defaultV60Recipe = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "V60 Pour Over Calculator & Timer",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": `${SITE_URL}/`,
-  "description": t('tools.v60.jsonld.desc'),
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "V60 Pour Over Calculator & Timer",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "url": `${SITE_URL}/${lang}/tools/v60-pour-over`,
+      "description": t('schema.desc.v60'),
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "HowTo",
+      "name": t('tools.v60.title'),
+      "description": t('schema.desc.v60'),
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Preparation",
+          "text": t('schema.v60.step1')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Bloom",
+          "text": t('schema.v60.step2')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "First Pour",
+          "text": t('schema.v60.step3')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Second Pour",
+          "text": t('schema.v60.step4')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Drawdown",
+          "text": t('schema.v60.step5')
+        }
+      ]
+    }
+  ]
 };
 
 export function getStaticPaths() {

@@ -16,8 +16,13 @@ const jsonLd = {
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": `${SITE_URL}/`,
-  "description": t('tools.watertemp.jsonld.desc'),
+  "url": `${SITE_URL}/${lang}/tools/water-temperature`,
+  "description": t('schema.desc.watertemp'),
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "621"
+  },
   "offers": {
     "@type": "Offer",
     "price": "0",

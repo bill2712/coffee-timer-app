@@ -22,18 +22,49 @@ const defaultAeroPressRecipe = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "AeroPress Recipe Calculator & Timer",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": `${SITE_URL}/`,
-  "description": t('tools.aeropress.jsonld.desc'),
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "AeroPress Recipe Calculator & Timer",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "url": `${SITE_URL}/${lang}/tools/aeropress`,
+      "description": t('schema.desc.aeropress'),
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "HowTo",
+      "name": t('tools.aeropress.title'),
+      "description": t('schema.desc.aeropress'),
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Preparation",
+          "text": t('schema.aeropress.step1')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Pour",
+          "text": t('schema.aeropress.step2')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Stir & Steep",
+          "text": t('schema.aeropress.step3')
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Plunge",
+          "text": t('schema.aeropress.step4')
+        }
+      ]
+    }
+  ]
 };
 
 export function getStaticPaths() {
