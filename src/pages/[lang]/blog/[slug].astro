@@ -11,12 +11,15 @@ import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog', (entry) => !entry.data.tags?.includes('Glossary'));
   
+  const locales = Object.keys(languages);
   return blogEntries.map(entry => {
-    const parts = entry.id.toLowerCase().split('/');
-    const entryLang = parts[0];
-    const slug = parts.slice(1).join('/');
+    const parts = entry.id.split('/');
+    // entry.id might be 'zh-tw/filename', find exact matching locale
+    const rawLang = parts[0];
+    const exactLang = locales.find(l => l.toLowerCase() === rawLang.toLowerCase()) || rawLang;
+    const slug = parts.slice(1).join('/').replace(/.mdx?$/, '');
     return {
-      params: { lang: entryLang, slug },
+      params: { lang: exactLang, slug },
       props: { entry },
     };
   });
