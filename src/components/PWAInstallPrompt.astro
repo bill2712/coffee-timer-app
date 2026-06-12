@@ -1,0 +1,122 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<!-- Install PWA Prompt Container -->
+<div id="pwa-install-banner" class="fixed bottom-0 left-0 right-0 z-50 p-4 transform translate-y-full transition-transform duration-500 ease-out flex justify-center">
+  <div class="glass-card-interactive w-full max-w-md rounded-2xl shadow-2xl border border-coffee-gold/20 p-5 flex flex-col gap-4 relative overflow-hidden">
+    <!-- Close button -->
+    <button id="pwa-close-btn" class="absolute top-2 right-2 p-2 text-coffee-sand/70 hover:text-coffee-light transition-colors" aria-label="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    
+    <div class="flex items-start gap-4">
+      <div class="flex-shrink-0 w-12 h-12 bg-coffee-dark rounded-xl border border-coffee-gold/30 flex items-center justify-center">
+        <img src="/favicon.svg" alt="App Icon" class="w-8 h-8" />
+      </div>
+      <div class="flex-1 pt-1">
+        <h3 class="font-display font-bold text-coffee-light text-base leading-tight">Barista Flow</h3>
+        <p class="text-xs text-coffee-sand mt-1" id="pwa-desc">Install our web app to your Home screen for quick access and a native app experience.</p>
+      </div>
+    </div>
+    
+    <!-- Dynamic action area based on OS -->
+    <div id="pwa-action-container" class="mt-2 w-full">
+      <!-- Android / Native install button -->
+      <button id="pwa-install-btn" class="hidden w-full bg-gradient-to-r from-coffee-accent to-coffee-gold text-coffee-dark font-bold text-sm py-2.5 rounded-xl hover:scale-[1.02] active:scale-95 transition-all shadow-md">
+        Add to Home Screen
+      </button>
+      
+      <!-- iOS Instruction -->
+      <div id="pwa-ios-instruction" class="hidden text-xs text-coffee-sand/80 bg-coffee-dark/50 p-3 rounded-xl border border-coffee-sand/10">
+        To install: tap <svg class="inline-block w-4 h-4 mx-1" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2l5 5h-4v9H9V7H5l5-5z"></path></svg> <strong>Share</strong>, then select <br><strong>"Add to Home Screen"</strong> <span class="bg-coffee-sand/20 rounded px-1 text-coffee-light">+</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let deferredPrompt: any = null;
+  const pwaBanner = document.getElementById('pwa-install-banner');
+  const closeBtn = document.getElementById('pwa-close-btn');
+  const installBtn = document.getElementById('pwa-install-btn');
+  const iosInstruction = document.getElementById('pwa-ios-instruction');
+
+  // Detect iOS Safari
+  const isIos = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    return /iphone|ipad|ipod/.test(userAgent);
+  };
+
+  // Detect if app is already installed/standalone
+  const isStandalone = () => {
+    return ('standalone' in window.navigator && (window.navigator as any).standalone) || window.matchMedia('(display-mode: standalone)').matches;
+  };
+
+  const hasDismissed = localStorage.getItem('pwa-dismissed');
+
+  // Show banner utility
+  const showBanner = () => {
+    if (hasDismissed || isStandalone()) return;
+    // Delay showing to not interrupt immediate page load experience
+    setTimeout(() => {
+      if (pwaBanner) pwaBanner.classList.remove('translate-y-full');
+    }, 3000);
+  };
+
+  const dismissBanner = () => {
+    if (pwaBanner) pwaBanner.classList.add('translate-y-full');
+    localStorage.setItem('pwa-dismissed', 'true');
+  };
+
+  // Close button logic
+  if (closeBtn) {
+    closeBtn.addEventListener('click', dismissBanner);
+  }
+
+  // Handle native install prompt (Android/Desktop)
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    if (installBtn && !isStandalone() && !hasDismissed) {
+      installBtn.classList.remove('hidden');
+      showBanner();
+    }
+  });
+
+  // Handle Install Button Click
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      
+      // Show the install prompt
+      deferredPrompt.prompt();
+      
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        dismissBanner();
+      }
+      deferredPrompt = null;
+    });
+  }
+
+  // Handle iOS specific logic
+  // iOS does not fire beforeinstallprompt. We manually show instructions.
+  if (isIos() && !isStandalone() && !hasDismissed && iosInstruction) {
+    iosInstruction.classList.remove('hidden');
+    showBanner();
+  }
+
+  // Hide if successfully installed during session
+  window.addEventListener('appinstalled', () => {
+    dismissBanner();
+    deferredPrompt = null;
+  });
+</script>

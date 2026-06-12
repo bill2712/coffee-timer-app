@@ -11,7 +11,7 @@ const t = useTranslations(lang);
 
 // Fetch all posts from content collections, sorted by publish date descending
 const posts = (await getCollection('blog'))
-  .filter((entry) => entry.id.startsWith(`${lang}/`) && !entry.data.tags?.includes('Glossary'))
+  .filter((entry) => entry.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && !entry.data.tags?.includes('Glossary'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 function formatDate(date: Date) {
