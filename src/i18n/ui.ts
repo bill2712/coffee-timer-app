@@ -20,6 +20,8 @@ export const defaultLang = 'zh-TW';
 
 export const ui = {
   "zh-TW": {
+    'index.guide.cta': '👉 新手請由此開始：完整沖煮指南',
+
     'master_guide.hero.title': '精品咖啡沖泡指南：點滴之間，淬煉極致風味',
     'master_guide.hero.subtitle': '學沖咖啡，品味生活每一天！第一次手沖咖啡？別擔心，有我們在。',
     'master_guide.hero.desc': '我們是你的數位口袋吧台師。不需具備任何專業知識，只要準備好你的咖啡杯，看懂這一頁，今天早上就能親手沖出大師級的完美風味。',
@@ -642,6 +644,8 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡沖煮參數計算與互動式三階段注水計時器，助您精準控制悶蒸、主要萃取與後段強度，沖煮出極致風味的咖啡。"
   },
   "en": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -1264,6 +1268,8 @@ export const ui = {
     "seo.description": "Barista Flow offers specialty coffee ratio calculators and an interactive 3-stage pour over timer to precisely control blooming, extraction, and strength."
   },
   "ja": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -1886,6 +1892,8 @@ export const ui = {
     "seo.description": "Barista Flowは、スペシャルティコーヒーの比率計算機とインタラクティブな3段階注水タイマーを提供し、蒸らし、抽出、強さを正確にコントロールします。"
   },
   "zh-CN": {
+    'index.guide.cta': '👉 新手请由此开始：完整冲煮指南',
+
     'master_guide.hero.title': '精品咖啡冲泡指南：点滴之间，淬炼极致风味',
     'master_guide.hero.subtitle': '学冲咖啡，品味生活每一天！第一次手冲咖啡？别担心，有我们在。',
     'master_guide.hero.desc': '我们是你的数字口袋吧台师。不需具备任何专业知识，只要准备好你的咖啡杯，看懂这一页，今天早上就能亲手冲出大师级的完美风味。',
@@ -2508,6 +2516,8 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡冲煮参数计算与互动式三阶段注水计时器，助您精准控制闷蒸、主要萃取与后段强度，冲煮出极致风味的咖啡。"
   },
   "fr": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -3130,6 +3140,8 @@ export const ui = {
     "seo.description": "Barista Flow propose des calculateurs de ratio pour café de spécialité et un minuteur interactif en 3 étapes."
   },
   "de": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -3752,6 +3764,8 @@ export const ui = {
     "seo.description": "Barista Flow bietet Spezialitätenkaffee-Rechner und einen interaktiven 3-Stufen-Timer zur Kontrolle von Blooming, Extraktion und Stärke."
   },
   "es": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -4374,6 +4388,8 @@ export const ui = {
     "seo.description": "Barista Flow ofrece calculadoras de proporción para café de especialidad y un temporizador interactivo en 3 etapas."
   },
   "pt": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -4996,6 +5012,8 @@ export const ui = {
     "seo.description": "O Barista Flow oferece calculadoras e temporizador para café especial."
   },
   "ru": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -5618,6 +5636,8 @@ export const ui = {
     "seo.description": "Калькуляторы пропорций и таймер для спешелти кофе."
   },
   "hi": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -6240,6 +6260,8 @@ export const ui = {
     "seo.description": "स्पेशलिटी कॉफी के लिए अनुपात कैलकुलेटर और टाइमर।"
   },
   "bn": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -6862,6 +6884,8 @@ export const ui = {
     "seo.description": "স্পেশালিটি কফির জন্য অনুপাত ক্যালকুলেটর এবং টাইমার।"
   },
   "ar": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
@@ -7484,6 +7508,8 @@ export const ui = {
     "seo.description": "مؤقت وحاسبة للقهوة المختصة."
   },
   "ur": {
+    'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
+
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
     'master_guide.hero.subtitle': 'Brew coffee, taste life! First time doing a pour-over? We\'ve got you covered.',
     'master_guide.hero.desc': 'We are your digital pocket barista. No professional knowledge required. Just prep your mug, read this page, and you\'ll brew a master-class cup this morning.',
