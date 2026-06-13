@@ -20,6 +20,12 @@ export const defaultLang = 'zh-TW';
 
 export const ui = {
   "zh-TW": {
+    'pwa_install.title': '安裝咖啡教練 App',
+    'pwa_install.desc': '一鍵加入主畫面，即使斷網也能秒速啟動計時器與全語系指南！',
+    'pwa_install.btn_android': '立即安裝',
+    'pwa_install.btn_ios': '如何加入',
+    'pwa_install.ios_step': '請點擊瀏覽器下方的『分享』按鈕，然後向下捲動選擇『加入主畫面』即可！',
+
     'index.guide.cta': '👉 新手請由此開始：完整沖煮指南',
 
     'master_guide.hero.title': '精品咖啡沖泡指南：點滴之間，淬煉極致風味',
@@ -644,6 +650,12 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡沖煮參數計算與互動式三階段注水計時器，助您精準控制悶蒸、主要萃取與後段強度，沖煮出極致風味的咖啡。"
   },
   "en": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -1268,6 +1280,12 @@ export const ui = {
     "seo.description": "Barista Flow offers specialty coffee ratio calculators and an interactive 3-stage pour over timer to precisely control blooming, extraction, and strength."
   },
   "ja": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -1892,6 +1910,12 @@ export const ui = {
     "seo.description": "Barista Flowは、スペシャルティコーヒーの比率計算機とインタラクティブな3段階注水タイマーを提供し、蒸らし、抽出、強さを正確にコントロールします。"
   },
   "zh-CN": {
+    'pwa_install.title': '安装咖啡教练 App',
+    'pwa_install.desc': '一键加入主屏幕，即使断网也能秒速启动计时器与全语系指南！',
+    'pwa_install.btn_android': '立即安装',
+    'pwa_install.btn_ios': '如何加入',
+    'pwa_install.ios_step': '请点击浏览器下方的“分享”按钮，然后向下滚动选择“加入主屏幕”即可！',
+
     'index.guide.cta': '👉 新手请由此开始：完整冲煮指南',
 
     'master_guide.hero.title': '精品咖啡冲泡指南：点滴之间，淬炼极致风味',
@@ -2516,6 +2540,12 @@ export const ui = {
     "seo.description": "Barista Flow 提供精品咖啡冲煮参数计算与互动式三阶段注水计时器，助您精准控制闷蒸、主要萃取与后段强度，冲煮出极致风味的咖啡。"
   },
   "fr": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -3140,6 +3170,12 @@ export const ui = {
     "seo.description": "Barista Flow propose des calculateurs de ratio pour café de spécialité et un minuteur interactif en 3 étapes."
   },
   "de": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -3764,6 +3800,12 @@ export const ui = {
     "seo.description": "Barista Flow bietet Spezialitätenkaffee-Rechner und einen interaktiven 3-Stufen-Timer zur Kontrolle von Blooming, Extraktion und Stärke."
   },
   "es": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -4388,6 +4430,12 @@ export const ui = {
     "seo.description": "Barista Flow ofrece calculadoras de proporción para café de especialidad y un temporizador interactivo en 3 etapas."
   },
   "pt": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -5012,6 +5060,12 @@ export const ui = {
     "seo.description": "O Barista Flow oferece calculadoras e temporizador para café especial."
   },
   "ru": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -5636,6 +5690,12 @@ export const ui = {
     "seo.description": "Калькуляторы пропорций и таймер для спешелти кофе."
   },
   "hi": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -6260,6 +6320,12 @@ export const ui = {
     "seo.description": "स्पेशलिटी कॉफी के लिए अनुपात कैलकुलेटर और टाइमर।"
   },
   "bn": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -6884,6 +6950,12 @@ export const ui = {
     "seo.description": "স্পেশালিটি কফির জন্য অনুপাত ক্যালকুলেটর এবং টাইমার।"
   },
   "ar": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
@@ -7508,6 +7580,12 @@ export const ui = {
     "seo.description": "مؤقت وحاسبة للقهوة المختصة."
   },
   "ur": {
+    'pwa_install.title': 'Install Coffee Timer App',
+    'pwa_install.desc': 'Add to Home Screen for instant offline access to the timer and global guides!',
+    'pwa_install.btn_android': 'Install Now',
+    'pwa_install.btn_ios': 'How to Install',
+    'pwa_install.ios_step': 'Tap the Share icon at the bottom, then scroll down and select \'Add to Home Screen\'!',
+
     'index.guide.cta': '👉 Beginners Start Here: Full Brewing Guide',
 
     'master_guide.hero.title': 'Specialty Coffee Brewing Guide',
