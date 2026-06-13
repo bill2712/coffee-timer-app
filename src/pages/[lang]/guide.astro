@@ -1,0 +1,194 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { useTranslations } from '../../i18n/utils';
+import { languages } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as keyof typeof languages);
+
+// Get base URL for links
+const baseUrl = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
+---
+
+<Layout title={t('master_guide.hero.title')} description={t('master_guide.hero.desc')}>
+  <!-- SECTION 1: HERO - THE REASSURING WELCOME -->
+  <section class="relative pt-24 pb-16 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-coffee-darker to-coffee-dark z-[-1]"></div>
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-[#D9A05B]/10 blur-[100px] rounded-full z-[-1]"></div>
+    
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coffee-sand/5 border border-coffee-sand/10 mb-8 backdrop-blur-sm">
+        <span class="text-xl">✨</span>
+        <span class="text-sm font-medium tracking-wide text-coffee-sand">{t('master_guide.hero.subtitle')}</span>
+      </div>
+      
+      <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide text-coffee-light mb-8 leading-tight">
+        {t('master_guide.hero.title')}
+      </h1>
+      
+      <p class="text-lg md:text-xl text-coffee-muted max-w-2xl mx-auto leading-relaxed">
+        {t('master_guide.hero.desc')}
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE "WHICH TOOL SHOULD I USE?" DECISION MATRIX -->
+  <section class="py-16 bg-coffee-dark">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="font-display text-3xl font-bold text-coffee-light">{t('master_guide.matrix.title')}</h2>
+        <div class="w-16 h-1 bg-[#D9A05B] mx-auto mt-4 rounded-full opacity-50"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- V60 -->
+        <div class="group relative bg-coffee-darker/50 border border-coffee-sand/10 rounded-2xl p-8 hover:bg-[#D9A05B]/5 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#D9A05B]/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"></div>
+          <h3 class="font-display text-2xl font-bold text-coffee-light mb-4 flex items-center gap-3">
+            {t('master_guide.matrix.v60.title')}
+          </h3>
+          <p class="text-coffee-muted leading-relaxed">
+            {t('master_guide.matrix.v60.desc')}
+          </p>
+        </div>
+
+        <!-- French Press -->
+        <div class="group relative bg-coffee-darker/50 border border-coffee-sand/10 rounded-2xl p-8 hover:bg-[#D9A05B]/5 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#D9A05B]/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"></div>
+          <h3 class="font-display text-2xl font-bold text-coffee-light mb-4 flex items-center gap-3">
+            {t('master_guide.matrix.frenchpress.title')}
+          </h3>
+          <p class="text-coffee-muted leading-relaxed">
+            {t('master_guide.matrix.frenchpress.desc')}
+          </p>
+        </div>
+
+        <!-- Aeropress -->
+        <div class="group relative bg-coffee-darker/50 border border-coffee-sand/10 rounded-2xl p-8 hover:bg-[#D9A05B]/5 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#D9A05B]/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"></div>
+          <h3 class="font-display text-2xl font-bold text-coffee-light mb-4 flex items-center gap-3">
+            {t('master_guide.matrix.aeropress.title')}
+          </h3>
+          <p class="text-coffee-muted leading-relaxed">
+            {t('master_guide.matrix.aeropress.desc')}
+          </p>
+        </div>
+
+        <!-- Cold Brew -->
+        <div class="group relative bg-coffee-darker/50 border border-coffee-sand/10 rounded-2xl p-8 hover:bg-[#D9A05B]/5 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#D9A05B]/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"></div>
+          <h3 class="font-display text-2xl font-bold text-coffee-light mb-4 flex items-center gap-3">
+            {t('master_guide.matrix.coldbrew.title')}
+          </h3>
+          <p class="text-coffee-muted leading-relaxed">
+            {t('master_guide.matrix.coldbrew.desc')}
+          </p>
+        </div>
+
+        <!-- Utilities (Spans full width on md) -->
+        <div class="group relative md:col-span-2 bg-coffee-darker/50 border border-coffee-sand/10 rounded-2xl p-8 hover:bg-[#D9A05B]/5 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-[#D9A05B]/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"></div>
+          <h3 class="font-display text-2xl font-bold text-coffee-light mb-4 flex items-center gap-3">
+            {t('master_guide.matrix.utilities.title')}
+          </h3>
+          <p class="text-coffee-muted leading-relaxed">
+            {t('master_guide.matrix.utilities.desc')}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: THE 3-STEP REAL-LIFE WORKFLOW -->
+  <section class="py-20 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="font-display text-3xl font-bold text-coffee-light">{t('master_guide.workflow.title')}</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="bg-coffee-dark border border-[#D9A05B]/20 rounded-2xl p-8 relative overflow-hidden shadow-xl">
+          <div class="text-[120px] font-display font-black text-[#D9A05B]/5 absolute -top-8 -right-4 select-none">1</div>
+          <div class="relative z-10">
+            <h3 class="font-display text-xl font-bold text-[#D9A05B] mb-4">{t('master_guide.workflow.step1.title')}</h3>
+            <p class="text-coffee-light leading-relaxed">{t('master_guide.workflow.step1.desc')}</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-coffee-dark border border-[#D9A05B]/20 rounded-2xl p-8 relative overflow-hidden shadow-xl mt-0 md:mt-8">
+          <div class="text-[120px] font-display font-black text-[#D9A05B]/5 absolute -top-8 -right-4 select-none">2</div>
+          <div class="relative z-10">
+            <h3 class="font-display text-xl font-bold text-[#D9A05B] mb-4">{t('master_guide.workflow.step2.title')}</h3>
+            <p class="text-coffee-light leading-relaxed">{t('master_guide.workflow.step2.desc')}</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-coffee-dark border border-[#D9A05B]/20 rounded-2xl p-8 relative overflow-hidden shadow-xl mt-0 md:mt-16">
+          <div class="text-[120px] font-display font-black text-[#D9A05B]/5 absolute -top-8 -right-4 select-none">3</div>
+          <div class="relative z-10">
+            <h3 class="font-display text-xl font-bold text-[#D9A05B] mb-4">{t('master_guide.workflow.step3.title')}</h3>
+            <p class="text-coffee-light leading-relaxed">{t('master_guide.workflow.step3.desc')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE SCIENCE OF 3-STAGE EXTRACTION -->
+  <section class="py-16 bg-coffee-darker border-y border-coffee-sand/10">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="font-display text-3xl font-bold text-coffee-light mb-4">{t('master_guide.science.title')}</h2>
+        <p class="text-coffee-muted">Decoding the visual gauge for perfect timing</p>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Stage 1 -->
+        <div class="flex items-start gap-4 p-6 rounded-2xl bg-coffee-dark/50 border border-[#D9A05B]/10 hover:border-[#D9A05B]/30 transition-colors">
+          <div class="w-12 h-12 shrink-0 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-xl">1</div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-coffee-light mb-2">{t('master_guide.science.stage1.title')}</h3>
+            <p class="text-coffee-muted leading-relaxed">{t('master_guide.science.stage1.desc')}</p>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="flex items-start gap-4 p-6 rounded-2xl bg-coffee-dark/50 border border-[#D9A05B]/10 hover:border-[#D9A05B]/30 transition-colors">
+          <div class="w-12 h-12 shrink-0 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-xl">2</div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-coffee-light mb-2">{t('master_guide.science.stage2.title')}</h3>
+            <p class="text-coffee-muted leading-relaxed">{t('master_guide.science.stage2.desc')}</p>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="flex items-start gap-4 p-6 rounded-2xl bg-coffee-dark/50 border border-[#D9A05B]/10 hover:border-[#D9A05B]/30 transition-colors">
+          <div class="w-12 h-12 shrink-0 rounded-full bg-amber-700/10 border border-amber-700/20 flex items-center justify-center text-amber-500 font-bold text-xl">3</div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-coffee-light mb-2">{t('master_guide.science.stage3.title')}</h3>
+            <p class="text-coffee-muted leading-relaxed">{t('master_guide.science.stage3.desc')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: FINAL CALL TO ACTION -->
+  <section class="py-24 text-center">
+    <div class="max-w-2xl mx-auto px-4">
+      <a 
+        href={`${baseUrl}/${lang}/`}
+        class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-coffee-darker bg-[#D9A05B] rounded-full hover:bg-opacity-90 hover:scale-105 transition-all duration-300 shadow-lg shadow-[#D9A05B]/20 ring-4 ring-[#D9A05B]/10"
+      >
+        {t('master_guide.cta.btn')}
+      </a>
+    </div>
+  </section>
+</Layout>
