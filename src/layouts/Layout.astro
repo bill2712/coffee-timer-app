@@ -53,6 +53,16 @@ const finalKeywords = keywords || t('seo.keywords');
 
     <meta name="generator" content={Astro.generator} />
     
+    <!-- Google Tag Manager (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9R61GZ220P"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-9R61GZ220P');
+    </script>
+    
     <!-- Google AdSense Placeholder (Required for approval) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7189047900748105" crossorigin="anonymous"></script>
   </head>
