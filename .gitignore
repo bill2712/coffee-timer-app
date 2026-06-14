@@ -26,3 +26,9 @@ pnpm-debug.log*
 # Inject Scripts
 inject_cta_keys.cjs
 inject_pwa_keys.cjs
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example

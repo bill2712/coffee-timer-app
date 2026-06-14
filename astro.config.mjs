@@ -5,6 +5,8 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { SITE_URL } from './src/config.js';
 
+import cloudflare from '@astrojs/cloudflare';
+
 const parsedUrl = new URL(SITE_URL);
 const dynamicSite = parsedUrl.origin;
 const dynamicBase = parsedUrl.pathname === '/' ? '' : parsedUrl.pathname;
@@ -12,6 +14,7 @@ const dynamicBase = parsedUrl.pathname === '/' ? '' : parsedUrl.pathname;
 export default defineConfig({
   site: dynamicSite,
   base: dynamicBase,
+
   i18n: {
     defaultLocale: "zh-TW",
     locales: ["zh-TW", "en", "fr", "ja", "de", "zh-CN", "es", "pt", "ru", "hi", "bn", "ar", "ur"],
@@ -19,6 +22,7 @@ export default defineConfig({
       prefixDefaultLocale: true
     }
   },
+
   integrations: [
     mdx(),
     sitemap({
@@ -42,10 +46,13 @@ export default defineConfig({
       }
     })
   ],
+
   vite: {
     plugins: [tailwindcss()],
     esbuild: {
       drop: ['console', 'debugger'],
     }
-  }
+  },
+
+  adapter: cloudflare()
 });

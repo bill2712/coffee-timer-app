@@ -1,0 +1,13 @@
+{
+	"compatibility_date": "2026-06-14",
+	"compatibility_flags": ["global_fetch_strictly_public"],
+	"name": "users-billtsang-gemini-antigravity-ide-scratch-coffee-timer",
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS"
+	},
+	"observability": {
+		"enabled": true
+	}
+}
