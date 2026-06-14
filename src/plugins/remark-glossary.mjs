@@ -47,7 +47,7 @@ export function remarkGlossary() {
           // Reset lastIndex for global regex
           item.regex.lastIndex = 0;
           const originalHtml = newHtml;
-          newHtml = newHtml.replace(item.regex, `<a href="/coffee-timer-app/glossary/${item.slug}" class="glossary-link">$&</a>`);
+          newHtml = newHtml.replace(item.regex, `<a href="/glossary/${item.slug}" class="glossary-link">$&</a>`);
           if (originalHtml !== newHtml) {
             hasMatch = true;
           }
