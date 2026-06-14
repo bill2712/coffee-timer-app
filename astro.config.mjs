@@ -3,15 +3,9 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import { SITE_URL } from './src/config.js';
-
-const parsedUrl = new URL(SITE_URL);
-const dynamicSite = parsedUrl.origin;
-const dynamicBase = parsedUrl.pathname === '/' ? '' : parsedUrl.pathname;
-
 export default defineConfig({
-  site: dynamicSite,
-  base: dynamicBase,
+  site: 'https://coffee-timer-app.bill27122002.workers.dev',
+  base: '/',
   i18n: {
     defaultLocale: "zh-TW",
     locales: ["zh-TW", "en", "fr", "ja", "de", "zh-CN", "es", "pt", "ru", "hi", "bn", "ar", "ur"],
