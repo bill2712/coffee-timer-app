@@ -297,8 +297,17 @@ const formDict = {
       let weightRaw = weightInput.value;
       let ratioRaw = ratioInput.value;
       
-      let weight = parseFloat(weightRaw.replace(',', '.'));
-      let ratio = parseFloat(ratioRaw.replace(',', '.'));
+      const sanitizeDecimal = (val: string) => {
+        if (!val) return '';
+        return val.replace(/,/g, '.').replace(/[^0-9.]/g, '');
+      };
+      
+      let weight = parseFloat(sanitizeDecimal(weightRaw));
+      let ratio = parseFloat(sanitizeDecimal(ratioRaw));
+
+      // Fallback if NaN
+      if (isNaN(weight)) weight = 15.0;
+      if (isNaN(ratio)) ratio = 15.0;
       
       // Validation Logic & Fail-safes
       const weightError = document.getElementById('weight-error');
@@ -354,15 +363,26 @@ const formDict = {
   }
 
   function getRecipeData() {
+    const sanitizeDecimal = (val: string) => {
+      if (!val) return '';
+      return val.replace(/,/g, '.').replace(/[^0-9.]/g, '');
+    };
+    
+    let parsedWeight = parseFloat(sanitizeDecimal(weightInput?.value));
+    let parsedRatio = parseFloat(sanitizeDecimal(ratioInput?.value));
+    
+    if (isNaN(parsedWeight) || parsedWeight <= 0) parsedWeight = 15.0;
+    if (isNaN(parsedRatio) || parsedRatio <= 0) parsedRatio = 15.0;
+
     return {
       id: Date.now().toString(), // unique id for history
       beanName: beanNameInput?.value || '自訂精品咖啡豆',
       roastLevel: roastLevelInput?.value || 'medium',
       grindSize: grindSizeInput?.value || '中等',
       waterTemp: parseInt(waterTempInput?.value) || 92,
-      coffeeWeight: parseFloat(weightInput?.value?.replace(',', '.')) || 20,
-      waterRatio: parseFloat(ratioInput?.value?.replace(',', '.')) || 15,
-      totalWater: Math.round((parseFloat(weightInput?.value?.replace(',', '.')) || 20) * (parseFloat(ratioInput?.value?.replace(',', '.')) || 15))
+      coffeeWeight: parsedWeight,
+      waterRatio: parsedRatio,
+      totalWater: Math.round(parsedWeight * parsedRatio)
     };
   }
 
@@ -377,7 +397,11 @@ const formDict = {
   }
 
   function syncWithTimer(recipe: any) {
-    localStorage.setItem('barista_flow_recipe', JSON.stringify(recipe));
+    try {
+      localStorage.setItem('barista_flow_recipe', JSON.stringify(recipe));
+    } catch (e) {
+      console.warn('Failed to sync recipe to localStorage:', e);
+    }
     const event = new CustomEvent('coffee-recipe-changed', { detail: recipe });
     window.dispatchEvent(event);
   }
@@ -442,11 +466,13 @@ const formDict = {
 
   // --- History Management ---
   function loadHistory(): any[] {
-    const str = localStorage.getItem('barista_flow_history');
     try {
+      const str = localStorage.getItem('barista_flow_history');
       const parsed = str ? JSON.parse(str) : [];
       return Array.isArray(parsed) ? parsed : [];
-    } catch(e) {
+    } catch (e) {
+      console.warn('History corrupted or unavailable, resetting:', e);
+      try { localStorage.removeItem('barista_flow_history'); } catch (err) {}
       return [];
     }
   }
@@ -458,7 +484,20 @@ const formDict = {
     history.unshift(r);
     // Keep only last 10
     if (history.length > 10) history.pop();
-    localStorage.setItem('barista_flow_history', JSON.stringify(history));
+    
+    try {
+      localStorage.setItem('barista_flow_history', JSON.stringify(history));
+    } catch (e) {
+      console.error('Failed to save history (QuotaExceededError?):', e);
+      // Fallback: clear history and save only the new one
+      try {
+        localStorage.removeItem('barista_flow_history');
+        localStorage.setItem('barista_flow_history', JSON.stringify([r]));
+      } catch (err) {
+        console.error('Critical: localStorage disabled or full', err);
+      }
+    }
+    
     renderHistory();
     historyPanel?.classList.remove('hidden');
     showToast('配方已儲存至我的最愛！');
@@ -467,7 +506,11 @@ const formDict = {
   function deleteHistory(id: string) {
     let history = loadHistory();
     history = history.filter(h => h.id !== id);
-    localStorage.setItem('barista_flow_history', JSON.stringify(history));
+    try {
+      localStorage.setItem('barista_flow_history', JSON.stringify(history));
+    } catch (e) {
+      console.warn('Failed to delete history item from localStorage:', e);
+    }
     renderHistory();
   }
 
@@ -614,7 +657,13 @@ const formDict = {
         syncWithTimer(getRecipeData());
       } else {
         // Normal behavior: load from localStorage
-        const savedRecipeStr = localStorage.getItem('barista_flow_recipe');
+        let savedRecipeStr = null;
+        try {
+          savedRecipeStr = localStorage.getItem('barista_flow_recipe');
+        } catch (e) {
+          console.warn('localStorage read error for recipe:', e);
+        }
+        
         if (savedRecipeStr) {
           try {
             applyRecipeData(JSON.parse(savedRecipeStr));

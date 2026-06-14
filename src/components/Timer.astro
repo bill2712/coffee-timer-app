@@ -247,8 +247,12 @@ const timerDict = {
     speechSynth = window.speechSynthesis;
 
     constructor() {
-      const savedMute = localStorage.getItem('barista_flow_muted');
-      if (savedMute === 'true') this.isMuted = true;
+      try {
+        const savedMute = localStorage.getItem('barista_flow_muted');
+        if (savedMute === 'true') this.isMuted = true;
+      } catch (e) {
+        console.warn('localStorage read error:', e);
+      }
     }
 
     init() {
@@ -563,6 +567,20 @@ const timerDict = {
 
   document.addEventListener("visibilitychange", handleVisibilityChange);
 
+  // Lifecycle memory sanitization for Astro View Transitions / SPA
+  document.addEventListener('astro:before-swap', () => {
+    if (timerId !== null) {
+      window.clearInterval(timerId);
+      timerId = null;
+    }
+  });
+  window.addEventListener('unload', () => {
+    if (timerId !== null) {
+      window.clearInterval(timerId);
+      timerId = null;
+    }
+  });
+
   function stopTimer(completed = false) {
     isRunning = false;
     window.dispatchEvent(new CustomEvent('timer-state', { detail: { running: false } }));
@@ -690,18 +708,30 @@ const timerDict = {
     };
 
     try {
-      const existingLogsStr = localStorage.getItem('barista_flow_logs');
       let logs = [];
-      if (existingLogsStr) {
-        try {
+      try {
+        const existingLogsStr = localStorage.getItem('barista_flow_logs');
+        if (existingLogsStr) {
           logs = JSON.parse(existingLogsStr);
           if (!Array.isArray(logs)) logs = [];
-        } catch(e) { logs = []; }
+        }
+      } catch (e) {
+        console.warn('Logs corrupted, resetting to clean array:', e);
+        logs = [];
+        try { localStorage.removeItem('barista_flow_logs'); } catch (err) {}
       }
+      
       logs.unshift(newLog); // Add to beginning
       localStorage.setItem('barista_flow_logs', JSON.stringify(logs));
     } catch (err) {
-      console.error('Failed to save log', err);
+      console.error('Failed to save log (QuotaExceededError or Data Corruption):', err);
+      // Fallback: clear and try saving just the single log
+      try {
+        localStorage.removeItem('barista_flow_logs');
+        localStorage.setItem('barista_flow_logs', JSON.stringify([newLog]));
+      } catch (e) {
+        console.error('Critical: localStorage completely full or disabled', e);
+      }
     }
 
     hideTastingModal();
