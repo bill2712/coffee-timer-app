@@ -28,7 +28,7 @@ const baseUrl = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL
     <!-- Dynamic action area based on OS -->
     <div id="pwa-action-container" class="w-full">
       <!-- Android / Native install button -->
-      <button id="pwa-install-btn" class="hidden w-full bg-gradient-to-r from-coffee-gold to-coffee-sand text-coffee-dark hover:from-coffee-gold-hover hover:to-coffee-gold font-bold text-[13px] py-2 rounded-lg active:scale-95 transition-all shadow-lg shadow-coffee-gold/20">
+      <button id="pwa-install-btn" class="hidden w-full bg-blue-600 text-white hover:bg-blue-700 font-bold text-[13px] py-2 rounded-lg active:scale-95 transition-all shadow-lg shadow-blue-500/30">
         {t('pwa_install.btn_android')}
       </button>
 
@@ -68,7 +68,12 @@ const baseUrl = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL
   const checkDismissed = () => {
     const expiry = localStorage.getItem('pwa_dismissed_until');
     if (!expiry) return false;
-    if (new Date().getTime() > parseInt(expiry, 10)) {
+    
+    const expiryDate = new Date(expiry);
+    // Fallback in case they have old non-ISO timestamps stored
+    const expiryTime = isNaN(expiryDate.getTime()) ? parseInt(expiry, 10) : expiryDate.getTime();
+    
+    if (new Date().getTime() > expiryTime) {
       localStorage.removeItem('pwa_dismissed_until');
       return false;
     }
@@ -95,9 +100,10 @@ const baseUrl = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL
     
     pwaBanner.classList.add('translate-y-24', 'opacity-0');
     
-    // Set expiry to 7 days from now
-    const expiry = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
-    localStorage.setItem('pwa_dismissed_until', expiry.toString());
+    // Set expiry to 7 days from now (modern ISO timestamp)
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 7);
+    localStorage.setItem('pwa_dismissed_until', expiryDate.toISOString());
     
     // Hide completely after animation
     setTimeout(() => {

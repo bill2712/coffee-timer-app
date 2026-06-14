@@ -1,7 +1,14 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const searchDict = {
+  tagWiki: t('search.tagWiki'),
+  tagArticle: t('search.tagArticle')
+};
 ---
 
-<div class="relative w-full max-w-xl mx-auto mb-12 group z-40" id="search-container">
+<div class="relative w-full max-w-xl mx-auto mb-12 group z-40" id="search-container" data-dict={JSON.stringify(searchDict)}>
   <div class="relative flex items-center w-full h-12 rounded-full focus-within:shadow-lg focus-within:ring-2 focus-within:ring-coffee-gold/50 bg-coffee-darker overflow-hidden border border-coffee-sand/20 transition-all duration-200 ease-out focus-within:border-coffee-gold">
     <div class="grid place-items-center h-full w-12 text-coffee-sand/50">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -13,7 +20,7 @@
       type="text"
       id="search-input"
       class="peer h-full w-full outline-none text-sm text-coffee-sand bg-transparent pe-4 font-light placeholder-coffee-sand/40 focus:ring-0"
-      placeholder="搜尋知識庫與百科... (例如: 悶蒸, 通道效應)"
+      placeholder={t('search.placeholder')}
       autocomplete="off"
     />
   </div>
@@ -24,8 +31,8 @@
     <ul id="search-results-list" class="divide-y divide-coffee-sand/5"></ul>
     
     <!-- Empty State -->
-    <div id="search-empty" class="hidden p-8 text-center text-coffee-muted text-sm font-light">
-      找不到符合「<span id="search-term-display" class="text-coffee-gold"></span>」的結果
+    <div id="search-empty" class="hidden p-8 text-center">
+      <p class="text-coffee-muted text-sm font-light">{t('search.noResult')}「<span id="search-term-display" class="text-coffee-gold"></span>」</p>
     </div>
     
     <!-- Loading State -->
@@ -36,9 +43,11 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  document.addEventListener('astro:page-load', () => {
     const searchContainer = document.getElementById('search-container');
+    const dict = searchContainer ? JSON.parse(searchContainer.dataset.dict || '{}') : {};
+    
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
     const searchResults = document.getElementById('search-results');
     const resultsList = document.getElementById('search-results-list');
     const searchEmpty = document.getElementById('search-empty');
@@ -105,8 +114,8 @@
         resultsList.innerHTML = results.slice(0, 8).map(item => {
           const isGlossary = item.tags.includes('Glossary');
           const badge = isGlossary 
-            ? `<span class="px-2 py-0.5 text-[10px] rounded bg-coffee-dark border border-coffee-sand/20 text-coffee-sand uppercase">百科</span>`
-            : `<span class="px-2 py-0.5 text-[10px] rounded bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold uppercase">文章</span>`;
+            ? `<span class="px-2 py-0.5 text-[10px] rounded bg-coffee-dark border border-coffee-sand/20 text-coffee-sand uppercase">${dict.tagWiki}</span>`
+            : `<span class="px-2 py-0.5 text-[10px] rounded bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold uppercase">${dict.tagArticle}</span>`;
             
           const link = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) + item.url : baseUrl + item.url;
             

@@ -24,7 +24,21 @@ const formDict = {
   roastDark: t('form.roast.dark'),
   applySync: t('form.apply'),
   applySuccess: t('form.applySuccess'),
-  locked: t('form.locked')
+  locked: t('form.locked'),
+  errWeightReset: t('form.errWeightReset'),
+  errRatioReset: t('form.errRatioReset'),
+  customBean: t('form.customBean'),
+  grindMedium: t('form.grindMedium'),
+  shareSuccess: t('form.shareSuccess'),
+  shareFail: t('form.shareFail'),
+  sharedRecipe: t('form.sharedRecipe'),
+  loadedShared: t('form.loadedShared'),
+  savedFavorite: t('form.savedFavorite'),
+  emptyHistory: t('form.emptyHistory'),
+  emptyHistoryDesc: t('form.emptyHistoryDesc'),
+  gPowder: t('form.gPowder'),
+  deleteBtn: t('form.deleteBtn'),
+  loadedSuccess: t('form.loadedSuccess')
 };
 ---
 
@@ -141,7 +155,7 @@ const formDict = {
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
           </button>
         </div>
-        <span id="weight-error" class="text-red-400 text-xs hidden ms-2 mt-1">請輸入有效的正數</span>
+        <span id="weight-error" class="text-red-400 text-xs hidden ms-2 mt-1">{t('form.errWeight')}</span>
       </div>
 
       <!-- Water Ratio Stepper -->
@@ -168,7 +182,7 @@ const formDict = {
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
           </button>
         </div>
-        <span id="ratio-error" class="text-red-400 text-xs hidden ms-2 mt-1">請輸入有效的比例</span>
+        <span id="ratio-error" class="text-red-400 text-xs hidden ms-2 mt-1">{t('form.errRatio')}</span>
       </div>
     </div>
 
@@ -236,7 +250,7 @@ const formDict = {
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-coffee-gold" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
       </svg>
-      <span id="toast-msg" class="text-sm font-medium">通知訊息</span>
+      <span id="toast-msg" class="text-sm font-medium">{t('form.toastDefault')}</span>
     </div>
 
   </form>
@@ -316,7 +330,7 @@ const formDict = {
       // Check if input is empty or invalid mid-typing
       if (weightRaw === '' || isNaN(weight) || weight <= 0) {
         if (weightError && weightRaw !== '' && weightRaw !== '-') { // Only show error if they typed something invalid
-          weightError.textContent = "咖啡粉量必須為正數，已重置";
+          weightError.textContent = dict.errWeightReset;
           weightError.classList.remove('hidden');
           weightInput.classList.add('text-red-500');
           setTimeout(() => {
@@ -334,7 +348,7 @@ const formDict = {
 
       if (ratioRaw === '' || isNaN(ratio) || ratio <= 0) {
         if (ratioError && ratioRaw !== '' && ratioRaw !== '-') {
-          ratioError.textContent = "粉水比例必須為正數，已重置";
+          ratioError.textContent = dict.errRatioReset;
           ratioError.classList.remove('hidden');
           ratioInput.classList.add('text-red-500');
           setTimeout(() => {
@@ -376,9 +390,9 @@ const formDict = {
 
     return {
       id: Date.now().toString(), // unique id for history
-      beanName: beanNameInput?.value || '自訂精品咖啡豆',
+      beanName: beanNameInput?.value || dict.customBean,
       roastLevel: roastLevelInput?.value || 'medium',
-      grindSize: grindSizeInput?.value || '中等',
+      grindSize: grindSizeInput?.value || dict.grindMedium,
       waterTemp: parseInt(waterTempInput?.value) || 92,
       coffeeWeight: parsedWeight,
       waterRatio: parsedRatio,
@@ -430,10 +444,10 @@ const formDict = {
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     
     navigator.clipboard.writeText(url).then(() => {
-      showToast('網址已複製！快分享給朋友吧 ☕');
+      showToast(dict.shareSuccess);
     }).catch(err => {
-      console.error('Could not copy text: ', err);
-      showToast('複製失敗，請手動複製網址。');
+      console.error('Copy failed:', err);
+      showToast(dict.shareFail);
     });
   }
 
@@ -442,7 +456,7 @@ const formDict = {
     if (!params.has('w') && !params.has('bean')) return false;
 
     const queryRecipe = {
-      beanName: params.get('bean') || '分享的配方',
+      beanName: params.get('bean') || dict.sharedRecipe,
       roastLevel: params.get('roast') || 'medium',
       grindSize: params.get('grind') || '',
       waterTemp: parseInt(params.get('t') as string) || 92,
@@ -459,7 +473,7 @@ const formDict = {
     window.history.replaceState({}, document.title, window.location.pathname);
     
     setTimeout(() => {
-      showToast('已載入朋友分享的配方！');
+      showToast(dict.loadedShared);
     }, 500);
     return true;
   }
@@ -500,7 +514,7 @@ const formDict = {
     
     renderHistory();
     historyPanel?.classList.remove('hidden');
-    showToast('配方已儲存至我的最愛！');
+    showToast(dict.savedFavorite);
   }
 
   function deleteHistory(id: string) {
@@ -544,10 +558,10 @@ const formDict = {
         <div class="flex-1 min-w-0" onclick="window.loadHistoryItem('${item.id}')">
           <h4 class="text-sm font-semibold text-coffee-light truncate">${escapeHTML(item.beanName)}</h4>
           <p class="text-[10px] sm:text-xs text-coffee-muted mt-0.5">
-            ${item.coffeeWeight}g 粉 | 1:${item.waterRatio} | ${item.waterTemp}°C | ${roastText}
+            ${item.coffeeWeight}${dict.gPowder} | 1:${item.waterRatio} | ${item.waterTemp}°C | ${roastText}
           </p>
         </div>
-        <button onclick="window.deleteHistoryItem('${item.id}')" class="p-2 text-coffee-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all" title="刪除" aria-label="刪除歷史紀錄">
+        <button onclick="window.deleteHistoryItem('${item.id}')" class="p-2 text-coffee-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all" title="${dict.deleteBtn}" aria-label="${dict.deleteBtn}">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
@@ -564,7 +578,7 @@ const formDict = {
     if (item) {
       applyRecipeData(item);
       syncWithTimer(item);
-      showToast('配方已載入！');
+      showToast(dict.loadedSuccess);
     }
   };
 

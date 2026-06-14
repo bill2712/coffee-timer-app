@@ -60,7 +60,7 @@ export function getStaticPaths() {
       </span>
     </h1>
     
-    <div class="mt-8 relative h-20 sm:h-14 overflow-hidden flex justify-center items-center">
+    <div class="mt-8 relative h-20 sm:h-14 min-h-[5rem] sm:min-h-[3.5rem] overflow-hidden flex justify-center items-center" style="contain: layout paint; contain-intrinsic-size: 80px;">
       <div id="motivation-banner" aria-live="polite" class="absolute w-full text-lg md:text-xl font-medium italic text-coffee-gold/90 drop-shadow-md transition-opacity duration-1000 opacity-0 px-2 leading-relaxed"></div>
     </div>
 
@@ -254,6 +254,7 @@ export function getStaticPaths() {
     banner.addEventListener('mouseleave', resumeRotation);
     banner.addEventListener('touchstart', pauseRotation, {passive: true});
     banner.addEventListener('touchend', resumeRotation, {passive: true});
+    banner.addEventListener('pointerdown', pauseRotation, {passive: true});
     
     // Initial display
     setTimeout(showSlogan, 100);
