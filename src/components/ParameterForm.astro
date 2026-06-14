@@ -443,7 +443,12 @@ const formDict = {
   // --- History Management ---
   function loadHistory(): any[] {
     const str = localStorage.getItem('barista_flow_history');
-    return str ? JSON.parse(str) : [];
+    try {
+      const parsed = str ? JSON.parse(str) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch(e) {
+      return [];
+    }
   }
 
   function saveToHistory() {

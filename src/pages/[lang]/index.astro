@@ -15,8 +15,9 @@ const t = useTranslations(lang);
 const webAppJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Barista Flow",
+  "name": t('seo.title'),
   "description": t('seo.description'),
+  "keywords": t('seo.keywords'),
   "operatingSystem": "All",
   "applicationCategory": "UtilityApplication",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",

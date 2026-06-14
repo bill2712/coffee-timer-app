@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Inject Scripts
+inject_cta_keys.cjs
+inject_pwa_keys.cjs

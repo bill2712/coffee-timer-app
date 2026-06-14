@@ -509,6 +509,10 @@ const timerDict = {
 
   function startTimer() {
     if (isRunning) return;
+    if (timerId !== null) {
+      window.clearInterval(timerId);
+      timerId = null;
+    }
     isRunning = true;
     lastTimestamp = Date.now();
     window.dispatchEvent(new CustomEvent('timer-state', { detail: { running: true } }));
@@ -689,7 +693,10 @@ const timerDict = {
       const existingLogsStr = localStorage.getItem('barista_flow_logs');
       let logs = [];
       if (existingLogsStr) {
-        logs = JSON.parse(existingLogsStr);
+        try {
+          logs = JSON.parse(existingLogsStr);
+          if (!Array.isArray(logs)) logs = [];
+        } catch(e) { logs = []; }
       }
       logs.unshift(newLog); // Add to beginning
       localStorage.setItem('barista_flow_logs', JSON.stringify(logs));
