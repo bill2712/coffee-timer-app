@@ -35,7 +35,13 @@ export function getStaticPaths() {
         </p>
       </div>
       
-      <div class="flex gap-4">
+      <div class="flex flex-wrap justify-center gap-3">
+        <button id="btn-clear-selection" class="hidden min-h-[44px] px-4 rounded-xl border border-coffee-sand/20 text-coffee-sand hover:text-coffee-light transition-colors text-sm font-semibold">
+          {t('history.compare.clear')}
+        </button>
+        <button id="btn-compare" disabled class="hidden min-h-[44px] px-5 rounded-xl bg-coffee-gold text-coffee-dark transition-all text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed">
+          {t('history.compare')} <span id="compare-count">0/2</span>
+        </button>
         <button id="btn-export-csv" class="hidden px-5 py-2.5 rounded-xl border border-coffee-gold/40 text-coffee-gold hover:bg-coffee-gold/10 transition-colors text-sm font-semibold tracking-wide items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -44,6 +50,15 @@ export function getStaticPaths() {
         </button>
       </div>
     </header>
+
+    <section id="compare-panel" class="hidden mb-10 rounded-3xl border border-coffee-gold/25 bg-coffee-darker/80 p-5 shadow-xl sm:p-8" aria-live="polite">
+      <div class="mb-6">
+        <p class="text-xs font-bold uppercase tracking-widest text-coffee-gold">A/B</p>
+        <h2 class="mt-1 font-display text-2xl font-bold text-coffee-light">{t('history.compare.title')}</h2>
+        <p class="mt-2 text-sm text-coffee-muted">{t('history.compare.hint')}</p>
+      </div>
+      <div id="compare-content"></div>
+    </section>
 
     <!-- History Grid Container -->
     <div id="history-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 relative min-h-[300px]">
@@ -80,8 +95,24 @@ export function getStaticPaths() {
   acidity: t('history.script.acidity'),
   bitterness: t('history.script.bitterness'),
   body: t('history.script.body'),
+  overall: t('history.script.overall'),
+  version: t('history.script.version'),
+  temperature: t('history.script.temperature'),
+  ratio: t('history.script.ratio'),
+  recommendation: t('history.script.recommendation'),
   delete: t('history.script.delete'),
-  confirm: t('history.script.confirm')
+  confirm: t('history.script.confirm'),
+  compare: t('history.compare'),
+  compareClear: t('history.compare.clear'),
+  compareSelect: t('history.compare.select'),
+  compareSelected: t('history.compare.selected'),
+  compareCount: t('history.compare.count'),
+  compareChanges: t('history.compare.changes'),
+  compareSame: t('history.compare.same'),
+  compareHigher: t('history.compare.higher'),
+  compareRebrew: t('history.compare.rebrew'),
+  locale: lang,
+  homeUrl: `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`
 } }}>
   window.historyDict = dict;
 </script>
@@ -97,12 +128,25 @@ export function getStaticPaths() {
       roastLevel: string;
       coffeeWeight: number;
       totalWater: number;
+      waterRatio: number;
+      waterTemp: number;
+      grindSize: string;
     };
+    recipeVersion: number;
+    parentLogId?: string;
     evaluation: {
       acidity: number;
       bitterness: number;
       body: number;
+      overall: number;
+      issue: string;
       notes: string;
+    };
+    recommendation?: {
+      title: string;
+      body: string;
+      variable: string;
+      suggestedRecipe?: Record<string, unknown>;
     };
   }
 
@@ -117,21 +161,41 @@ export function getStaticPaths() {
       return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback;
     };
 
+    const coffeeWeight = clamp(raw.recipe.coffeeWeight, 1, 100, 20);
+    const totalWater = clamp(raw.recipe.totalWater, 1, 2500, 300);
+    const inferredRatio = Math.round((totalWater / coffeeWeight) * 10) / 10;
+    const recommendation = raw.recommendation && typeof raw.recommendation === 'object' ? {
+      title: String(raw.recommendation.title || '').slice(0, 120),
+      body: String(raw.recommendation.body || '').slice(0, 500),
+      variable: String(raw.recommendation.variable || '').slice(0, 40),
+      suggestedRecipe: raw.recommendation.suggestedRecipe && typeof raw.recommendation.suggestedRecipe === 'object'
+        ? raw.recommendation.suggestedRecipe
+        : undefined
+    } : undefined;
+
     return {
       id,
       date: date.toISOString(),
       recipe: {
         beanName: String(raw.recipe.beanName || '').trim().slice(0, 80),
         roastLevel: ['light', 'medium', 'dark'].includes(raw.recipe.roastLevel) ? raw.recipe.roastLevel : 'medium',
-        coffeeWeight: clamp(raw.recipe.coffeeWeight, 1, 100, 20),
-        totalWater: clamp(raw.recipe.totalWater, 1, 2500, 300)
+        coffeeWeight,
+        totalWater,
+        waterRatio: clamp(raw.recipe.waterRatio, 10, 25, inferredRatio),
+        waterTemp: clamp(raw.recipe.waterTemp, 80, 100, 92),
+        grindSize: String(raw.recipe.grindSize || '').slice(0, 80)
       },
+      recipeVersion: Math.max(1, Math.min(999, Math.round(Number(raw.recipeVersion) || 1))),
+      parentLogId: /^\d{1,20}$/.test(String(raw.parentLogId || '')) ? String(raw.parentLogId) : undefined,
       evaluation: {
         acidity: clamp(raw.evaluation.acidity, 1, 5, 3),
         bitterness: clamp(raw.evaluation.bitterness, 1, 5, 3),
         body: clamp(raw.evaluation.body, 1, 5, 3),
+        overall: clamp(raw.evaluation.overall, 1, 5, 3),
+        issue: String(raw.evaluation.issue || 'balanced').slice(0, 30),
         notes: String(raw.evaluation.notes || '').slice(0, 500)
-      }
+      },
+      recommendation
     };
   }
 
@@ -140,8 +204,14 @@ export function getStaticPaths() {
     const loading = document.getElementById('history-loading');
     const emptyState = document.getElementById('history-empty');
     const btnExport = document.getElementById('btn-export-csv');
+    const btnCompare = document.getElementById('btn-compare') as HTMLButtonElement | null;
+    const btnClearSelection = document.getElementById('btn-clear-selection');
+    const compareCount = document.getElementById('compare-count');
+    const comparePanel = document.getElementById('compare-panel');
+    const compareContent = document.getElementById('compare-content');
 
     let logs: LogEntry[] = [];
+    const selectedIds = new Set<string>();
 
     // Load data from localStorage
     try {
@@ -164,6 +234,8 @@ export function getStaticPaths() {
         btnExport.classList.remove('hidden');
         btnExport.classList.add('inline-flex');
       }
+      btnCompare?.classList.remove('hidden');
+      btnClearSelection?.classList.remove('hidden');
       renderLogs(logs);
     }
 
@@ -173,6 +245,13 @@ export function getStaticPaths() {
         exportToCSV(logs);
       });
     }
+    btnCompare?.addEventListener('click', renderComparison);
+    btnClearSelection?.addEventListener('click', () => {
+      selectedIds.clear();
+      comparePanel?.classList.add('hidden');
+      updateComparisonControls();
+      renderLogs(logs);
+    });
 
     // Render function
     function renderLogs(logData: LogEntry[]) {
@@ -184,21 +263,22 @@ export function getStaticPaths() {
 
       logData.forEach(log => {
         const d = new Date(log.date);
-        const dateStr = d.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
-        const ratio = Math.round(log.recipe.totalWater / log.recipe.coffeeWeight);
+        const dateStr = d.toLocaleDateString(window.historyDict.locale, { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+        const ratio = log.recipe.waterRatio || Math.round((log.recipe.totalWater / log.recipe.coffeeWeight) * 10) / 10;
+        const selected = selectedIds.has(log.id);
 
         const card = document.createElement('div');
-        card.className = 'log-card backdrop-blur-md bg-coffee-darker/60 p-6 rounded-3xl border border-coffee-sand/10 hover:shadow-lg hover:border-coffee-gold/30 hover:-translate-y-1 transition-all duration-300 relative group';
+        card.className = `log-card backdrop-blur-md bg-coffee-darker/60 p-6 rounded-3xl border ${selected ? 'border-coffee-gold ring-2 ring-coffee-gold/20' : 'border-coffee-sand/10'} hover:shadow-lg hover:border-coffee-gold/30 transition-all duration-200 relative group`;
         
         card.innerHTML = `
-          <button class="absolute top-4 end-4 p-2 text-coffee-sand/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all duration-200 delete-btn" data-id="${log.id}" title="${window.historyDict.delete}">
+          <button class="absolute top-4 end-4 min-h-[44px] min-w-[44px] p-2 text-coffee-sand/50 hover:text-red-500 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200 delete-btn" data-id="${log.id}" title="${window.historyDict.delete}" aria-label="${window.historyDict.delete}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
           
           <div class="mb-4 pe-8">
-            <span class="text-[10px] text-coffee-muted mb-1 block">${dateStr}</span>
+            <div class="mb-1 flex items-center gap-2 text-[10px] text-coffee-muted"><span>${dateStr}</span><span class="rounded-full border border-coffee-sand/15 px-2 py-0.5">${window.historyDict.version} ${log.recipeVersion}</span></div>
             <h3 class="font-display font-bold text-lg text-coffee-light truncate">${escapeHTML(log.recipe.beanName) || window.historyDict.unknownBean}</h3>
             <p class="text-xs text-coffee-sand/80 mt-1">${log.recipe.coffeeWeight}g ${window.historyDict.powder} | 1:${ratio} | ${log.recipe.totalWater}g ${window.historyDict.water}</p>
           </div>
@@ -219,12 +299,26 @@ export function getStaticPaths() {
               <span class="text-xs text-coffee-muted w-10">${window.historyDict.body}</span>
               <div class="flex-1 flex gap-1">${renderDots(log.evaluation.body)}</div>
             </div>
+            <div class="flex items-center gap-3 border-t border-coffee-sand/10 pt-3">
+              <span class="text-xs font-semibold text-coffee-sand w-10">${window.historyDict.overall}</span>
+              <div class="flex-1 flex gap-1">${renderDots(log.evaluation.overall)}</div>
+            </div>
           </div>
+
+          ${log.recommendation?.title ? `
+          <div class="mt-4 rounded-xl border border-coffee-gold/15 bg-coffee-gold/5 p-3">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-coffee-gold">${window.historyDict.recommendation}</p>
+            <p class="mt-1 text-xs font-semibold text-coffee-light">${escapeHTML(log.recommendation.title)}</p>
+          </div>` : ''}
 
           ${log.evaluation.notes ? `
           <div class="mt-4 pt-4 border-t border-coffee-sand/10">
             <p class="text-xs text-coffee-sand/80 italic line-clamp-2">"${escapeHTML(log.evaluation.notes)}"</p>
           </div>` : ''}
+
+          <button type="button" class="compare-select-btn mt-5 min-h-[48px] w-full rounded-xl border ${selected ? 'border-coffee-gold bg-coffee-gold text-coffee-dark' : 'border-coffee-sand/20 bg-coffee-dark text-coffee-sand'} text-sm font-bold transition-colors" data-id="${log.id}" aria-pressed="${selected}">
+            ${selected ? window.historyDict.compareSelected : window.historyDict.compareSelect}
+          </button>
         `;
 
         container.appendChild(card);
@@ -238,6 +332,21 @@ export function getStaticPaths() {
           if (id) deleteLog(id);
         });
       });
+      document.querySelectorAll('.compare-select-btn').forEach(btn => {
+        btn.addEventListener('click', (event) => {
+          const id = (event.currentTarget as HTMLButtonElement).dataset.id;
+          if (!id) return;
+          if (selectedIds.has(id)) selectedIds.delete(id);
+          else {
+            const oldestSelection = selectedIds.values().next().value;
+            if (selectedIds.size >= 2 && oldestSelection) selectedIds.delete(oldestSelection);
+            selectedIds.add(id);
+          }
+          updateComparisonControls();
+          renderLogs(logs);
+        });
+      });
+      updateComparisonControls();
     }
 
     function renderDots(value: number) {
@@ -249,10 +358,103 @@ export function getStaticPaths() {
       return html;
     }
 
+    function updateComparisonControls() {
+      if (compareCount) compareCount.textContent = `${selectedIds.size}/2`;
+      if (btnCompare) btnCompare.disabled = selectedIds.size !== 2;
+    }
+
+    function renderComparison() {
+      const pair = logs.filter(log => selectedIds.has(log.id));
+      if (pair.length !== 2 || !compareContent) return;
+      pair.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+      const [a, b] = pair;
+      const ratioA = a.recipe.waterRatio;
+      const ratioB = b.recipe.waterRatio;
+      const changes: string[] = [];
+      if (a.recipe.coffeeWeight !== b.recipe.coffeeWeight) changes.push(`${window.historyDict.powder}: ${a.recipe.coffeeWeight}g → ${b.recipe.coffeeWeight}g`);
+      if (ratioA !== ratioB) changes.push(`${window.historyDict.ratio}: 1:${ratioA} → 1:${ratioB}`);
+      if (a.recipe.waterTemp !== b.recipe.waterTemp) changes.push(`${window.historyDict.temperature}: ${a.recipe.waterTemp}°C → ${b.recipe.waterTemp}°C`);
+      if (a.recipe.totalWater !== b.recipe.totalWater) changes.push(`${window.historyDict.water}: ${a.recipe.totalWater}g → ${b.recipe.totalWater}g`);
+      if (a.recipe.grindSize !== b.recipe.grindSize && (a.recipe.grindSize || b.recipe.grindSize)) {
+        changes.push(`${escapeHTML(a.recipe.grindSize || '—')} → ${escapeHTML(b.recipe.grindSize || '—')}`);
+      }
+
+      const metricRows = [
+        [window.historyDict.powder, `${a.recipe.coffeeWeight}g`, `${b.recipe.coffeeWeight}g`],
+        [window.historyDict.ratio, `1:${ratioA}`, `1:${ratioB}`],
+        [window.historyDict.temperature, `${a.recipe.waterTemp}°C`, `${b.recipe.waterTemp}°C`],
+        [window.historyDict.acidity, a.evaluation.acidity, b.evaluation.acidity],
+        [window.historyDict.bitterness, a.evaluation.bitterness, b.evaluation.bitterness],
+        [window.historyDict.body, a.evaluation.body, b.evaluation.body],
+        [window.historyDict.overall, a.evaluation.overall, b.evaluation.overall]
+      ];
+      const higherA = a.evaluation.overall > b.evaluation.overall;
+      const higherB = b.evaluation.overall > a.evaluation.overall;
+
+      compareContent.innerHTML = `
+        <div class="grid grid-cols-2 gap-3 sm:gap-5">
+          ${[a, b].map((log, index) => `
+            <article class="rounded-2xl border ${index === 0 ? 'border-blue-400/30 bg-blue-400/5' : 'border-coffee-gold/30 bg-coffee-gold/5'} p-4">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-black ${index === 0 ? 'text-blue-300' : 'text-coffee-gold'}">${index === 0 ? 'A' : 'B'}</span>
+                <span class="text-[10px] text-coffee-muted">${window.historyDict.version} ${log.recipeVersion}</span>
+              </div>
+              <h3 class="mt-2 truncate font-display text-base font-bold text-coffee-light">${escapeHTML(log.recipe.beanName) || window.historyDict.unknownBean}</h3>
+              <div class="mt-3 flex gap-1">${renderDots(log.evaluation.overall)}</div>
+              ${(index === 0 && higherA) || (index === 1 && higherB) ? `<p class="mt-3 text-[10px] font-bold text-green-400">${window.historyDict.compareHigher}</p>` : ''}
+            </article>
+          `).join('')}
+        </div>
+
+        <div class="mt-6 overflow-hidden rounded-2xl border border-coffee-sand/10">
+          <table class="w-full text-sm">
+            <thead class="bg-coffee-dark text-coffee-muted"><tr><th class="p-3 text-start"></th><th class="p-3 text-center">A</th><th class="p-3 text-center">B</th></tr></thead>
+            <tbody>${metricRows.map(row => `<tr class="border-t border-coffee-sand/10"><th class="p-3 text-start text-xs font-semibold text-coffee-sand">${row[0]}</th><td class="p-3 text-center text-coffee-light">${row[1]}</td><td class="p-3 text-center text-coffee-light">${row[2]}</td></tr>`).join('')}</tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-coffee-sand/10 bg-coffee-dark/60 p-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-coffee-gold">${window.historyDict.compareChanges}</h3>
+          ${changes.length
+            ? `<ul class="mt-3 space-y-2 text-sm text-coffee-sand">${changes.map(change => `<li>• ${change}</li>`).join('')}</ul>`
+            : `<p class="mt-3 text-sm text-coffee-muted">${window.historyDict.compareSame}</p>`}
+        </div>
+
+        <div class="mt-6 grid gap-3 sm:grid-cols-2">
+          ${[a, b].map((log, index) => `
+            <div class="rounded-xl border border-coffee-sand/10 p-4">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-coffee-muted">${index === 0 ? 'A' : 'B'} · ${window.historyDict.recommendation}</p>
+              <p class="mt-1 text-sm font-semibold text-coffee-light">${escapeHTML(log.recommendation?.title || '—')}</p>
+            </div>
+          `).join('')}
+        </div>
+
+        <button id="btn-rebrew-newer" type="button" class="mt-6 min-h-[52px] w-full rounded-xl bg-gradient-to-r from-coffee-gold to-coffee-sand px-5 text-sm font-bold text-coffee-dark shadow-lg shadow-coffee-gold/20">
+          ${window.historyDict.compareRebrew}
+        </button>
+      `;
+
+      document.getElementById('btn-rebrew-newer')?.addEventListener('click', () => {
+        const newer = new Date(a.date) > new Date(b.date) ? a : b;
+        try {
+          localStorage.setItem('barista_flow_recipe', JSON.stringify(newer.recipe));
+          localStorage.setItem('barista_flow_pending_parent', newer.id);
+        } catch (error) {
+          console.warn('Could not load the selected recipe:', error);
+        }
+        window.location.href = window.historyDict.homeUrl;
+      });
+      comparePanel?.classList.remove('hidden');
+      comparePanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     function deleteLog(id: string) {
       if (!confirm(window.historyDict.confirm)) return;
       
       logs = logs.filter(log => log.id !== id);
+      selectedIds.delete(id);
+      comparePanel?.classList.add('hidden');
+      updateComparisonControls();
       localStorage.setItem('barista_flow_logs', JSON.stringify(logs));
       
       if (logs.length === 0) {
@@ -264,6 +466,8 @@ export function getStaticPaths() {
           btnExport.classList.add('hidden');
           btnExport.classList.remove('inline-flex');
         }
+        btnCompare?.classList.add('hidden');
+        btnClearSelection?.classList.add('hidden');
         document.querySelectorAll('.log-card').forEach(c => c.remove());
       } else {
         renderLogs(logs);
@@ -280,15 +484,21 @@ export function getStaticPaths() {
         return `"${text.replace(/"/g, '""')}"`;
       };
 
-      const headers = ['Date', 'Bean Name', 'Coffee Weight (g)', 'Total Water (g)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Notes'];
+      const headers = ['Date', 'Bean Name', 'Recipe Version', 'Coffee Weight (g)', 'Water Ratio', 'Water Temp (C)', 'Total Water (g)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Overall (1-5)', 'Issue', 'Next Recommendation', 'Notes'];
       const rows = logData.map(log => [
         csvCell(log.date),
         csvCell(log.recipe.beanName),
+        log.recipeVersion,
         log.recipe.coffeeWeight,
+        log.recipe.waterRatio,
+        log.recipe.waterTemp,
         log.recipe.totalWater,
         log.evaluation.acidity,
         log.evaluation.bitterness,
         log.evaluation.body,
+        log.evaluation.overall,
+        csvCell(log.evaluation.issue),
+        csvCell(log.recommendation?.title || ''),
         csvCell(log.evaluation.notes)
       ]);
 
@@ -305,6 +515,7 @@ export function getStaticPaths() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
   });
 </script>

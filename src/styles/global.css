@@ -95,6 +95,65 @@ body {
   box-shadow: 0 0 25px rgba(212, 175, 55, 0.45);
 }
 
+.diagnosis-choice:has(input:checked) {
+  border-color: var(--color-coffee-gold);
+  background: var(--color-coffee-gold);
+  color: var(--color-coffee-dark);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.18);
+}
+
+.diagnosis-choice:has(input:focus-visible) {
+  outline: 2px solid var(--color-coffee-light);
+  outline-offset: 2px;
+}
+
+body.brew-focus-active,
+body.brew-modal-active {
+  overflow: hidden;
+}
+
+#timer-root.brew-focus-mode {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  width: 100%;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  background: radial-gradient(circle at 50% 35%, #241b14 0%, var(--color-coffee-darker) 68%);
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+#timer-root.brew-focus-mode #timer-time {
+  font-size: clamp(4rem, 10vw, 6.5rem);
+  line-height: 1;
+  max-width: none;
+}
+
+#timer-root.brew-focus-mode .timer-dial {
+  width: min(82vw, 22rem);
+  height: min(82vw, 22rem);
+}
+
+#timer-root.brew-focus-mode #btn-start,
+#timer-root.brew-focus-mode #btn-reset {
+  min-height: 64px;
+  font-size: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #timer-root,
+  #timer-root *,
+  #tasting-log-modal * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
