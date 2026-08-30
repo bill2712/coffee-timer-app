@@ -2,10 +2,10 @@
 import '../styles/global.css';
 import SEO from '../components/SEO.astro';
 import AdSlot from '../components/AdSlot.astro';
-import CookieBanner from '../components/CookieBanner.astro';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
 import { getLangFromUrl, useTranslations, rtlLanguages } from '../i18n/utils';
+import { languages } from '../i18n/ui';
 
 
 interface Props {
@@ -28,8 +28,10 @@ const {
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 const lang = getLangFromUrl(Astro.url);
+const localeHome = `${base}${lang}/`.replace(/\/+/g, '/');
 const t = useTranslations(lang);
 const isRTL = rtlLanguages.includes(lang);
+const hasMultipleLanguages = Object.keys(languages).length > 1;
 
 const finalTitle = title || t('seo.title');
 const finalDescription = description || t('seo.description');
@@ -52,19 +54,11 @@ const finalKeywords = keywords || t('seo.keywords');
     <SEO title={finalTitle} description={finalDescription} keywords={finalKeywords} image={ogImage} article={article} jsonld={jsonld} />
 
     <meta name="generator" content={Astro.generator} />
-    
-    <!-- Google Tag Manager (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9R61GZ220P"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <meta name="google-adsense-account" content="ca-pub-7189047900748105" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-      gtag('config', 'G-9R61GZ220P');
-    </script>
-    
-    <!-- Google AdSense Placeholder (Required for approval) -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7189047900748105" crossorigin="anonymous"></script>
+    <!-- The AdSense loader remains for site review; ad units stay disabled until approval. -->
+    <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7189047900748105" crossorigin="anonymous"></script>
   </head>
   <body class="bg-coffee-dark text-coffee-light min-h-screen flex flex-col selection:bg-coffee-gold selection:text-coffee-dark overflow-x-hidden transition-colors duration-500 break-words hyphens-auto">
     <!-- Navbar -->
@@ -72,7 +66,7 @@ const finalKeywords = keywords || t('seo.keywords');
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 sm:h-20">
           <div class="flex-shrink-0 flex items-center relative z-[60]">
-            <a href={base} class="flex items-center gap-2 group">
+            <a href={localeHome} class="flex items-center gap-2 group">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-coffee-gold transition-transform group-hover:rotate-12 duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
                 <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
@@ -121,11 +115,11 @@ const finalKeywords = keywords || t('seo.keywords');
               {t('nav.faq')}
             </a>
             <div class="border-s border-coffee-sand/20 h-6 mx-2 hidden lg:block"></div>
-            <LanguagePicker />
+            {hasMultipleLanguages && <LanguagePicker idSuffix="desktop" />}
           </nav>
 
           <!-- Mobile Menu Toggle Button (Hamburger-to-X) -->
-          <button id="mobile-menu-toggle" aria-label="切換選單" class="lg:hidden relative z-[60] w-12 h-12 flex flex-col justify-center items-end gap-[6px] outline-none group" aria-label="Toggle Menu">
+          <button id="mobile-menu-toggle" class="lg:hidden relative z-[60] w-12 h-12 flex flex-col justify-center items-end gap-[6px] outline-none group" aria-label={lang === 'zh-TW' ? '切換選單' : 'Toggle menu'} aria-controls="mobile-menu-drawer" aria-expanded="false">
             <span class="line-1 block h-[2px] bg-coffee-gold rounded-full w-7 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-8"></span>
             <span class="line-2 block h-[2px] bg-coffee-gold rounded-full w-5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-8"></span>
           </button>
@@ -146,7 +140,7 @@ const finalKeywords = keywords || t('seo.keywords');
         <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/faq`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.faq')}</a>
         
         <div class="mobile-link opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] pt-4">
-          <LanguagePicker />
+          {hasMultipleLanguages && <LanguagePicker idSuffix="mobile" />}
         </div>
       </nav>
     </div>
@@ -176,12 +170,13 @@ const finalKeywords = keywords || t('seo.keywords');
               <span class="font-display font-semibold tracking-widest text-coffee-sand/80 text-sm">BARISTA FLOW</span>
             </div>
             <p class="text-xs text-coffee-muted italic text-center md:text-start mt-1">
-              {t('layout.footer.quote')}
+              {lang === 'zh-TW' ? '可調整、可重現、以味道驗證的沖煮起點。' : 'Adjustable, reproducible starting points—validated by taste.'}
             </p>
           </div>
           
           <div class="flex flex-wrap justify-center gap-x-4 sm:gap-x-8 gap-y-3 text-xs text-coffee-muted">
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/about`} class="hover:text-coffee-gold transition-colors">{t('nav.about')}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/methodology`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '計算方法與來源' : 'Methodology & sources'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/faq`} class="hover:text-coffee-gold transition-colors">{t('nav.faq')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/contact`} class="hover:text-coffee-gold transition-colors">{t('nav.contact')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/terms-of-service`} class="hover:text-coffee-gold transition-colors">{t('nav.terms')}</a>
@@ -200,11 +195,8 @@ const finalKeywords = keywords || t('seo.keywords');
       </div>
     </footer>
 
-    <!-- Global Cookie Consent Banner -->
-    <CookieBanner />
-
     <!-- Service Worker Registration -->
-    <script define:vars={{ base }}>
+    <script is:inline define:vars={{ base }}>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register(`${base}sw.js`).catch((error) => {
@@ -227,6 +219,7 @@ const finalKeywords = keywords || t('seo.keywords');
 
         function toggleMenu() {
           isOpen = !isOpen;
+          toggleBtn?.setAttribute('aria-expanded', String(isOpen));
           
           if (isOpen) {
             // Morph Hamburger to X

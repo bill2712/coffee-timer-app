@@ -10,10 +10,12 @@ import { SITE_URL } from '../../../config';
 
 export async function getStaticPaths() {
   const glossaryEntries = await getCollection('blog', (entry) => entry.data.tags?.includes('Glossary'));
+  const publishedLocales = Object.keys(languages);
   
-  return glossaryEntries.map(entry => {
+  return glossaryEntries.filter(entry => publishedLocales.some(locale => entry.id.toLowerCase().startsWith(`${locale.toLowerCase()}/`))).map(entry => {
     const parts = entry.id.split('/');
-    const entryLang = parts[0];
+    const rawLang = parts[0];
+    const entryLang = publishedLocales.find(locale => locale.toLowerCase() === rawLang.toLowerCase()) || rawLang;
     const slug = parts.slice(1).join('/');
     return {
       params: { lang: entryLang, slug },
@@ -37,7 +39,7 @@ const jsonLd = {
   "@type": "DefinedTerm",
   "name": (entry.data as any).term,
   "description": entry.data.description,
-  "inDefinedTermSet": `${siteOrigin}${basePath}/glossary`
+  "inDefinedTermSet": `${siteOrigin}${basePath}/${lang}/glossary`
 };
 ---
 

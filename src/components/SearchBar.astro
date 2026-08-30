@@ -8,7 +8,7 @@ const searchDict = {
 };
 ---
 
-<div class="relative w-full max-w-xl mx-auto mb-12 group z-40" id="search-container" data-dict={JSON.stringify(searchDict)}>
+<div class="relative w-full max-w-xl mx-auto mb-12 group z-40" id="search-container" data-dict={JSON.stringify(searchDict)} data-lang={lang}>
   <div class="relative flex items-center w-full h-12 rounded-full focus-within:shadow-lg focus-within:ring-2 focus-within:ring-coffee-gold/50 bg-coffee-darker overflow-hidden border border-coffee-sand/20 transition-all duration-200 ease-out focus-within:border-coffee-gold">
     <div class="grid place-items-center h-full w-12 text-coffee-sand/50">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,9 +43,12 @@ const searchDict = {
 </div>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+  const initializeSearch = () => {
     const searchContainer = document.getElementById('search-container');
+    if (!searchContainer || searchContainer.dataset.initialized === 'true') return;
+    searchContainer.dataset.initialized = 'true';
     const dict = searchContainer ? JSON.parse(searchContainer.dataset.dict || '{}') : {};
+    const currentLang = searchContainer?.dataset.lang || 'zh-TW';
     
     const searchInput = document.getElementById('search-input') as HTMLInputElement;
     const searchResults = document.getElementById('search-results');
@@ -70,7 +73,8 @@ const searchDict = {
       
       try {
         const response = await fetch(`${baseUrl}api/search.json`);
-        searchIndex = await response.json();
+        const allItems = await response.json();
+        searchIndex = Array.isArray(allItems) ? allItems.filter(item => item.lang === currentLang) : [];
         isIndexLoaded = true;
       } catch (error) {
         console.error('Failed to load search index:', error);
@@ -169,5 +173,12 @@ const searchDict = {
         searchInput.blur();
       }
     });
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeSearch, { once: true });
+  } else {
+    initializeSearch();
+  }
+  document.addEventListener('astro:page-load', initializeSearch);
 </script>

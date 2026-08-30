@@ -22,11 +22,11 @@ const homeStr = t('nav.home');
 const siteParsed = new URL(SITE_URL);
 const siteOrigin = siteParsed.origin;
 const basePath = siteParsed.pathname === '/' ? '' : siteParsed.pathname;
-const baseUrl = basePath.endsWith('/') ? basePath : basePath + '/';
+const localeBase = `${basePath}/${lang}/`.replace(/\/+/g, '/');
 
 // Prepend home to the items explicitly for the schema
 const schemaItems = [
-  { label: homeStr, url: baseUrl },
+  { label: homeStr, url: localeBase },
   ...items
 ];
 
@@ -36,8 +36,8 @@ const breadcrumbList = {
   "itemListElement": schemaItems.map((item, index) => {
     let finalUrl = item.url || '';
     if (finalUrl && !finalUrl.startsWith('http')) {
-      if (!finalUrl.startsWith(baseUrl) && finalUrl !== baseUrl) {
-        finalUrl = baseUrl + finalUrl.replace(/^\//, '');
+      if (!finalUrl.startsWith(localeBase) && finalUrl !== localeBase) {
+        finalUrl = localeBase + finalUrl.replace(/^\//, '');
       }
       finalUrl = new URL(finalUrl, siteOrigin).toString();
     }
@@ -55,7 +55,7 @@ const breadcrumbList = {
 <nav class={`flex text-xs text-coffee-muted mb-8 ${className}`} aria-label="Breadcrumb">
   <ol class="inline-flex flex-wrap items-center space-x-1 md:space-x-2">
     <li class="inline-flex items-center">
-      <a href={import.meta.env.BASE_URL} class="inline-flex items-center hover:text-coffee-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold rounded">
+      <a href={localeBase} class="inline-flex items-center hover:text-coffee-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold rounded">
         <svg class="w-3 h-3 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
           <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
         </svg>
@@ -71,7 +71,7 @@ const breadcrumbList = {
           </svg>
           {item.url && index !== items.length - 1 ? (
             <a 
-              href={item.url.startsWith('/') ? baseUrl + item.url.slice(1) : baseUrl + item.url} 
+              href={item.url.startsWith('/') ? localeBase + item.url.slice(1) : localeBase + item.url}
               class="ms-1 text-coffee-muted hover:text-coffee-gold md:ms-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold rounded"
             >
               {item.label}

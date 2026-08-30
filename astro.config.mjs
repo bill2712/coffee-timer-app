@@ -8,7 +8,9 @@ export default defineConfig({
   base: '/',
   i18n: {
     defaultLocale: "zh-TW",
-    locales: ["zh-TW", "en", "fr", "ja", "de", "zh-CN", "es", "pt", "ru", "hi", "bn", "ar", "ur"],
+    // Only publish locales that have completed a human editorial review.
+    // The remaining translations stay in the repository as drafts.
+    locales: ["zh-TW"],
     routing: {
       prefixDefaultLocale: true
     }
@@ -19,27 +21,12 @@ export default defineConfig({
       i18n: {
         defaultLocale: 'zh-TW',
         locales: {
-          'zh-TW': 'zh-TW',
-          'en': 'en',
-          'fr': 'fr',
-          'ja': 'ja',
-          'de': 'de',
-          'zh-CN': 'zh-CN',
-          'es': 'es',
-          'pt': 'pt',
-          'ru': 'ru',
-          'hi': 'hi',
-          'bn': 'bn',
-          'ar': 'ar',
-          'ur': 'ur'
+          'zh-TW': 'zh-TW'
         }
       }
     })
   ],
   vite: {
-    plugins: [tailwindcss()],
-    esbuild: {
-      drop: ['console', 'debugger'],
-    }
+    plugins: [tailwindcss()]
   }
 });

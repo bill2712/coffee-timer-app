@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection('blog', (entry) => !entry.data.tags?.includes('Glossary'));
   
   const locales = Object.keys(languages);
-  return blogEntries.map(entry => {
+  return blogEntries.filter(entry => locales.some(locale => entry.id.toLowerCase().startsWith(`${locale.toLowerCase()}/`))).map(entry => {
     const parts = entry.id.split('/');
     // entry.id might be 'zh-tw/filename', find exact matching locale
     const rawLang = parts[0];
@@ -54,8 +54,9 @@ const jsonLd = {
   "description": entry.data.description,
   "datePublished": entry.data.pubDate.toISOString(),
   "author": {
-    "@type": "Person",
-    "name": "Bill"
+    "@type": "Organization",
+    "name": entry.data.author,
+    "url": `${siteOrigin}${basePath}/${lang}/about`
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -66,7 +67,7 @@ const jsonLd = {
     "name": "Barista Flow",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://baristaflow.com/favicon.svg"
+      "url": `${siteOrigin}${basePath}/favicon.svg`
     }
   }
 };

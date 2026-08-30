@@ -29,11 +29,6 @@ const webAppJsonLd = {
     t('schema.app.feature4'),
     t('schema.app.feature5')
   ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "ratingCount": "842"
-  },
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -221,7 +216,7 @@ export function getStaticPaths() {
   </section>
 </Layout>
 
-<script define:vars={{
+<script is:inline define:vars={{
   m1: t('motivation.1'), m2: t('motivation.2'), m3: t('motivation.3'),
   m4: t('motivation.4'), m5: t('motivation.5'), m6: t('motivation.6'),
   m7: t('motivation.7'), m8: t('motivation.8'), m9: t('motivation.9')
@@ -233,7 +228,6 @@ export function getStaticPaths() {
     
     let currentIndex = Math.floor(Math.random() * slogans.length);
     let isPaused = false;
-    let autoRotateInterval;
     
     const showSlogan = () => {
       if (isPaused) return;

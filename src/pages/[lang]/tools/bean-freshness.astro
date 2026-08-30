@@ -63,11 +63,6 @@ const jsonLd = {
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/${lang}/tools/bean-freshness`,
   "description": t('schema.desc.beanfreshness'),
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "ratingCount": "312"
-  },
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -89,7 +84,7 @@ export function getStaticPaths() {
     
     <div class="text-center mb-10">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
-        Freshness Tracker
+        {lang === 'zh-TW' ? '咖啡豆養豆追蹤' : 'Freshness Tracker'}
       </div>
       <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
         {t("tools.bean.title")}
@@ -209,6 +204,12 @@ export function getStaticPaths() {
 
     <!-- In-Article Ad Placement -->
     <AdSlot type="in-article" id="bean-fresh-mid-ad" class="mb-16" />
+
+    <p class="mb-12 rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-4 text-sm leading-relaxed text-coffee-sand">
+      {lang === 'zh-TW'
+        ? '養豆天數沒有適用所有咖啡的固定答案。本工具只按烘焙度提供一般起點；包裝方式、烘焙機、豆種、沖煮方法與個人口味都會影響適飲期，請以實際排氣和杯測結果為準。'
+        : 'There is no universal resting period for every coffee. This tool only provides a general starting point by roast level; packaging, roaster, variety, brew method, and preference all affect the useful window, so verify it by brewing and tasting.'}
+    </p>
 
     <!-- FAQ Accordion -->
     <div class="mt-8 mb-16">

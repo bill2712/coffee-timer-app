@@ -1,109 +1,60 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLanguagePaths } from '../../i18n/routes';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const isZh = lang === 'zh-TW';
+const copy = isZh ? {
+  title: '私隱政策',
+  description: 'Barista Flow 的本機儲存、第三方請求、廣告狀態及使用者控制說明。',
+  updated: '更新日期：2026 年 8 月 30 日',
+  intro: '本政策說明當你使用 Barista Flow 時，哪些資料會留在瀏覽器、哪些第三方資源可能收到一般網絡請求，以及你可以如何控制或刪除資料。',
+  sections: [
+    ['1. 不設帳戶，也不收集表單資料', '網站不提供註冊或登入，也沒有把聯絡表單送到伺服器。問題回報會連到 GitHub；你在 GitHub 提交的內容受 GitHub 自身的條款與私隱政策規管。請勿在公開 Issues 張貼個人或敏感資料。'],
+    ['2. 只在本機儲存的資料', '咖啡配方、沖煮紀錄、靜音設定、語言偏好和 PWA 提示狀態使用瀏覽器 localStorage 儲存在你的裝置。Barista Flow 不會把這些資料上傳到自己的伺服器。清除本網站的瀏覽資料即可刪除。'],
+    ['3. 分享連結', '當你主動使用「分享配方」時，咖啡豆名稱和沖煮參數會寫入網址查詢字串，方便另一部裝置讀取。連結不會自動送出，但任何收到連結的人都能看到其中的參數，因此請勿在咖啡豆名稱輸入個人資料。'],
+    ['4. 第三方網絡請求', '頁面會從 Google Fonts 下載字型，計時圖表會從 jsDelivr 取得 Chart.js。網站亦保留 Google AdSense 的站點驗證程式供審核；即使目前沒有顯示廣告，第三方仍可能收到 IP 位址、瀏覽器類型、請求時間和來源頁等標準技術資料。請參閱相應供應商的私隱政策。'],
+    ['5. 分析與廣告狀態', '網站目前沒有載入 Google Analytics，亦沒有顯示廣告單元。若日後啟用 AdSense，會在適用地區先配置 Google 認證的同意管理平台，並更新本政策和頁面上的披露。'],
+    ['6. 保安與資料保留', '網站是靜態頁面，沒有 Barista Flow 使用者資料庫。公開原始碼及修正紀錄可供檢視；安全問題應使用 GitHub 的私密漏洞回報，而不是公開 Issue。'],
+    ['7. 聯絡', '如對本政策有疑問，請使用「聯絡與回報問題」頁面的公開或私密回報渠道。']
+  ]
+} : {
+  title: 'Privacy policy',
+  description: 'How Barista Flow handles local storage, third-party requests, advertising status, and user controls.',
+  updated: 'Updated: 30 August 2026',
+  intro: 'This policy explains what stays in your browser when you use Barista Flow, which external resources may receive ordinary network requests, and how you can control or delete data.',
+  sections: [
+    ['1. No accounts or submitted form data', 'The site has no registration or login and does not send a contact form to a Barista Flow server. Issue reporting links to GitHub, where anything you submit is governed by GitHub’s terms and privacy policy. Do not post personal or sensitive information in public issues.'],
+    ['2. Data stored only on your device', 'Coffee recipes, brew logs, mute state, language preference, and PWA prompt state use browser localStorage on your device. Barista Flow does not upload this data to its own server. Clear this site’s browsing data to delete it.'],
+    ['3. Shared links', 'When you choose “share recipe,” the bean name and brew parameters are placed in the URL query string so another device can read them. The link is not sent automatically, but anyone who receives it can read those parameters. Do not put personal data in a bean name.'],
+    ['4. Third-party network requests', 'Pages download fonts from Google Fonts, and the timer chart obtains Chart.js from jsDelivr. The site also retains the Google AdSense site-review script. Although no ads are currently displayed, these providers may receive standard technical request data such as IP address, browser type, request time, and referring page. Consult each provider’s privacy policy.'],
+    ['5. Analytics and advertising status', 'The site currently does not load Google Analytics and displays no ad units. If AdSense is enabled later, a Google-certified consent management platform will be configured where required, and this policy and on-page disclosures will be updated.'],
+    ['6. Security and retention', 'This is a static site with no Barista Flow user database. Source and fix history are public for review. Security concerns should use GitHub private vulnerability reporting, not a public issue.'],
+    ['7. Contact', 'For questions about this policy, use the public or private channels on the Contact and issue reporting page.']
+  ]
+};
 
 export function getStaticPaths() {
   return getLanguagePaths();
 }
 ---
 
-<Layout
-  title={t('privacy.meta.title')}
-  description={t('privacy.meta.desc')}
->
-  <div class="max-w-3xl mx-auto py-8 sm:py-12">
-    <div class="mb-10 text-center">
-      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">{t('privacy.title')}</h1>
-      <p class="text-sm text-coffee-muted">{t('privacy.date')}</p>
+<Layout title={`${copy.title} | Barista Flow`} description={copy.description}>
+  <article class="max-w-3xl mx-auto py-10 sm:py-16">
+    <header class="mb-12">
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-coffee-light mb-4">{copy.title}</h1>
+      <p class="text-xs text-coffee-muted mb-6">{copy.updated}</p>
+      <p class="text-coffee-sand/90 leading-7">{copy.intro}</p>
+    </header>
+
+    <div class="space-y-5">
+      {copy.sections.map(([heading, body]) => (
+        <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-8">
+          <h2 class="font-display text-xl font-bold text-coffee-light mb-3">{heading}</h2>
+          <p class="text-sm text-coffee-sand/85 leading-7">{body}</p>
+        </section>
+      ))}
     </div>
-
-    <p class="text-coffee-light/90 leading-relaxed mb-10 text-center max-w-2xl mx-auto">
-      {t('privacy.p1')}
-    </p>
-
-    <div class="space-y-6">
-      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
-        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
-        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">1</span>
-          {t('privacy.s1.title')}
-        </h2>
-        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
-          <p>{t('privacy.s1.p1')}</p>
-        </div>
-      </section>
-
-      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
-        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
-        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">2</span>
-          {t('privacy.s2.title')}
-        </h2>
-        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11 space-y-4">
-          <p>{t('privacy.s2.p1')}</p>
-          <div>
-            <h3 class="text-coffee-light font-bold mb-2">{t('privacy.s2.sub')}</h3>
-            <p class="mb-2">{t('privacy.s2.p2')}</p>
-            <ul class="list-disc list-outside ms-4 space-y-1">
-              <li>{t('privacy.s2.l1')}</li>
-              <li>{t('privacy.s2.l2')}</li>
-              <li>{t('privacy.s2.l3')}</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
-        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
-        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">3</span>
-          {t('privacy.s3.title')}
-        </h2>
-        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11 space-y-4">
-          <p>{t('privacy.s3.p1')}</p>
-          <ul class="list-disc list-outside ms-4 space-y-1">
-            <li>{t('privacy.s3.l1')}</li>
-            <li>{t('privacy.s3.l2')}</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
-        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
-        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">4</span>
-          {t('privacy.s4.title')}
-        </h2>
-        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
-          <p>{t('privacy.s4.p1')}</p>
-        </div>
-      </section>
-
-      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
-        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
-        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">5</span>
-          {t('privacy.s5.title')}
-        </h2>
-        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
-          <p>{t('privacy.s5.p1')}</p>
-        </div>
-      </section>
-
-      <section class="bg-coffee-dark border border-coffee-sand/10 p-6 sm:p-8 rounded-3xl hover:border-coffee-gold/30 transition-colors shadow-sm relative overflow-hidden group">
-        <div class="absolute top-0 start-0 w-1 h-full bg-coffee-gold/50 group-hover:bg-coffee-gold transition-colors"></div>
-        <h2 class="text-xl font-display font-bold text-coffee-light mb-3 flex items-center gap-3">
-          <span class="w-8 h-8 rounded-full bg-coffee-gold/10 flex items-center justify-center text-coffee-gold text-sm">6</span>
-          {t('privacy.s6.title')}
-        </h2>
-        <div class="text-coffee-sand/80 leading-relaxed text-sm ms-11">
-          <p>{t('privacy.s6.p1')}</p>
-        </div>
-      </section>
-    </div>
-  </div>
+  </article>
 </Layout>

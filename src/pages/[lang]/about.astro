@@ -1,109 +1,90 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLanguagePaths } from '../../i18n/routes';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const isZh = lang === 'zh-TW';
+const base = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
+const copy = isZh ? {
+  title: '關於 Barista Flow',
+  description: '了解 Barista Flow 的用途、編輯原則、資料處理方式及開源維護紀錄。',
+  lead: 'Barista Flow 是一個免費、開源的咖啡沖煮輔助工具，把粉水比、注水目標和計時提示放在同一個畫面。它提供可重複的起點，但不把任何單一配方說成唯一答案。',
+  purposeTitle: '我們解決甚麼問題',
+  purpose: '沖煮時同時看秤、記水量和數秒很容易分心。這個工具把使用者輸入的粉量與比例換算成總水量，再把時間和累積注水目標顯示在計時器中。所有建議都可以修改，最終仍應按咖啡豆、器材、水質和個人口味調整。',
+  editorialTitle: '內容與編輯原則',
+  editorial: '教學內容以可驗證、可實作為原則：清楚標示假設、提供來源、區分業界參考值與個人偏好，並保留公開版本紀錄。未完成人工校對的翻譯不會發布或加入 Sitemap。',
+  privacyTitle: '資料與私隱',
+  privacy: '配方、喜好與沖煮紀錄只儲存在你的瀏覽器 localStorage，不會上傳到 Barista Flow 伺服器。分享連結只包含你主動加入的沖煮參數；請勿把個人資料填進咖啡豆名稱或筆記。',
+  fundingTitle: '營運與廣告披露',
+  funding: '網站目前不顯示廣告。未來如獲准加入 AdSense，廣告會清楚標示，且不會改變工具的計算結果或編輯內容。核心計時器與計算工具會維持免費。',
+  openTitle: '公開維護',
+  openBody: '原始碼、版本紀錄、已知問題與修正均公開在 GitHub。若發現錯誤，可以查看處理狀態或提交可重現的回報。',
+  methodButton: '查看計算方法與來源',
+  repoButton: '查看公開原始碼',
+  reviewed: '最後人工檢閱：2026 年 8 月 30 日'
+} : {
+  title: 'About Barista Flow',
+  description: 'Learn what Barista Flow does, how its content is reviewed, how data is handled, and how the open-source project is maintained.',
+  lead: 'Barista Flow is a free, open-source coffee brewing companion that puts ratio calculation, pour targets, and timing cues on one screen. It offers a repeatable starting point without claiming that one recipe is the only correct answer.',
+  purposeTitle: 'The problem we solve',
+  purpose: 'Watching a scale, remembering water targets, and counting seconds at the same time is distracting. The tool converts your dose and ratio into total water, then shows timing and cumulative pour targets. Every recommendation is adjustable and should be tuned for the coffee, equipment, water, and your taste.',
+  editorialTitle: 'Content and editorial principles',
+  editorial: 'Guidance is written to be verifiable and practical: assumptions are stated, sources are linked, industry reference points are separated from preference, and version history stays public. Translations are not published or added to the sitemap until they receive a human review.',
+  privacyTitle: 'Data and privacy',
+  privacy: 'Recipes, preferences, and brew logs stay in your browser localStorage and are not uploaded to a Barista Flow server. Shared links contain only the brew parameters you choose to add. Do not enter personal information in bean names or notes.',
+  fundingTitle: 'Funding and advertising disclosure',
+  funding: 'The site currently displays no ads. If AdSense is approved later, ads will be clearly identified and will not influence calculations or editorial content. The core timer and calculators will remain free.',
+  openTitle: 'Public maintenance',
+  openBody: 'Source code, version history, known issues, and fixes are public on GitHub. You can review the status or submit a reproducible report when something is wrong.',
+  methodButton: 'Read methodology and sources',
+  repoButton: 'View the public source',
+  reviewed: 'Last human review: 30 August 2026'
+};
+
+const sections = [
+  [copy.purposeTitle, copy.purpose],
+  [copy.editorialTitle, copy.editorial],
+  [copy.privacyTitle, copy.privacy],
+  [copy.fundingTitle, copy.funding],
+  [copy.openTitle, copy.openBody]
+];
 
 export function getStaticPaths() {
   return getLanguagePaths();
 }
 ---
 
-<Layout
-  title={t('about.meta.title')}
-  description={t('about.meta.desc')}
->
-  <div class="max-w-3xl mx-auto py-8 sm:py-12">
-    <div class="mb-10 text-center">
-      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">{t('about.title')}</h1>
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mt-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-coffee-gold"></span>
-        {t('about.tag')}
-      </div>
+<Layout title={`${copy.title} | Barista Flow`} description={copy.description}>
+  <article class="max-w-4xl mx-auto py-10 sm:py-16">
+    <header class="max-w-3xl mb-12">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-coffee-gold mb-4">Open-source coffee tools</p>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-coffee-light mb-6">{copy.title}</h1>
+      <p class="text-lg text-coffee-sand/90 leading-relaxed">{copy.lead}</p>
+      <p class="text-xs text-coffee-muted mt-4">{copy.reviewed}</p>
+    </header>
+
+    <div class="grid gap-5">
+      {sections.map(([heading, body], index) => (
+        <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-9">
+          <div class="flex items-start gap-4">
+            <span class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-coffee-gold/10 text-sm font-bold text-coffee-gold">{index + 1}</span>
+            <div>
+              <h2 class="font-display text-2xl font-bold text-coffee-light mb-3">{heading}</h2>
+              <p class="text-sm sm:text-base text-coffee-sand/85 leading-7">{body}</p>
+            </div>
+          </div>
+        </section>
+      ))}
     </div>
 
-    <!-- Introduction -->
-    <div class="glass-card rounded-3xl p-8 sm:p-12 mb-8 text-center relative overflow-hidden border border-coffee-sand/10">
-      <div class="absolute top-0 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 w-3/4 h-32 bg-coffee-gold/10 blur-[80px] rounded-full -z-10 pointer-events-none"></div>
-      <p class="text-lg sm:text-xl text-coffee-sand font-light leading-relaxed max-w-2xl mx-auto">
-        {t('about.intro')}
-      </p>
+    <div class="mt-10 flex flex-col sm:flex-row gap-4">
+      <a href={`${base}/${lang}/methodology`.replace(/\/+/g, '/')} class="inline-flex justify-center rounded-xl bg-coffee-gold px-6 py-3 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover transition-colors">
+        {copy.methodButton}
+      </a>
+      <a href="https://github.com/bill2712/coffee-timer-app" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center rounded-xl border border-coffee-gold/50 px-6 py-3 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10 transition-colors">
+        {copy.repoButton}<span aria-hidden="true" class="ms-2">↗</span>
+      </a>
     </div>
-
-    <!-- Features / Offers Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-      <div class="bg-coffee-darker/60 backdrop-blur-md border border-coffee-sand/10 p-6 rounded-2xl hover:border-coffee-gold/40 hover:-translate-y-1 transition-all duration-300">
-        <div class="w-12 h-12 rounded-xl bg-coffee-gold/10 flex items-center justify-center text-coffee-gold mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-          </svg>
-        </div>
-        <h3 class="font-display font-bold text-coffee-light mb-2">{t('about.offer.l1.title')}</h3>
-        <p class="text-sm text-coffee-sand/80 leading-relaxed">{t('about.offer.l1')}</p>
-      </div>
-
-      <div class="bg-coffee-darker/60 backdrop-blur-md border border-coffee-sand/10 p-6 rounded-2xl hover:border-coffee-gold/40 hover:-translate-y-1 transition-all duration-300">
-        <div class="w-12 h-12 rounded-xl bg-coffee-gold/10 flex items-center justify-center text-coffee-gold mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        </div>
-        <h3 class="font-display font-bold text-coffee-light mb-2">{t('about.offer.l2.title')}</h3>
-        <p class="text-sm text-coffee-sand/80 leading-relaxed">{t('about.offer.l2')}</p>
-      </div>
-
-      <div class="bg-coffee-darker/60 backdrop-blur-md border border-coffee-sand/10 p-6 rounded-2xl hover:border-coffee-gold/40 hover:-translate-y-1 transition-all duration-300">
-        <div class="w-12 h-12 rounded-xl bg-coffee-gold/10 flex items-center justify-center text-coffee-gold mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-          </svg>
-        </div>
-        <h3 class="font-display font-bold text-coffee-light mb-2">{t('about.offer.l3.title')}</h3>
-        <p class="text-sm text-coffee-sand/80 leading-relaxed">{t('about.offer.l3')}</p>
-      </div>
-    </div>
-
-    <!-- Vision & Promise Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-      <div class="prose prose-invert prose-coffee">
-        <h2 class="font-display text-2xl text-coffee-gold flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          {t('about.vision.title')}
-        </h2>
-        <p class="text-sm text-coffee-sand/90 leading-relaxed mb-4">
-          {t('about.vision.p1')}
-        </p>
-        <p class="text-sm text-coffee-sand/90 leading-relaxed">
-          {t('about.vision.title')} {t('about.vision.p2')}
-        </p>
-      </div>
-
-      <div class="prose prose-invert prose-coffee">
-        <h2 class="font-display text-2xl text-coffee-gold flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          {t('about.promise.title')}
-        </h2>
-        <p class="text-sm text-coffee-sand/90 leading-relaxed">
-          {t('about.promise.p1')}
-        </p>
-      </div>
-    </div>
-
-    <!-- Quote -->
-    <div class="mt-12 p-8 bg-gradient-to-br from-coffee-darker to-black border border-coffee-gold/20 rounded-3xl text-center relative shadow-2xl">
-      <div class="absolute -top-4 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 bg-coffee-dark border border-coffee-gold/30 px-4 py-1 rounded-full text-coffee-gold text-xs font-bold tracking-widest">
-        {t('about.belief')}
-      </div>
-      <h3 class="font-display text-2xl md:text-3xl font-light text-coffee-light italic my-4 leading-tight">"{t('about.quote')}"</h3>
-      <div class="w-16 h-0.5 bg-coffee-gold/30 mx-auto my-4"></div>
-      <p class="text-sm text-coffee-gold font-bold tracking-widest uppercase">{t('about.team')}</p>
-    </div>
-  </div>
+  </article>
 </Layout>

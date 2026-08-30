@@ -1,132 +1,94 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLanguagePaths } from '../../i18n/routes';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const isZh = lang === 'zh-TW';
+const copy = isZh ? {
+  title: '聯絡與回報問題',
+  description: '透過公開的 GitHub 專案回報 Barista Flow 錯誤、提出功能建議或檢視修正進度。',
+  intro: '這是一個免費、開源的瀏覽器工具。為避免展示一個實際不會送出的表單，我們把問題回報集中到公開的 GitHub 專案，讓每個回報都有可追蹤的處理紀錄。',
+  bugTitle: '回報功能錯誤',
+  bugBody: '請寫下使用的裝置、瀏覽器、操作步驟，以及你預期和實際看到的結果。請勿公開張貼個人資料、密碼或任何敏感資訊。',
+  bugButton: '建立問題回報',
+  securityTitle: '私下回報安全漏洞',
+  securityBody: '安全漏洞不應張貼在公開 Issues。請使用 GitHub 的私密漏洞回報，只有專案維護者能看到內容。',
+  securityButton: '私密回報漏洞',
+  codeTitle: '查看原始碼與修正紀錄',
+  codeBody: '所有網站程式、版本紀錄和已知問題都可以公開檢視。你可以先搜尋是否已有相同問題，再新增回報。',
+  codeButton: '前往 GitHub 專案',
+  response: '回報通常會在 GitHub 上回覆；處理時間會依問題複雜度而異。'
+} : {
+  title: 'Contact and issue reporting',
+  description: 'Report Barista Flow bugs, request features, or review fixes through the public GitHub project.',
+  intro: 'Barista Flow is a free, open-source browser tool. Instead of presenting a form that does not actually send, we route reports to the public GitHub project so every issue has a traceable status.',
+  bugTitle: 'Report a functional bug',
+  bugBody: 'Include your device, browser, steps to reproduce, and the expected and actual result. Do not post personal information, passwords, or other sensitive data publicly.',
+  bugButton: 'Create an issue',
+  securityTitle: 'Report a vulnerability privately',
+  securityBody: 'Do not post security vulnerabilities in public issues. Use GitHub private vulnerability reporting so only the project maintainers can read the report.',
+  securityButton: 'Send a private report',
+  codeTitle: 'Review source and fixes',
+  codeBody: 'The site source, version history, and known issues are public. Search for an existing report before opening a new one.',
+  codeButton: 'Open the GitHub project',
+  response: 'Replies are normally posted on GitHub; timing depends on the complexity of the issue.'
+};
 
 export function getStaticPaths() {
   return getLanguagePaths();
 }
 ---
 
-<Layout
-  title={t('contact.meta.title')}
-  description={t('contact.meta.desc')}
->
-  <div class="max-w-3xl mx-auto py-8 sm:py-12">
-    <div class="mb-10 text-center">
-      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">{t('contact.title')}</h1>
-      <p class="text-sm text-coffee-muted">{t('contact.subtitle')}</p>
+<Layout title={`${copy.title} | Barista Flow`} description={copy.description}>
+  <article class="max-w-4xl mx-auto py-10 sm:py-16">
+    <header class="max-w-2xl mb-10 sm:mb-14">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-coffee-gold mb-4">Barista Flow</p>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-coffee-light mb-5">{copy.title}</h1>
+      <p class="text-coffee-sand/90 leading-relaxed">{copy.intro}</p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-8">
+        <h2 class="font-display text-2xl font-bold text-coffee-light mb-4">{copy.bugTitle}</h2>
+        <p class="text-sm text-coffee-sand/80 leading-relaxed mb-7">{copy.bugBody}</p>
+        <a
+          href="https://github.com/bill2712/coffee-timer-app/issues/new/choose"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-xl bg-coffee-gold px-5 py-3 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover transition-colors"
+        >
+          {copy.bugButton}<span aria-hidden="true" class="ms-2">↗</span>
+        </a>
+      </section>
+
+      <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-8">
+        <h2 class="font-display text-2xl font-bold text-coffee-light mb-4">{copy.securityTitle}</h2>
+        <p class="text-sm text-coffee-sand/80 leading-relaxed mb-7">{copy.securityBody}</p>
+        <a
+          href="https://github.com/bill2712/coffee-timer-app/security/advisories/new"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-xl border border-red-300/50 px-5 py-3 text-sm font-bold text-red-200 hover:bg-red-300/10 transition-colors"
+        >
+          {copy.securityButton}<span aria-hidden="true" class="ms-2">↗</span>
+        </a>
+      </section>
+
+      <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-8 md:col-span-2">
+        <h2 class="font-display text-2xl font-bold text-coffee-light mb-4">{copy.codeTitle}</h2>
+        <p class="text-sm text-coffee-sand/80 leading-relaxed mb-7">{copy.codeBody}</p>
+        <a
+          href="https://github.com/bill2712/coffee-timer-app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-xl border border-coffee-gold/50 px-5 py-3 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10 transition-colors"
+        >
+          {copy.codeButton}<span aria-hidden="true" class="ms-2">↗</span>
+        </a>
+      </section>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
-      
-      <!-- Contact Info -->
-      <div class="md:col-span-2 flex flex-col gap-6">
-        <div class="glass-card rounded-2xl p-6">
-          <h3 class="font-display text-lg font-bold text-coffee-gold mb-2">{t('contact.business.title')}</h3>
-          <p class="text-sm text-coffee-muted leading-relaxed mb-4">
-            {t('contact.business.desc')}
-          </p>
-          <a href="mailto:business@baristaflow.com" class="text-sm font-semibold text-coffee-sand hover:text-coffee-light transition-colors flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            business@baristaflow.com
-          </a>
-        </div>
-
-        <div class="glass-card rounded-2xl p-6">
-          <h3 class="font-display text-lg font-bold text-coffee-gold mb-2">{t('contact.support.title')}</h3>
-          <p class="text-sm text-coffee-muted leading-relaxed mb-4">
-            {t('contact.support.desc')}
-          </p>
-          <a href="mailto:support@baristaflow.com" class="text-sm font-semibold text-coffee-sand hover:text-coffee-light transition-colors flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-            support@baristaflow.com
-          </a>
-        </div>
-      </div>
-
-      <!-- Contact Form -->
-      <div class="md:col-span-3 glass-card rounded-2xl p-6 sm:p-8">
-        <form id="contact-form" class="space-y-5" onsubmit={`alert('${t('contact.form.alert')}'); this.reset(); return false;`}>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div class="flex flex-col gap-1.5">
-              <label for="name" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.name')}</label>
-              <input
-                type="text"
-                id="name"
-                required
-                placeholder={t('contact.form.namePlaceholder')}
-                class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
-              />
-            </div>
-            
-            <div class="flex flex-col gap-1.5">
-              <label for="email" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.email')}</label>
-              <input
-                type="email"
-                id="email"
-                required
-                placeholder={t('contact.form.emailPlaceholder')}
-                class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light"
-              />
-            </div>
-          </div>
-
-          <div class="flex flex-col gap-1.5">
-            <label for="subject" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.subject')}</label>
-            <select
-              id="subject"
-              class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light appearance-none cursor-pointer"
-            >
-              <option value="feedback">{t('contact.form.opt.feedback')}</option>
-              <option value="bug">{t('contact.form.opt.bug')}</option>
-              <option value="business">{t('contact.form.opt.business')}</option>
-              <option value="other">{t('contact.form.opt.other')}</option>
-            </select>
-          </div>
-
-          <div class="flex flex-col gap-1.5">
-            <label for="message" class="text-xs font-semibold uppercase tracking-wider text-coffee-sand">{t('contact.form.message')}</label>
-            <textarea
-              id="message"
-              required
-              rows="5"
-              placeholder={t('contact.form.messagePlaceholder')}
-              class="w-full bg-coffee-darker border border-coffee-sand/15 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-coffee-gold transition-colors text-coffee-light resize-none custom-scrollbar"
-            ></textarea>
-          </div>
-
-          <button
-            type="submit"
-            class="w-full bg-gradient-to-r from-coffee-accent to-coffee-gold hover:from-coffee-gold hover:to-coffee-gold-hover text-coffee-dark font-semibold tracking-wide rounded-lg py-3 shadow-lg transition-all duration-300 transform active:scale-[0.98] cursor-pointer text-sm"
-          >
-            {t('contact.form.submit')}
-          </button>
-        </form>
-      </div>
-
-    </div>
-  </div>
+    <p class="mt-8 text-xs text-coffee-muted">{copy.response}</p>
+  </article>
 </Layout>
-
-<style>
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(42, 36, 32, 0.5);
-    border-radius: 4px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(197, 168, 128, 0.3);
-    border-radius: 4px;
-  }
-</style>

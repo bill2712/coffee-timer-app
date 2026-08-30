@@ -25,7 +25,7 @@ const glossaryTerms = [
 
 export function remarkGlossary() {
   return (tree) => {
-    visit(tree, 'text', (node, index, parent) => {
+    visit(tree, 'text', (node, _index, parent) => {
       // Avoid replacing text inside links, headings, or html elements
       if (
         !parent ||

@@ -1,0 +1,30 @@
+name: Content correction
+description: Suggest a factual, translation, source, or terminology correction.
+title: "[Content]: "
+labels: ["content"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: https://coffeetimer.online/zh-TW/blog/example/
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current wording or claim
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Proposed correction
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Supporting source
+      description: Prefer a standard, manufacturer document, or primary research source.
+      placeholder: https://example.com/source

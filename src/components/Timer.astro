@@ -214,6 +214,7 @@ const timerDict = {
         <textarea 
           id="tasting-notes" 
           rows="2" 
+          maxlength="500"
           placeholder={t('timer.modal.notesPlaceholder')}
           class="w-full bg-coffee-dark border border-coffee-sand/20 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light resize-none placeholder-coffee-sand/40"
         ></textarea>
@@ -532,11 +533,6 @@ const timerDict = {
       btnStart.classList.add('bg-coffee-darker', 'text-coffee-muted');
     }
     
-    if (btnReset) {
-      btnReset.disabled = true;
-      btnReset.classList.add('opacity-50', 'cursor-not-allowed');
-    }
-    
     if (timerBreathBg) {
       timerBreathBg.classList.add('animate-breath', 'bg-[#D9A05B]/10');
     }
@@ -645,8 +641,16 @@ const timerDict = {
     if (timerStageTitle) timerStageTitle.textContent = dict.clickStart;
   }
 
-  function handleRecipeUpdate(newRecipe: typeof recipe) {
-    recipe = { ...recipe, ...newRecipe };
+  function handleRecipeUpdate(newRecipe: any) {
+    const weight = Number(newRecipe?.coffeeWeight);
+    const water = Number(newRecipe?.totalWater);
+    const roast = String(newRecipe?.roastLevel || '');
+    recipe = {
+      coffeeWeight: Number.isFinite(weight) ? Math.min(100, Math.max(5, weight)) : 20,
+      totalWater: Number.isFinite(water) ? Math.min(2500, Math.max(50, water)) : 300,
+      beanName: String(newRecipe?.beanName || recipe.beanName).trim().slice(0, 80),
+      roastLevel: ['light', 'medium', 'dark'].includes(roast) ? roast : 'medium'
+    };
     
     if (beanDisplay) beanDisplay.textContent = recipe.beanName;
     if (roastDisplay) roastDisplay.textContent = getRoastDisplay(recipe.roastLevel);
@@ -698,7 +702,7 @@ const timerDict = {
     const acidity = (document.getElementById('rating-acidity') as HTMLInputElement)?.value || '3';
     const bitterness = (document.getElementById('rating-bitterness') as HTMLInputElement)?.value || '3';
     const body = (document.getElementById('rating-body') as HTMLInputElement)?.value || '3';
-    const notes = (document.getElementById('tasting-notes') as HTMLTextAreaElement)?.value || '';
+    const notes = ((document.getElementById('tasting-notes') as HTMLTextAreaElement)?.value || '').slice(0, 500);
 
     const newLog = {
       id: Date.now().toString(),
@@ -911,7 +915,7 @@ const timerDict = {
     // Listen to custom recipe event
     window.addEventListener('coffee-recipe-changed', ((e: CustomEvent) => {
       handleRecipeUpdate(e.detail);
-      initOrUpdateChart(e.detail);
+      initOrUpdateChart(recipe);
     }) as EventListener);
 
     // Initial load from LocalStorage if exists
@@ -920,7 +924,7 @@ const timerDict = {
       try {
         const loadedRecipe = JSON.parse(savedRecipeStr);
         handleRecipeUpdate(loadedRecipe);
-        initOrUpdateChart(loadedRecipe);
+        initOrUpdateChart(recipe);
       } catch (e) {
         console.error('Failed to parse saved recipe in timer init', e);
         updateDisplay();

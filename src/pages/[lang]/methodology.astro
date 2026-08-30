@@ -1,0 +1,129 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getLanguagePaths } from '../../i18n/routes';
+import { getLangFromUrl } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const copy = isZh ? {
+  title: '計算方法、假設與資料來源',
+  description: '公開說明 Barista Flow 的粉水比、注水目標、時間提示、溫度建議及內容檢閱方法。',
+  intro: '這一頁記錄工具如何把輸入轉成畫面上的建議，也清楚說明它不能代替甚麼。你可以據此檢查計算、重現結果，或提出具體修正。',
+  reviewed: '最後人工檢閱：2026 年 8 月 30 日',
+  formulaTitle: '1. 粉水比與總水量',
+  formulaBody: '總水量（g）＝咖啡粉量（g）× 粉水比。水在一般沖煮情境下可近似 1 g＝1 ml，因此畫面同時以 g／ml 幫助讀數。例：20 g 咖啡、1:15，目標總水量為 300 g。四捨五入只影響顯示，不代表秤的精度。',
+  stagesTitle: '2. 三階段計時器',
+  stagesBody: '首頁的預設流程是可調整的起點：悶蒸 40 秒，累積水量為粉量的 2.5 倍；其後 50 秒注水至總水量的 60%；最後 60 秒注至總水量。這是介面節奏，不是宣稱所有咖啡都應使用同一配方。濾杯形狀、研磨、注水高度、咖啡密度和排氣量都會改變實際流速。',
+  tempTitle: '3. 溫度與器材建議',
+  tempBody: '溫度數值只作起點。淺焙通常需要較高的萃取能量，深焙可由較低溫開始，但器材製造商的官方說明可能採用不同溫度。例如 AeroPress 官方入門方法使用約 85°C；這說明不存在適用所有器材的單一「黃金溫度」。',
+  adjustTitle: '4. 如何用味道修正',
+  adjustBody: '先固定咖啡粉量與水量，每次只改一個變數。若風味尖酸、薄弱或萃取不足，可嘗試研磨稍細、提高水溫或延長接觸時間；若乾澀、苦重或收斂，可反向調整。這些是診斷方向，不是品質保證。記錄實際結果比追求單一數字更有用。',
+  editorialTitle: '5. 編輯與翻譯品質',
+  editorialBody: '文章必須提供可實作的步驟、限制或比較，而非只為搜尋關鍵字改寫。資料以產業標準、器材製造商說明及可查證的研究為優先。翻譯需要人工檢查術語、單位、連結和自然語句；未完成檢閱的語言版本保留為草稿，不發布到網站或 Sitemap。',
+  limitsTitle: '6. 限制與安全',
+  limitsBody: '工具不讀取咖啡秤，也不測量 TDS 或萃取率；畫面上的結果只是根據使用者輸入計算。處理熱水時應使用穩固器材並遵守製造商安全說明。AeroPress 倒置法有翻倒熱水的風險，本網站不把它列為唯一或必要方法。',
+  sourcesTitle: '主要參考來源',
+  sourceIntro: '以下連結是用來核對術語、器材特性與建議範圍的第一方資料；外部網站可能日後更新。',
+  feedback: '發現公式、來源或翻譯問題？請附上頁面網址和可重現例子。',
+  feedbackButton: '提交內容修正'
+} : {
+  title: 'Methodology, assumptions, and sources',
+  description: 'How Barista Flow calculates brew ratios, pour targets, timing cues, temperature starting points, and how its content is reviewed.',
+  intro: 'This page documents how inputs become on-screen suggestions and what the tool cannot replace. You can use it to check the math, reproduce a result, or propose a specific correction.',
+  reviewed: 'Last human review: 30 August 2026',
+  formulaTitle: '1. Brew ratio and total water',
+  formulaBody: 'Total water (g) = coffee dose (g) × ratio. In ordinary brewing, water can be approximated as 1 g = 1 ml, so the interface uses g/ml to make the target easy to read. For example, 20 g of coffee at 1:15 gives a 300 g water target. Rounding affects the display, not the accuracy of your scale.',
+  stagesTitle: '2. Three-stage timer',
+  stagesBody: 'The homepage defaults are an adjustable starting point: a 40-second bloom to 2.5 times the coffee dose, 50 seconds to reach 60% of total water, then 60 seconds to reach the final target. This is an interface rhythm, not a claim that every coffee requires one recipe. Dripper geometry, grind, pour height, coffee density, and degassing all change flow.',
+  tempTitle: '3. Temperature and brewer guidance',
+  tempBody: 'Temperatures are starting points. Lighter roasts often need more extraction energy and darker roasts can start cooler, but manufacturer instructions vary by brewer. The official AeroPress starter method, for example, uses about 85°C. There is no single “golden temperature” for every device.',
+  adjustTitle: '4. Adjusting by taste',
+  adjustBody: 'Keep dose and water fixed, then change one variable at a time. If the cup is sharply sour, thin, or under-extracted, try a slightly finer grind, hotter water, or longer contact time. If it is drying, harsh, or bitter, adjust in the opposite direction. These are diagnostic directions, not a quality guarantee. Recording results is more useful than chasing one number.',
+  editorialTitle: '5. Editorial and translation quality',
+  editorialBody: 'An article must offer practical steps, limitations, or a meaningful comparison—not a keyword rewrite. Industry standards, manufacturer instructions, and verifiable research are preferred sources. A translation needs a human check for terminology, units, links, and natural language. Unreviewed locales remain drafts and are not published or added to the sitemap.',
+  limitsTitle: '6. Limits and safety',
+  limitsBody: 'The tool does not read a coffee scale or measure TDS or extraction yield; results are calculations based on user input. Use stable equipment and follow manufacturer safety instructions around hot water. Inverted AeroPress methods can increase spill risk and are not presented here as mandatory or uniquely correct.',
+  sourcesTitle: 'Primary reference sources',
+  sourceIntro: 'These first-party sources are used to check terminology, equipment characteristics, and reasonable starting ranges. External pages may be updated later.',
+  feedback: 'Found a formula, source, or translation problem? Include the page URL and a reproducible example.',
+  feedbackButton: 'Submit a content correction'
+};
+
+const sections = [
+  [copy.formulaTitle, copy.formulaBody],
+  [copy.stagesTitle, copy.stagesBody],
+  [copy.tempTitle, copy.tempBody],
+  [copy.adjustTitle, copy.adjustBody],
+  [copy.editorialTitle, copy.editorialBody],
+  [copy.limitsTitle, copy.limitsBody]
+];
+
+const sources = [
+  {
+    name: 'Specialty Coffee Association — Coffee Standards',
+    url: 'https://sca.coffee/research/coffee-standards',
+    note: isZh ? '產業標準的用途、制定方式與已發布標準清單。' : 'Purpose, development process, and catalogue of coffee industry standards.'
+  },
+  {
+    name: 'HARIO — V60 Dripper',
+    url: 'https://global.hario.com/product/coffee/dripper/VD.html',
+    note: isZh ? 'V60 錐形濾杯的官方結構、容量與水流說明。' : 'Official V60 geometry, capacity, and flow explanation.'
+  },
+  {
+    name: 'AeroPress — How to Use',
+    url: 'https://aeropress.com/pages/how-to-use',
+    note: isZh ? 'AeroPress 官方入門步驟、研磨、溫度與時間。' : 'Official starter steps, grind, temperature, and timing.'
+  },
+  {
+    name: 'AeroPress — FAQ',
+    url: 'https://aeropress.com/pages/faq',
+    note: isZh ? '官方對粉量、溫度與配方可調性的說明。' : 'Manufacturer guidance on dose, temperature, and recipe flexibility.'
+  }
+];
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
+---
+
+<Layout title={`${copy.title} | Barista Flow`} description={copy.description}>
+  <article class="max-w-4xl mx-auto py-10 sm:py-16">
+    <header class="max-w-3xl mb-12">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-coffee-gold mb-4">Editorial transparency</p>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-coffee-light mb-6">{copy.title}</h1>
+      <p class="text-lg text-coffee-sand/90 leading-relaxed">{copy.intro}</p>
+      <p class="text-xs text-coffee-muted mt-4">{copy.reviewed}</p>
+    </header>
+
+    <div class="space-y-5">
+      {sections.map(([heading, body]) => (
+        <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-9">
+          <h2 class="font-display text-2xl font-bold text-coffee-light mb-3">{heading}</h2>
+          <p class="text-sm sm:text-base text-coffee-sand/85 leading-7">{body}</p>
+        </section>
+      ))}
+    </div>
+
+    <section class="mt-10 rounded-3xl border border-coffee-gold/20 bg-coffee-gold/5 p-7 sm:p-9">
+      <h2 class="font-display text-2xl font-bold text-coffee-light mb-3">{copy.sourcesTitle}</h2>
+      <p class="text-sm text-coffee-sand/80 leading-6 mb-6">{copy.sourceIntro}</p>
+      <ul class="space-y-4">
+        {sources.map((source) => (
+          <li>
+            <a href={source.url} target="_blank" rel="noopener noreferrer" class="font-semibold text-coffee-gold hover:text-coffee-light transition-colors">
+              {source.name}<span aria-hidden="true" class="ms-2">↗</span>
+            </a>
+            <p class="text-xs text-coffee-muted mt-1">{source.note}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <div class="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-coffee-sand/10 pt-8">
+      <p class="text-sm text-coffee-sand/80">{copy.feedback}</p>
+      <a href="https://github.com/bill2712/coffee-timer-app/issues/new/choose" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex justify-center rounded-xl bg-coffee-gold px-5 py-3 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover transition-colors">
+        {copy.feedbackButton}<span aria-hidden="true" class="ms-2">↗</span>
+      </a>
+    </div>
+  </article>
+</Layout>

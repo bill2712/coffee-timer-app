@@ -63,6 +63,7 @@ const formDict = {
           class="peer w-full bg-transparent font-display text-base text-coffee-light focus:outline-none placeholder-transparent"
           placeholder={t('form.beanPlaceholder')}
           aria-label={t('form.bean')}
+          maxlength="80"
         />
         <label
           for="bean-name"
@@ -84,36 +85,8 @@ const formDict = {
       </div>
     </div>
 
-    <!-- Numbers Grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
-        <input
-          type="number"
-          id="coffee-weight"
-          step="0.1"
-          min="1"
-          class="peer w-full bg-transparent font-mono text-lg text-coffee-light focus:outline-none text-end"
-          value="15"
-          aria-label={t('form.weight')}
-        />
-        <label class="absolute start-3 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand whitespace-nowrap">{t('form.weight')}</label>
-        <span class="absolute end-3 top-2 text-[10px] text-coffee-muted">Weight</span>
-      </div>
-
-      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
-        <input
-          type="number"
-          id="water-ratio"
-          step="0.5"
-          min="5"
-          class="peer w-full bg-transparent font-mono text-lg text-coffee-light focus:outline-none text-end"
-          value="15"
-          aria-label={t('form.ratio')}
-        />
-        <label class="absolute start-3 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand whitespace-nowrap">{t('form.ratio')}</label>
-        <span class="absolute end-3 top-2 text-[10px] text-coffee-muted">Ratio</span>
-      </div>
-
+    <!-- Temperature Grid -->
+    <div class="grid grid-cols-1 gap-4">
       <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="number"
@@ -328,7 +301,7 @@ const formDict = {
       const ratioError = document.getElementById('ratio-error');
 
       // Check if input is empty or invalid mid-typing
-      if (weightRaw === '' || isNaN(weight) || weight <= 0) {
+      if (weightRaw === '' || isNaN(weight) || weight < 5 || weight > 100) {
         if (weightError && weightRaw !== '' && weightRaw !== '-') { // Only show error if they typed something invalid
           weightError.textContent = dict.errWeightReset;
           weightError.classList.remove('hidden');
@@ -346,7 +319,7 @@ const formDict = {
         weightInput.classList.remove('text-red-500');
       }
 
-      if (ratioRaw === '' || isNaN(ratio) || ratio <= 0) {
+      if (ratioRaw === '' || isNaN(ratio) || ratio < 10 || ratio > 25) {
         if (ratioError && ratioRaw !== '' && ratioRaw !== '-') {
           ratioError.textContent = dict.errRatioReset;
           ratioError.classList.remove('hidden');
@@ -385,15 +358,21 @@ const formDict = {
     let parsedWeight = parseFloat(sanitizeDecimal(weightInput?.value));
     let parsedRatio = parseFloat(sanitizeDecimal(ratioInput?.value));
     
-    if (isNaN(parsedWeight) || parsedWeight <= 0) parsedWeight = 15.0;
-    if (isNaN(parsedRatio) || parsedRatio <= 0) parsedRatio = 15.0;
+    if (isNaN(parsedWeight)) parsedWeight = 20;
+    if (isNaN(parsedRatio)) parsedRatio = 15;
+    parsedWeight = Math.min(100, Math.max(5, parsedWeight));
+    parsedRatio = Math.min(25, Math.max(10, parsedRatio));
+
+    const parsedTemp = Math.min(100, Math.max(80, parseInt(waterTempInput?.value) || 92));
+    const rawRoast = roastLevelInput?.value || '';
+    const safeRoast = ['light', 'medium', 'dark'].includes(rawRoast) ? rawRoast : 'medium';
 
     return {
       id: Date.now().toString(), // unique id for history
-      beanName: beanNameInput?.value || dict.customBean,
-      roastLevel: roastLevelInput?.value || 'medium',
+      beanName: beanNameInput?.value.trim().slice(0, 80) || dict.customBean,
+      roastLevel: safeRoast,
       grindSize: grindSizeInput?.value || dict.grindMedium,
-      waterTemp: parseInt(waterTempInput?.value) || 92,
+      waterTemp: parsedTemp,
       coffeeWeight: parsedWeight,
       waterRatio: parsedRatio,
       totalWater: Math.round(parsedWeight * parsedRatio)
@@ -456,12 +435,12 @@ const formDict = {
     if (!params.has('w') && !params.has('bean')) return false;
 
     const queryRecipe = {
-      beanName: params.get('bean') || dict.sharedRecipe,
-      roastLevel: params.get('roast') || 'medium',
-      grindSize: params.get('grind') || '',
-      waterTemp: parseInt(params.get('t') as string) || 92,
-      coffeeWeight: parseFloat((params.get('w') as string)?.replace(',', '.')) || 20,
-      waterRatio: parseFloat((params.get('r') as string)?.replace(',', '.')) || 15,
+      beanName: (params.get('bean') || dict.sharedRecipe).trim().slice(0, 80),
+      roastLevel: ['light', 'medium', 'dark'].includes(params.get('roast') || '') ? params.get('roast') : 'medium',
+      grindSize: (params.get('grind') || '').slice(0, 40),
+      waterTemp: Math.min(100, Math.max(80, parseInt(params.get('t') || '') || 92)),
+      coffeeWeight: Math.min(100, Math.max(5, parseFloat((params.get('w') || '').replace(',', '.')) || 20)),
+      waterRatio: Math.min(25, Math.max(10, parseFloat((params.get('r') || '').replace(',', '.')) || 15)),
       totalWater: 0
     };
     queryRecipe.totalWater = Math.round(queryRecipe.coffeeWeight * queryRecipe.waterRatio);
@@ -479,11 +458,38 @@ const formDict = {
   }
 
   // --- History Management ---
+  function normalizeHistoryItem(raw: any) {
+    if (!raw || typeof raw !== 'object') return null;
+    const id = String(raw.id || '');
+    if (!/^\d{1,20}$/.test(id)) return null;
+
+    const weight = Number(raw.coffeeWeight);
+    const ratio = Number(raw.waterRatio);
+    const temp = Number(raw.waterTemp);
+    const roast = String(raw.roastLevel || '');
+
+    return {
+      id,
+      beanName: String(raw.beanName || dict.customBean).trim().slice(0, 80),
+      roastLevel: ['light', 'medium', 'dark'].includes(roast) ? roast : 'medium',
+      grindSize: String(raw.grindSize || '').slice(0, 40),
+      waterTemp: Number.isFinite(temp) ? Math.min(100, Math.max(80, temp)) : 92,
+      coffeeWeight: Number.isFinite(weight) ? Math.min(100, Math.max(5, weight)) : 20,
+      waterRatio: Number.isFinite(ratio) ? Math.min(25, Math.max(10, ratio)) : 15,
+      totalWater: 0
+    };
+  }
+
   function loadHistory(): any[] {
     try {
       const str = localStorage.getItem('barista_flow_history');
       const parsed = str ? JSON.parse(str) : [];
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) return [];
+      type HistoryItem = NonNullable<ReturnType<typeof normalizeHistoryItem>>;
+      return parsed.map(normalizeHistoryItem).filter((item): item is HistoryItem => item !== null).map(item => ({
+        ...item,
+        totalWater: Math.round(item.coffeeWeight * item.waterRatio)
+      }));
     } catch (e) {
       console.warn('History corrupted or unavailable, resetting:', e);
       try { localStorage.removeItem('barista_flow_history'); } catch (err) {}

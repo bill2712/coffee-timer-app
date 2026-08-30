@@ -1,46 +1,39 @@
-# Astro Starter Kit: Basics
+# Barista Flow / Coffee Timer
+
+Barista Flow is a static coffee-brewing companion published at [coffeetimer.online](https://coffeetimer.online/zh-TW/). It combines an adjustable brew-ratio calculator, three-stage pour timer, local brew log, equipment guides, and an editorially reviewed coffee glossary.
+
+## Published languages
+
+- Hong Kong Traditional Chinese (`zh-TW`)
+
+Other locale files remain unpublished drafts until their terminology, claims, links, and natural language have completed a human editorial review.
+
+Additional translations remain in the repository as unpublished drafts until they receive a human review. They are excluded from navigation, generated routes, hreflang, search, RSS, and the sitemap.
+
+## Local development
+
+Requires Node.js 22.12 or newer.
 
 ```sh
-npm create astro@latest -- --template basics
+npm ci
+npm run astro -- check
+npm run build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Data handling
 
-## 🚀 Project Structure
+The site has no user database. Recipes, preferences, and brew logs remain in browser `localStorage`. Shared recipe links contain only the parameters the user chooses to place in the URL. See the public privacy policy and methodology pages for the current disclosures and calculation assumptions.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Content and advertising status
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+Ad placements are disabled while the site is under publisher review. The AdSense account meta tag, review loader, and root `ads.txt` remain available for verification. Advertising must not be enabled until the site is approved and a Google-certified CMP is configured where required.
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Reporting problems
 
-## 🧞 Commands
+- Functional or content issues: [open a GitHub issue](https://github.com/bill2712/coffee-timer-app/issues/new/choose)
+- Security vulnerabilities: use [private vulnerability reporting](https://github.com/bill2712/coffee-timer-app/security/advisories/new); do not disclose vulnerabilities in a public issue.
 
-All commands are run from the root of the project, from a terminal:
+## Deployment
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Pushes to `main` are built and deployed through the GitHub Pages workflow in `.github/workflows/deploy.yml`.

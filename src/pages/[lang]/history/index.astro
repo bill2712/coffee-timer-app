@@ -20,7 +20,6 @@ export function getStaticPaths() {
     <!-- Breadcrumb -->
     <div class="flex justify-center">
       <Breadcrumbs items={[
-        { label: t('nav.home'), url: '/' },
         { label: t('history.title') }
       ]} />
     </div>
@@ -107,6 +106,35 @@ export function getStaticPaths() {
     };
   }
 
+  function normalizeLog(raw: any): LogEntry | null {
+    if (!raw || typeof raw !== 'object' || !raw.recipe || !raw.evaluation) return null;
+    const id = String(raw.id || '');
+    const date = new Date(raw.date);
+    if (!/^\d{1,20}$/.test(id) || Number.isNaN(date.valueOf())) return null;
+
+    const clamp = (value: unknown, min: number, max: number, fallback: number) => {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? Math.min(max, Math.max(min, parsed)) : fallback;
+    };
+
+    return {
+      id,
+      date: date.toISOString(),
+      recipe: {
+        beanName: String(raw.recipe.beanName || '').trim().slice(0, 80),
+        roastLevel: ['light', 'medium', 'dark'].includes(raw.recipe.roastLevel) ? raw.recipe.roastLevel : 'medium',
+        coffeeWeight: clamp(raw.recipe.coffeeWeight, 1, 100, 20),
+        totalWater: clamp(raw.recipe.totalWater, 1, 2500, 300)
+      },
+      evaluation: {
+        acidity: clamp(raw.evaluation.acidity, 1, 5, 3),
+        bitterness: clamp(raw.evaluation.bitterness, 1, 5, 3),
+        body: clamp(raw.evaluation.body, 1, 5, 3),
+        notes: String(raw.evaluation.notes || '').slice(0, 500)
+      }
+    };
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('history-container');
     const loading = document.getElementById('history-loading');
@@ -119,7 +147,8 @@ export function getStaticPaths() {
     try {
       const stored = localStorage.getItem('barista_flow_logs');
       if (stored) {
-        logs = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        logs = Array.isArray(parsed) ? parsed.map(normalizeLog).filter((log): log is LogEntry => Boolean(log)) : [];
       }
     } catch (e) {
       console.error('Failed to parse history logs', e);
@@ -244,16 +273,23 @@ export function getStaticPaths() {
     function exportToCSV(logData: LogEntry[]) {
       if (logData.length === 0) return;
 
+      const csvCell = (value: unknown) => {
+        let text = String(value ?? '');
+        // Prevent spreadsheet applications from treating user text as a formula.
+        if (/^[=+\-@]/.test(text)) text = `'${text}`;
+        return `"${text.replace(/"/g, '""')}"`;
+      };
+
       const headers = ['Date', 'Bean Name', 'Coffee Weight (g)', 'Total Water (g)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Notes'];
       const rows = logData.map(log => [
-        log.date,
-        `"${log.recipe.beanName.replace(/"/g, '""')}"`,
+        csvCell(log.date),
+        csvCell(log.recipe.beanName),
         log.recipe.coffeeWeight,
         log.recipe.totalWater,
         log.evaluation.acidity,
         log.evaluation.bitterness,
         log.evaluation.body,
-        `"${log.evaluation.notes.replace(/"/g, '""')}"`
+        csvCell(log.evaluation.notes)
       ]);
 
       const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');

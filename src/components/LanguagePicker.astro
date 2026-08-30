@@ -2,6 +2,11 @@
 import { languages } from '../i18n/ui';
 import { getLangFromUrl } from '../i18n/utils';
 
+interface Props {
+  idSuffix?: string;
+}
+
+const { idSuffix = 'default' } = Astro.props;
 const currentLang = getLangFromUrl(Astro.url);
 const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
 let pathWithoutBase = Astro.url.pathname;
@@ -11,11 +16,12 @@ if (basePath && pathWithoutBase.startsWith(basePath)) {
 const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/') || '/';
 ---
 
-<div class="relative inline-block text-start" id="lang-picker-container">
+<div class="relative inline-block text-start" data-language-picker>
   <button
     type="button"
     class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-coffee-darker border border-coffee-sand/20 text-coffee-sand hover:text-coffee-gold hover:border-coffee-gold/50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-coffee-dark focus:ring-coffee-gold"
-    id="lang-menu-button"
+    id={`lang-menu-button-${idSuffix}`}
+    aria-controls={`lang-menu-${idSuffix}`}
     aria-expanded="false"
     aria-haspopup="true"
     aria-label="Change Language"
@@ -29,9 +35,9 @@ const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/
     class="origin-top-right absolute end-0 mt-2 w-48 rounded-xl shadow-2xl shadow-black/50 bg-coffee-darker border border-coffee-sand/20 ring-1 ring-black ring-opacity-5 divide-y divide-coffee-sand/10 focus:outline-none transition-all duration-200 opacity-0 scale-95 pointer-events-none z-50 max-h-[60vh] overflow-y-auto custom-scrollbar"
     role="menu"
     aria-orientation="vertical"
-    aria-labelledby="lang-menu-button"
+    aria-labelledby={`lang-menu-button-${idSuffix}`}
     tabindex="-1"
-    id="lang-menu"
+    id={`lang-menu-${idSuffix}`}
   >
     <div class="py-1" role="none">
       {Object.entries(languages).map(([langCode, langName]) => (
@@ -73,12 +79,16 @@ const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const button = document.getElementById('lang-menu-button');
-    const menu = document.getElementById('lang-menu');
-    const links = menu?.querySelectorAll('a[data-lang]');
+    document.querySelectorAll<HTMLElement>('[data-language-picker]').forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
 
-    if (button && menu) {
-      let isOpen = false;
+      const button = container.querySelector<HTMLButtonElement>('button[aria-controls]');
+      const menu = container.querySelector<HTMLElement>('[role="menu"]');
+      const links = menu?.querySelectorAll('a[data-lang]');
+
+      if (button && menu) {
+        let isOpen = false;
 
       const toggleMenu = () => {
         isOpen = !isOpen;
@@ -105,14 +115,15 @@ const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/
       });
       
       // Save user preference to localStorage when they pick a language
-      links?.forEach(link => {
-        link.addEventListener('click', (e) => {
-          const targetLang = (e.currentTarget as HTMLElement).getAttribute('data-lang');
-          if (targetLang) {
-            localStorage.setItem('barista-flow-lang', targetLang);
-          }
+        links?.forEach(link => {
+          link.addEventListener('click', (e) => {
+            const targetLang = (e.currentTarget as HTMLElement).getAttribute('data-lang');
+            if (targetLang) {
+              localStorage.setItem('barista-flow-lang', targetLang);
+            }
+          });
         });
-      });
-    }
+      }
+    });
   });
 </script>

@@ -17,11 +17,6 @@ const jsonLd = {
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/${lang}/tools/grind-converter`,
   "description": t('schema.desc.grindconverter'),
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "ratingCount": "512"
-  },
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -42,7 +37,7 @@ export function getStaticPaths() {
   <div class="max-w-4xl mx-auto py-8 sm:py-12">
     <div class="text-center mb-10">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
-        Grinder Calibration Tool
+        {lang === 'zh-TW' ? '磨豆機校正工具' : 'Grinder Calibration Tool'}
       </div>
       <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
         {t('grind.title')}
@@ -187,6 +182,11 @@ export function getStaticPaths() {
       <p>
         <span set:html={t("grind.p3")} />
       </p>
+      <p class="not-prose mt-6 rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-4 text-sm leading-relaxed text-coffee-sand">
+        {lang === 'zh-TW'
+          ? '刻度換算屬近似值，不同批次、刀盤磨損、零點校正和咖啡豆都會令結果有差異。請把結果當作起始位置，再按流速和味道逐格調整。'
+          : 'Grind conversions are approximate. Manufacturing variation, burr wear, zero calibration, and the coffee itself can all change the result. Use the value as a starting point, then adjust by flow rate and taste.'}
+      </p>
     </article>
   </div>
 </Layout>
@@ -300,7 +300,6 @@ export function getStaticPaths() {
     }
   };
 
-  const methodsOrder = ['espresso', 'aeropress', 'v60', 'frenchPress', 'coldBrew'] as const;
 
   // UI Elements
   const sourceSelect = document.getElementById('source-grinder') as HTMLSelectElement;

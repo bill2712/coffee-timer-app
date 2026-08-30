@@ -18,11 +18,6 @@ const jsonLd = {
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
   "url": `${SITE_URL}/${lang}/tools/water-temperature`,
   "description": t('schema.desc.watertemp'),
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "ratingCount": "621"
-  },
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -49,7 +44,7 @@ export function getStaticPaths() {
     <div id="setup-panel" class="opacity-100 transition-opacity duration-500">
       <div class="text-center mb-10">
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-4">
-          Physics-Based Tool
+          {lang === 'zh-TW' ? '物理估算工具' : 'Physics-Based Tool'}
         </div>
         <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-coffee-light mb-4">
           {t('tools.watertemp.title')}
@@ -124,7 +119,7 @@ export function getStaticPaths() {
               
               <div class="text-center z-10">
                 <div id="estimated-time" class="text-5xl font-display font-bold text-coffee-gold tracking-tight">03:15</div>
-                <div class="text-xs font-medium text-coffee-muted mt-2 tracking-widest">MIN : SEC</div>
+                <div class="text-xs font-medium text-coffee-muted mt-2 tracking-widest">{lang === 'zh-TW' ? '分：秒' : 'MIN : SEC'}</div>
               </div>
             </div>
 
@@ -152,6 +147,11 @@ export function getStaticPaths() {
         </p>
         <p>
           {t('tools.watertemp.p3')}
+        </p>
+        <p class="not-prose mt-6 rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-4 text-sm leading-relaxed text-coffee-sand">
+          {lang === 'zh-TW'
+            ? '重要限制：結果只是依預設冷卻係數作出的估算。水量、壺身形狀、壺蓋、氣流和初始壺溫都會改變降溫速度；食品溫度計才是確認實際水溫的方法。'
+            : 'Important limitation: this is an estimate based on preset cooling coefficients. Water volume, kettle geometry, lid position, airflow, and the kettle’s initial temperature all affect cooling; use a food thermometer to confirm the actual temperature.'}
         </p>
       </div>
     </div>

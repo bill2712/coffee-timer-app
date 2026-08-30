@@ -4,7 +4,7 @@ import { SITE_URL } from '../config.js';
 
 export async function GET(context: any) {
   // Fetch all posts and glossary entries
-  const allEntries = await getCollection('blog');
+  const allEntries = await getCollection('blog', (entry) => entry.id.toLowerCase().startsWith('zh-tw/'));
   
   // Sort by pubDate descending
   const sortedEntries = allEntries.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -23,13 +23,14 @@ export async function GET(context: any) {
       // Determine base path depending on tags
       const isGlossary = entry.data.tags?.includes('Glossary');
       const prefix = isGlossary ? '/glossary/' : '/blog/';
+      const slug = entry.id.split('/').slice(1).join('/');
       
       return {
         title: entry.data.title,
         pubDate: entry.data.pubDate,
         description: entry.data.description,
         // Compute RSS link from post `id`
-        link: `${prefix}${entry.id}/`,
+        link: `/zh-TW${prefix}${slug}/`,
       };
     }),
     // (optional) inject custom xml
