@@ -145,9 +145,8 @@ export function getStaticPaths() {
     </p>
 
     <p class="not-prose mt-8 rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-4 text-sm leading-relaxed text-coffee-sand">
-      安全與操作來源：請先閱讀
-      <a class="font-semibold text-coffee-gold underline underline-offset-4" href="https://aeropress.com/pages/how-to-use" target="_blank" rel="noopener noreferrer">AeroPress 官方使用說明</a>，
-      尤其留意熱水、穩固杯具與下壓方式。本站參數不取代製造商安全指示。
+      {lang === 'zh-TW' ? '安全與操作來源：請先閱讀 ' : 'Safety and operating source: read the '}
+      <a class="font-semibold text-coffee-gold underline underline-offset-4" href="https://aeropress.com/pages/how-to-use" target="_blank" rel="noopener noreferrer">{lang === 'zh-TW' ? 'AeroPress 官方使用說明' : 'official AeroPress instructions'}</a>{lang === 'zh-TW' ? '，尤其留意熱水、穩固杯具與下壓方式。本站參數不取代製造商安全指示。' : ', especially the guidance on hot water, a stable mug, and pressing. This site’s parameters do not replace the manufacturer’s safety instructions.'}
     </p>
   </div>
 </Layout>

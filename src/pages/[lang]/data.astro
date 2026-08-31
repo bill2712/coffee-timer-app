@@ -1,10 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import { getLanguagePaths } from '../../i18n/routes';
 
 export function getStaticPaths() {
-  return getLanguagePaths();
+  return [{ params: { lang: 'zh-TW' } }];
 }
 ---
 
@@ -68,6 +67,7 @@ export function getStaticPaths() {
 
   const STORAGE_KEYS = [
     'barista_flow_recipe',
+    'barista_flow_recipes',
     'barista_flow_history',
     'barista_flow_logs',
     'barista_flow_pending_parent',

@@ -134,7 +134,7 @@ const formDict = {
       <!-- Coffee Weight Stepper -->
       <div>
         <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-center px-1 hover:shadow-md">
-          <button type="button" id="btn-weight-minus" aria-label="減少咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+          <button type="button" id="btn-weight-minus" aria-label={lang === 'zh-TW' ? '減少咖啡粉量' : 'Decrease coffee weight'} class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
           </button>
           
@@ -151,7 +151,7 @@ const formDict = {
             </label>
           </div>
 
-          <button type="button" id="btn-weight-plus" aria-label="增加咖啡粉量" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+          <button type="button" id="btn-weight-plus" aria-label={lang === 'zh-TW' ? '增加咖啡粉量' : 'Increase coffee weight'} class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
           </button>
         </div>
@@ -161,7 +161,7 @@ const formDict = {
       <!-- Water Ratio Stepper -->
       <div>
         <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-center px-1 hover:shadow-md">
-          <button type="button" id="btn-ratio-minus" aria-label="減少粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+          <button type="button" id="btn-ratio-minus" aria-label={lang === 'zh-TW' ? '減少粉水比例' : 'Decrease brew ratio'} class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
           </button>
           
@@ -178,7 +178,7 @@ const formDict = {
             </label>
           </div>
 
-          <button type="button" id="btn-ratio-plus" aria-label="增加粉水比例" class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
+          <button type="button" id="btn-ratio-plus" aria-label={lang === 'zh-TW' ? '增加粉水比例' : 'Increase brew ratio'} class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
           </button>
         </div>
@@ -439,9 +439,36 @@ const formDict = {
     updateCalculations();
   }
 
+  function getRecipeScope() {
+    return window.location.pathname.replace(/\/$/, '') || '/';
+  }
+
+  function getScopedRecipe() {
+    try {
+      const raw = localStorage.getItem('barista_flow_recipes');
+      const recipes = raw ? JSON.parse(raw) : {};
+      return recipes && typeof recipes === 'object' ? recipes[getRecipeScope()] : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function saveScopedRecipe(recipe: any) {
+    try {
+      const raw = localStorage.getItem('barista_flow_recipes');
+      const parsed = raw ? JSON.parse(raw) : {};
+      const recipes = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+      recipes[getRecipeScope()] = recipe;
+      localStorage.setItem('barista_flow_recipes', JSON.stringify(recipes));
+    } catch (error) {
+      console.warn('Failed to save page-specific recipe:', error);
+    }
+  }
+
   function syncWithTimer(recipe: any) {
     try {
       localStorage.setItem('barista_flow_recipe', JSON.stringify(recipe));
+      saveScopedRecipe(recipe);
     } catch (e) {
       console.warn('Failed to sync recipe to localStorage:', e);
     }
@@ -774,7 +801,8 @@ const formDict = {
         // Normal behavior: load from localStorage
         let savedRecipeStr = null;
         try {
-          savedRecipeStr = localStorage.getItem('barista_flow_recipe');
+          const scopedRecipe = getScopedRecipe();
+          savedRecipeStr = scopedRecipe ? JSON.stringify(scopedRecipe) : null;
         } catch (e) {
           console.warn('localStorage read error for recipe:', e);
         }
@@ -786,6 +814,9 @@ const formDict = {
         } else if (defaultRecipeObj) {
           // If no local storage but we have defaults (e.g. first visit)
           applyRecipeData(defaultRecipeObj);
+          syncWithTimer(getRecipeData());
+        } else {
+          // A new page scope starts from its own visible defaults, never from another brewer.
           syncWithTimer(getRecipeData());
         }
       }

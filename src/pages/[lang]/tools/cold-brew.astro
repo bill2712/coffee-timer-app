@@ -169,8 +169,8 @@ export function getStaticPaths() {
     </p>
 
     <p class="not-prose mt-8 rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-4 text-sm leading-relaxed text-coffee-sand">
-      冷藏安全參考：美國 FDA 建議冰箱保持在 4°C 或以下、冷藏食品使用有蓋容器，並盡快食用已準備的即食食品。詳見
-      <a class="font-semibold text-coffee-gold underline underline-offset-4" href="https://www.fda.gov/consumers/consumer-updates/are-you-storing-food-safely" target="_blank" rel="noopener noreferrer">FDA 食品冷藏指引</a>。
+      {lang === 'zh-TW' ? '冷藏安全參考：美國 FDA 建議冰箱保持在 4°C 或以下、冷藏食品使用有蓋容器，並盡快食用已準備的即食食品。詳見 ' : 'Refrigeration safety reference: the U.S. FDA recommends keeping refrigerators at or below 4°C, using covered containers, and consuming prepared food promptly. See the '}
+      <a class="font-semibold text-coffee-gold underline underline-offset-4" href="https://www.fda.gov/consumers/consumer-updates/are-you-storing-food-safely" target="_blank" rel="noopener noreferrer">{lang === 'zh-TW' ? 'FDA 食品冷藏指引' : 'FDA food-storage guidance'}</a>。
     </p>
   </div>
 </Layout>

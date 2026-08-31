@@ -1,5 +1,5 @@
-const CACHE_NAME = 'barista-flow-v3';
-const APP_SHELL = ['/', '/zh-TW/', '/manifest.json', '/favicon.svg'];
+const CACHE_NAME = 'barista-flow-v4';
+const APP_SHELL = ['/', '/zh-TW/', '/en/', '/manifest.json', '/favicon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

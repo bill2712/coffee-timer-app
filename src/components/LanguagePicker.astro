@@ -14,21 +14,26 @@ if (basePath && pathWithoutBase.startsWith(basePath)) {
   pathWithoutBase = pathWithoutBase.slice(basePath.length);
 }
 const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/') || '/';
+const currentLabel = currentLang === 'zh-TW' ? '繁中' : 'EN';
+const pickerLabel = currentLang === 'zh-TW' ? '切換語言' : 'Change language';
+const zhOnlyPath = currentPath === '/data' || currentPath === '/data/' || currentPath.startsWith('/recipes');
 ---
 
 <div class="relative inline-block text-start" data-language-picker>
   <button
     type="button"
-    class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-coffee-darker border border-coffee-sand/20 text-coffee-sand hover:text-coffee-gold hover:border-coffee-gold/50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-coffee-dark focus:ring-coffee-gold"
+    class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-coffee-sand/25 bg-coffee-darker px-3 text-sm font-semibold text-coffee-sand transition-colors hover:border-coffee-gold/50 hover:text-coffee-gold focus:outline-none focus:ring-2 focus:ring-coffee-gold focus:ring-offset-2 focus:ring-offset-coffee-dark"
     id={`lang-menu-button-${idSuffix}`}
     aria-controls={`lang-menu-${idSuffix}`}
     aria-expanded="false"
     aria-haspopup="true"
-    aria-label="Change Language"
+    aria-label={pickerLabel}
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
+    <span>{currentLabel}</span>
+    <svg aria-hidden="true" class="h-3.5 w-3.5 opacity-70" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
   </button>
 
   <div
@@ -42,10 +47,9 @@ const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/
     <div class="py-1" role="none">
       {Object.entries(languages).map(([langCode, langName]) => (
         <a
-          href={`${basePath}/${langCode}${currentPath.startsWith('/') ? currentPath : '/' + currentPath}`.replace(/\/+/g, '/')}
+          href={`${basePath}/${langCode}${langCode !== 'zh-TW' && zhOnlyPath ? '/' : (currentPath.startsWith('/') ? currentPath : '/' + currentPath)}`.replace(/\/+/g, '/')}
           class={`group flex items-center px-4 py-2.5 text-sm transition-colors ${currentLang === langCode ? 'text-coffee-gold bg-coffee-gold/10 font-bold' : 'text-coffee-light hover:bg-coffee-sand/10 hover:text-white'}`}
           role="menuitem"
-          tabindex="-1"
           data-lang={langCode}
         >
           {currentLang === langCode && (
@@ -85,17 +89,18 @@ const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/
 
       const button = container.querySelector<HTMLButtonElement>('button[aria-controls]');
       const menu = container.querySelector<HTMLElement>('[role="menu"]');
-      const links = menu?.querySelectorAll('a[data-lang]');
+      const links = menu?.querySelectorAll<HTMLAnchorElement>('a[data-lang]');
 
       if (button && menu) {
         let isOpen = false;
 
-      const toggleMenu = () => {
-        isOpen = !isOpen;
+      const setOpen = (open: boolean, focusFirst = false) => {
+        isOpen = open;
         button.setAttribute('aria-expanded', isOpen.toString());
         if (isOpen) {
           menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
           menu.classList.add('opacity-100', 'scale-100');
+          if (focusFirst) window.setTimeout(() => links?.[0]?.focus(), 0);
         } else {
           menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
           menu.classList.remove('opacity-100', 'scale-100');
@@ -104,13 +109,28 @@ const currentPath = pathWithoutBase.replace(new RegExp(`^/${currentLang}/?`), '/
 
       button.addEventListener('click', (e) => {
         e.stopPropagation();
-        toggleMenu();
+        setOpen(!isOpen);
+      });
+
+      button.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          setOpen(true, true);
+        }
       });
 
       // Close menu when clicking outside
       document.addEventListener('click', (event) => {
         if (isOpen && !button.contains(event.target as Node) && !menu.contains(event.target as Node)) {
-          toggleMenu();
+          setOpen(false);
+        }
+      });
+
+      container.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && isOpen) {
+          event.preventDefault();
+          setOpen(false);
+          button.focus();
         }
       });
       

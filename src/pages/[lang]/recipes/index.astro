@@ -1,7 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
-import { getLanguagePaths } from '../../../i18n/routes';
 import { getLangFromUrl } from '../../../i18n/utils';
 import { standardRecipes } from '../../../data/standardRecipes';
 
@@ -9,7 +8,7 @@ const lang = getLangFromUrl(Astro.url);
 const base = `/${lang}`;
 
 export function getStaticPaths() {
-  return getLanguagePaths();
+  return [{ params: { lang: 'zh-TW' } }];
 }
 ---
 
