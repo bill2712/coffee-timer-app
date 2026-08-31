@@ -1,0 +1,98 @@
+---
+import { getLangFromUrl } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+---
+
+<aside class="mt-14 rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-5 sm:p-7" aria-labelledby="page-feedback-title">
+  <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-coffee-gold">{isZh ? '改善這一頁' : 'Improve this page'}</p>
+      <h2 id="page-feedback-title" class="mt-1 font-display text-xl font-bold text-coffee-light">{isZh ? '這頁有幫助嗎？' : 'Was this page helpful?'}</h2>
+      <p class="mt-1 text-xs leading-relaxed text-coffee-muted">{isZh ? '選擇會保存在這部裝置；如要讓我們收到具體問題，請使用錯誤回報。' : 'Your choice stays on this device. Use the issue report to send us details.'}</p>
+    </div>
+    <div class="flex flex-wrap gap-2" data-feedback-actions>
+      <button type="button" data-feedback-value="helpful" class="min-h-[44px] rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand transition hover:border-coffee-gold hover:text-coffee-gold" aria-pressed="false">
+        {isZh ? '有幫助' : 'Helpful'}
+      </button>
+      <button type="button" data-feedback-value="unresolved" class="min-h-[44px] rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand transition hover:border-coffee-gold hover:text-coffee-gold" aria-pressed="false">
+        {isZh ? '未能解決' : 'Not resolved'}
+      </button>
+    </div>
+  </div>
+  <div class="mt-4 flex flex-col gap-3 border-t border-coffee-sand/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
+    <p data-feedback-status class="text-xs text-coffee-muted" aria-live="polite">{isZh ? '尚未提供意見' : 'No feedback yet'}</p>
+    <a
+      data-feedback-report
+      href="https://github.com/bill2712/coffee-timer-app/issues/new"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-coffee-gold px-4 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover"
+    >
+      {isZh ? '回報內容錯誤或功能問題 ↗' : 'Report a content or feature issue ↗'}
+    </a>
+  </div>
+</aside>
+
+<script is:inline define:vars={{ isZh }}>
+  (() => {
+    const STORAGE_KEY = 'barista_flow_article_feedback';
+    const root = document.currentScript?.previousElementSibling;
+    if (!(root instanceof HTMLElement)) return;
+    const buttons = Array.from(root.querySelectorAll('[data-feedback-value]'));
+    const status = root.querySelector('[data-feedback-status]');
+    const report = root.querySelector('[data-feedback-report]');
+    const pageKey = window.location.pathname;
+
+    function readStore() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function setReportLink(value) {
+      if (!(report instanceof HTMLAnchorElement)) return;
+      const label = value === 'unresolved' ? (isZh ? '未能解決' : 'Not resolved') : value === 'helpful' ? (isZh ? '有幫助' : 'Helpful') : (isZh ? '未選擇' : 'Not selected');
+      const params = new URLSearchParams({
+        title: `[網站回報] ${document.title}`.slice(0, 180),
+        body: `${isZh ? '頁面' : 'Page'}: ${window.location.origin}${window.location.pathname}\n${isZh ? '頁面回饋' : 'Page feedback'}: ${label}\n\n${isZh ? '問題描述：' : 'Issue description:'}\n`
+      });
+      report.href = `https://github.com/bill2712/coffee-timer-app/issues/new?${params.toString()}`;
+    }
+
+    function render(value) {
+      buttons.forEach((button) => {
+        const active = button.getAttribute('data-feedback-value') === value;
+        button.setAttribute('aria-pressed', String(active));
+        button.classList.toggle('border-coffee-gold', active);
+        button.classList.toggle('bg-coffee-gold/10', active);
+        button.classList.toggle('text-coffee-gold', active);
+      });
+      if (status) {
+        status.textContent = value === 'helpful'
+          ? (isZh ? '已記錄：有幫助。你可隨時更改。' : 'Saved: helpful. You can change this anytime.')
+          : value === 'unresolved'
+            ? (isZh ? '已記錄：未能解決。請用右方按鈕把具體問題傳給我們。' : 'Saved: not resolved. Please send the specific issue using the button.')
+            : (isZh ? '尚未提供意見' : 'No feedback yet');
+      }
+      setReportLink(value);
+    }
+
+    const store = readStore();
+    render(store[pageKey]?.value || '');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const value = button.getAttribute('data-feedback-value');
+        if (!['helpful', 'unresolved'].includes(value || '')) return;
+        const nextStore = readStore();
+        nextStore[pageKey] = { value, updatedAt: new Date().toISOString() };
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(nextStore)); } catch (error) {}
+        render(value);
+      });
+    });
+  })();
+</script>

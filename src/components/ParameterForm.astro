@@ -11,9 +11,22 @@ export interface Props {
     waterRatio?: number;
   };
   ignoreLocalStorage?: boolean;
+  minWaterTemp?: number;
+  maxWaterTemp?: number;
+  minRatio?: number;
+  maxRatio?: number;
+  maxCoffeeWeight?: number;
 }
 
-const { defaultRecipe, ignoreLocalStorage = false } = Astro.props;
+const {
+  defaultRecipe,
+  ignoreLocalStorage = false,
+  minWaterTemp = 80,
+  maxWaterTemp = 100,
+  minRatio = 10,
+  maxRatio = 25,
+  maxCoffeeWeight = 100
+} = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -67,6 +80,7 @@ const formDict = {
   </aside>
 
   <form id="recipe-form" class="space-y-5" onsubmit="return false;" data-default-recipe={JSON.stringify(defaultRecipe || null)} data-ignore-local={ignoreLocalStorage ? "true" : "false"}>
+    <input type="hidden" id="standard-recipe-id" value="" />
     <!-- Coffee Beans & Roast -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
@@ -104,7 +118,7 @@ const formDict = {
         <input
           type="number"
           id="water-temp"
-          min="80" max="100" value="92"
+          min={minWaterTemp} max={maxWaterTemp} value={defaultRecipe?.waterTemp ?? 92}
           class="peer w-full bg-transparent font-display text-base text-coffee-light focus:outline-none placeholder-transparent"
           placeholder="92"
         />
@@ -128,7 +142,7 @@ const formDict = {
             <input
               type="number"
               id="coffee-weight"
-              min="5" max="100" step="0.5" value="20"
+              min="5" max={maxCoffeeWeight} step="0.5" value={defaultRecipe?.coffeeWeight ?? 20}
               class="peer w-full bg-transparent text-center font-display text-xl font-bold text-coffee-light focus:outline-none placeholder-transparent"
               placeholder="20"
             />
@@ -155,7 +169,7 @@ const formDict = {
             <input
               type="number"
               id="water-ratio"
-              min="10" max="25" step="0.5" value="15"
+              min={minRatio} max={maxRatio} step="0.1" value={defaultRecipe?.waterRatio ?? 15}
               class="peer w-full bg-transparent text-center font-display text-xl font-bold text-coffee-light focus:outline-none placeholder-transparent"
               placeholder="15"
             />
@@ -271,6 +285,7 @@ const formDict = {
   const roastLevelInput = document.getElementById('roast-level') as HTMLSelectElement;
   const grindSizeInput = document.getElementById('grind-size') as HTMLInputElement;
   const waterTempInput = document.getElementById('water-temp') as HTMLInputElement;
+  const standardRecipeInput = document.getElementById('standard-recipe-id') as HTMLInputElement;
   const coachAdjustment = document.getElementById('coach-adjustment');
   const coachAdjustmentTitle = document.getElementById('coach-adjustment-title');
   const coachAdjustmentBody = document.getElementById('coach-adjustment-body');
@@ -292,6 +307,15 @@ const formDict = {
   
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-msg');
+
+  function getBounds(input: HTMLInputElement | null, fallbackMin: number, fallbackMax: number) {
+    const parsedMin = Number(input?.min);
+    const parsedMax = Number(input?.max);
+    return {
+      min: Number.isFinite(parsedMin) ? parsedMin : fallbackMin,
+      max: Number.isFinite(parsedMax) ? parsedMax : fallbackMax
+    };
+  }
 
   // --- Core Functions ---
   function updateCalculations() {
@@ -318,7 +342,9 @@ const formDict = {
       const ratioError = document.getElementById('ratio-error');
 
       // Check if input is empty or invalid mid-typing
-      if (weightRaw === '' || isNaN(weight) || weight < 5 || weight > 100) {
+      const weightBounds = getBounds(weightInput, 5, 100);
+      const ratioBounds = getBounds(ratioInput, 10, 25);
+      if (weightRaw === '' || isNaN(weight) || weight < weightBounds.min || weight > weightBounds.max) {
         if (weightError && weightRaw !== '' && weightRaw !== '-') { // Only show error if they typed something invalid
           weightError.textContent = dict.errWeightReset;
           weightError.classList.remove('hidden');
@@ -331,12 +357,13 @@ const formDict = {
           }, 1500);
         }
         weight = 0; // Temporary state for calc so it doesn't output NaN
+        isValid = false;
       } else {
         weightError?.classList.add('hidden');
         weightInput.classList.remove('text-red-500');
       }
 
-      if (ratioRaw === '' || isNaN(ratio) || ratio < 10 || ratio > 25) {
+      if (ratioRaw === '' || isNaN(ratio) || ratio < ratioBounds.min || ratio > ratioBounds.max) {
         if (ratioError && ratioRaw !== '' && ratioRaw !== '-') {
           ratioError.textContent = dict.errRatioReset;
           ratioError.classList.remove('hidden');
@@ -349,6 +376,7 @@ const formDict = {
           }, 1500);
         }
         ratio = 0;
+        isValid = false;
       } else {
         ratioError?.classList.add('hidden');
         ratioInput.classList.remove('text-red-500');
@@ -377,10 +405,13 @@ const formDict = {
     
     if (isNaN(parsedWeight)) parsedWeight = 20;
     if (isNaN(parsedRatio)) parsedRatio = 15;
-    parsedWeight = Math.min(100, Math.max(5, parsedWeight));
-    parsedRatio = Math.min(25, Math.max(10, parsedRatio));
+    const weightBounds = getBounds(weightInput, 5, 100);
+    const ratioBounds = getBounds(ratioInput, 10, 25);
+    const tempBounds = getBounds(waterTempInput, 80, 100);
+    parsedWeight = Math.min(weightBounds.max, Math.max(weightBounds.min, parsedWeight));
+    parsedRatio = Math.min(ratioBounds.max, Math.max(ratioBounds.min, parsedRatio));
 
-    const parsedTemp = Math.min(100, Math.max(80, parseInt(waterTempInput?.value) || 92));
+    const parsedTemp = Math.min(tempBounds.max, Math.max(tempBounds.min, parseInt(waterTempInput?.value) || 92));
     const rawRoast = roastLevelInput?.value || '';
     const safeRoast = ['light', 'medium', 'dark'].includes(rawRoast) ? rawRoast : 'medium';
 
@@ -392,7 +423,8 @@ const formDict = {
       waterTemp: parsedTemp,
       coffeeWeight: parsedWeight,
       waterRatio: parsedRatio,
-      totalWater: Math.round(parsedWeight * parsedRatio)
+      totalWater: Math.round(parsedWeight * parsedRatio),
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(standardRecipeInput?.value || '') ? standardRecipeInput.value : ''
     };
   }
 
@@ -403,6 +435,7 @@ const formDict = {
     if (waterTempInput) waterTempInput.value = recipe.waterTemp || 92;
     if (weightInput) weightInput.value = recipe.coffeeWeight || 20;
     if (ratioInput) ratioInput.value = recipe.waterRatio || 15;
+    if (standardRecipeInput) standardRecipeInput.value = /^[a-z0-9-]{1,80}$/.test(recipe.standardRecipeId || '') ? recipe.standardRecipeId : '';
     updateCalculations();
   }
 
@@ -457,6 +490,7 @@ const formDict = {
     params.set('t', r.waterTemp.toString());
     params.set('w', r.coffeeWeight.toString());
     params.set('r', r.waterRatio.toString());
+    if (r.standardRecipeId) params.set('source', r.standardRecipeId);
     
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     
@@ -472,14 +506,19 @@ const formDict = {
     const params = new URLSearchParams(window.location.search);
     if (!params.has('w') && !params.has('bean')) return false;
 
+    const weightBounds = getBounds(weightInput, 5, 100);
+    const ratioBounds = getBounds(ratioInput, 10, 25);
+    const tempBounds = getBounds(waterTempInput, 80, 100);
+    const sourceId = params.get('source') || '';
     const queryRecipe = {
       beanName: (params.get('bean') || dict.sharedRecipe).trim().slice(0, 80),
       roastLevel: ['light', 'medium', 'dark'].includes(params.get('roast') || '') ? params.get('roast') : 'medium',
       grindSize: (params.get('grind') || '').slice(0, 40),
-      waterTemp: Math.min(100, Math.max(80, parseInt(params.get('t') || '') || 92)),
-      coffeeWeight: Math.min(100, Math.max(5, parseFloat((params.get('w') || '').replace(',', '.')) || 20)),
-      waterRatio: Math.min(25, Math.max(10, parseFloat((params.get('r') || '').replace(',', '.')) || 15)),
-      totalWater: 0
+      waterTemp: Math.min(tempBounds.max, Math.max(tempBounds.min, parseInt(params.get('t') || '') || 92)),
+      coffeeWeight: Math.min(weightBounds.max, Math.max(weightBounds.min, parseFloat((params.get('w') || '').replace(',', '.')) || 20)),
+      waterRatio: Math.min(ratioBounds.max, Math.max(ratioBounds.min, parseFloat((params.get('r') || '').replace(',', '.')) || 15)),
+      totalWater: 0,
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(sourceId) ? sourceId : ''
     };
     queryRecipe.totalWater = Math.round(queryRecipe.coffeeWeight * queryRecipe.waterRatio);
     
@@ -506,15 +545,19 @@ const formDict = {
     const temp = Number(raw.waterTemp);
     const roast = String(raw.roastLevel || '');
 
+    const weightBounds = getBounds(weightInput, 5, 100);
+    const ratioBounds = getBounds(ratioInput, 10, 25);
+    const tempBounds = getBounds(waterTempInput, 80, 100);
     return {
       id,
       beanName: String(raw.beanName || dict.customBean).trim().slice(0, 80),
       roastLevel: ['light', 'medium', 'dark'].includes(roast) ? roast : 'medium',
       grindSize: String(raw.grindSize || '').slice(0, 40),
-      waterTemp: Number.isFinite(temp) ? Math.min(100, Math.max(80, temp)) : 92,
-      coffeeWeight: Number.isFinite(weight) ? Math.min(100, Math.max(5, weight)) : 20,
-      waterRatio: Number.isFinite(ratio) ? Math.min(25, Math.max(10, ratio)) : 15,
-      totalWater: 0
+      waterTemp: Number.isFinite(temp) ? Math.min(tempBounds.max, Math.max(tempBounds.min, temp)) : 92,
+      coffeeWeight: Number.isFinite(weight) ? Math.min(weightBounds.max, Math.max(weightBounds.min, weight)) : 20,
+      waterRatio: Number.isFinite(ratio) ? Math.min(ratioBounds.max, Math.max(ratioBounds.min, ratio)) : 15,
+      totalWater: 0,
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(raw.standardRecipeId || '')) ? String(raw.standardRecipeId) : ''
     };
   }
 

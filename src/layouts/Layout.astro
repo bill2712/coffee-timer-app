@@ -4,6 +4,7 @@ import SEO from '../components/SEO.astro';
 import AdSlot from '../components/AdSlot.astro';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
+import PageFeedback from '../components/PageFeedback.astro';
 import { getLangFromUrl, useTranslations, rtlLanguages } from '../i18n/utils';
 import { languages } from '../i18n/ui';
 
@@ -87,8 +88,8 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/blog`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
               {t('nav.glossary')}
             </a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/about`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              {t('nav.about')}
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
+              {lang === 'zh-TW' ? '配方庫' : 'Recipes'}
             </a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/grind-converter`} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200 flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -132,7 +133,7 @@ const finalKeywords = keywords || t('seo.keywords');
       <nav class="flex flex-col items-center space-y-6 px-6">
         <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.home')}</a>
         <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/blog`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.glossary')}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/about`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{t('nav.about')}</a>
+        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="mobile-link text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-110 active:scale-95">{lang === 'zh-TW' ? '配方庫' : 'Recipes'}</a>
         <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/grind-converter`} class="mobile-link text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-110 active:scale-95">{t('nav.grindConverter')}</a>
         <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/water-temperature`} class="mobile-link text-3xl font-light tracking-wide text-orange-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-orange-300 hover:scale-110 active:scale-95">{t('nav.waterTemp')}</a>
         <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/bean-freshness`} class="mobile-link text-3xl font-light tracking-wide text-green-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-green-300 hover:scale-110 active:scale-95">{t('nav.beanFreshness')}</a>
@@ -155,6 +156,7 @@ const finalKeywords = keywords || t('seo.keywords');
       <AdSlot type="top-leaderboard" id="adsense-top-banner" class="my-6" />
 
       <slot />
+      <PageFeedback />
     </main>
 
     <!-- Footer -->
@@ -177,6 +179,8 @@ const finalKeywords = keywords || t('seo.keywords');
           <div class="flex flex-wrap justify-center gap-x-4 sm:gap-x-8 gap-y-3 text-xs text-coffee-muted">
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/about`} class="hover:text-coffee-gold transition-colors">{t('nav.about')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/methodology`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '計算方法與來源' : 'Methodology & sources'}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '標準配方庫' : 'Recipe library'}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/data`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '資料備份' : 'Data backup'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/faq`} class="hover:text-coffee-gold transition-colors">{t('nav.faq')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/contact`} class="hover:text-coffee-gold transition-colors">{t('nav.contact')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/terms-of-service`} class="hover:text-coffee-gold transition-colors">{t('nav.terms')}</a>

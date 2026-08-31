@@ -36,6 +36,9 @@ export function getStaticPaths() {
       </div>
       
       <div class="flex flex-wrap justify-center gap-3">
+        <a href={`/${lang}/data`} class="inline-flex min-h-[44px] items-center rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand transition-colors hover:border-coffee-gold hover:text-coffee-gold">
+          完整備份／搬機
+        </a>
         <button id="btn-clear-selection" class="hidden min-h-[44px] px-4 rounded-xl border border-coffee-sand/20 text-coffee-sand hover:text-coffee-light transition-colors text-sm font-semibold">
           {t('history.compare.clear')}
         </button>

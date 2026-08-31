@@ -3,6 +3,28 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
+export interface Props {
+  mode?: 'pour-over' | 'aeropress' | 'french-press';
+}
+
+const { mode = 'pour-over' } = Astro.props;
+const isZh = lang === 'zh-TW';
+const timerStages = mode === 'aeropress' ? [
+  { name: isZh ? '注水攪拌' : 'Pour & stir', duration: 15, weightMultiplier: 1, desc: isZh ? '注水至目標水量，攪拌約 3 秒。' : 'Pour to the target and stir for about 3 seconds.', speech: isZh ? '注水並攪拌' : 'Pour and stir' },
+  { name: isZh ? '浸泡' : 'Steep', duration: 30, weightMultiplier: 1, desc: isZh ? '插入活塞形成真空，保持浸泡。' : 'Insert the plunger to create a seal and let it steep.', speech: isZh ? '開始浸泡' : 'Begin steeping' },
+  { name: isZh ? '緩慢下壓' : 'Gentle press', duration: 30, weightMultiplier: 1, desc: isZh ? '以溫和、穩定的力度下壓；遇到過大阻力時先停止。' : 'Press gently and steadily; stop if resistance is excessive.', speech: isZh ? '溫和穩定地下壓' : 'Press gently and steadily' }
+] : mode === 'french-press' ? [
+  { name: isZh ? '注水' : 'Pour', duration: 30, weightMultiplier: 1, desc: isZh ? '均勻注水至目標水量，確保咖啡粉完全濕潤。' : 'Pour evenly to the target, wetting all the grounds.', speech: isZh ? '注水至目標水量' : 'Pour to the target' },
+  { name: isZh ? '浸泡' : 'Steep', duration: 210, weightMultiplier: 1, desc: isZh ? '蓋上壺蓋但暫不下壓，讓咖啡浸泡至 4:00。' : 'Fit the lid without pressing and steep until 4:00.', speech: isZh ? '保持浸泡' : 'Continue steeping' },
+  { name: isZh ? '下壓分杯' : 'Press & serve', duration: 20, weightMultiplier: 1, desc: isZh ? '緩慢下壓，完成後立即把咖啡全部倒出。' : 'Press slowly, then decant all coffee immediately.', speech: isZh ? '緩慢下壓並立即分杯' : 'Press slowly and serve' }
+] : [
+  { name: t('timer.stage.blooming'), duration: 40, weightMultiplier: 2.5, desc: t('timer.desc.blooming'), speech: t('timer.speech.blooming') },
+  { name: t('timer.stage.pour1'), duration: 50, weightMultiplier: 0.60, desc: t('timer.desc.pour1'), speech: t('timer.speech.pour1') },
+  { name: t('timer.stage.pour2'), duration: 60, weightMultiplier: 1.00, desc: t('timer.desc.pour2'), speech: t('timer.speech.pour2') }
+];
+const totalDuration = timerStages.reduce((sum, stage) => sum + stage.duration, 0);
+const initialTime = `${String(Math.floor(totalDuration / 60)).padStart(2, '0')}:${String(totalDuration % 60).padStart(2, '0')}`;
+
 const timerDict = {
   bloomName: t('timer.stage.blooming'),
   pour1Name: t('timer.stage.pour1'),
@@ -48,7 +70,9 @@ const timerDict = {
   lessWaterTitle: t('timer.diagnosis.lessWater.title'),
   lessWaterBody: t('timer.diagnosis.lessWater.body'),
   moreWaterTitle: t('timer.diagnosis.moreWater.title'),
-  moreWaterBody: t('timer.diagnosis.moreWater.body')
+  moreWaterBody: t('timer.diagnosis.moreWater.body'),
+  stages: timerStages,
+  timerMode: mode
 };
 ---
 
@@ -98,27 +122,15 @@ const timerDict = {
     <!-- Connecting Line -->
     <div class="absolute top-3.5 start-6 end-6 h-[2px] bg-coffee-sand/10 -z-10"></div>
     
-    <div id="step-0" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
-      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">1</span>
-      <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">{t('timer.stage.blooming')} (40s)</span>
-        <span id="step-target-0" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
+    {timerStages.map((stage, index) => (
+      <div id={`step-${index}`} class="flex w-20 flex-col items-center gap-1.5 opacity-40 transition-all duration-300">
+        <span class="flex h-7 w-7 items-center justify-center rounded-full border-2 border-coffee-sand/30 bg-coffee-dark text-xs font-bold text-coffee-light transition-colors">{index + 1}</span>
+        <div class="flex flex-col items-center text-center">
+          <span class="text-[10px] font-medium leading-tight text-coffee-sand">{stage.name} ({stage.duration}s)</span>
+          <span id={`step-target-${index}`} class="mt-0.5 text-[10px] font-bold text-coffee-gold">0g</span>
+        </div>
       </div>
-    </div>
-    <div id="step-1" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
-      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">2</span>
-      <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">{t('timer.stage.pour1')} (50s)</span>
-        <span id="step-target-1" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
-      </div>
-    </div>
-    <div id="step-2" class="flex flex-col items-center gap-1.5 opacity-40 transition-all duration-300 w-16">
-      <span class="w-7 h-7 rounded-full bg-coffee-dark border-2 border-coffee-sand/30 flex items-center justify-center text-xs font-bold text-coffee-light transition-colors duration-300">3</span>
-      <div class="flex flex-col items-center text-center">
-        <span class="text-[10px] font-medium text-coffee-sand whitespace-nowrap">{t('timer.stage.pour2')} (60s)</span>
-        <span id="step-target-2" class="text-[10px] text-coffee-gold font-bold mt-0.5">0g</span>
-      </div>
-    </div>
+    ))}
   </div>
 
   <!-- Circle Progress Timer -->
@@ -154,7 +166,7 @@ const timerDict = {
     <!-- Inside Content -->
     <div class="text-center flex flex-col items-center z-10 w-full px-2">
       <span id="timer-stage-title" class="text-xs uppercase font-semibold tracking-widest text-[#B47B4B] w-full break-words whitespace-normal leading-tight h-8 flex items-end justify-center">{t('timer.clickToStart')}</span>
-      <span id="timer-time" class="font-display tabular-nums whitespace-nowrap w-full max-w-[240px] text-center text-5xl sm:text-6xl font-light font-mono tracking-tight text-coffee-light my-2">02:30</span>
+      <span id="timer-time" class="font-display tabular-nums whitespace-nowrap w-full max-w-[240px] text-center text-5xl sm:text-6xl font-light font-mono tracking-tight text-coffee-light my-2">{initialTime}</span>
       
       <!-- Target Weight Tracker -->
       <div class="bg-coffee-darker/60 border border-coffee-sand/10 rounded-full px-4 py-1.5 mt-1 flex items-center gap-1.5">
@@ -327,14 +339,21 @@ const timerDict = {
 <script>
   const timerRoot = document.getElementById('timer-root');
   const dict = timerRoot ? JSON.parse(timerRoot.dataset.dict || '{}') : {};
+  interface TimerStage {
+    name: string;
+    duration: number;
+    weightMultiplier: number;
+    desc: string;
+    speech: string;
+  }
   // Timing parameters (in seconds)
-  const STAGES = [
+  const STAGES: TimerStage[] = Array.isArray(dict.stages) && dict.stages.length === 3 ? dict.stages : [
     { name: dict.bloomName, duration: 40, weightMultiplier: 2.5, desc: dict.descBloom, speech: dict.speechBloom },
     { name: dict.pour1Name, duration: 50, weightMultiplier: 0.60, desc: dict.descPour1, speech: dict.speechPour1 },
     { name: dict.pour2Name, duration: 60, weightMultiplier: 1.00, desc: dict.descPour2, speech: dict.speechPour2 }
   ];
 
-  const TOTAL_DURATION = STAGES.reduce((acc, stage) => acc + stage.duration, 0);
+  const TOTAL_DURATION = STAGES.reduce((acc: number, stage: TimerStage) => acc + stage.duration, 0);
 
   // Audio & Speech synthesis helper
   class CoffeeSynth {
@@ -426,7 +445,8 @@ const timerDict = {
     waterTemp: 92,
     grindSize: '',
     beanName: document.getElementById('bean-display')?.textContent || 'Classic Pour Over',
-    roastLevel: 'medium'
+    roastLevel: 'medium',
+    standardRecipeId: ''
   };
 
   // Timer run state
@@ -477,12 +497,11 @@ const timerDict = {
     }
   }
 
-  function getTargetWeights() {
-    return [
-      Math.round(recipe.coffeeWeight * STAGES[0].weightMultiplier),
-      Math.round(recipe.totalWater * STAGES[1].weightMultiplier),
-      recipe.totalWater
-    ];
+  function getTargetWeights(sourceRecipe: any = recipe) {
+    return STAGES.map((stage: any, index: number) => {
+      if (dict.timerMode === 'pour-over' && index === 0) return Math.round(sourceRecipe.coffeeWeight * stage.weightMultiplier);
+      return Math.round(sourceRecipe.totalWater * stage.weightMultiplier);
+    });
   }
 
   function formatTime(seconds: number): string {
@@ -673,7 +692,7 @@ const timerDict = {
     const stageElapsed = elapsed - stageStartAccumulator;
     const stageRemaining = currentStage.duration - stageElapsed;
     
-    const targets = getTargetWeights();
+    const targets = getTargetWeights(recipe);
 
     // Update Step Indicators (Stepper)
     for (let i = 0; i < STAGES.length; i++) {
@@ -925,7 +944,8 @@ const timerDict = {
       waterTemp: Number.isFinite(temp) ? Math.min(100, Math.max(80, temp)) : 92,
       grindSize: String(newRecipe?.grindSize || '').slice(0, 80),
       beanName: String(newRecipe?.beanName || recipe.beanName).trim().slice(0, 80),
-      roastLevel: ['light', 'medium', 'dark'].includes(roast) ? roast : 'medium'
+      roastLevel: ['light', 'medium', 'dark'].includes(roast) ? roast : 'medium',
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(newRecipe?.standardRecipeId || '')) ? String(newRecipe.standardRecipeId) : ''
     };
     
     if (beanDisplay) beanDisplay.textContent = recipe.beanName;
@@ -1088,17 +1108,13 @@ const timerDict = {
     if (!ctx) return;
 
     // Calculate Y values based on recipe
-    const bloomW = Math.round(recipe.coffeeWeight * STAGES[0].weightMultiplier);
-    const pour1W = Math.round(recipe.totalWater * STAGES[1].weightMultiplier);
-    const pour2W = recipe.totalWater;
-
-    // Time points (X axis)
-    const dataPoints = [
-      { x: 0, y: 0 },
-      { x: 40, y: bloomW },
-      { x: 90, y: pour1W },
-      { x: 150, y: pour2W }
-    ];
+    const targets = getTargetWeights(recipe);
+    let elapsed = 0;
+    const dataPoints = [{ x: 0, y: 0 }];
+    STAGES.forEach((stage: any, index: number) => {
+      elapsed += stage.duration;
+      dataPoints.push({ x: elapsed, y: targets[index] });
+    });
 
     if (extractionChart) {
       extractionChart.data.datasets[0].data = dataPoints;
@@ -1139,7 +1155,7 @@ const timerDict = {
             x: {
               type: 'linear',
               min: 0,
-              max: 150,
+              max: TOTAL_DURATION,
               ticks: {
                 stepSize: 50,
                 color: 'rgba(245, 242, 235, 0.4)', // text-coffee-muted

@@ -22,6 +22,8 @@ const copy = isZh ? {
   editorialBody: '文章必須提供可實作的步驟、限制或比較，而非只為搜尋關鍵字改寫。資料以產業標準、器材製造商說明及可查證的研究為優先。翻譯需要人工檢查術語、單位、連結和自然語句；未完成檢閱的語言版本保留為草稿，不發布到網站或 Sitemap。',
   limitsTitle: '6. 限制與安全',
   limitsBody: '工具不讀取咖啡秤，也不測量 TDS 或萃取率；畫面上的結果只是根據使用者輸入計算。處理熱水時應使用穩固器材並遵守製造商安全說明。AeroPress 倒置法有翻倒熱水的風險，本網站不把它列為唯一或必要方法。',
+  searchTitle: '7. 搜尋資料與改善次序',
+  searchBody: '網域已配置 Google 網站擁有權驗證，公開 Sitemap 只列出已發布頁面，預設語言也指向現有的繁體中文版本。實際搜尋字詞、曝光與點擊只會在網站擁有者的 Search Console 內查看，不會公開個別訪客資料。改善次序應以有曝光但未能解答問題的頁面、內容錯誤回報與本機「未能解決」回饋共同判斷，而不是大量製作相似關鍵字頁面。',
   sourcesTitle: '主要參考來源',
   sourceIntro: '以下連結是用來核對術語、器材特性與建議範圍的第一方資料；外部網站可能日後更新。',
   feedback: '發現公式、來源或翻譯問題？請附上頁面網址和可重現例子。',
@@ -43,6 +45,8 @@ const copy = isZh ? {
   editorialBody: 'An article must offer practical steps, limitations, or a meaningful comparison—not a keyword rewrite. Industry standards, manufacturer instructions, and verifiable research are preferred sources. A translation needs a human check for terminology, units, links, and natural language. Unreviewed locales remain drafts and are not published or added to the sitemap.',
   limitsTitle: '6. Limits and safety',
   limitsBody: 'The tool does not read a coffee scale or measure TDS or extraction yield; results are calculations based on user input. Use stable equipment and follow manufacturer safety instructions around hot water. Inverted AeroPress methods can increase spill risk and are not presented here as mandatory or uniquely correct.',
+  searchTitle: '7. Search data and improvement priorities',
+  searchBody: 'The domain has Google ownership verification and the public sitemap lists only published pages. The default locale points to the live Traditional Chinese version. Search queries, impressions, and clicks remain visible only to the property owner in Search Console. Priorities should combine pages with impressions but weak answers, specific issue reports, and on-device unresolved feedback—not mass-produced keyword variants.',
   sourcesTitle: 'Primary reference sources',
   sourceIntro: 'These first-party sources are used to check terminology, equipment characteristics, and reasonable starting ranges. External pages may be updated later.',
   feedback: 'Found a formula, source, or translation problem? Include the page URL and a reproducible example.',
@@ -55,7 +59,8 @@ const sections = [
   [copy.tempTitle, copy.tempBody],
   [copy.adjustTitle, copy.adjustBody],
   [copy.editorialTitle, copy.editorialBody],
-  [copy.limitsTitle, copy.limitsBody]
+  [copy.limitsTitle, copy.limitsBody],
+  [copy.searchTitle, copy.searchBody]
 ];
 
 const sources = [
