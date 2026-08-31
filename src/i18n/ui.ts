@@ -1153,7 +1153,7 @@ export const ui = {
     "contact.form.messagePlaceholder": "Please describe your issue or suggestion in detail...",
     "contact.form.submit": "Send Message",
     "nav.home": "Home",
-    "nav.glossary": "Glossary",
+    "nav.glossary": "Knowledge Base",
     "nav.about": "About Us",
     "nav.faq": "FAQ",
     "nav.grindConverter": "Grind Converter",
