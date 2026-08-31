@@ -36,7 +36,7 @@ export function getStaticPaths() {
       </div>
       
       <div class="flex flex-wrap justify-center gap-3">
-        {lang === 'zh-TW' && <a href={`/${lang}/data`} class="inline-flex min-h-[44px] items-center rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand transition-colors hover:border-coffee-gold hover:text-coffee-gold">完整備份／搬機</a>}
+        <a href={`/${lang}/data`} class="inline-flex min-h-[44px] items-center rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand transition-colors hover:border-coffee-gold hover:text-coffee-gold">{lang === 'zh-TW' ? '完整備份／搬機' : 'Backup / transfer'}</a>
         <button id="btn-clear-selection" class="hidden min-h-[44px] px-4 rounded-xl border border-coffee-sand/20 text-coffee-sand hover:text-coffee-light transition-colors text-sm font-semibold">
           {t('history.compare.clear')}
         </button>
@@ -112,6 +112,10 @@ export function getStaticPaths() {
   compareSame: t('history.compare.same'),
   compareHigher: t('history.compare.higher'),
   compareRebrew: t('history.compare.rebrew'),
+  grind: lang === 'zh-TW' ? '研磨度' : 'Grind',
+  brewTime: lang === 'zh-TW' ? '沖煮時間' : 'Brew time',
+  savePersonal: lang === 'zh-TW' ? '儲存為個人配方' : 'Save as personal recipe',
+  savedPersonal: lang === 'zh-TW' ? '已儲存到個人配方' : 'Saved to personal recipes',
   locale: lang,
   homeUrl: `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`
 } }}>
@@ -132,7 +136,9 @@ export function getStaticPaths() {
       waterRatio: number;
       waterTemp: number;
       grindSize: string;
+      standardRecipeId?: string;
     };
+    brewTimeSeconds: number;
     recipeVersion: number;
     parentLogId?: string;
     evaluation: {
@@ -142,6 +148,7 @@ export function getStaticPaths() {
       overall: number;
       issue: string;
       notes: string;
+      photoData?: string;
     };
     recommendation?: {
       title: string;
@@ -184,8 +191,10 @@ export function getStaticPaths() {
         totalWater,
         waterRatio: clamp(raw.recipe.waterRatio, 10, 25, inferredRatio),
         waterTemp: clamp(raw.recipe.waterTemp, 80, 100, 92),
-        grindSize: String(raw.recipe.grindSize || '').slice(0, 80)
+        grindSize: String(raw.recipe.grindSize || '').slice(0, 80),
+        standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(raw.recipe.standardRecipeId || '')) ? String(raw.recipe.standardRecipeId) : undefined
       },
+      brewTimeSeconds: Math.round(clamp(raw.brewTimeSeconds, 1, 86400, 150)),
       recipeVersion: Math.max(1, Math.min(999, Math.round(Number(raw.recipeVersion) || 1))),
       parentLogId: /^\d{1,20}$/.test(String(raw.parentLogId || '')) ? String(raw.parentLogId) : undefined,
       evaluation: {
@@ -194,7 +203,10 @@ export function getStaticPaths() {
         body: clamp(raw.evaluation.body, 1, 5, 3),
         overall: clamp(raw.evaluation.overall, 1, 5, 3),
         issue: String(raw.evaluation.issue || 'balanced').slice(0, 30),
-        notes: String(raw.evaluation.notes || '').slice(0, 500)
+        notes: String(raw.evaluation.notes || '').slice(0, 500),
+        photoData: typeof raw.evaluation.photoData === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(raw.evaluation.photoData) && raw.evaluation.photoData.length <= 230000
+          ? raw.evaluation.photoData
+          : undefined
       },
       recommendation
     };
@@ -282,7 +294,10 @@ export function getStaticPaths() {
             <div class="mb-1 flex items-center gap-2 text-[10px] text-coffee-muted"><span>${dateStr}</span><span class="rounded-full border border-coffee-sand/15 px-2 py-0.5">${window.historyDict.version} ${log.recipeVersion}</span></div>
             <h3 class="font-display font-bold text-lg text-coffee-light truncate">${escapeHTML(log.recipe.beanName) || window.historyDict.unknownBean}</h3>
             <p class="text-xs text-coffee-sand/80 mt-1">${log.recipe.coffeeWeight}g ${window.historyDict.powder} | 1:${ratio} | ${log.recipe.totalWater}g ${window.historyDict.water}</p>
+            <p class="mt-1 text-[11px] text-coffee-muted">${window.historyDict.grind}: ${escapeHTML(log.recipe.grindSize || '—')} · ${window.historyDict.brewTime}: ${formatDuration(log.brewTimeSeconds)}</p>
           </div>
+
+          ${log.evaluation.photoData ? `<img src="${log.evaluation.photoData}" alt="" class="mb-4 h-40 w-full rounded-2xl border border-coffee-sand/10 object-cover" loading="lazy" />` : ''}
 
           <div class="space-y-3 mb-4">
             <!-- Metric: Acidity -->
@@ -359,6 +374,29 @@ export function getStaticPaths() {
       return html;
     }
 
+    function formatDuration(seconds: number) {
+      const safe = Math.max(0, Math.round(seconds || 0));
+      return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, '0')}`;
+    }
+
+    function savePersonalRecipe(log: LogEntry, button?: HTMLButtonElement) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem('barista_flow_history') || '[]');
+        const favorites = Array.isArray(parsed) ? parsed : [];
+        const favorite = { ...log.recipe, id: Date.now().toString(), savedFromLogId: log.id };
+        const next = [favorite, ...favorites.filter((item) => item?.savedFromLogId !== log.id)].slice(0, 10);
+        localStorage.setItem('barista_flow_history', JSON.stringify(next));
+        localStorage.setItem('barista_flow_recipe', JSON.stringify(log.recipe));
+        if (button) {
+          button.textContent = window.historyDict.savedPersonal;
+          button.disabled = true;
+          button.classList.add('border-green-400/40', 'text-green-300');
+        }
+      } catch (error) {
+        console.warn('Could not save the personal recipe:', error);
+      }
+    }
+
     function updateComparisonControls() {
       if (compareCount) compareCount.textContent = `${selectedIds.size}/2`;
       if (btnCompare) btnCompare.disabled = selectedIds.size !== 2;
@@ -377,13 +415,17 @@ export function getStaticPaths() {
       if (a.recipe.waterTemp !== b.recipe.waterTemp) changes.push(`${window.historyDict.temperature}: ${a.recipe.waterTemp}°C → ${b.recipe.waterTemp}°C`);
       if (a.recipe.totalWater !== b.recipe.totalWater) changes.push(`${window.historyDict.water}: ${a.recipe.totalWater}g → ${b.recipe.totalWater}g`);
       if (a.recipe.grindSize !== b.recipe.grindSize && (a.recipe.grindSize || b.recipe.grindSize)) {
-        changes.push(`${escapeHTML(a.recipe.grindSize || '—')} → ${escapeHTML(b.recipe.grindSize || '—')}`);
+        changes.push(`${window.historyDict.grind}: ${escapeHTML(a.recipe.grindSize || '—')} → ${escapeHTML(b.recipe.grindSize || '—')}`);
       }
+      if (a.brewTimeSeconds !== b.brewTimeSeconds) changes.push(`${window.historyDict.brewTime}: ${formatDuration(a.brewTimeSeconds)} → ${formatDuration(b.brewTimeSeconds)}`);
 
       const metricRows = [
         [window.historyDict.powder, `${a.recipe.coffeeWeight}g`, `${b.recipe.coffeeWeight}g`],
+        [window.historyDict.water, `${a.recipe.totalWater}g`, `${b.recipe.totalWater}g`],
         [window.historyDict.ratio, `1:${ratioA}`, `1:${ratioB}`],
+        [window.historyDict.grind, escapeHTML(a.recipe.grindSize || '—'), escapeHTML(b.recipe.grindSize || '—')],
         [window.historyDict.temperature, `${a.recipe.waterTemp}°C`, `${b.recipe.waterTemp}°C`],
+        [window.historyDict.brewTime, formatDuration(a.brewTimeSeconds), formatDuration(b.brewTimeSeconds)],
         [window.historyDict.acidity, a.evaluation.acidity, b.evaluation.acidity],
         [window.historyDict.bitterness, a.evaluation.bitterness, b.evaluation.bitterness],
         [window.historyDict.body, a.evaluation.body, b.evaluation.body],
@@ -426,6 +468,7 @@ export function getStaticPaths() {
             <div class="rounded-xl border border-coffee-sand/10 p-4">
               <p class="text-[10px] font-bold uppercase tracking-wider text-coffee-muted">${index === 0 ? 'A' : 'B'} · ${window.historyDict.recommendation}</p>
               <p class="mt-1 text-sm font-semibold text-coffee-light">${escapeHTML(log.recommendation?.title || '—')}</p>
+              <button type="button" data-save-personal="${log.id}" class="mt-4 min-h-[44px] w-full rounded-lg border border-coffee-gold/35 px-3 text-xs font-bold text-coffee-gold hover:bg-coffee-gold/10">${window.historyDict.savePersonal} ${index === 0 ? 'A' : 'B'}</button>
             </div>
           `).join('')}
         </div>
@@ -444,6 +487,12 @@ export function getStaticPaths() {
           console.warn('Could not load the selected recipe:', error);
         }
         window.location.href = window.historyDict.homeUrl;
+      });
+      compareContent.querySelectorAll<HTMLButtonElement>('[data-save-personal]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const log = pair.find((item) => item.id === button.dataset.savePersonal);
+          if (log) savePersonalRecipe(log, button);
+        });
       });
       comparePanel?.classList.remove('hidden');
       comparePanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -485,15 +534,17 @@ export function getStaticPaths() {
         return `"${text.replace(/"/g, '""')}"`;
       };
 
-      const headers = ['Date', 'Bean Name', 'Recipe Version', 'Coffee Weight (g)', 'Water Ratio', 'Water Temp (C)', 'Total Water (g)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Overall (1-5)', 'Issue', 'Next Recommendation', 'Notes'];
+      const headers = ['Date', 'Bean Name', 'Recipe Version', 'Coffee Weight (g)', 'Water Ratio', 'Grind Setting', 'Water Temp (C)', 'Total Water (g)', 'Brew Time (seconds)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Overall (1-5)', 'Issue', 'Next Recommendation', 'Notes'];
       const rows = logData.map(log => [
         csvCell(log.date),
         csvCell(log.recipe.beanName),
         log.recipeVersion,
         log.recipe.coffeeWeight,
         log.recipe.waterRatio,
+        csvCell(log.recipe.grindSize),
         log.recipe.waterTemp,
         log.recipe.totalWater,
+        log.brewTimeSeconds,
         log.evaluation.acidity,
         log.evaluation.bitterness,
         log.evaluation.body,

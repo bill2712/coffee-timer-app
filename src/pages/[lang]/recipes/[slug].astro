@@ -1,15 +1,28 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
-import { standardRecipes, type StandardRecipe } from '../../../data/standardRecipes';
+import { languages } from '../../../i18n/ui';
+import { getStandardRecipes, type StandardRecipe } from '../../../data/standardRecipes';
 
 export function getStaticPaths() {
-  return standardRecipes.map((recipe) => ({ params: { lang: 'zh-TW', slug: recipe.slug }, props: { recipe } }));
+  return Object.keys(languages).flatMap((lang) => getStandardRecipes(lang).map((recipe) => ({ params: { lang, slug: recipe.slug }, props: { recipe } })));
 }
 
 interface Props { recipe: StandardRecipe }
 const { recipe } = Astro.props;
 const lang = Astro.params.lang || 'zh-TW';
+const isZh = lang === 'zh-TW';
+const c = isZh ? {
+  titleSuffix: '有來源的咖啡配方', description: '查看原始來源、器材、完整步驟、適用情境與限制，並套用到個人沖煮紀錄。', crumb: '標準配方庫', powder: '咖啡粉', ratio: '粉水比', temp: '水溫起點', time: '時間',
+  original: '原始來源', reviewed: '來源覆核', sourceLink: '查看原始資料 ↗', untested: '本站實測狀態：尚未由本站以實物器材獨立測試；內容按上述來源整理，不使用虛構測試或照片。你的實際沖煮評分與照片只會在這部裝置累積。',
+  equipment: '器材與適用情境', suited: '適合', limitations: '限制', steps: '沖煮步驟', notes: '整理註記', noTests: '你的實作：尚未有紀錄', makeOwn: '把標準起點變成你的版本', makeOwnBody: '套用後可再調整參數；完成沖煮並評分、加入照片或心得，這頁便會顯示你的實際測試。', apply: '套用到',
+  testEyebrow: 'Personal test records', testTitle: '你的實際測試、照片與調整心得', allLogs: '查看全部 A/B 紀錄 →', noNotes: '沒有文字心得', next: '下一杯', photoAlt: '個人沖煮實作照片'
+} : {
+  titleSuffix: 'source-backed coffee recipe', description: 'See the original source, equipment, complete steps, use case, and limitations, then apply it to your own brew log.', crumb: 'Standard recipes', powder: 'Coffee', ratio: 'Ratio', temp: 'Starting temp', time: 'Time',
+  original: 'Original source', reviewed: 'Source reviewed', sourceLink: 'View original source ↗', untested: 'Barista Flow test status: not independently tested with physical equipment. This page organises the cited source and does not invent tests or photos. Your brew scores and photos remain on this device.',
+  equipment: 'Equipment and use case', suited: 'Good for', limitations: 'Limitations', steps: 'Brew steps', notes: 'Editorial notes', noTests: 'Your tests: no records yet', makeOwn: 'Turn this baseline into your version', makeOwnBody: 'Apply the recipe, adjust it, then save a score, photo, and notes. This page will show your real test records.', apply: 'Apply to',
+  testEyebrow: 'Personal test records', testTitle: 'Your real tests, photos, and adjustment notes', allLogs: 'View all A/B records →', noNotes: 'No written notes', next: 'Next brew', photoAlt: 'Personal brew test photo'
+};
 const query = new URLSearchParams({
   bean: recipe.recipe.beanName,
   roast: recipe.recipe.roastLevel,
@@ -32,9 +45,9 @@ const jsonld = {
 };
 ---
 
-<Layout title={`${recipe.title}｜有來源的咖啡配方`} description={`${recipe.summary} 查看原始來源、器材、完整步驟、適用情境與限制，並套用到個人沖煮紀錄。`} jsonld={jsonld}>
+<Layout title={`${recipe.title} | ${c.titleSuffix}`} description={`${recipe.summary} ${c.description}`} jsonld={jsonld}>
   <article class="mx-auto max-w-4xl py-6 sm:py-10">
-    <div class="flex justify-center"><Breadcrumbs items={[{ label: '標準配方庫', url: 'recipes' }, { label: recipe.title }]} /></div>
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: c.crumb, url: 'recipes' }, { label: recipe.title }]} /></div>
     <header class="mx-auto mt-5 max-w-3xl text-center">
       <span class="rounded-full bg-coffee-gold/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-coffee-gold">{recipe.brewerLabel}</span>
       <h1 class="mt-5 font-display text-4xl font-bold tracking-tight text-coffee-light sm:text-5xl">{recipe.title}</h1>
@@ -43,10 +56,10 @@ const jsonld = {
 
     <section class="mt-9 grid gap-3 sm:grid-cols-4">
       {[
-        ['咖啡粉', `${recipe.recipe.coffeeWeight} g`],
-        ['粉水比', `1:${Math.round(recipe.recipe.waterRatio * 10) / 10}`],
-        ['水溫起點', `${recipe.recipe.waterTemp}°C`],
-        ['時間', recipe.duration]
+        [c.powder, `${recipe.recipe.coffeeWeight} g`],
+        [c.ratio, `1:${Math.round(recipe.recipe.waterRatio * 10) / 10}`],
+        [c.temp, `${recipe.recipe.waterTemp}°C`],
+        [c.time, recipe.duration]
       ].map(([label, value]) => (
         <div class="rounded-2xl border border-coffee-sand/10 bg-coffee-darker/70 p-4 text-center"><p class="text-[10px] uppercase tracking-wider text-coffee-muted">{label}</p><p class="mt-1 font-display text-xl font-bold text-coffee-light">{value}</p></div>
       ))}
@@ -55,52 +68,66 @@ const jsonld = {
     <section class="mt-8 rounded-3xl border border-coffee-gold/20 bg-coffee-gold/5 p-5 sm:p-7">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">原始來源</p>
+          <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.original}</p>
           <p class="mt-2 text-sm font-semibold text-coffee-light">{recipe.sourceName}</p>
-          <p class="mt-1 text-xs text-coffee-muted">來源覆核：{recipe.reviewedAt}</p>
+          <p class="mt-1 text-xs text-coffee-muted">{c.reviewed}: {recipe.reviewedAt}</p>
         </div>
-        <a href={recipe.sourceUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-coffee-gold/40 px-4 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10">查看原始資料 ↗</a>
+        <a href={recipe.sourceUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-coffee-gold/40 px-4 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10">{c.sourceLink}</a>
       </div>
-      <p class="mt-5 border-t border-coffee-gold/15 pt-4 text-xs leading-6 text-coffee-sand">本站實測狀態：尚未由本站以實物器材獨立測試；內容按上述來源整理，不使用虛構測試或照片。你的實際沖煮評分會只在這部裝置累積。</p>
+      <p class="mt-5 border-t border-coffee-gold/15 pt-4 text-xs leading-6 text-coffee-sand">{c.untested}</p>
     </section>
 
     <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_1.6fr]">
       <section class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6">
-        <h2 class="font-display text-2xl font-bold text-coffee-gold">器材與適用情境</h2>
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{c.equipment}</h2>
         <ul class="mt-4 space-y-2 text-sm leading-6 text-coffee-sand/85">
           {recipe.equipment.map((item) => <li class="flex gap-2"><span aria-hidden="true" class="text-coffee-gold">✓</span><span>{item}</span></li>)}
         </ul>
-        <h3 class="mt-6 text-sm font-bold text-coffee-light">適合</h3>
+        <h3 class="mt-6 text-sm font-bold text-coffee-light">{c.suited}</h3>
         <p class="mt-2 text-sm leading-7 text-coffee-sand/80">{recipe.applicability}</p>
-        <h3 class="mt-5 text-sm font-bold text-coffee-light">限制</h3>
+        <h3 class="mt-5 text-sm font-bold text-coffee-light">{c.limitations}</h3>
         <p class="mt-2 text-sm leading-7 text-coffee-sand/80">{recipe.limitations}</p>
       </section>
 
       <section class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6 sm:p-8">
-        <h2 class="font-display text-2xl font-bold text-coffee-gold">沖煮步驟</h2>
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{c.steps}</h2>
         <ol class="mt-5 space-y-5">
           {recipe.steps.map((step, index) => (
             <li class="flex gap-4"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-coffee-gold font-bold text-coffee-dark">{index + 1}</span><p class="pt-1 text-sm leading-7 text-coffee-sand/90">{step}</p></li>
           ))}
         </ol>
         <div class="mt-7 rounded-2xl bg-coffee-dark/60 p-4">
-          <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">整理註記</p>
+          <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.notes}</p>
           <ul class="mt-2 list-disc space-y-2 ps-5 text-xs leading-6 text-coffee-muted">{recipe.notes.map((note) => <li>{note}</li>)}</ul>
         </div>
       </section>
     </div>
 
     <section class="mt-8 rounded-3xl border border-coffee-gold/25 bg-coffee-darker/80 p-6 text-center sm:p-8">
-      <p data-recipe-personal-stat data-recipe-id={recipe.id} class="text-sm font-semibold text-coffee-gold">你的實作：尚未有紀錄</p>
-      <h2 class="mt-2 font-display text-2xl font-bold text-coffee-light">把標準起點變成你的版本</h2>
-      <p class="mx-auto mt-2 max-w-xl text-sm leading-7 text-coffee-muted">套用後可再調整參數；完成沖煮並評分，這頁便會顯示你的實作次數與平均分。</p>
-      <a href={applyUrl} class="mt-5 inline-flex min-h-[50px] items-center justify-center rounded-xl bg-coffee-gold px-7 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover">套用到 {recipe.brewerLabel} 工具</a>
+      <p data-recipe-personal-stat data-recipe-id={recipe.id} class="text-sm font-semibold text-coffee-gold">{c.noTests}</p>
+      <h2 class="mt-2 font-display text-2xl font-bold text-coffee-light">{c.makeOwn}</h2>
+      <p class="mx-auto mt-2 max-w-xl text-sm leading-7 text-coffee-muted">{c.makeOwnBody}</p>
+      <a href={applyUrl} class="mt-5 inline-flex min-h-[50px] items-center justify-center rounded-xl bg-coffee-gold px-7 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover">{c.apply} {recipe.brewerLabel}</a>
+    </section>
+
+    <section id="personal-test-records" class="mt-8 hidden rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6 sm:p-8" aria-labelledby="personal-test-title">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.testEyebrow}</p>
+          <h2 id="personal-test-title" class="mt-1 font-display text-2xl font-bold text-coffee-light">{c.testTitle}</h2>
+        </div>
+        <a href={`/${lang}/history`} class="text-sm font-bold text-coffee-gold hover:text-coffee-light">{c.allLogs}</a>
+      </div>
+      <div id="personal-test-list" class="mt-6 grid gap-4 sm:grid-cols-2"></div>
     </section>
   </article>
 </Layout>
 
 <script>
+  import { escapeHTML } from '../../../utils/sanitize';
+
   try {
+    const isZhPage = document.documentElement.lang === 'zh-TW';
     const element = document.querySelector('[data-recipe-personal-stat]');
     const id = element?.getAttribute('data-recipe-id');
     const parsed = JSON.parse(localStorage.getItem('barista_flow_logs') || '[]');
@@ -108,7 +135,23 @@ const jsonld = {
     if (element && logs.length) {
       const scores = logs.map((log) => Number(log?.evaluation?.overall)).filter(Number.isFinite);
       const average = scores.length ? (scores.reduce((sum, score) => sum + score, 0) / scores.length).toFixed(1) : '—';
-      element.textContent = `你的實作：${logs.length} 次・平均 ${average}/5`;
+      element.textContent = isZhPage ? `你的實作：${logs.length} 次・平均 ${average}/5` : `Your tests: ${logs.length} · average ${average}/5`;
+    }
+    const section = document.getElementById('personal-test-records');
+    const list = document.getElementById('personal-test-list');
+    if (section && list && logs.length) {
+      list.innerHTML = logs.slice(0, 6).map((log) => {
+        const date = new Date(log?.date);
+        const safeDate = Number.isNaN(date.valueOf()) ? '—' : date.toLocaleDateString(isZhPage ? 'zh-HK' : 'en', { year: 'numeric', month: 'short', day: 'numeric' });
+        const photo = typeof log?.evaluation?.photoData === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(log.evaluation.photoData) && log.evaluation.photoData.length <= 230000
+          ? `<img src="${log.evaluation.photoData}" alt="${isZhPage ? '個人沖煮實作照片' : 'Personal brew test photo'}" class="h-44 w-full rounded-xl object-cover" loading="lazy" />`
+          : '';
+        const notes = escapeHTML(String(log?.evaluation?.notes || '').slice(0, 500));
+        const recommendation = escapeHTML(String(log?.recommendation?.title || '').slice(0, 120));
+        const score = Math.min(5, Math.max(1, Number(log?.evaluation?.overall) || 3));
+        return `<article class="rounded-2xl border border-coffee-sand/10 bg-coffee-dark/55 p-4">${photo}<div class="${photo ? 'mt-4' : ''} flex items-center justify-between gap-3 text-xs text-coffee-muted"><span>${safeDate}</span><span class="font-bold text-coffee-gold">${score}/5</span></div>${notes ? `<p class="mt-3 text-sm leading-6 text-coffee-sand">${notes}</p>` : `<p class="mt-3 text-sm text-coffee-muted">${isZhPage ? '沒有文字心得' : 'No written notes'}</p>`}${recommendation ? `<p class="mt-3 border-t border-coffee-sand/10 pt-3 text-xs font-semibold text-coffee-gold">${isZhPage ? '下一杯' : 'Next brew'}: ${recommendation}</p>` : ''}</article>`;
+      }).join('');
+      section.classList.remove('hidden');
     }
   } catch (error) {}
 </script>

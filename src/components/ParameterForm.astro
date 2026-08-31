@@ -112,8 +112,24 @@ const formDict = {
       </div>
     </div>
 
-    <!-- Temperature Grid -->
-    <div class="grid grid-cols-1 gap-4">
+    <!-- Grind & Temperature -->
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
+        <input
+          type="text"
+          id="grind-size"
+          value={defaultRecipe?.grindSize ?? ''}
+          maxlength="80"
+          class="peer w-full bg-transparent font-display text-base text-coffee-light focus:outline-none placeholder-transparent"
+          placeholder={lang === 'zh-TW' ? '例如：20 格／中細研磨' : 'For example: 20 clicks / medium-fine'}
+          aria-describedby="grind-size-hint"
+        />
+        <label for="grind-size" class="absolute start-3 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand whitespace-nowrap">
+          {lang === 'zh-TW' ? '研磨度／刻度' : 'Grind setting'}
+        </label>
+        <p id="grind-size-hint" class="sr-only">{lang === 'zh-TW' ? '記錄磨豆機刻度或粗幼描述，方便下一杯只改一個變數。' : 'Record grinder clicks or a coarse/fine description so the next brew can change one variable.'}</p>
+      </div>
+
       <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="number"

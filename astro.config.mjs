@@ -8,9 +8,9 @@ export default defineConfig({
   base: '/',
   i18n: {
     defaultLocale: "zh-TW",
-    // Only publish locales that have completed a human editorial review.
-    // The remaining translations stay in the repository as drafts.
-    locales: ["zh-TW"],
+    // Publish only the two editorially reviewed locales.
+    // The remaining translation files stay in the repository as drafts.
+    locales: ["zh-TW", "en"],
     routing: {
       prefixDefaultLocale: true
     }
@@ -21,7 +21,8 @@ export default defineConfig({
       i18n: {
         defaultLocale: 'zh-TW',
         locales: {
-          'zh-TW': 'zh-TW'
+          'zh-TW': 'zh-TW',
+          en: 'en'
         }
       }
     })

@@ -1,55 +1,70 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../i18n/routes';
+import { getLangFromUrl } from '../../i18n/utils';
 
 export function getStaticPaths() {
-  return [{ params: { lang: 'zh-TW' } }];
+  return getLanguagePaths();
 }
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const c = isZh ? {
+  title: 'Coffee Timer 資料備份與搬機', desc: '毋須註冊帳戶，一鍵匯出及匯入咖啡配方、收藏、沖煮紀錄、計時狀態與頁面回饋。資料只在你的瀏覽器與下載檔案內。', crumb: '資料備份與搬機',
+  h1: '你的紀錄，隨時可以帶走', intro: '毋須帳戶。備份檔包含本裝置的配方、收藏、沖煮評分、照片及設定；檔案只會下載到你的裝置，不會上傳到 Coffee Timer 伺服器。',
+  exportTitle: '1. 匯出完整備份', exportBody: '產生可在另一部裝置匯入的 JSON 備份檔。Cookie 同意不會搬移，讓每部裝置自行保留私隱選擇。', logs: '沖煮紀錄', favorites: '收藏配方', download: '下載備份檔',
+  importTitle: '2. 在新裝置匯入', importBody: '先選擇由本網站匯出的檔案。系統會先檢查格式並顯示內容摘要，不會一選檔便覆蓋資料。', choose: '選擇 .json 備份檔', confirm: '我明白匯入會取代這部裝置現有的 Coffee Timer 資料，並已先下載備份。', importButton: '確認匯入並重新載入',
+  safety: '安全設計', checks: ['只接受 JSON，檔案上限 2 MB', '只匯入 Coffee Timer 已知欄位', '選檔後先預覽，確認後才取代', '不包含密碼、帳戶或廣告識別資料']
+} : {
+  title: 'Coffee Timer backup and device transfer', desc: 'Export and import recipes, favourites, brew logs, timer state, photos, and page feedback without an account. Data stays in your browser and downloaded backup.', crumb: 'Backup & device transfer',
+  h1: 'Your brew records can move with you', intro: 'No account is required. The backup includes recipes, favourites, brew scores, photos, and settings from this device. It downloads locally and is not uploaded to a Coffee Timer server.',
+  exportTitle: '1. Export a complete backup', exportBody: 'Create a JSON backup that can be imported on another device. Cookie consent is excluded so each device keeps its own privacy choice.', logs: 'Brew logs', favorites: 'Saved recipes', download: 'Download backup',
+  importTitle: '2. Import on a new device', importBody: 'Choose a backup exported by this site. The file is validated and previewed before any current data is replaced.', choose: 'Choose a .json backup', confirm: 'I understand that importing replaces Coffee Timer data on this device, and I have downloaded a current backup first.', importButton: 'Confirm import and reload',
+  safety: 'Safety design', checks: ['Accepts JSON only, up to 2 MB', 'Imports only recognised Coffee Timer fields', 'Previews before replacement', 'Contains no password, account, or advertising identifiers']
+};
 ---
 
-<Layout title="Coffee Timer 資料備份與搬機" description="毋須註冊帳戶，一鍵匯出及匯入咖啡配方、收藏、沖煮紀錄、計時狀態與頁面回饋。資料只在你的瀏覽器與下載檔案內。">
+<Layout title={c.title} description={c.desc}>
   <div class="mx-auto max-w-4xl py-6 sm:py-10">
-    <div class="flex justify-center"><Breadcrumbs items={[{ label: '資料備份與搬機' }]} /></div>
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: c.crumb }]} /></div>
     <header class="mx-auto mt-4 max-w-2xl text-center">
       <p class="text-xs font-bold uppercase tracking-[0.22em] text-coffee-gold">Local-first backup</p>
-      <h1 class="mt-3 font-display text-4xl font-bold text-coffee-light sm:text-5xl">你的紀錄，隨時可以帶走</h1>
-      <p class="mt-5 text-sm leading-7 text-coffee-sand/80 sm:text-base">毋須帳戶。備份檔包含本裝置的配方、收藏、沖煮評分及設定；檔案只會下載到你的裝置，不會上傳到 Coffee Timer 伺服器。</p>
+      <h1 class="mt-3 font-display text-4xl font-bold text-coffee-light sm:text-5xl">{c.h1}</h1>
+      <p class="mt-5 text-sm leading-7 text-coffee-sand/80 sm:text-base">{c.intro}</p>
     </header>
 
     <section class="mt-9 grid gap-6 md:grid-cols-2">
       <article class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/75 p-6 sm:p-8">
         <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-coffee-gold/10 text-xl text-coffee-gold" aria-hidden="true">↓</span>
-        <h2 class="mt-4 font-display text-2xl font-bold text-coffee-light">1. 匯出完整備份</h2>
-        <p class="mt-3 text-sm leading-7 text-coffee-muted">產生可在另一部裝置匯入的 JSON 備份檔。Cookie 同意不會搬移，讓每部裝置自行保留私隱選擇。</p>
+        <h2 class="mt-4 font-display text-2xl font-bold text-coffee-light">{c.exportTitle}</h2>
+        <p class="mt-3 text-sm leading-7 text-coffee-muted">{c.exportBody}</p>
         <dl id="backup-summary" class="mt-5 grid grid-cols-2 gap-3 text-center">
-          <div class="rounded-xl bg-coffee-dark/60 p-3"><dt class="text-[10px] text-coffee-muted">沖煮紀錄</dt><dd data-count="logs" class="mt-1 text-xl font-bold text-coffee-gold">0</dd></div>
-          <div class="rounded-xl bg-coffee-dark/60 p-3"><dt class="text-[10px] text-coffee-muted">收藏配方</dt><dd data-count="favorites" class="mt-1 text-xl font-bold text-coffee-gold">0</dd></div>
+          <div class="rounded-xl bg-coffee-dark/60 p-3"><dt class="text-[10px] text-coffee-muted">{c.logs}</dt><dd data-count="logs" class="mt-1 text-xl font-bold text-coffee-gold">0</dd></div>
+          <div class="rounded-xl bg-coffee-dark/60 p-3"><dt class="text-[10px] text-coffee-muted">{c.favorites}</dt><dd data-count="favorites" class="mt-1 text-xl font-bold text-coffee-gold">0</dd></div>
         </dl>
-        <button id="btn-export-backup" type="button" class="mt-6 min-h-[50px] w-full rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover">下載備份檔</button>
+        <button id="btn-export-backup" type="button" class="mt-6 min-h-[50px] w-full rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover">{c.download}</button>
       </article>
 
       <article class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/75 p-6 sm:p-8">
         <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-coffee-gold/10 text-xl text-coffee-gold" aria-hidden="true">↑</span>
-        <h2 class="mt-4 font-display text-2xl font-bold text-coffee-light">2. 在新裝置匯入</h2>
-        <p class="mt-3 text-sm leading-7 text-coffee-muted">先選擇由本網站匯出的檔案。系統會先檢查格式並顯示內容摘要，不會一選檔便覆蓋資料。</p>
-        <label for="backup-file" class="mt-5 flex min-h-[50px] cursor-pointer items-center justify-center rounded-xl border border-dashed border-coffee-gold/50 px-4 text-center text-sm font-semibold text-coffee-gold hover:bg-coffee-gold/10">選擇 .json 備份檔</label>
+        <h2 class="mt-4 font-display text-2xl font-bold text-coffee-light">{c.importTitle}</h2>
+        <p class="mt-3 text-sm leading-7 text-coffee-muted">{c.importBody}</p>
+        <label for="backup-file" class="mt-5 flex min-h-[50px] cursor-pointer items-center justify-center rounded-xl border border-dashed border-coffee-gold/50 px-4 text-center text-sm font-semibold text-coffee-gold hover:bg-coffee-gold/10">{c.choose}</label>
         <input id="backup-file" type="file" accept="application/json,.json" class="sr-only" />
         <div id="import-preview" class="mt-4 hidden rounded-xl border border-coffee-sand/10 bg-coffee-dark/55 p-4 text-sm leading-7 text-coffee-sand" aria-live="polite"></div>
         <label class="mt-4 hidden items-start gap-3 text-xs leading-6 text-coffee-sand" id="replace-confirm-wrap">
           <input id="replace-confirm" type="checkbox" class="mt-1 h-4 w-4 accent-coffee-gold" />
-          <span>我明白匯入會取代這部裝置現有的 Coffee Timer 資料，並已先下載備份。</span>
+          <span>{c.confirm}</span>
         </label>
-        <button id="btn-import-backup" type="button" disabled class="mt-4 min-h-[50px] w-full rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover disabled:cursor-not-allowed disabled:opacity-40">確認匯入並重新載入</button>
+        <button id="btn-import-backup" type="button" disabled class="mt-4 min-h-[50px] w-full rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover disabled:cursor-not-allowed disabled:opacity-40">{c.importButton}</button>
       </article>
     </section>
 
     <section class="mt-7 rounded-3xl border border-coffee-sand/10 bg-coffee-dark/45 p-6">
-      <h2 class="font-display text-xl font-bold text-coffee-light">安全設計</h2>
+      <h2 class="font-display text-xl font-bold text-coffee-light">{c.safety}</h2>
       <ul class="mt-4 grid gap-3 text-sm leading-7 text-coffee-muted sm:grid-cols-2">
-        <li>✓ 只接受 JSON，檔案上限 2 MB</li>
-        <li>✓ 只匯入 Coffee Timer 已知欄位</li>
-        <li>✓ 選檔後先預覽，確認後才取代</li>
-        <li>✓ 不包含密碼、帳戶或廣告識別資料</li>
+        {c.checks.map((item) => <li>✓ {item}</li>)}
       </ul>
       <p id="backup-status" class="mt-5 text-sm font-semibold text-coffee-gold" aria-live="polite"></p>
     </section>
@@ -57,6 +72,22 @@ export function getStaticPaths() {
 </Layout>
 
 <script>
+  const isZhPage = document.documentElement.lang === 'zh-TW';
+  const message = {
+    downloaded: isZhPage ? '備份已下載。請把檔案存放在你信任的位置。' : 'Backup downloaded. Store it somewhere you trust.',
+    invalidObject: isZhPage ? '檔案內容不是有效的備份物件。' : 'The file does not contain a valid backup object.',
+    wrongVersion: isZhPage ? '這不是 Coffee Timer v1 備份檔。' : 'This is not a Coffee Timer v1 backup.',
+    incomplete: isZhPage ? '備份資料結構不完整。' : 'The backup data structure is incomplete.',
+    empty: isZhPage ? '備份內沒有可匯入的 Coffee Timer 資料。' : 'The backup contains no recognised Coffee Timer data.',
+    badLogs: isZhPage ? '沖煮紀錄格式或數量不正確。' : 'The brew-log format or count is invalid.',
+    badFavorites: isZhPage ? '收藏配方格式或數量不正確。' : 'The saved-recipe format or count is invalid.',
+    tooLarge: isZhPage ? '檔案超過 2 MB 上限。' : 'The file exceeds the 2 MB limit.',
+    invalid: isZhPage ? '檔案無效' : 'Invalid file',
+    untouched: isZhPage ? '資料沒有被更改。' : 'No data was changed.',
+    valid: isZhPage ? '檔案格式正確。勾選確認後才會匯入。' : 'The file is valid. Tick the confirmation box to import.',
+    imported: isZhPage ? '匯入完成，正在重新載入…' : 'Import complete. Reloading…',
+    rollback: isZhPage ? '儲存空間不足或瀏覽器拒絕寫入；已嘗試還原匯入前的資料，請重新載入確認。' : 'Storage was unavailable. The previous data was restored where possible; reload and verify it.'
+  };
   interface BackupFile {
     format: string;
     version: number;
@@ -126,23 +157,23 @@ export function getStaticPaths() {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-    if (status) status.textContent = '備份已下載。請把檔案存放在你信任的位置。';
+    if (status) status.textContent = message.downloaded;
   });
 
   function validateBackup(value: unknown): BackupFile {
-    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('檔案內容不是有效的備份物件。');
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(message.invalidObject);
     const candidate = value as Partial<BackupFile>;
-    if (candidate.format !== 'barista-flow-backup' || candidate.version !== 1) throw new Error('這不是 Coffee Timer v1 備份檔。');
-    if (!candidate.data || typeof candidate.data !== 'object' || Array.isArray(candidate.data)) throw new Error('備份資料結構不完整。');
+    if (candidate.format !== 'barista-flow-backup' || candidate.version !== 1) throw new Error(message.wrongVersion);
+    if (!candidate.data || typeof candidate.data !== 'object' || Array.isArray(candidate.data)) throw new Error(message.incomplete);
     const safeData: Record<string, unknown> = {};
     STORAGE_KEYS.forEach((key) => {
       if (Object.prototype.hasOwnProperty.call(candidate.data, key)) safeData[key] = candidate.data![key];
     });
-    if (!Object.keys(safeData).length) throw new Error('備份內沒有可匯入的 Coffee Timer 資料。');
+    if (!Object.keys(safeData).length) throw new Error(message.empty);
     const logs = safeData.barista_flow_logs;
     const favorites = safeData.barista_flow_history;
-    if (logs !== undefined && (!Array.isArray(logs) || logs.length > 200)) throw new Error('沖煮紀錄格式或數量不正確。');
-    if (favorites !== undefined && (!Array.isArray(favorites) || favorites.length > 10)) throw new Error('收藏配方格式或數量不正確。');
+    if (logs !== undefined && (!Array.isArray(logs) || logs.length > 200)) throw new Error(message.badLogs);
+    if (favorites !== undefined && (!Array.isArray(favorites) || favorites.length > 10)) throw new Error(message.badFavorites);
     return {
       format: candidate.format,
       version: candidate.version,
@@ -160,25 +191,27 @@ export function getStaticPaths() {
       const file = fileInput.files?.[0];
       if (!file) return;
       try {
-        if (file.size > MAX_FILE_SIZE) throw new Error('檔案超過 2 MB 上限。');
+        if (file.size > MAX_FILE_SIZE) throw new Error(message.tooLarge);
         const parsed = JSON.parse(await file.text());
         validatedBackup = validateBackup(parsed);
         const logs = validatedBackup.data.barista_flow_logs;
         const favorites = validatedBackup.data.barista_flow_history;
         if (importPreview) {
-          importPreview.textContent = `已驗證：${Array.isArray(logs) ? logs.length : 0} 項沖煮紀錄、${Array.isArray(favorites) ? favorites.length : 0} 項收藏。備份日期：${new Date(validatedBackup.exportedAt).toLocaleString('zh-HK')}`;
+          importPreview.textContent = isZhPage
+            ? `已驗證：${Array.isArray(logs) ? logs.length : 0} 項沖煮紀錄、${Array.isArray(favorites) ? favorites.length : 0} 項收藏。備份日期：${new Date(validatedBackup.exportedAt).toLocaleString('zh-HK')}`
+            : `Validated: ${Array.isArray(logs) ? logs.length : 0} brew logs and ${Array.isArray(favorites) ? favorites.length : 0} saved recipes. Backup date: ${new Date(validatedBackup.exportedAt).toLocaleString('en')}`;
           importPreview.classList.remove('hidden');
         }
         confirmWrap?.classList.remove('hidden');
         confirmWrap?.classList.add('flex');
-        if (status) status.textContent = '檔案格式正確。勾選確認後才會匯入。';
+        if (status) status.textContent = message.valid;
       } catch (error) {
         if (importPreview) {
-          importPreview.textContent = `無法匯入：${error instanceof Error ? error.message : '檔案無效'}`;
+          importPreview.textContent = `${isZhPage ? '無法匯入' : 'Cannot import'}: ${error instanceof Error ? error.message : message.invalid}`;
           importPreview.classList.remove('hidden');
         }
         confirmWrap?.classList.add('hidden');
-        if (status) status.textContent = '資料沒有被更改。';
+        if (status) status.textContent = message.untouched;
       }
     });
   }
@@ -199,14 +232,14 @@ export function getStaticPaths() {
     try {
       STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
       Object.entries(validatedBackup.data).forEach(([key, value]) => localStorage.setItem(key, JSON.stringify(value)));
-      if (status) status.textContent = '匯入完成，正在重新載入…';
+      if (status) status.textContent = message.imported;
       window.setTimeout(() => window.location.reload(), 600);
     } catch (error) {
       try {
         STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
         Object.entries(previousData).forEach(([key, raw]) => localStorage.setItem(key, raw));
       } catch (rollbackError) {}
-      if (status) status.textContent = '儲存空間不足或瀏覽器拒絕寫入；已嘗試還原匯入前的資料，請重新載入確認。';
+      if (status) status.textContent = message.rollback;
     }
   });
 

@@ -177,3 +177,75 @@ export const standardRecipes: StandardRecipe[] = [
 export function getRecipeBySlug(slug: string) {
   return standardRecipes.find((recipe) => recipe.slug === slug);
 }
+
+const englishCopy: Record<string, Partial<StandardRecipe>> = {
+  'hario-hoffmann-one-cup': {
+    title: 'James Hoffmann One-Cup V60', brewerLabel: 'V60 pour-over',
+    summary: 'A repeatable one-cup baseline using 15 g coffee, 250 g water, and five equal pours.', duration: 'About 3:00',
+    applicability: 'For V60 01/02, light-to-medium roasts, and brewers comparing grind settings with a fixed pouring rhythm.',
+    limitations: 'The source calls for freshly boiled soft filtered water. Barista Flow uses 96°C as an adjustable starting point, not as a value attributed to the original author.',
+    equipment: ['V60 dripper and filter', 'Scale and timer', 'Gooseneck kettle', 'Soft filtered water'],
+    steps: ['Prepare 15 g medium-fine coffee and 250 g water.', 'Pour to 50 g, gently swirl, and bloom until 0:45.', 'At roughly 10-second intervals, pour to 100, 150, 200, then 250 g.', 'Gently swirl at the end. Aim for about 3:00, adjusting grind first when drawdown differs.'],
+    notes: ['96°C is Barista Flow’s convenient starting point; the original source uses water just off the boil.', 'Different V60 sizes, papers, and grinders change drawdown. Taste matters more than matching one time.'],
+    recipe: { beanName: 'Hoffmann V60 baseline', roastLevel: 'light', grindSize: 'Medium-fine', waterTemp: 96, coffeeWeight: 15, waterRatio: 16.7 }
+  },
+  'hario-rojewska-two-pour': {
+    title: 'Agnieszka Rojewska Two-Pour V60', brewerLabel: 'V60 pour-over',
+    summary: 'A concise competition-style V60 method using 15 g coffee, 250 ml water, a quick pre-wet, and two main pours.', duration: 'About 2:15',
+    applicability: 'For V60 brewers who want fewer pours and a relatively fast, bright extraction baseline.',
+    limitations: 'The original source does not specify water temperature. Barista Flow supplies 92°C only as an adjustable starting point.',
+    equipment: ['V60 dripper and filter', 'Scale and timer', 'Gooseneck kettle'],
+    steps: ['Use 15 g medium-ground coffee and 250 ml water.', 'Pre-wet quickly and wait 15 seconds.', 'Pour first to 150 ml, then direct the remaining 100 ml toward the centre.', 'Finish pouring at about 1:00, targeting a total time near 2:15.'],
+    notes: ['92°C is a Barista Flow starting value; it is not specified by the original source.', 'If flow is fast and the cup thin, go slightly finer. If dry and slow, go slightly coarser.'],
+    recipe: { beanName: 'Rojewska V60 baseline', roastLevel: 'medium', grindSize: 'Medium', waterTemp: 92, coffeeWeight: 15, waterRatio: 16.7 }
+  },
+  'aeropress-signature': {
+    title: 'Official AeroPress Signature Recipe', brewerLabel: 'AeroPress',
+    summary: 'The everyday official method: 16–18 g medium-fine coffee, 85°C water, a short stir, and a gentle press.', duration: 'About 1:00–1:30',
+    applicability: 'For the standard AeroPress and anyone establishing a lower-temperature, short-steep baseline.',
+    limitations: 'The official method specifies the chamber’s #4 mark rather than grams of water. The 1:14 ratio here is only an approximate calculator input.',
+    equipment: ['AeroPress and filter', 'Stable mug', 'Stirrer', 'Scale (optional)'],
+    steps: ['Fit the filter and place the AeroPress on a stable mug.', 'Add 16–18 g medium-fine coffee and use 85°C water.', 'Fill to the chamber’s #4 mark and stir for about 3 seconds.', 'Insert the plunger to seal. Wait about 30 seconds for freshly ground coffee or 60 seconds for pre-ground.', 'Press gently and steadily; take care with hot water and pressure when removing the cap.'],
+    notes: ['Barista Flow displays 17 g, the midpoint of the official 16–18 g range.', 'The 1:14 ratio approximates the #4 chamber mark for calculator use.'],
+    recipe: { beanName: 'Official AeroPress baseline', roastLevel: 'medium', grindSize: 'Medium-fine', waterTemp: 85, coffeeWeight: 17, waterRatio: 14 }
+  },
+  'stumptown-french-press': {
+    title: 'Stumptown French Press', brewerLabel: 'French press',
+    summary: 'A multi-cup baseline using 56 g coarse coffee, 850 g water, and a four-minute steep before immediate decanting.', duration: '4:00 steep + press',
+    applicability: 'For an approximately one-litre French press, sharing, and a fuller-bodied cup.',
+    limitations: 'Pot capacity and mesh resistance change the feel of the press. Decant immediately after brewing to stop continued steeping.',
+    equipment: ['Approximately 1 L French press', 'Scale and timer', 'Stirrer', 'Serving vessel large enough for the full brew'],
+    steps: ['Use 56 g coarse coffee and water around 96°C (the source gives about 205°F).', 'Pour about 450 g water and stir the crust at 1:00.', 'Continue to 850 g, fit the lid, and do not press yet.', 'At 4:00, press slowly and decant all coffee immediately.'],
+    notes: ['The ratio can be scaled, but steeping behaviour and pressing resistance still require a real-brew check.'],
+    recipe: { beanName: 'Stumptown French Press', roastLevel: 'medium', grindSize: 'Coarse', waterTemp: 96, coffeeWeight: 56, waterRatio: 15.2 }
+  },
+  'blue-bottle-french-press': {
+    title: 'Blue Bottle Small French Press', brewerLabel: 'French press',
+    summary: 'A small four-minute recipe using 30 g coffee and 350 g water for a compact press.', duration: 'About 4:20',
+    applicability: 'For a small French press and one or two servings, especially when comparing a stronger brew ratio.',
+    limitations: 'At 1:11.7 this is stronger than typical pour-over. Dilute to taste or raise the ratio gradually if the cup is too concentrated.',
+    equipment: ['Small French press', 'Scale and timer', 'Stirrer'],
+    steps: ['Use 30 g coarse coffee and 350 g water around 96–99°C.', 'Pour evenly to wet all grounds.', 'Steep to 4:00, then press slowly over about 20 seconds.', 'Decant immediately to stop extraction.'],
+    notes: ['Barista Flow uses 97°C, the midpoint of the source’s 205–210°F range.'],
+    recipe: { beanName: 'Blue Bottle French Press', roastLevel: 'medium', grindSize: 'Coarse', waterTemp: 97, coffeeWeight: 30, waterRatio: 11.7 }
+  },
+  'oxo-cold-brew-concentrate': {
+    title: 'OXO Cold Brew Concentrate', brewerLabel: 'Cold brew',
+    summary: 'A 1:4.2 concentrate using 284 g coarse coffee and 1,200 ml water, diluted before drinking.', duration: '12–24 hours',
+    applicability: 'For the OXO Cold Brew Coffee Maker or a concentrate brewer with similar capacity and drainage.',
+    limitations: 'This is an equipment-specific large concentrate recipe, not ready-to-drink cold brew. Scale carefully for other brewers. Barista Flow does not guarantee shelf life.',
+    equipment: ['OXO Cold Brew Coffee Maker or similar brewer', 'Scale', 'Clean covered refrigerator container'],
+    steps: ['Add 284 g coarse coffee and distribute 1,200 ml cold water evenly.', 'Steep for 12–24 hours.', 'Drain and collect concentrate according to the brewer instructions.', 'Dilute one part concentrate with two to three parts water or milk, then adjust to taste.', 'Refrigerate in a clean covered container and follow current food-safety guidance.'],
+    notes: ['4°C is Barista Flow’s refrigeration starting point; the source specifies cold water.', 'Confirm brewer capacity before applying this large recipe.'],
+    recipe: { beanName: 'OXO cold brew concentrate', roastLevel: 'dark', grindSize: 'Coarse', waterTemp: 4, coffeeWeight: 284, waterRatio: 4.225 }
+  }
+};
+
+export function getStandardRecipes(lang: string): StandardRecipe[] {
+  if (lang !== 'en') return standardRecipes;
+  return standardRecipes.map((recipe) => ({ ...recipe, ...englishCopy[recipe.id], sourceName: recipe.sourceName, sourceUrl: recipe.sourceUrl } as StandardRecipe));
+}
+
+export function getLocalizedRecipeBySlug(slug: string, lang: string) {
+  return getStandardRecipes(lang).find((recipe) => recipe.slug === slug);
+}

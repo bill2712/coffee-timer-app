@@ -300,6 +300,28 @@ const timerDict = {
           placeholder={t('timer.modal.notesPlaceholder')}
           class="w-full bg-coffee-dark border border-coffee-sand/20 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-gold/50 focus:border-coffee-gold transition-colors duration-200 ease-out text-coffee-light resize-none placeholder-coffee-sand/40"
         ></textarea>
+        <p class="mt-2 text-[11px] leading-5 text-coffee-muted">{isZh ? '寫下今次味道、實際操作，以及下一杯想驗證的調整。' : 'Note the flavour, what you actually did, and the adjustment you want to test next.'}</p>
+      </div>
+
+      <!-- Optional local test photo -->
+      <div class="rounded-2xl border border-coffee-sand/15 bg-coffee-dark/50 p-4">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <label for="tasting-photo" class="block text-xs font-semibold uppercase tracking-wider text-coffee-sand">{isZh ? '實作照片（選填）' : 'Brew photo (optional)'}</label>
+            <p class="mt-1 text-[11px] leading-5 text-coffee-muted">{isZh ? '照片會壓縮後只存於本裝置及你的備份檔；最多保留最近 6 張。' : 'The compressed photo stays on this device and in your backup; the latest six are retained.'}</p>
+          </div>
+          <label for="tasting-photo" class="inline-flex min-h-[44px] cursor-pointer items-center justify-center rounded-xl border border-coffee-gold/40 px-4 text-xs font-bold text-coffee-gold hover:bg-coffee-gold/10">
+            {isZh ? '拍照／選擇照片' : 'Take / choose photo'}
+          </label>
+        </div>
+        <input id="tasting-photo" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" />
+        <div id="tasting-photo-preview-wrap" class="mt-4 hidden items-start gap-3">
+          <img id="tasting-photo-preview" alt={isZh ? '今次沖煮照片預覽' : 'Brew photo preview'} class="h-24 w-24 rounded-xl border border-coffee-sand/15 object-cover" />
+          <div class="flex-1">
+            <p id="tasting-photo-status" class="text-xs leading-5 text-coffee-muted" aria-live="polite"></p>
+            <button id="btn-remove-photo" type="button" class="mt-2 min-h-[40px] rounded-lg border border-coffee-sand/20 px-3 text-xs font-semibold text-coffee-sand hover:text-coffee-light">{isZh ? '移除照片' : 'Remove photo'}</button>
+          </div>
+        </div>
       </div>
 
       <div class="pt-4 flex gap-3">
@@ -461,6 +483,7 @@ const timerDict = {
   let wakeLock: any = null;
   let activeDiagnosis: any = null;
   let activeLogId = '';
+  let pendingPhotoData = '';
 
   // DOM Elements
   let timerProgress: SVGCircleElement | null = null;
@@ -629,6 +652,7 @@ const timerDict = {
   }
 
   function buildDiagnosis(issue: string) {
+    const zh = dict.lang === 'zh-TW';
     const currentRatio = Number.isFinite(Number(recipe.waterRatio))
       ? Number(recipe.waterRatio)
       : Math.round((recipe.totalWater / recipe.coffeeWeight) * 10) / 10;
@@ -638,20 +662,51 @@ const timerDict = {
     let variable = 'none';
     let ratioChange = '';
 
-    if (issue === 'sour' || issue === 'fast') {
+    const grind = String(recipe.grindSize || (zh ? '未記錄研磨刻度' : 'grind setting not recorded'));
+    const brewSeconds = Math.max(0, Math.round(TOTAL_DURATION - remainingTime));
+    const timeLabel = `${Math.floor(brewSeconds / 60)}:${String(brewSeconds % 60).padStart(2, '0')}`;
+    const context = zh
+      ? `本杯：${grind}、${recipe.waterTemp}°C、1:${currentRatio}、${timeLabel}。`
+      : `This brew: ${grind}, ${recipe.waterTemp}°C, 1:${currentRatio}, ${timeLabel}. `;
+
+    if (issue === 'fast') {
       title = dict.finerTitle;
-      body = dict.finerBody;
+      body = context + dict.finerBody;
       variable = 'grind-finer';
-    } else if (issue === 'bitter' || issue === 'slow') {
+      nextRecipe.grindSize = zh ? `${grind}（稍細一格）` : `${grind} (one small step finer)`;
+    } else if (issue === 'slow') {
       title = dict.coarserTitle;
-      body = dict.coarserBody;
+      body = context + dict.coarserBody;
       variable = 'grind-coarser';
+      nextRecipe.grindSize = zh ? `${grind}（稍粗一格）` : `${grind} (one small step coarser)`;
+    } else if (issue === 'sour' && recipe.waterTemp <= 88) {
+      const nextTemp = Math.min(100, recipe.waterTemp + 2);
+      title = zh ? `水溫提高至 ${nextTemp}°C` : `Raise water temperature to ${nextTemp}°C`;
+      body = context + (zh ? '目前水溫偏低；下一杯只提高 2°C，研磨、粉水比與注水節奏保持不變，測試尖酸及空洞感會否改善。' : 'The current temperature is low; raise only the water temperature by 2°C and keep grind, ratio, and pouring unchanged to test whether sharp acidity and hollowness improve.');
+      variable = 'water-temperature';
+      nextRecipe.waterTemp = nextTemp;
+    } else if (issue === 'bitter' && recipe.waterTemp >= 94) {
+      const nextTemp = Math.max(80, recipe.waterTemp - 2);
+      title = zh ? `水溫降低至 ${nextTemp}°C` : `Lower water temperature to ${nextTemp}°C`;
+      body = context + (zh ? '目前水溫偏高；下一杯只降低 2°C，研磨、粉水比與注水節奏保持不變，測試苦澀及乾口會否減少。' : 'The current temperature is high; lower only the water temperature by 2°C and keep grind, ratio, and pouring unchanged to test whether bitterness and dryness decrease.');
+      variable = 'water-temperature';
+      nextRecipe.waterTemp = nextTemp;
+    } else if (issue === 'sour') {
+      title = dict.finerTitle;
+      body = context + dict.finerBody;
+      variable = 'grind-finer';
+      nextRecipe.grindSize = zh ? `${grind}（稍細一格）` : `${grind} (one small step finer)`;
+    } else if (issue === 'bitter') {
+      title = dict.coarserTitle;
+      body = context + dict.coarserBody;
+      variable = 'grind-coarser';
+      nextRecipe.grindSize = zh ? `${grind}（稍粗一格）` : `${grind} (one small step coarser)`;
     } else if (issue === 'weak') {
       const newRatio = Math.max(10, currentRatio - 1);
       nextRecipe.waterRatio = newRatio;
       nextRecipe.totalWater = Math.round(nextRecipe.coffeeWeight * newRatio);
       title = dict.lessWaterTitle;
-      body = dict.lessWaterBody;
+      body = context + dict.lessWaterBody;
       variable = 'water-ratio';
       ratioChange = `1:${currentRatio} → 1:${newRatio}`;
     } else if (issue === 'strong') {
@@ -659,11 +714,12 @@ const timerDict = {
       nextRecipe.waterRatio = newRatio;
       nextRecipe.totalWater = Math.round(nextRecipe.coffeeWeight * newRatio);
       title = dict.moreWaterTitle;
-      body = dict.moreWaterBody;
+      body = context + dict.moreWaterBody;
       variable = 'water-ratio';
       ratioChange = `1:${currentRatio} → 1:${newRatio}`;
     }
 
+    if (issue === 'balanced') body = context + dict.keepBody;
     return { issue, title, body, variable, ratioChange, nextRecipe };
   }
 
@@ -991,6 +1047,7 @@ const timerDict = {
       diagnosisResult?.classList.add('hidden');
       activeDiagnosis = null;
       activeLogId = '';
+      resetPhotoInput();
       updateSliderValues();
     }, 300);
   }
@@ -1003,7 +1060,100 @@ const timerDict = {
     });
   }
 
-  function saveTastingLog(e: Event) {
+  function blobToDataUrl(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(new Error('Photo could not be read.'));
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function loadPhotoSource(file: File): Promise<{ source: CanvasImageSource; width: number; height: number; close: () => void }> {
+    if ('createImageBitmap' in window) {
+      const bitmap = await createImageBitmap(file);
+      return {
+        source: bitmap,
+        width: bitmap.width,
+        height: bitmap.height,
+        close: () => bitmap.close?.()
+      };
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = objectUrl;
+    await image.decode();
+    return {
+      source: image,
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+      close: () => URL.revokeObjectURL(objectUrl)
+    };
+  }
+
+  async function compressPhoto(file: File): Promise<string> {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 12 * 1024 * 1024) {
+      throw new Error(dict.lang === 'zh-TW' ? '請選擇 12 MB 以下的 JPG、PNG 或 WebP。' : 'Choose a JPG, PNG, or WebP under 12 MB.');
+    }
+    const photo = await loadPhotoSource(file);
+    const render = async (maxEdge: number, quality: number) => {
+      const scale = Math.min(1, maxEdge / Math.max(photo.width, photo.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(photo.width * scale));
+      canvas.height = Math.max(1, Math.round(photo.height * scale));
+      canvas.getContext('2d')?.drawImage(photo.source, 0, 0, canvas.width, canvas.height);
+      return new Promise<Blob>((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Photo compression failed.')), 'image/jpeg', quality));
+    };
+    let blob: Blob;
+    try {
+      blob = await render(1000, 0.76);
+      if (blob.size > 120000) blob = await render(760, 0.64);
+      if (blob.size > 120000) blob = await render(560, 0.52);
+    } finally {
+      photo.close();
+    }
+    if (blob.size > 160000) throw new Error(dict.lang === 'zh-TW' ? '照片內容太複雜，壓縮後仍然過大；請換一張較小照片。' : 'The compressed photo is still too large. Choose a smaller image.');
+    return blobToDataUrl(blob);
+  }
+
+  function resetPhotoInput() {
+    pendingPhotoData = '';
+    const input = document.getElementById('tasting-photo') as HTMLInputElement | null;
+    const preview = document.getElementById('tasting-photo-preview') as HTMLImageElement | null;
+    const wrap = document.getElementById('tasting-photo-preview-wrap');
+    const status = document.getElementById('tasting-photo-status');
+    if (input) input.value = '';
+    if (preview) preview.removeAttribute('src');
+    wrap?.classList.add('hidden');
+    wrap?.classList.remove('flex');
+    if (status) status.textContent = '';
+  }
+
+  async function handlePhotoInput(event: Event) {
+    const input = event.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    const status = document.getElementById('tasting-photo-status');
+    const wrap = document.getElementById('tasting-photo-preview-wrap');
+    const preview = document.getElementById('tasting-photo-preview') as HTMLImageElement | null;
+    wrap?.classList.remove('hidden');
+    wrap?.classList.add('flex');
+    if (status) status.textContent = dict.lang === 'zh-TW' ? '正在壓縮照片…' : 'Compressing photo…';
+    try {
+      pendingPhotoData = await compressPhoto(file);
+      if (preview) preview.src = pendingPhotoData;
+      if (status) status.textContent = dict.lang === 'zh-TW' ? '照片已準備，只會儲存在本裝置。' : 'Photo ready. It will stay on this device.';
+    } catch (error) {
+      resetPhotoInput();
+      wrap?.classList.remove('hidden');
+      wrap?.classList.add('flex');
+      if (status) status.textContent = error instanceof Error ? error.message : (dict.lang === 'zh-TW' ? '照片無法處理。' : 'The photo could not be processed.');
+    }
+  }
+
+  async function saveTastingLog(e: Event) {
     e.preventDefault();
     
     const acidity = (document.getElementById('rating-acidity') as HTMLInputElement)?.value || '3';
@@ -1039,6 +1189,7 @@ const timerDict = {
       id: activeLogId,
       date: new Date().toISOString(),
       recipe: { ...recipe },
+      brewTimeSeconds: Math.max(1, Math.round(TOTAL_DURATION - remainingTime)),
       recipeVersion,
       parentLogId: parentLog ? parentLogId : undefined,
       evaluation: {
@@ -1047,7 +1198,8 @@ const timerDict = {
         body: parseInt(body),
         overall: parseInt(overall),
         issue,
-        notes
+        notes,
+        photoData: pendingPhotoData || undefined
       },
       recommendation: {
         issue,
@@ -1058,13 +1210,40 @@ const timerDict = {
       }
     };
 
+    let logSaved = false;
     try {
       logs.unshift(newLog);
+      let retainedPhotos = 0;
+      logs.forEach((log) => {
+        if (!log?.evaluation?.photoData) return;
+        retainedPhotos += 1;
+        if (retainedPhotos > 6) delete log.evaluation.photoData;
+      });
       localStorage.setItem('barista_flow_logs', JSON.stringify(logs.slice(0, 200)));
       localStorage.removeItem('barista_flow_pending_parent');
       localStorage.removeItem('barista_flow_pending_adjustment');
+      logSaved = true;
     } catch (error) {
-      console.error('Failed to save tasting log without changing existing records:', error);
+      console.warn('Photo storage was full; retrying the brew log without photos:', error);
+      logs.forEach((log) => {
+        if (log?.evaluation) delete log.evaluation.photoData;
+      });
+      try {
+        localStorage.setItem('barista_flow_logs', JSON.stringify(logs.slice(0, 200)));
+        localStorage.removeItem('barista_flow_pending_parent');
+        localStorage.removeItem('barista_flow_pending_adjustment');
+        pendingPhotoData = '';
+        logSaved = true;
+      } catch (fallbackError) {
+        console.error('Failed to save the tasting log:', fallbackError);
+      }
+    }
+
+    if (!logSaved) {
+      window.alert(dict.lang === 'zh-TW'
+        ? '這部裝置的瀏覽器儲存空間不足，今次紀錄尚未儲存。請先到「資料備份」下載備份，再刪除部分舊紀錄。'
+        : 'This browser is out of local storage, so this brew was not saved. Download a backup first, then remove some older records.');
+      return;
     }
 
     const resultTitle = document.getElementById('diagnosis-result-title');
@@ -1269,6 +1448,8 @@ const timerDict = {
     }
     btnCloseDiagnosis?.addEventListener('click', hideTastingModal);
     btnApplyDiagnosis?.addEventListener('click', applyDiagnosis);
+    document.getElementById('tasting-photo')?.addEventListener('change', handlePhotoInput);
+    document.getElementById('btn-remove-photo')?.addEventListener('click', resetPhotoInput);
     modalBackdrop?.addEventListener('click', hideTastingModal);
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && tastingModal && !tastingModal.classList.contains('hidden')) hideTastingModal();
