@@ -1,0 +1,103 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../i18n/routes';
+import { getLangFromUrl } from '../../i18n/utils';
+
+export function getStaticPaths() { return getLanguagePaths(); }
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const base = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+const today = new Date().toISOString().slice(0, 10);
+const c = isZh ? {
+  title: '咖啡豆護照 | Barista Flow', desc: '記錄咖啡豆名稱、產地、處理法、烘焙日、開封日，並由實際沖煮紀錄找出及重用最佳配方。', crumb: '咖啡豆護照', eyebrow: '你的咖啡豆資料庫', h1: '每包豆都有一份可累積的護照', intro: '把產地與新鮮度資料連同每次沖煮結果保存。最佳配方來自你自己的高評分紀錄，不是通用定律。',
+  formTitle: '新增咖啡豆護照', editTitle: '編輯咖啡豆護照', name: '咖啡豆名稱', namePh: '例如：衣索比亞 Guji', origin: '產地', originPh: '例如：Guji, Ethiopia', process: '處理法', roastDate: '烘焙日', openedDate: '開封日', save: '儲存護照', cancel: '取消編輯', listTitle: '已儲存的咖啡豆', empty: '尚未建立咖啡豆護照。先加入手上正在使用的一包豆。', washed: '水洗', natural: '日曬', honey: '蜜處理', anaerobic: '厭氧／特殊發酵', other: '其他／未註明',
+  best: '最佳配方', autoBest: '按最高評分推薦', confirmedBest: '已確認最佳配方', noBrew: '這包豆尚未有沖煮紀錄。', linked: '杯已連結', use: '使用這包豆沖煮', useBest: '套用最佳配方', confirmBest: '確認為最佳配方', edit: '編輯', remove: '刪除', removeConfirm: '刪除這份咖啡豆護照？既有沖煮紀錄不會刪除。', saved: '咖啡豆護照已儲存。', deleted: '護照已刪除。', daysRoast: '烘焙後 {days} 日', daysOpen: '開封後 {days} 日', futureDate: '日期不可晚於今日。', dateOrder: '開封日不可早於烘焙日。', insights: '查看這包豆的數據洞察', score: '總評'
+} : {
+  title: 'Coffee Bean Passports | Barista Flow', desc: 'Record origin, process, roast date, opened date, and the best recipe identified from your own brew logs.', crumb: 'Bean passports', eyebrow: 'Your bean library', h1: 'Give every bag a passport that learns with you', intro: 'Keep origin and freshness details beside actual brew results. A best recipe comes from your own highly rated records, not a universal rule.',
+  formTitle: 'Add a bean passport', editTitle: 'Edit bean passport', name: 'Bean name', namePh: 'For example: Ethiopia Guji', origin: 'Origin', originPh: 'For example: Guji, Ethiopia', process: 'Process', roastDate: 'Roast date', openedDate: 'Opened date', save: 'Save passport', cancel: 'Cancel editing', listTitle: 'Saved beans', empty: 'No bean passports yet. Add the bag you are currently brewing.', washed: 'Washed', natural: 'Natural', honey: 'Honey', anaerobic: 'Anaerobic / special fermentation', other: 'Other / not stated',
+  best: 'Best recipe', autoBest: 'Suggested from highest rating', confirmedBest: 'Confirmed best recipe', noBrew: 'No brew records are linked to this bean yet.', linked: 'linked brews', use: 'Brew this bean', useBest: 'Apply best recipe', confirmBest: 'Confirm as best recipe', edit: 'Edit', remove: 'Delete', removeConfirm: 'Delete this bean passport? Existing brew logs will remain.', saved: 'Bean passport saved.', deleted: 'Passport deleted.', daysRoast: '{days} days after roast', daysOpen: '{days} days since opening', futureDate: 'Dates cannot be in the future.', dateOrder: 'Opened date cannot be before roast date.', insights: 'View insights for this bean', score: 'Overall'
+};
+---
+
+<Layout title={c.title} description={c.desc}>
+  <div class="mx-auto max-w-5xl py-8 sm:py-12">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: c.crumb }]} /></div>
+    <header class="mx-auto mt-5 max-w-3xl text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-coffee-gold">{c.eyebrow}</p>
+      <h1 class="mt-3 text-balance font-display text-4xl font-bold leading-tight text-coffee-light sm:text-5xl">{c.h1}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p>
+    </header>
+
+    <div class="mt-10 grid items-start gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+      <section class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-5 sm:p-6 lg:sticky lg:top-24" aria-labelledby="passport-form-title">
+        <h2 id="passport-form-title" class="font-display text-2xl font-bold text-coffee-light">{c.formTitle}</h2>
+        <form id="bean-form" class="mt-5 grid gap-4" novalidate>
+          <input id="bean-id" type="hidden" />
+          <label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.name}</span><input id="passport-name" required maxlength="80" placeholder={c.namePh} class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold focus:ring-2 focus:ring-coffee-gold/30" /></label>
+          <label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.origin}</span><input id="passport-origin" required maxlength="100" placeholder={c.originPh} class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold focus:ring-2 focus:ring-coffee-gold/30" /></label>
+          <label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.process}</span><select id="passport-process" class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold"><option value="washed">{c.washed}</option><option value="natural">{c.natural}</option><option value="honey">{c.honey}</option><option value="anaerobic">{c.anaerobic}</option><option value="other">{c.other}</option></select></label>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.roastDate}</span><input id="passport-roast-date" type="date" max={today} class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-3 text-base text-coffee-light outline-none focus:border-coffee-gold" /></label>
+            <label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.openedDate}</span><input id="passport-opened-date" type="date" max={today} class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-3 text-base text-coffee-light outline-none focus:border-coffee-gold" /></label>
+          </div>
+          <p id="bean-form-status" class="min-h-5 text-xs font-semibold text-coffee-gold" aria-live="polite"></p>
+          <div class="grid gap-3 sm:grid-cols-2"><button id="btn-save-bean" type="submit" class="min-h-[50px] rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover">{c.save}</button><button id="btn-cancel-bean" type="button" class="hidden min-h-[50px] rounded-xl border border-coffee-sand/20 px-5 text-sm font-semibold text-coffee-sand hover:text-coffee-light">{c.cancel}</button></div>
+        </form>
+      </section>
+
+      <section aria-labelledby="bean-list-title">
+        <div class="flex flex-wrap items-end justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.eyebrow}</p><h2 id="bean-list-title" class="mt-1 font-display text-3xl font-bold text-coffee-light">{c.listTitle}</h2></div><a href={`${base}/insights`} class="inline-flex min-h-[44px] items-center rounded-xl border border-blue-400/30 px-4 text-xs font-bold text-blue-300 hover:bg-blue-400/10">{isZh ? '全部個人洞察' : 'All personal insights'}</a></div>
+        <div id="bean-empty" class="mt-5 hidden rounded-2xl border border-dashed border-coffee-sand/20 p-8 text-center text-sm leading-7 text-coffee-muted">{c.empty}</div>
+        <div id="bean-list" class="mt-5 grid gap-4"></div>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline define:vars={{ pageCopy: c, homeUrl: `${base}/`, insightsUrl: `${base}/insights` }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const KEY = 'barista_flow_beans_v1';
+    const form = document.getElementById('bean-form');
+    const fields = { id: document.getElementById('bean-id'), name: document.getElementById('passport-name'), origin: document.getElementById('passport-origin'), process: document.getElementById('passport-process'), roastDate: document.getElementById('passport-roast-date'), openedDate: document.getElementById('passport-opened-date') };
+    const status = document.getElementById('bean-form-status');
+    const list = document.getElementById('bean-list');
+    const empty = document.getElementById('bean-empty');
+    const cancel = document.getElementById('btn-cancel-bean');
+    const processLabels = { washed: pageCopy.washed, natural: pageCopy.natural, honey: pageCopy.honey, anaerobic: pageCopy.anaerobic, other: pageCopy.other };
+    const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
+    const safeDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || '')) ? String(value) : '';
+    const readArray = (key) => { try { const parsed = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(parsed) ? parsed : []; } catch (error) { return []; } };
+    const normalizeBeans = () => readArray(KEY).slice(0, 100).map((bean) => ({ id: /^\d{1,20}$/.test(String(bean?.id || '')) ? String(bean.id) : '', name: String(bean?.name || '').trim().slice(0, 80), origin: String(bean?.origin || '').trim().slice(0, 100), process: ['washed','natural','honey','anaerobic','other'].includes(bean?.process) ? bean.process : 'other', roastDate: safeDate(bean?.roastDate), openedDate: safeDate(bean?.openedDate), bestLogId: /^\d{1,20}$/.test(String(bean?.bestLogId || '')) ? String(bean.bestLogId) : '', createdAt: String(bean?.createdAt || ''), updatedAt: String(bean?.updatedAt || '') })).filter((bean) => bean.id && bean.name);
+    let beans = normalizeBeans();
+    const logs = readArray('barista_flow_logs').filter((log) => /^\d{1,20}$/.test(String(log?.id || '')) && log?.recipe && log?.evaluation);
+    const linkedLogs = (bean) => logs.filter((log) => String(log.recipe.beanPassportId || '') === bean.id || (!log.recipe.beanPassportId && String(log.recipe.beanName || '').trim().toLocaleLowerCase() === bean.name.toLocaleLowerCase()));
+    const ranked = (items) => [...items].sort((a,b) => (Number(b.evaluation?.overall)||0) - (Number(a.evaluation?.overall)||0) || new Date(b.date).valueOf() - new Date(a.date).valueOf());
+    const bestFor = (bean, items) => items.find((log) => String(log.id) === bean.bestLogId) || ranked(items)[0] || null;
+    const duration = (seconds) => { const value = Math.max(0, Math.round(Number(seconds)||0)); return `${Math.floor(value/60)}:${String(value%60).padStart(2,'0')}`; };
+    const daysSince = (date) => date ? Math.max(0, Math.floor((new Date().setHours(0,0,0,0) - new Date(`${date}T00:00:00`).valueOf()) / 86400000)) : null;
+    const routeToBrew = (bean, log) => { const recipe = log?.recipe ? { ...log.recipe } : { beanName: bean.name, roastLevel: 'medium', grindSize: document.documentElement.lang === 'zh-TW' ? '中細研磨' : 'Medium-fine', waterTemp: 92, coffeeWeight: 15, waterRatio: 15, totalWater: 225 }; recipe.beanName = bean.name; recipe.beanPassportId = bean.id; try { localStorage.setItem('barista_flow_recipe', JSON.stringify(recipe)); } catch (error) {} const params = new URLSearchParams({ passport: bean.id, bean: bean.name, roast: recipe.roastLevel || 'medium', grind: recipe.grindSize || '', t: String(recipe.waterTemp || 92), w: String(recipe.coffeeWeight || 15), r: String(recipe.waterRatio || 15) }); window.location.href = `${homeUrl}?${params.toString()}#brew-start`; };
+    const saveBeans = () => { localStorage.setItem(KEY, JSON.stringify(beans.slice(0,100))); };
+    const resetForm = () => { form?.reset(); fields.id.value = ''; document.getElementById('passport-form-title').textContent = pageCopy.formTitle; cancel?.classList.add('hidden'); };
+
+    const render = () => {
+      list.replaceChildren(); empty.classList.toggle('hidden', beans.length > 0);
+      beans.forEach((bean) => {
+        const matches = linkedLogs(bean); const best = bestFor(bean, matches); const isConfirmed = Boolean(bean.bestLogId && best && String(best.id) === bean.bestLogId); const freshnessDate = bean.openedDate || bean.roastDate; const days = daysSince(freshnessDate); const freshness = days === null ? '' : (bean.openedDate ? pageCopy.daysOpen : pageCopy.daysRoast).replace('{days}', String(days));
+        const card = document.createElement('article'); card.className = 'rounded-2xl border border-coffee-sand/12 bg-coffee-darker/60 p-5 sm:p-6'; card.dataset.beanCard = bean.id;
+        card.innerHTML = `<div class="flex flex-wrap items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><h3 class="font-display text-2xl font-bold text-coffee-light">${esc(bean.name)}</h3>${freshness ? `<span class="rounded-full border border-green-400/20 bg-green-400/5 px-2.5 py-1 text-[10px] font-bold text-green-300">${esc(freshness)}</span>` : ''}</div><p class="mt-2 text-sm text-coffee-sand">${esc(bean.origin)} · ${esc(processLabels[bean.process])}</p><p class="mt-1 text-xs text-coffee-muted">${pageCopy.roastDate}: ${esc(bean.roastDate || '—')} · ${pageCopy.openedDate}: ${esc(bean.openedDate || '—')} · ${matches.length} ${pageCopy.linked}</p></div><div class="flex gap-2"><button type="button" data-edit="${bean.id}" class="min-h-[40px] rounded-lg border border-coffee-sand/20 px-3 text-xs font-semibold text-coffee-sand hover:text-coffee-light">${pageCopy.edit}</button><button type="button" data-delete="${bean.id}" class="min-h-[40px] rounded-lg border border-red-400/20 px-3 text-xs font-semibold text-red-300 hover:bg-red-400/10">${pageCopy.remove}</button></div></div><div class="mt-5 rounded-xl border border-coffee-gold/15 bg-coffee-gold/5 p-4">${best ? `<div class="flex flex-wrap items-center justify-between gap-2"><p class="text-[10px] font-bold uppercase tracking-wider text-coffee-gold">${pageCopy.best}</p><span class="text-[10px] font-bold ${isConfirmed ? 'text-green-300' : 'text-coffee-muted'}">${isConfirmed ? pageCopy.confirmedBest : pageCopy.autoBest}</span></div><p class="mt-2 text-sm font-semibold text-coffee-light">1:${Number(best.recipe.waterRatio)||'—'} · ${Number(best.recipe.waterTemp)||'—'}°C · ${esc(best.recipe.grindSize || '—')} · ${duration(best.brewTimeSeconds)}</p><p class="mt-1 text-xs text-coffee-muted">${pageCopy.score}: ${Number(best.evaluation.overall)||0}/5</p>` : `<p class="text-sm text-coffee-muted">${pageCopy.noBrew}</p>`}</div><div class="mt-4 grid gap-2 sm:grid-cols-2">${best ? `<button type="button" data-use-best="${bean.id}" class="min-h-[46px] rounded-xl bg-coffee-gold px-4 text-xs font-bold text-coffee-dark hover:bg-coffee-gold-hover">${pageCopy.useBest}</button><button type="button" data-confirm-best="${bean.id}" data-log="${best.id}" class="min-h-[46px] rounded-xl border border-coffee-gold/30 px-4 text-xs font-bold text-coffee-gold hover:bg-coffee-gold/10">${pageCopy.confirmBest}</button>` : `<button type="button" data-use-bean="${bean.id}" class="min-h-[46px] rounded-xl bg-coffee-gold px-4 text-xs font-bold text-coffee-dark hover:bg-coffee-gold-hover">${pageCopy.use}</button>`}<a href="${insightsUrl}?bean=${bean.id}" class="inline-flex min-h-[46px] items-center justify-center rounded-xl border border-blue-400/25 px-4 text-center text-xs font-bold text-blue-300 hover:bg-blue-400/10 sm:col-span-2">${pageCopy.insights}</a></div>`;
+        list.appendChild(card);
+      });
+      list.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => { const bean = beans.find((item) => item.id === button.dataset.edit); if (!bean) return; fields.id.value=bean.id; fields.name.value=bean.name; fields.origin.value=bean.origin; fields.process.value=bean.process; fields.roastDate.value=bean.roastDate; fields.openedDate.value=bean.openedDate; document.getElementById('passport-form-title').textContent=pageCopy.editTitle; cancel?.classList.remove('hidden'); form?.scrollIntoView({behavior:'smooth',block:'start'}); }));
+      list.querySelectorAll('[data-delete]').forEach((button) => button.addEventListener('click', () => { if (!window.confirm(pageCopy.removeConfirm)) return; beans=beans.filter((item)=>item.id!==button.dataset.delete); saveBeans(); render(); status.textContent=pageCopy.deleted; }));
+      list.querySelectorAll('[data-use-bean]').forEach((button) => button.addEventListener('click', () => { const bean=beans.find((item)=>item.id===button.dataset.useBean); if(bean) routeToBrew(bean,null); }));
+      list.querySelectorAll('[data-use-best]').forEach((button) => button.addEventListener('click', () => { const bean=beans.find((item)=>item.id===button.dataset.useBest); if(bean) routeToBrew(bean,bestFor(bean,linkedLogs(bean))); }));
+      list.querySelectorAll('[data-confirm-best]').forEach((button) => button.addEventListener('click', () => { const bean=beans.find((item)=>item.id===button.dataset.confirmBest); if(!bean) return; bean.bestLogId=String(button.dataset.log||''); bean.updatedAt=new Date().toISOString(); saveBeans(); render(); }));
+    };
+
+    form?.addEventListener('submit', (event) => { event.preventDefault(); const name=String(fields.name.value||'').trim().slice(0,80); const origin=String(fields.origin.value||'').trim().slice(0,100); const roastDate=safeDate(fields.roastDate.value); const openedDate=safeDate(fields.openedDate.value); const todayValue=new Date().toISOString().slice(0,10); if(!name||!origin){ form.reportValidity(); return; } if((roastDate&&roastDate>todayValue)||(openedDate&&openedDate>todayValue)){ status.textContent=pageCopy.futureDate; return; } if(roastDate&&openedDate&&openedDate<roastDate){ status.textContent=pageCopy.dateOrder; return; } const existing=beans.find((bean)=>bean.id===fields.id.value); const now=new Date().toISOString(); const next={ id:existing?.id||Date.now().toString(), name, origin, process:['washed','natural','honey','anaerobic','other'].includes(fields.process.value)?fields.process.value:'other', roastDate, openedDate, bestLogId:existing?.bestLogId||'', createdAt:existing?.createdAt||now, updatedAt:now }; beans=existing?beans.map((bean)=>bean.id===existing.id?next:bean):[next,...beans]; saveBeans(); resetForm(); render(); status.textContent=pageCopy.saved; });
+    cancel?.addEventListener('click', resetForm);
+    render();
+    const requested = new URLSearchParams(location.search).get('bean'); if (/^\d{1,20}$/.test(requested||'')) document.querySelector(`[data-bean-card="${requested}"]`)?.scrollIntoView({block:'center'});
+  });
+</script>

@@ -36,6 +36,8 @@ export function getStaticPaths() {
       </div>
       
       <div class="flex flex-wrap justify-center gap-3">
+        <a href={`/${lang}/beans`} class="inline-flex min-h-[44px] items-center rounded-xl border border-coffee-gold/25 px-4 text-sm font-semibold text-coffee-gold transition-colors hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '咖啡豆護照' : 'Bean passports'}</a>
+        <a href={`/${lang}/insights`} class="inline-flex min-h-[44px] items-center rounded-xl border border-blue-300/25 px-4 text-sm font-semibold text-blue-200 transition-colors hover:bg-blue-300/10">{lang === 'zh-TW' ? '個人洞察' : 'Personal insights'}</a>
         <a href={`/${lang}/data`} class="inline-flex min-h-[44px] items-center rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand transition-colors hover:border-coffee-gold hover:text-coffee-gold">{lang === 'zh-TW' ? '完整備份／搬機' : 'Backup / transfer'}</a>
         <button id="btn-clear-selection" class="hidden min-h-[44px] px-4 rounded-xl border border-coffee-sand/20 text-coffee-sand hover:text-coffee-light transition-colors text-sm font-semibold">
           {t('history.compare.clear')}
@@ -117,10 +119,12 @@ export function getStaticPaths() {
   actualPour: lang === 'zh-TW' ? '實際注水' : 'Actual pour',
   trainingBrew: lang === 'zh-TW' ? '訓練第 {lesson} 杯' : 'Training brew {lesson}',
   targetsRecorded: lang === 'zh-TW' ? '記錄 {count}/3 段' : '{count}/3 targets',
+  passport: lang === 'zh-TW' ? '咖啡豆護照' : 'Bean passport',
   savePersonal: lang === 'zh-TW' ? '儲存為個人配方' : 'Save as personal recipe',
   savedPersonal: lang === 'zh-TW' ? '已儲存到個人配方' : 'Saved to personal recipes',
   locale: lang,
-  homeUrl: `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`
+  homeUrl: `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`,
+  beansUrl: `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/beans`
 } }}>
   window.historyDict = dict;
 </script>
@@ -140,6 +144,7 @@ export function getStaticPaths() {
       waterTemp: number;
       grindSize: string;
       standardRecipeId?: string;
+      beanPassportId?: string;
     };
     brewTimeSeconds: number;
     recipeVersion: number;
@@ -212,7 +217,8 @@ export function getStaticPaths() {
         waterRatio: clamp(raw.recipe.waterRatio, 10, 25, inferredRatio),
         waterTemp: clamp(raw.recipe.waterTemp, 80, 100, 92),
         grindSize: String(raw.recipe.grindSize || '').slice(0, 80),
-        standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(raw.recipe.standardRecipeId || '')) ? String(raw.recipe.standardRecipeId) : undefined
+        standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(raw.recipe.standardRecipeId || '')) ? String(raw.recipe.standardRecipeId) : undefined,
+        beanPassportId: /^\d{1,20}$/.test(String(raw.recipe.beanPassportId || '')) ? String(raw.recipe.beanPassportId) : undefined
       },
       brewTimeSeconds: Math.round(clamp(raw.brewTimeSeconds, 1, 86400, 150)),
       recipeVersion: Math.max(1, Math.min(999, Math.round(Number(raw.recipeVersion) || 1))),
@@ -251,7 +257,16 @@ export function getStaticPaths() {
     const compareContent = document.getElementById('compare-content');
 
     let logs: LogEntry[] = [];
+    const passports = new Map<string, { name: string; origin: string }>();
     const selectedIds = new Set<string>();
+
+    try {
+      const parsed = JSON.parse(localStorage.getItem('barista_flow_beans_v1') || '[]');
+      if (Array.isArray(parsed)) parsed.forEach((bean) => {
+        const id = String(bean?.id || '');
+        if (/^\d{1,20}$/.test(id)) passports.set(id, { name: String(bean?.name || '').slice(0, 80), origin: String(bean?.origin || '').slice(0, 80) });
+      });
+    } catch (error) {}
 
     // Load data from localStorage
     try {
@@ -306,6 +321,7 @@ export function getStaticPaths() {
         const dateStr = d.toLocaleDateString(window.historyDict.locale, { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
         const ratio = log.recipe.waterRatio || Math.round((log.recipe.totalWater / log.recipe.coffeeWeight) * 10) / 10;
         const selected = selectedIds.has(log.id);
+        const passport = log.recipe.beanPassportId ? passports.get(log.recipe.beanPassportId) : undefined;
 
         const card = document.createElement('div');
         card.className = `log-card backdrop-blur-md bg-coffee-darker/60 p-6 rounded-3xl border ${selected ? 'border-coffee-gold ring-2 ring-coffee-gold/20' : 'border-coffee-sand/10'} hover:shadow-lg hover:border-coffee-gold/30 transition-all duration-200 relative group`;
@@ -322,6 +338,7 @@ export function getStaticPaths() {
             <h3 class="font-display font-bold text-lg text-coffee-light truncate">${escapeHTML(log.recipe.beanName) || window.historyDict.unknownBean}</h3>
             <p class="text-xs text-coffee-sand/80 mt-1">${log.recipe.coffeeWeight}g ${window.historyDict.powder} | 1:${ratio} | ${log.recipe.totalWater}g ${window.historyDict.water}</p>
             <p class="mt-1 text-[11px] text-coffee-muted">${window.historyDict.grind}: ${escapeHTML(log.recipe.grindSize || '—')} · ${window.historyDict.brewTime}: ${formatDuration(log.brewTimeSeconds)}</p>
+            ${passport ? `<a href="${window.historyDict.beansUrl}?bean=${log.recipe.beanPassportId}" class="mt-2 inline-flex min-h-[32px] items-center rounded-full border border-coffee-gold/20 bg-coffee-gold/5 px-3 text-[10px] font-bold text-coffee-gold hover:bg-coffee-gold/10">${window.historyDict.passport} · ${escapeHTML(passport.origin || passport.name)}</a>` : ''}
           </div>
 
           ${log.evaluation.photoData ? `<img src="${log.evaluation.photoData}" alt="" class="mb-4 h-40 w-full rounded-2xl border border-coffee-sand/10 object-cover" loading="lazy" />` : ''}
@@ -565,10 +582,11 @@ export function getStaticPaths() {
         return `"${text.replace(/"/g, '""')}"`;
       };
 
-      const headers = ['Date', 'Bean Name', 'Recipe Version', 'Training Lesson', 'Coffee Weight (g)', 'Water Ratio', 'Grind Setting', 'Water Temp (C)', 'Total Water (g)', 'Brew Time (seconds)', 'Pour Targets Recorded', 'Schedule Offset (seconds)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Overall (1-5)', 'Issue', 'Next Recommendation', 'Notes'];
+      const headers = ['Date', 'Bean Name', 'Bean Passport ID', 'Recipe Version', 'Training Lesson', 'Coffee Weight (g)', 'Water Ratio', 'Grind Setting', 'Water Temp (C)', 'Total Water (g)', 'Brew Time (seconds)', 'Pour Targets Recorded', 'Schedule Offset (seconds)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Overall (1-5)', 'Issue', 'Next Recommendation', 'Notes'];
       const rows = logData.map(log => [
         csvCell(log.date),
         csvCell(log.recipe.beanName),
+        csvCell(log.recipe.beanPassportId || ''),
         log.recipeVersion,
         log.trainingLesson || '',
         log.recipe.coffeeWeight,

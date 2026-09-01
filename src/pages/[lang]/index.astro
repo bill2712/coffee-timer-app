@@ -21,7 +21,7 @@ const c = isZh ? {
   setupEyebrow: '步驟 2–3', setupTitle: '輸入粉量，然後跟著計時器', setupBody: '新手只需處理必要選項；豆名、研磨刻度、水溫及比例收在「進階設定」內。',
   helpEyebrow: '遇到問題時才看', helpTitle: '按杯中問題找答案', helpBody: '不用先讀完整個知識庫。沖完後選擇最接近的問題，再深入了解。',
   first: '第一次手沖，由哪裡開始？', sour: '咖啡太酸／尖銳', bitter: '咖啡太苦／乾口', grind: '不知道研磨度怎樣選', flow: '注水太快或太慢', ratio: '不知道要用多少粉和水',
-  moreTitle: '進階工具與完整內容', moreBody: '標準配方、磨豆機校準、轉換器及完整文章都保留在這裡。', recipes: '有來源配方庫', tools: '個人磨豆機校準', knowledge: '完整知識庫', backup: '資料備份／搬機', latestFallback: '上一杯已儲存', trainingActive: '正在進行首五杯訓練', trainingContinue: '返回本杯設定', trainingView: '查看五杯進度'
+  moreTitle: '進階工具與完整內容', moreBody: '咖啡豆護照、個人數據洞察、標準配方及完整文章都保留在這裡。', recipes: '有來源配方庫', tools: '個人磨豆機校準', knowledge: '完整知識庫', beans: '咖啡豆護照', insights: '個人數據洞察', backup: '資料備份／搬機', latestFallback: '上一杯已儲存', trainingActive: '正在進行首五杯訓練', trainingContinue: '返回本杯設定', trainingView: '查看五杯進度', viewInsights: '查看個人洞察'
 } : {
   eyebrow: 'Your first brew, made simple', title: 'Set up in 30 seconds, then follow the prompts', intro: 'Choose your brewer and coffee dose. We will supply a sensible starting point, then help you adjust from what you taste.', start: 'Set up my first brew', guide: 'Start the First Five Brews course',
   step1: 'Choose a brewer', step1Body: 'Start with the equipment in front of you.', step2: 'Enter your dose', step2Body: 'Water, ratio, and temperature get a recommended starting point.', step3: 'Follow the prompts', step3Body: 'The timer highlights only what matters now.',
@@ -31,7 +31,7 @@ const c = isZh ? {
   setupEyebrow: 'Steps 2–3', setupTitle: 'Enter the dose, then follow the timer', setupBody: 'Beginners see only essential choices. Bean name, grinder setting, temperature, and ratio stay under Advanced settings.',
   helpEyebrow: 'Open only when needed', helpTitle: 'Find help by the problem in your cup', helpBody: 'You do not need to read the whole library first. Finish a brew, choose the closest problem, then learn more.',
   first: 'My first pour-over: where do I start?', sour: 'Coffee tastes sharp or too sour', bitter: 'Coffee tastes bitter or drying', grind: 'I do not know which grind to use', flow: 'The drawdown is too fast or slow', ratio: 'How much coffee and water?',
-  moreTitle: 'Advanced tools and full library', moreBody: 'Source-backed recipes, grinder calibration, converters, and every article remain available here.', recipes: 'Source-backed recipes', tools: 'Personal grinder calibration', knowledge: 'Full knowledge library', backup: 'Backup / device transfer', latestFallback: 'Your last brew is saved', trainingActive: 'First Five Brews in progress', trainingContinue: 'Return to this brew', trainingView: 'View five-brew progress'
+  moreTitle: 'Advanced tools and full library', moreBody: 'Bean passports, personal insights, source-backed recipes, and every article remain available here.', recipes: 'Source-backed recipes', tools: 'Personal grinder calibration', knowledge: 'Full knowledge library', beans: 'Bean passports', insights: 'Personal brewing insights', backup: 'Backup / device transfer', latestFallback: 'Your last brew is saved', trainingActive: 'First Five Brews in progress', trainingContinue: 'Return to this brew', trainingView: 'View five-brew progress', viewInsights: 'View personal insights'
 };
 
 const starterRecipe = { beanName: isZh ? '我的咖啡豆' : 'My coffee beans', roastLevel: 'medium', grindSize: isZh ? '中細研磨（像砂糖）' : 'Medium-fine (like table salt)', waterTemp: 92, coffeeWeight: 15, waterRatio: 15 };
@@ -50,6 +50,7 @@ export function getStaticPaths() { return getLanguagePaths(); }
       <div class="flex flex-col gap-2 sm:flex-row">
         <button id="btn-repeat-last" type="button" class="min-h-[48px] rounded-xl bg-green-300 px-5 text-sm font-bold text-coffee-dark hover:bg-green-200">{c.repeat}</button>
         <a href={`${basePath}/history`} class="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-coffee-sand/20 px-5 text-sm font-semibold text-coffee-sand hover:text-coffee-light">{c.records}</a>
+        <a id="returning-insights-link" href={`${basePath}/insights`} class="hidden min-h-[48px] items-center justify-center rounded-xl border border-blue-300/30 px-5 text-sm font-semibold text-blue-200 hover:bg-blue-300/10">{c.viewInsights}</a>
         <a id="compare-latest-link" href={`${basePath}/history`} class="hidden min-h-[48px] items-center justify-center rounded-xl border border-coffee-gold/30 px-5 text-sm font-semibold text-coffee-gold hover:bg-coffee-gold/10">{c.compare}</a>
       </div>
     </div>
@@ -101,7 +102,7 @@ export function getStaticPaths() { return getLanguagePaths(); }
 
   <details class="group mt-10 rounded-2xl border border-coffee-sand/10 bg-coffee-dark/35">
     <summary class="flex min-h-[64px] cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold sm:px-6"><span><strong class="block font-display text-lg text-coffee-light">{c.moreTitle}</strong><span class="mt-1 block text-xs leading-5 text-coffee-muted">{c.moreBody}</span></span><span class="text-xl text-coffee-gold transition-transform group-open:rotate-45" aria-hidden="true">＋</span></summary>
-    <div class="grid gap-3 border-t border-coffee-sand/10 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-4"><a href={`${basePath}/recipes`} class="secondary-resource">{c.recipes}</a><a href={`${basePath}/tools/grinder-calibration`} class="secondary-resource">{c.tools}</a><a href={`${basePath}/blog`} class="secondary-resource">{c.knowledge}</a><a href={`${basePath}/data`} class="secondary-resource">{c.backup}</a></div>
+    <div class="grid gap-3 border-t border-coffee-sand/10 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-3"><a href={`${basePath}/beans`} class="secondary-resource">{c.beans}</a><a href={`${basePath}/insights`} class="secondary-resource">{c.insights}</a><a href={`${basePath}/recipes`} class="secondary-resource">{c.recipes}</a><a href={`${basePath}/tools/grinder-calibration`} class="secondary-resource">{c.tools}</a><a href={`${basePath}/blog`} class="secondary-resource">{c.knowledge}</a><a href={`${basePath}/data`} class="secondary-resource">{c.backup}</a></div>
   </details>
 
   <AdSlot type="bottom-utility" class="my-12" />
@@ -127,6 +128,7 @@ export function getStaticPaths() { return getLanguagePaths(); }
     const returnPanel = document.getElementById('returning-brewer');
     const returnSummary = document.getElementById('returning-summary');
     const compareLink = document.getElementById('compare-latest-link');
+    const insightsLink = document.getElementById('returning-insights-link');
     const repeatButton = document.getElementById('btn-repeat-last');
     const latest = logs[0];
     try {
@@ -145,6 +147,7 @@ export function getStaticPaths() { return getLanguagePaths(); }
       const recommendation = String(latest.recommendation?.title || '');
       if (returnSummary) returnSummary.textContent = recommendation ? `${bean} · ${recommendation}` : `${bean} · ${returnBody}`;
       if (logs.length >= 2) { compareLink?.classList.remove('hidden'); compareLink?.classList.add('inline-flex'); }
+      if (logs.length >= 5) { insightsLink?.classList.remove('hidden'); insightsLink?.classList.add('inline-flex'); }
       repeatButton?.addEventListener('click', () => {
         try { localStorage.setItem('barista_flow_recipe', JSON.stringify(latest.recipe)); } catch (error) {}
         window.dispatchEvent(new CustomEvent('coffee-recipe-changed', { detail: latest.recipe }));

@@ -91,6 +91,8 @@ const finalKeywords = keywords || t('seo.keywords');
               <summary class="flex min-h-[44px] cursor-pointer list-none items-center gap-1 rounded-lg px-2 text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-xs transition-transform group-open:rotate-180" aria-hidden="true">⌄</span></summary>
               <div class="absolute end-0 top-full z-[70] mt-2 grid w-64 gap-1 rounded-xl border border-coffee-sand/15 bg-coffee-darker p-2 shadow-2xl">
                 <a href={`${base}${lang}/training`} class="nav-more-link">{lang === 'zh-TW' ? '首五杯新手訓練' : 'First Five Brews'}</a>
+                <a href={`${base}${lang}/beans`} class="nav-more-link">{lang === 'zh-TW' ? '咖啡豆護照' : 'Bean passports'}</a>
+                <a href={`${base}${lang}/insights`} class="nav-more-link">{lang === 'zh-TW' ? '個人數據洞察' : 'Personal insights'}</a>
                 <a href={`${base}${lang}/tools/grinder-calibration`} class="nav-more-link">{lang === 'zh-TW' ? '個人磨豆機校準' : 'Grinder calibration'}</a>
                 <a href={`${base}${lang}/recipes`} class="nav-more-link">{lang === 'zh-TW' ? '有來源配方庫' : 'Source-backed recipes'}</a>
                 <a href={`${base}${lang}/tools/grind-converter`} class="nav-more-link">{lang === 'zh-TW' ? '沖煮工具與計算器' : 'Brewing tools & calculators'}</a>
@@ -121,6 +123,8 @@ const finalKeywords = keywords || t('seo.keywords');
           <summary class="flex min-h-[52px] cursor-pointer list-none items-center justify-center gap-2 text-2xl font-light tracking-wide text-coffee-light">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-base transition-transform group-open:rotate-180">⌄</span></summary>
           <div class="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-coffee-sand/10 bg-coffee-darker/60 p-3 text-center text-sm text-coffee-sand">
             <a href={`${base}${lang}/training`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '首五杯' : 'Five brews'}</a>
+            <a href={`${base}${lang}/beans`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '咖啡豆護照' : 'Bean passports'}</a>
+            <a href={`${base}${lang}/insights`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '個人洞察' : 'Insights'}</a>
             <a href={`${base}${lang}/tools/grinder-calibration`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '磨豆機校準' : 'Grinder'}</a>
             <a href={`${base}${lang}/recipes`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '配方庫' : 'Recipes'}</a>
             <a href={`${base}${lang}/tools/grind-converter`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '工具' : 'Tools'}</a>
@@ -169,6 +173,8 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/about`} class="hover:text-coffee-gold transition-colors">{t('nav.about')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/methodology`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '計算方法與來源' : 'Methodology & sources'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '標準配方庫' : 'Standard recipes'}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/beans`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '咖啡豆護照' : 'Bean passports'}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/insights`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '個人數據洞察' : 'Personal insights'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/data`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '資料備份' : 'Data backup'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/faq`} class="hover:text-coffee-gold transition-colors">{t('nav.faq')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/contact`} class="hover:text-coffee-gold transition-colors">{t('nav.contact')}</a>

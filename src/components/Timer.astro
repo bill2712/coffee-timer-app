@@ -540,7 +540,8 @@ const timerDict = {
     grindSize: '',
     beanName: document.getElementById('bean-display')?.textContent || 'Classic Pour Over',
     roastLevel: 'medium',
-    standardRecipeId: ''
+    standardRecipeId: '',
+    beanPassportId: ''
   };
 
   // Timer run state
@@ -1259,7 +1260,8 @@ const timerDict = {
       grindSize: String(newRecipe?.grindSize || '').slice(0, 80),
       beanName: String(newRecipe?.beanName || recipe.beanName).trim().slice(0, 80),
       roastLevel: ['light', 'medium', 'dark'].includes(roast) ? roast : 'medium',
-      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(newRecipe?.standardRecipeId || '')) ? String(newRecipe.standardRecipeId) : ''
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(newRecipe?.standardRecipeId || '')) ? String(newRecipe.standardRecipeId) : '',
+      beanPassportId: /^\d{1,20}$/.test(String(newRecipe?.beanPassportId || '')) ? String(newRecipe.beanPassportId) : ''
     };
     
     if (beanDisplay) beanDisplay.textContent = recipe.beanName;

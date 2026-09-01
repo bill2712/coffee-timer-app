@@ -9,6 +9,7 @@ export interface Props {
     waterTemp?: number;
     coffeeWeight?: number;
     waterRatio?: number;
+    beanPassportId?: string;
   };
   ignoreLocalStorage?: boolean;
   minWaterTemp?: number;
@@ -117,6 +118,19 @@ const formDict = {
         <svg class="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
       </summary>
       <div class="space-y-4 border-t border-coffee-sand/10 p-4">
+        <div class="rounded-2xl border border-coffee-sand/15 bg-coffee-darker p-3">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <label class="min-w-0 flex-1 text-xs font-semibold text-coffee-sand" for="bean-passport-id">
+              <span class="mb-2 block">{lang === 'zh-TW' ? '咖啡豆護照（選填）' : 'Coffee bean passport (optional)'}</span>
+              <select id="bean-passport-id" class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-3 text-sm text-coffee-light outline-none focus:border-coffee-gold focus:ring-2 focus:ring-coffee-gold/30">
+                <option value="">{lang === 'zh-TW' ? '不連結護照' : 'No passport linked'}</option>
+              </select>
+            </label>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/beans`} class="inline-flex min-h-[48px] shrink-0 items-center justify-center rounded-xl border border-coffee-gold/35 px-4 text-xs font-bold text-coffee-gold hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '管理豆護照' : 'Manage passports'}</a>
+          </div>
+          <p class="mt-2 text-[11px] leading-5 text-coffee-muted">{lang === 'zh-TW' ? '選擇後會自動填入豆名，今杯紀錄亦會歸入該護照。' : 'Selecting one fills the bean name and links this brew to that passport.'}</p>
+        </div>
+
         <!-- Coffee Beans & Roast -->
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
@@ -314,6 +328,7 @@ const formDict = {
   const weightInput = document.getElementById('coffee-weight') as HTMLInputElement;
   const ratioInput = document.getElementById('water-ratio') as HTMLInputElement;
   const beanNameInput = document.getElementById('bean-name') as HTMLInputElement;
+  const beanPassportInput = document.getElementById('bean-passport-id') as HTMLSelectElement;
   const roastLevelInput = document.getElementById('roast-level') as HTMLSelectElement;
   const grindSizeInput = document.getElementById('grind-size') as HTMLInputElement;
   const waterTempInput = document.getElementById('water-temp') as HTMLInputElement;
@@ -464,7 +479,8 @@ const formDict = {
       coffeeWeight: parsedWeight,
       waterRatio: parsedRatio,
       totalWater: Math.round(parsedWeight * parsedRatio),
-      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(standardRecipeInput?.value || '') ? standardRecipeInput.value : ''
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(standardRecipeInput?.value || '') ? standardRecipeInput.value : '',
+      beanPassportId: /^\d{1,20}$/.test(beanPassportInput?.value || '') ? beanPassportInput.value : ''
     };
   }
 
@@ -476,7 +492,30 @@ const formDict = {
     if (weightInput) weightInput.value = recipe.coffeeWeight || 20;
     if (ratioInput) ratioInput.value = recipe.waterRatio || 15;
     if (standardRecipeInput) standardRecipeInput.value = /^[a-z0-9-]{1,80}$/.test(recipe.standardRecipeId || '') ? recipe.standardRecipeId : '';
+    if (beanPassportInput) beanPassportInput.value = /^\d{1,20}$/.test(String(recipe.beanPassportId || '')) ? String(recipe.beanPassportId) : '';
     updateCalculations();
+  }
+
+  function loadBeanPassports() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem('barista_flow_beans_v1') || '[]');
+      return Array.isArray(parsed) ? parsed.filter((bean) => /^\d{1,20}$/.test(String(bean?.id || '')) && String(bean?.name || '').trim()) : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function populateBeanPassports() {
+    if (!beanPassportInput) return;
+    const selected = beanPassportInput.value;
+    beanPassportInput.querySelectorAll('option:not(:first-child)').forEach((option) => option.remove());
+    loadBeanPassports().forEach((bean) => {
+      const option = document.createElement('option');
+      option.value = String(bean.id);
+      option.textContent = [String(bean.name).slice(0, 80), String(bean.origin || '').slice(0, 80)].filter(Boolean).join(' · ');
+      beanPassportInput.appendChild(option);
+    });
+    if ([...beanPassportInput.options].some((option) => option.value === selected)) beanPassportInput.value = selected;
   }
 
   function getRecipeScope() {
@@ -577,6 +616,7 @@ const formDict = {
     const ratioBounds = getBounds(ratioInput, 10, 25);
     const tempBounds = getBounds(waterTempInput, 80, 100);
     const sourceId = params.get('source') || '';
+    const passportId = params.get('passport') || '';
     const queryRecipe = {
       beanName: (params.get('bean') || dict.sharedRecipe).trim().slice(0, 80),
       roastLevel: ['light', 'medium', 'dark'].includes(params.get('roast') || '') ? params.get('roast') : 'medium',
@@ -585,7 +625,8 @@ const formDict = {
       coffeeWeight: Math.min(weightBounds.max, Math.max(weightBounds.min, parseFloat((params.get('w') || '').replace(',', '.')) || 20)),
       waterRatio: Math.min(ratioBounds.max, Math.max(ratioBounds.min, parseFloat((params.get('r') || '').replace(',', '.')) || 15)),
       totalWater: 0,
-      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(sourceId) ? sourceId : ''
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(sourceId) ? sourceId : '',
+      beanPassportId: /^\d{1,20}$/.test(passportId) ? passportId : ''
     };
     queryRecipe.totalWater = Math.round(queryRecipe.coffeeWeight * queryRecipe.waterRatio);
     
@@ -625,7 +666,8 @@ const formDict = {
       coffeeWeight: Number.isFinite(weight) ? Math.min(weightBounds.max, Math.max(weightBounds.min, weight)) : 20,
       waterRatio: Number.isFinite(ratio) ? Math.min(ratioBounds.max, Math.max(ratioBounds.min, ratio)) : 15,
       totalWater: 0,
-      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(raw.standardRecipeId || '')) ? String(raw.standardRecipeId) : ''
+      standardRecipeId: /^[a-z0-9-]{1,80}$/.test(String(raw.standardRecipeId || '')) ? String(raw.standardRecipeId) : '',
+      beanPassportId: /^\d{1,20}$/.test(String(raw.beanPassportId || '')) ? String(raw.beanPassportId) : ''
     };
   }
 
@@ -744,6 +786,11 @@ const formDict = {
 
   // --- Initialization ---
   document.addEventListener('DOMContentLoaded', () => {
+    populateBeanPassports();
+    beanPassportInput?.addEventListener('change', () => {
+      const bean = loadBeanPassports().find((item) => String(item.id) === beanPassportInput.value);
+      if (bean && beanNameInput) beanNameInput.value = String(bean.name).slice(0, 80);
+    });
     renderCoachAdjustment();
     btnClearCoach?.addEventListener('click', () => {
       try {
@@ -878,7 +925,7 @@ const formDict = {
     // --- Timer State Lock (Mid-Brew Protection) ---
     window.addEventListener('timer-state', (e: any) => {
       const isRunning = e.detail?.running || false;
-      const inputs = [weightInput, ratioInput, beanNameInput, roastLevelInput, grindSizeInput, waterTempInput];
+      const inputs = [weightInput, ratioInput, beanPassportInput, beanNameInput, roastLevelInput, grindSizeInput, waterTempInput];
       
       inputs.forEach(input => {
         if (input) {
