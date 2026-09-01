@@ -16,6 +16,7 @@ interface Props {
   ogImage?: string;
   article?: boolean;
   jsonld?: any;
+  hideTopAd?: boolean;
 }
 
 const {
@@ -24,7 +25,8 @@ const {
   keywords,
   ogImage = "/images/og-default.jpg",
   article = false,
-  jsonld
+  jsonld,
+  hideTopAd = false
 } = Astro.props;
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
@@ -81,38 +83,19 @@ const finalKeywords = keywords || t('seo.keywords');
             </a>
           </div>
           
-          <nav class="hidden lg:flex items-center gap-5 ms-auto min-w-0">
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              {t('nav.home')}
-            </a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/blog`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              {t('nav.glossary')}
-            </a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{lang === 'zh-TW' ? '配方庫' : 'Recipes'}</a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/grind-converter`} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200 flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
-              </svg>
-              {t('nav.grindConverter')}
-            </a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/water-temperature`} class="hidden xl:flex text-sm font-medium tracking-wide text-orange-400 hover:text-orange-300 transition-colors duration-200 items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
-              </svg>
-              {t('nav.waterTemp')}
-            </a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/bean-freshness`} class="hidden xl:flex text-sm font-medium tracking-wide text-green-400 hover:text-green-300 transition-colors duration-200 items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clip-rule="evenodd" />
-              </svg>
-              {t('nav.beanFreshness')}
-            </a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/history`} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200">
-              {t('nav.history')}
-            </a>
-            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/faq`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">
-              {t('nav.faq')}
-            </a>
+          <nav class="hidden lg:flex items-center gap-5 ms-auto min-w-0" aria-label={lang === 'zh-TW' ? '主要導航' : 'Primary navigation'}>
+            <a href={`${base}${lang}/`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{lang === 'zh-TW' ? '開始沖煮' : 'Start brewing'}</a>
+            <a href={`${base}${lang}/history`} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200">{lang === 'zh-TW' ? '我的紀錄' : 'My records'}</a>
+            <a href={`${base}${lang}/blog`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{lang === 'zh-TW' ? '學習' : 'Learn'}</a>
+            <details class="group relative">
+              <summary class="flex min-h-[44px] cursor-pointer list-none items-center gap-1 rounded-lg px-2 text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-xs transition-transform group-open:rotate-180" aria-hidden="true">⌄</span></summary>
+              <div class="absolute end-0 top-full z-[70] mt-2 grid w-64 gap-1 rounded-xl border border-coffee-sand/15 bg-coffee-darker p-2 shadow-2xl">
+                <a href={`${base}${lang}/recipes`} class="nav-more-link">{lang === 'zh-TW' ? '有來源配方庫' : 'Source-backed recipes'}</a>
+                <a href={`${base}${lang}/tools/grind-converter`} class="nav-more-link">{lang === 'zh-TW' ? '沖煮工具與計算器' : 'Brewing tools & calculators'}</a>
+                <a href={`${base}${lang}/faq`} class="nav-more-link">{t('nav.faq')}</a>
+                <a href={`${base}${lang}/data`} class="nav-more-link">{lang === 'zh-TW' ? '資料備份／搬機' : 'Backup / transfer'}</a>
+              </div>
+            </details>
             <div class="border-s border-coffee-sand/20 h-6 mx-2 hidden lg:block"></div>
             {hasMultipleLanguages && <LanguagePicker idSuffix="desktop" />}
           </nav>
@@ -127,16 +110,20 @@ const finalKeywords = keywords || t('seo.keywords');
     </header>
 
     <!-- Mobile Glassmorphic Overlay Drawer -->
-    <div id="mobile-menu-drawer" role="dialog" aria-modal="true" aria-label={lang === 'zh-TW' ? '主選單' : 'Main menu'} class="fixed inset-0 z-[55] overflow-y-auto backdrop-blur-xl bg-coffee-dark/95 flex flex-col opacity-0 -translate-y-full pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+    <div id="mobile-menu-drawer" role="dialog" aria-modal="true" aria-hidden="true" inert aria-label={lang === 'zh-TW' ? '主選單' : 'Main menu'} class="fixed inset-0 z-[55] overflow-y-auto backdrop-blur-xl bg-coffee-dark/95 flex flex-col opacity-0 -translate-y-full pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
       <nav class="flex min-h-full flex-col items-center justify-center space-y-4 px-6 py-24">
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-105 active:scale-95">{t('nav.home')}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/blog`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-105 active:scale-95">{t('nav.glossary')}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-105 active:scale-95">{lang === 'zh-TW' ? '配方庫' : 'Recipes'}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/grind-converter`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-105 active:scale-95">{t('nav.grindConverter')}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/water-temperature`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-orange-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-orange-300 hover:scale-105 active:scale-95">{t('nav.waterTemp')}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/bean-freshness`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-green-400 opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-green-300 hover:scale-105 active:scale-95">{t('nav.beanFreshness')}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/history`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light hover:scale-105 active:scale-95">{t('nav.history')}</a>
-        <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/faq`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold hover:scale-105 active:scale-95">{t('nav.faq')}</a>
+        <a href={`${base}${lang}/`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold active:scale-95">{lang === 'zh-TW' ? '開始沖煮' : 'Start brewing'}</a>
+        <a href={`${base}${lang}/history`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light active:scale-95">{lang === 'zh-TW' ? '我的紀錄' : 'My records'}</a>
+        <a href={`${base}${lang}/blog`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold active:scale-95">{lang === 'zh-TW' ? '學習' : 'Learn'}</a>
+        <details class="mobile-link group w-full max-w-sm opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+          <summary class="flex min-h-[52px] cursor-pointer list-none items-center justify-center gap-2 text-2xl font-light tracking-wide text-coffee-light">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-base transition-transform group-open:rotate-180">⌄</span></summary>
+          <div class="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-coffee-sand/10 bg-coffee-darker/60 p-3 text-center text-sm text-coffee-sand">
+            <a href={`${base}${lang}/recipes`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '配方庫' : 'Recipes'}</a>
+            <a href={`${base}${lang}/tools/grind-converter`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '工具' : 'Tools'}</a>
+            <a href={`${base}${lang}/faq`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{t('nav.faq')}</a>
+            <a href={`${base}${lang}/data`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '備份' : 'Backup'}</a>
+          </div>
+        </details>
         
         <div class="mobile-link opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] pt-4">
           {hasMultipleLanguages && <LanguagePicker idSuffix="mobile" />}
@@ -151,7 +138,7 @@ const finalKeywords = keywords || t('seo.keywords');
       <div class="fixed bottom-[-10%] end-[-5%] w-[600px] h-[600px] bg-coffee-accent/10 blur-[150px] rounded-full -z-10 pointer-events-none hidden lg:block"></div>
 
       <!-- Top Leaderboard Ad Slot (Global) -->
-      <AdSlot type="top-leaderboard" id="adsense-top-banner" class="my-6" />
+      {!hideTopAd && <AdSlot type="top-leaderboard" id="adsense-top-banner" class="my-6" />}
 
       <slot />
       <PageFeedback />
@@ -215,7 +202,8 @@ const finalKeywords = keywords || t('seo.keywords');
         const drawer = document.getElementById('mobile-menu-drawer');
         const line1 = toggleBtn?.querySelector('.line-1');
         const line2 = toggleBtn?.querySelector('.line-2');
-        const links = document.querySelectorAll('.mobile-link');
+        const menuItems = document.querySelectorAll('.mobile-link');
+        const menuLinks = drawer?.querySelectorAll('a') || [];
         
         let isOpen = false;
 
@@ -234,12 +222,14 @@ const finalKeywords = keywords || t('seo.keywords');
             // Show Drawer
             drawer?.classList.remove('opacity-0', '-translate-y-full', 'pointer-events-none');
             drawer?.classList.add('opacity-100', 'translate-y-0');
+            drawer?.setAttribute('aria-hidden', 'false');
+            drawer?.removeAttribute('inert');
             
             // Lock body scroll
             document.body.style.overflow = 'hidden';
 
             // Animate links in staggered
-            links.forEach((link, index) => {
+            menuItems.forEach((link, index) => {
               setTimeout(() => {
                 link.classList.remove('opacity-0', 'translate-y-12');
                 link.classList.add('opacity-100', 'translate-y-0');
@@ -256,12 +246,14 @@ const finalKeywords = keywords || t('seo.keywords');
             // Hide Drawer
             drawer?.classList.remove('opacity-100', 'translate-y-0');
             drawer?.classList.add('opacity-0', '-translate-y-full', 'pointer-events-none');
+            drawer?.setAttribute('aria-hidden', 'true');
+            drawer?.setAttribute('inert', '');
             
             // Unlock body scroll
             document.body.style.overflow = '';
 
             // Reset links
-            links.forEach((link) => {
+            menuItems.forEach((link) => {
               link.classList.add('opacity-0', 'translate-y-12');
               link.classList.remove('opacity-100', 'translate-y-0');
             });
@@ -271,10 +263,21 @@ const finalKeywords = keywords || t('seo.keywords');
         toggleBtn?.addEventListener('click', toggleMenu);
 
         // Close menu when clicking a link
-        links.forEach(link => {
+        menuLinks.forEach(link => {
           link.addEventListener('click', () => {
             if (isOpen) toggleMenu();
           });
+        });
+
+        const desktopMore = document.querySelector('header details') as HTMLDetailsElement | null;
+        document.addEventListener('click', (event) => {
+          if (desktopMore?.open && event.target instanceof Node && !desktopMore.contains(event.target)) desktopMore.open = false;
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            if (desktopMore?.open) desktopMore.open = false;
+            if (isOpen) toggleMenu();
+          }
         });
       });
     </script>

@@ -32,6 +32,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const formDict = {
+  lang,
   roastLight: t('form.roast.light'),
   roastMedium: t('form.roast.medium'),
   roastDark: t('form.roast.dark'),
@@ -61,9 +62,9 @@ const formDict = {
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
       </svg>
-      {t('form.title')}
+      {lang === 'zh-TW' ? '你的第一杯設定' : 'Your first-brew setup'}
     </h2>
-    <p class="text-xs text-coffee-muted mt-1">{t('form.subtitle')}</p>
+    <p class="mt-1 text-xs leading-relaxed text-coffee-muted">{lang === 'zh-TW' ? '先選咖啡粉量，其餘使用可靠起始值；沖完再按味道逐項調整。' : 'Choose the coffee dose first. Start with reliable defaults, then adjust one thing after tasting.'}</p>
   </div>
 
   <aside id="coach-adjustment" class="hidden rounded-2xl border border-coffee-gold/30 bg-coffee-gold/10 p-4" aria-live="polite">
@@ -81,8 +82,43 @@ const formDict = {
 
   <form id="recipe-form" class="space-y-5" onsubmit="return false;" data-default-recipe={JSON.stringify(defaultRecipe || null)} data-ignore-local={ignoreLocalStorage ? "true" : "false"}>
     <input type="hidden" id="standard-recipe-id" value="" />
-    <!-- Coffee Beans & Roast -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <p class="mb-2 text-xs font-bold uppercase tracking-wider text-coffee-gold">
+        {lang === 'zh-TW' ? '第一步：你想用幾多咖啡粉？' : 'Step 1: How much coffee are you using?'}
+      </p>
+      <div class="relative flex h-20 items-center rounded-2xl border border-coffee-gold/35 bg-coffee-darker px-1 transition-all focus-within:border-coffee-gold focus-within:ring-2 focus-within:ring-coffee-gold/50">
+        <button type="button" id="btn-weight-minus" aria-label={lang === 'zh-TW' ? '減少咖啡粉量' : 'Decrease coffee weight'} class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl text-coffee-sand transition hover:bg-coffee-sand/10 hover:text-coffee-gold active:scale-95">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
+        </button>
+        <div class="relative flex h-full flex-1 flex-col justify-end pb-3">
+          <input type="number" id="coffee-weight" min="5" max={maxCoffeeWeight} step="0.5" value={defaultRecipe?.coffeeWeight ?? 15} class="peer w-full bg-transparent text-center font-display text-2xl font-bold text-coffee-light focus:outline-none" placeholder="15" />
+          <label for="coffee-weight" class="absolute start-1/2 top-2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider text-coffee-sand rtl:translate-x-1/2">{t('form.weight')}</label>
+        </div>
+        <button type="button" id="btn-weight-plus" aria-label={lang === 'zh-TW' ? '增加咖啡粉量' : 'Increase coffee weight'} class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl text-coffee-sand transition hover:bg-coffee-sand/10 hover:text-coffee-gold active:scale-95">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+        </button>
+      </div>
+      <span id="weight-error" class="ms-2 mt-1 hidden text-xs text-red-400">{t('form.errWeight')}</span>
+    </div>
+
+    <div class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-4 text-center" aria-live="polite">
+      <p id="simple-recipe-sentence" class="font-display text-lg font-bold text-coffee-light">
+        {lang === 'zh-TW' ? '15g 咖啡粉 → 注水至 225g' : '15g coffee → pour to 225g'}
+      </p>
+      <p class="mt-1 text-xs leading-relaxed text-coffee-sand">
+        {lang === 'zh-TW' ? '已為初學者預設中細研磨、92°C、1:15；想微調才打開下面設定。' : 'Beginner defaults are medium-fine, 92°C and 1:15. Open the settings below only when you want to adjust.'}
+      </p>
+    </div>
+
+    <details id="advanced-settings" class="group rounded-2xl border border-coffee-sand/15 bg-coffee-dark/45">
+      <summary class="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-coffee-sand marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold">
+        <span>{lang === 'zh-TW' ? '進階設定（選填）' : 'Advanced settings (optional)'}</span>
+        <span class="text-xs font-normal text-coffee-muted">{lang === 'zh-TW' ? '豆名、研磨、水溫、比例' : 'Bean, grind, temperature, ratio'}</span>
+        <svg class="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
+      </summary>
+      <div class="space-y-4 border-t border-coffee-sand/10 p-4">
+        <!-- Coffee Beans & Roast -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="text"
@@ -110,10 +146,10 @@ const formDict = {
           {t('form.roast')}
         </label>
       </div>
-    </div>
+        </div>
 
-    <!-- Grind & Temperature -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <!-- Grind & Temperature -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-end pb-2 px-3 hover:shadow-md">
         <input
           type="text"
@@ -143,39 +179,11 @@ const formDict = {
         </label>
         <span class="absolute end-4 bottom-2 text-coffee-muted text-sm font-medium">°C</span>
       </div>
-    </div>
-
-    <!-- Coffee Ratio & Water Amount Calc -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-      <!-- Coffee Weight Stepper -->
-      <div>
-        <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-center px-1 hover:shadow-md">
-          <button type="button" id="btn-weight-minus" aria-label={lang === 'zh-TW' ? '減少咖啡粉量' : 'Decrease coffee weight'} class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
-          </button>
-          
-          <div class="relative flex-1 h-full flex flex-col justify-end pb-2">
-            <input
-              type="number"
-              id="coffee-weight"
-              min="5" max={maxCoffeeWeight} step="0.5" value={defaultRecipe?.coffeeWeight ?? 20}
-              class="peer w-full bg-transparent text-center font-display text-xl font-bold text-coffee-light focus:outline-none placeholder-transparent"
-              placeholder="20"
-            />
-            <label for="coffee-weight" class="absolute start-1/2 -translate-x-1/2 rtl:translate-x-1/2 top-2 text-[10px] font-semibold uppercase tracking-wider text-coffee-sand transition-all duration-300 pointer-events-none whitespace-nowrap">
-              {t('form.weight')}
-            </label>
-          </div>
-
-          <button type="button" id="btn-weight-plus" aria-label={lang === 'zh-TW' ? '增加咖啡粉量' : 'Increase coffee weight'} class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
-          </button>
         </div>
-        <span id="weight-error" class="text-red-400 text-xs hidden ms-2 mt-1">{t('form.errWeight')}</span>
-      </div>
 
-      <!-- Water Ratio Stepper -->
-      <div>
+        <!-- Water Ratio Stepper -->
+        <div>
+          <p class="mb-2 text-xs font-semibold text-coffee-sand">{lang === 'zh-TW' ? '粉水比例' : 'Brew ratio'}</p>
         <div class="relative bg-coffee-darker border border-coffee-sand/15 rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-coffee-gold/50 focus-within:border-coffee-gold h-16 flex items-center px-1 hover:shadow-md">
           <button type="button" id="btn-ratio-minus" aria-label={lang === 'zh-TW' ? '減少粉水比例' : 'Decrease brew ratio'} class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl text-coffee-sand hover:text-coffee-gold hover:bg-coffee-sand/10 active:scale-95 transition-all duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer outline-none">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
@@ -199,8 +207,9 @@ const formDict = {
           </button>
         </div>
         <span id="ratio-error" class="text-red-400 text-xs hidden ms-2 mt-1">{t('form.errRatio')}</span>
+        </div>
       </div>
-    </div>
+    </details>
 
     <!-- Summary Box -->
     <div class="bg-coffee-darker/60 border border-coffee-sand/10 rounded-xl p-4 flex justify-between items-center mt-6">
@@ -221,12 +230,18 @@ const formDict = {
       <button
         type="button"
         id="btn-apply-recipe"
+        data-default-label={lang === 'zh-TW' ? '使用這個設定，準備開始' : 'Use these settings and get ready'}
         class="w-full bg-gradient-to-r from-coffee-gold to-coffee-sand hover:from-coffee-gold-hover hover:to-coffee-gold text-coffee-dark font-semibold tracking-wide rounded-2xl py-4 shadow-lg shadow-coffee-gold/20 hover:shadow-xl hover:shadow-coffee-gold/40 hover:-translate-y-1 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-coffee-gold cursor-pointer text-center text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {t('form.apply')}
+        {lang === 'zh-TW' ? '使用這個設定，準備開始' : 'Use these settings and get ready'}
       </button>
 
-      <div class="grid grid-cols-2 gap-3">
+      <details class="group rounded-xl border border-coffee-sand/10 bg-coffee-dark/30">
+        <summary class="flex min-h-[48px] cursor-pointer list-none items-center justify-between px-4 text-xs font-semibold text-coffee-muted marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold">
+          <span>{lang === 'zh-TW' ? '儲存或分享這個設定' : 'Save or share these settings'}</span>
+          <svg class="h-4 w-4 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
+        </summary>
+        <div class="grid grid-cols-2 gap-3 border-t border-coffee-sand/10 p-3">
         <button
           type="button"
           id="btn-save-history"
@@ -247,7 +262,8 @@ const formDict = {
           </svg>
           {t('form.shareUrl')}
         </button>
-      </div>
+        </div>
+      </details>
     </div>
 
     <!-- History Panel -->
@@ -313,6 +329,8 @@ const formDict = {
   const btnRatioPlus = document.getElementById('btn-ratio-plus');
   
   const totalWaterEl = document.getElementById('total-water');
+  const simpleRecipeSentence = document.getElementById('simple-recipe-sentence');
+  const advancedSettings = document.getElementById('advanced-settings') as HTMLDetailsElement | null;
   const btnApply = document.getElementById('btn-apply-recipe') as HTMLButtonElement;
   const btnSaveHistory = document.getElementById('btn-save-history');
   const btnShareUrl = document.getElementById('btn-share-url');
@@ -401,9 +419,15 @@ const formDict = {
       if (isValid) {
         const totalWater = Math.round(weight * ratio);
         totalWaterEl.textContent = totalWater.toString();
+        if (simpleRecipeSentence) {
+          simpleRecipeSentence.textContent = dict.lang === 'en'
+            ? `${weight}g coffee → pour to ${totalWater}g`
+            : `${weight}g 咖啡粉 → 注水至 ${totalWater}g`;
+        }
         if (btnApply) btnApply.disabled = false;
       } else {
         totalWaterEl.textContent = '0';
+        if (simpleRecipeSentence) simpleRecipeSentence.textContent = dict.lang === 'en' ? 'Enter a valid dose' : '請輸入有效咖啡粉量';
         if (btnApply) btnApply.disabled = true;
       }
     }
@@ -566,6 +590,7 @@ const formDict = {
     queryRecipe.totalWater = Math.round(queryRecipe.coffeeWeight * queryRecipe.waterRatio);
     
     applyRecipeData(queryRecipe);
+    if (advancedSettings) advancedSettings.open = true;
     syncWithTimer(queryRecipe);
     
     // Clear URL to prevent reloading the same state
@@ -707,6 +732,7 @@ const formDict = {
     const item = history.find(h => h.id === id);
     if (item) {
       applyRecipeData(item);
+      if (advancedSettings) advancedSettings.open = true;
       syncWithTimer(item);
       showToast(dict.loadedSuccess);
     }
@@ -728,6 +754,7 @@ const formDict = {
     });
     window.addEventListener('coffee-coach-recommendation', ((event: CustomEvent) => {
       renderCoachAdjustment(event.detail);
+      if (event.detail && advancedSettings) advancedSettings.open = true;
     }) as EventListener);
     window.addEventListener('coffee-recipe-changed', ((event: CustomEvent) => {
       if (event.detail) applyRecipeData(event.detail);
@@ -780,8 +807,15 @@ const formDict = {
         syncWithTimer(getRecipeData());
         btnApply.textContent = dict.applySuccess;
         btnApply.classList.add('bg-green-600');
+        const timerTarget = document.getElementById('brew-preflight') || document.getElementById('timer-root');
+        window.setTimeout(() => {
+          timerTarget?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+          const firstCheck = timerTarget?.querySelector<HTMLInputElement>('.brew-preflight-check:not(:checked)');
+          const timerStart = document.getElementById('btn-start') as HTMLButtonElement | null;
+          window.setTimeout(() => (firstCheck || timerStart)?.focus(), 350);
+        }, 80);
         setTimeout(() => {
-          btnApply.textContent = dict.applySync;
+          btnApply.textContent = btnApply.dataset.defaultLabel || dict.applySync;
           btnApply.classList.remove('bg-green-600');
         }, 1500);
       });
@@ -839,11 +873,7 @@ const formDict = {
     }
 
     // Prepare History Panel
-    const history = loadHistory();
-    if (history.length > 0 && historyPanel) {
-      historyPanel.classList.remove('hidden');
-      renderHistory();
-    }
+    renderHistory();
 
     // --- Timer State Lock (Mid-Brew Protection) ---
     window.addEventListener('timer-state', (e: any) => {

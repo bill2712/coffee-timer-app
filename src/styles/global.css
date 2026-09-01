@@ -95,6 +95,29 @@ body {
   box-shadow: 0 0 25px rgba(212, 175, 55, 0.45);
 }
 
+.nav-more-link {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  color: var(--color-coffee-sand);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.nav-more-link:hover,
+.nav-more-link:focus-visible {
+  background: color-mix(in srgb, var(--color-coffee-gold) 12%, transparent);
+  color: var(--color-coffee-light);
+}
+
+.nav-more-link:focus-visible {
+  outline: 2px solid var(--color-coffee-gold);
+  outline-offset: 1px;
+}
+
 .diagnosis-choice:has(input:checked) {
   border-color: var(--color-coffee-gold);
   background: var(--color-coffee-gold);

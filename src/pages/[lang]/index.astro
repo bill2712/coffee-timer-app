@@ -9,263 +9,140 @@ import { getLanguagePaths } from '../../i18n/routes';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const isZh = lang === 'zh-TW';
+const basePath = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
 
-
-
-const webAppJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": t('seo.title'),
-  "description": t('seo.description'),
-  "keywords": t('seo.keywords'),
-  "operatingSystem": "All",
-  "applicationCategory": "UtilityApplication",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "url": `${SITE_URL}/${lang}/`,
-  "featureList": [
-    t('schema.app.feature1'),
-    t('schema.app.feature2'),
-    t('schema.app.feature3'),
-    t('schema.app.feature4'),
-    t('schema.app.feature5')
-  ],
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
+const c = isZh ? {
+  eyebrow: '第一次沖也不怕', title: '30 秒設定，跟住提示沖第一杯', intro: '選器材、輸入咖啡粉重量，其餘先交給推薦設定。完成後再按味道逐杯微調。', start: '開始設定第一杯', guide: '先看 2 分鐘新手指南',
+  step1: '選器材', step1Body: '先選你手上的沖煮工具。', step2: '輸入粉量', step2Body: '我們會自動計算水量、比例與溫度起點。', step3: '跟提示沖', step3Body: '畫面只突出現在要做的事。',
+  welcomeBack: '歡迎回來', returnTitle: '繼續改善上一杯', returnBody: '可直接載入上次參數，或查看已累積的味道紀錄。', repeat: '再次使用上次配方', records: '查看沖煮紀錄', compare: '比較最近兩杯',
+  brewerEyebrow: '步驟 1', brewerTitle: '你今日用甚麼器材？', brewerBody: '不知道選甚麼？V60 是清晰易學的起點；其他器材會帶你到專用流程。', recommended: '新手推薦',
+  v60: 'V60 手沖', v60Body: '清楚的三階段視覺提示', aero: 'AeroPress', aeroBody: '快速、容易清理', french: '法式濾壓壺', frenchBody: '浸泡式、操作直接', cold: '冷萃', coldBody: '低溫長時間浸泡',
+  setupEyebrow: '步驟 2–3', setupTitle: '輸入粉量，然後跟著計時器', setupBody: '新手只需處理必要選項；豆名、研磨刻度、水溫及比例收在「進階設定」內。',
+  helpEyebrow: '遇到問題時才看', helpTitle: '按杯中問題找答案', helpBody: '不用先讀完整個知識庫。沖完後選擇最接近的問題，再深入了解。',
+  first: '第一次手沖，由哪裡開始？', sour: '咖啡太酸／尖銳', bitter: '咖啡太苦／乾口', grind: '不知道研磨度怎樣選', flow: '注水太快或太慢', ratio: '不知道要用多少粉和水',
+  moreTitle: '進階工具與完整內容', moreBody: '標準配方、轉換器、養豆計算及完整文章都保留在這裡。', recipes: '有來源配方庫', tools: '全部沖煮工具', knowledge: '完整知識庫', backup: '資料備份／搬機', latestFallback: '上一杯已儲存'
+} : {
+  eyebrow: 'Your first brew, made simple', title: 'Set up in 30 seconds, then follow the prompts', intro: 'Choose your brewer and coffee dose. We will supply a sensible starting point, then help you adjust from what you taste.', start: 'Set up my first brew', guide: 'Read the 2-minute beginner guide',
+  step1: 'Choose a brewer', step1Body: 'Start with the equipment in front of you.', step2: 'Enter your dose', step2Body: 'Water, ratio, and temperature get a recommended starting point.', step3: 'Follow the prompts', step3Body: 'The timer highlights only what matters now.',
+  welcomeBack: 'Welcome back', returnTitle: 'Improve your last brew', returnBody: 'Load the previous settings or review the taste records you have built up.', repeat: 'Brew the last recipe again', records: 'View brew records', compare: 'Compare the latest two',
+  brewerEyebrow: 'Step 1', brewerTitle: 'What are you brewing with today?', brewerBody: 'Not sure? V60 is a clear starting point. Other choices open their dedicated workflow.', recommended: 'Beginner pick',
+  v60: 'V60 pour-over', v60Body: 'Clear three-stage visual prompts', aero: 'AeroPress', aeroBody: 'Fast and easy to clean', french: 'French press', frenchBody: 'Direct immersion brewing', cold: 'Cold brew', coldBody: 'Long, low-temperature steep',
+  setupEyebrow: 'Steps 2–3', setupTitle: 'Enter the dose, then follow the timer', setupBody: 'Beginners see only essential choices. Bean name, grinder setting, temperature, and ratio stay under Advanced settings.',
+  helpEyebrow: 'Open only when needed', helpTitle: 'Find help by the problem in your cup', helpBody: 'You do not need to read the whole library first. Finish a brew, choose the closest problem, then learn more.',
+  first: 'My first pour-over: where do I start?', sour: 'Coffee tastes sharp or too sour', bitter: 'Coffee tastes bitter or drying', grind: 'I do not know which grind to use', flow: 'The drawdown is too fast or slow', ratio: 'How much coffee and water?',
+  moreTitle: 'Advanced tools and full library', moreBody: 'Source-backed recipes, converters, freshness tools, and every article remain available here.', recipes: 'Source-backed recipes', tools: 'All brewing tools', knowledge: 'Full knowledge library', backup: 'Backup / device transfer', latestFallback: 'Your last brew is saved'
 };
 
-export function getStaticPaths() {
-  return getLanguagePaths();
-}
+const starterRecipe = { beanName: isZh ? '我的咖啡豆' : 'My coffee beans', roastLevel: 'medium', grindSize: isZh ? '中細研磨（像砂糖）' : 'Medium-fine (like table salt)', waterTemp: 92, coffeeWeight: 15, waterRatio: 15 };
+const webAppJsonLd = {
+  '@context': 'https://schema.org', '@type': 'WebApplication', name: t('seo.title'), description: t('seo.description'), keywords: t('seo.keywords'), operatingSystem: 'All', applicationCategory: 'UtilityApplication', browserRequirements: 'Requires JavaScript. Requires HTML5.', url: `${SITE_URL}/${lang}/`,
+  featureList: [t('schema.app.feature1'), t('schema.app.feature2'), t('schema.app.feature3'), t('schema.app.feature4'), t('schema.app.feature5')], offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+};
+
+export function getStaticPaths() { return getLanguagePaths(); }
 ---
 
-<Layout jsonld={webAppJsonLd}>
-  <section class="text-center max-w-4xl mx-auto mb-10 sm:mb-14 animate-float px-4">
-    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coffee-gold/10 border border-coffee-gold/20 text-coffee-gold text-xs font-semibold uppercase tracking-widest mb-6">
-      <span class="w-2 h-2 rounded-full bg-coffee-gold animate-pulse"></span>
-      {t('index.hero.tagline')}
-    </div>
-    
-    <h1 class="font-display break-keep text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight text-coffee-light leading-tight">
-      {t('index.hero.title1')}<br class="sm:hidden" />
-      <span class="bg-gradient-to-r from-coffee-gold via-coffee-sand to-coffee-gold bg-clip-text text-transparent">
-        {t('index.hero.title2')}
-      </span>
-    </h1>
-    
-    <div class="mt-8 relative h-20 sm:h-14 min-h-[5rem] sm:min-h-[3.5rem] overflow-hidden flex justify-center items-center" style="contain: layout paint; contain-intrinsic-size: 80px;">
-      <div id="motivation-banner" aria-live="polite" class="absolute w-full text-lg md:text-xl font-medium italic text-coffee-gold/90 drop-shadow-md transition-opacity duration-1000 opacity-0 px-2 leading-relaxed"></div>
-    </div>
-
-    <!-- Massive Guide CTA Button -->
-    <div class="mt-8 md:mt-12 flex justify-center animate-pulse-slow">
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/guide`} class="relative inline-flex items-center justify-center px-8 py-5 md:px-12 md:py-6 text-xl md:text-2xl font-display font-bold text-coffee-darker bg-gradient-to-r from-coffee-gold via-[#F2C94C] to-coffee-gold bg-[length:200%_auto] rounded-full hover:bg-right transition-all duration-500 shadow-[0_0_40px_rgba(217,160,91,0.4)] hover:shadow-[0_0_60px_rgba(217,160,91,0.6)] hover:scale-[1.02] ring-4 ring-coffee-gold/20 overflow-hidden group">
-        <span class="absolute inset-0 w-full h-full bg-white/20 -skew-x-12 -translate-x-full group-hover:animate-shine"></span>
-        <span class="relative z-10 flex items-center gap-3">
-          {t('index.guide.cta')}
-        </span>
-      </a>
-    </div>
-  </section>
-
-  <!-- Quick-Start User Guide (Beginner Crash Course) -->
-  <section class="mb-20 relative">
-    <!-- Premium background tint -->
-    <div class="absolute inset-0 bg-amber-500/5 blur-3xl rounded-[100px] pointer-events-none -z-10"></div>
-    
-    <div class="text-center max-w-3xl mx-auto mb-10 px-4">
-      <h2 class="font-display text-3xl md:text-4xl font-bold tracking-wide text-coffee-light mb-4">
-        {t('beginner_guide.headline.title')}
-      </h2>
-      <p class="text-sm md:text-base text-coffee-muted leading-relaxed">
-        {t('beginner_guide.headline.subtitle')}
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <a href="#tool-selector" class="backdrop-blur-xl bg-coffee-dark/60 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/30 rounded-3xl p-8 flex flex-col gap-4 group hover:-translate-y-2 hover:border-[#D9A05B]/40 transition-all duration-500 cursor-pointer">
-        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-        </div>
-        <h3 class="font-display text-xl font-bold text-coffee-light">{t('beginner_guide.step1.title')}</h3>
-        <p class="text-sm text-coffee-muted leading-relaxed">{t('beginner_guide.step1.desc')}</p>
-      </a>
-
-      <a href="#parameter-form" class="backdrop-blur-xl bg-coffee-dark/60 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/30 rounded-3xl p-8 flex flex-col gap-4 group hover:-translate-y-2 hover:border-[#D9A05B]/40 transition-all duration-500 cursor-pointer">
-        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-        </div>
-        <h3 class="font-display text-xl font-bold text-coffee-light">{t('beginner_guide.step2.title')}</h3>
-        <p class="text-sm text-coffee-muted leading-relaxed">{t('beginner_guide.step2.desc')}</p>
-      </a>
-
-      <a href="#timer-interface" class="backdrop-blur-xl bg-coffee-dark/60 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/30 rounded-3xl p-8 flex flex-col gap-4 group hover:-translate-y-2 hover:border-[#D9A05B]/40 transition-all duration-500 cursor-pointer">
-        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        </div>
-        <h3 class="font-display text-xl font-bold text-coffee-light">{t('beginner_guide.step3.title')}</h3>
-        <p class="text-sm text-coffee-muted leading-relaxed">{t('beginner_guide.step3.desc')}</p>
-      </a>
-    </div>
-  </section>
-
-  <!-- Interactive Grid Area -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start scroll-mt-24">
-    <!-- Parameters Input Panel -->
-    <div id="parameter-form" class="lg:col-span-5 order-2 lg:order-1 scroll-mt-24">
-      <ParameterForm />
-      <div class="mt-8">
-        <AdSlot type="bottom-utility" class="my-8" />
-      </div>
-    </div>
-
-    <!-- Live Timer Panel -->
-    <div id="timer-interface" class="lg:col-span-7 order-1 lg:order-2 lg:sticky lg:top-24 scroll-mt-24">
-      <Timer />
-    </div>
-  </div>
-
-  <!-- Educational Info Cards -->
-  <section class="mt-20 border-t border-coffee-sand/10 pt-16">
-    <div class="text-center max-w-2xl mx-auto mb-12 px-4">
-      <h2 class="font-display text-3xl font-bold tracking-wide text-coffee-light">{t('index.edu.title')}</h2>
-      <p class="text-xs sm:text-sm text-coffee-muted mt-2">{t('index.edu.subtitle')}</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-      <div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 rounded-3xl p-6 sm:p-8 flex flex-col gap-4 group">
-        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-11.314l.707.707m11.314 11.314l.707-.707M4 12a8 8 0 1116 0 8 8 0 01-16 0z" />
-          </svg>
-        </div>
-        <h3 class="font-display text-xl font-bold text-coffee-light">{t('index.edu.step1.title')}</h3>
-        <p class="text-sm text-coffee-muted leading-relaxed">
-          {t('index.edu.step1.desc')}
-        </p>
-      </div>
-
-      <div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 rounded-3xl p-6 sm:p-8 flex flex-col gap-4 group">
-        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-          </svg>
-        </div>
-        <h3 class="font-display text-xl font-bold text-coffee-light">{t('index.edu.step2.title')}</h3>
-        <p class="text-sm text-coffee-muted leading-relaxed">
-          {t('index.edu.step2.desc')}
-        </p>
-      </div>
-
-      <div class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 rounded-3xl p-6 sm:p-8 flex flex-col gap-4 group">
-        <div class="w-14 h-14 rounded-2xl bg-[#D9A05B]/10 border border-[#D9A05B]/20 flex items-center justify-center text-[#D9A05B] group-hover:scale-110 group-hover:bg-[#D9A05B]/20 transition-all duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <h3 class="font-display text-xl font-bold text-coffee-light">{t('index.edu.step3.title')}</h3>
-        <p class="text-sm text-coffee-muted leading-relaxed">
-          {t('index.edu.step3.desc')}
-        </p>
+<Layout jsonld={webAppJsonLd} hideTopAd>
+  <section id="returning-brewer" class="mb-8 hidden rounded-2xl border border-green-400/20 bg-green-400/5 p-5 sm:p-6" aria-live="polite">
+    <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+      <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-green-300">{c.welcomeBack}</p><h2 class="mt-1 font-display text-2xl font-bold text-coffee-light">{c.returnTitle}</h2><p id="returning-summary" class="mt-2 text-sm leading-6 text-coffee-sand/75">{c.returnBody}</p></div>
+      <div class="flex flex-col gap-2 sm:flex-row">
+        <button id="btn-repeat-last" type="button" class="min-h-[48px] rounded-xl bg-green-300 px-5 text-sm font-bold text-coffee-dark hover:bg-green-200">{c.repeat}</button>
+        <a href={`${basePath}/history`} class="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-coffee-sand/20 px-5 text-sm font-semibold text-coffee-sand hover:text-coffee-light">{c.records}</a>
+        <a id="compare-latest-link" href={`${basePath}/history`} class="hidden min-h-[48px] items-center justify-center rounded-xl border border-coffee-gold/30 px-5 text-sm font-semibold text-coffee-gold hover:bg-coffee-gold/10">{c.compare}</a>
       </div>
     </div>
   </section>
 
-  <!-- Explore Other Brewers (Internal Linking for SEO) -->
-  <section id="tool-selector" class="mt-20 border-t border-coffee-sand/10 pt-16 mb-8 scroll-mt-24">
-    <div class="text-center max-w-2xl mx-auto mb-12 px-4">
-      <h2 class="font-display text-3xl font-bold tracking-wide text-coffee-light">{t('index.tools.title')}</h2>
-      <p class="text-xs sm:text-sm text-coffee-muted mt-2">{t('index.tools.subtitle')}</p>
+  <header class="mx-auto max-w-4xl pb-10 pt-3 text-center sm:pb-14 sm:pt-6">
+    <p class="inline-flex items-center gap-2 rounded-full border border-coffee-gold/25 bg-coffee-gold/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-coffee-gold"><span class="h-2 w-2 rounded-full bg-green-400" aria-hidden="true"></span>{c.eyebrow}</p>
+    <h1 class="mx-auto mt-5 max-w-3xl text-balance font-display text-4xl font-bold leading-[1.12] tracking-tight text-coffee-light sm:text-5xl lg:text-6xl">{c.title}</h1>
+    <p class="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-coffee-sand/80 sm:text-lg">{c.intro}</p>
+    <div class="mt-7 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+      <a href="#brewer-picker" class="inline-flex min-h-[54px] items-center justify-center rounded-xl bg-coffee-gold px-7 text-base font-bold text-coffee-dark shadow-lg shadow-coffee-gold/15 transition hover:bg-coffee-gold-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark">{c.start}</a>
+      <a href={`${basePath}/guide`} class="inline-flex min-h-[54px] items-center justify-center rounded-xl border border-coffee-sand/20 px-7 text-sm font-semibold text-coffee-sand transition hover:border-coffee-gold/50 hover:text-coffee-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold">{c.guide}</a>
     </div>
+    <ol class="mx-auto mt-8 grid max-w-3xl gap-3 text-start sm:grid-cols-3" aria-label={isZh ? '開始沖煮三步' : 'Three steps to start brewing'}>
+      {[[c.step1, c.step1Body], [c.step2, c.step2Body], [c.step3, c.step3Body]].map(([title, body], index) => (
+        <li class="flex gap-3 rounded-xl border border-coffee-sand/10 bg-coffee-darker/55 p-4"><span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-coffee-gold text-xs font-bold text-coffee-dark">{index + 1}</span><span><strong class="block text-sm text-coffee-light">{title}</strong><span class="mt-1 block text-xs leading-5 text-coffee-muted">{body}</span></span></li>
+      ))}
+    </ol>
+  </header>
 
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-16">
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/v60-pour-over`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">☕</span>
-        <span class="font-display font-semibold text-coffee-light">{t('index.tools.v60')}</span>
-      </a>
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/french-press`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🫖</span>
-        <span class="font-display font-semibold text-coffee-light">{t('index.tools.frenchPress')}</span>
-      </a>
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/aeropress`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🪄</span>
-        <span class="font-display font-semibold text-coffee-light">{t('index.tools.aeropress')}</span>
-      </a>
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/cold-brew`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🧊</span>
-        <span class="font-display font-semibold text-coffee-light">{t('index.tools.coldBrew')}</span>
-      </a>
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/grind-converter`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 md:col-span-1 col-span-2 relative overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        <div class="absolute inset-0 bg-gradient-to-br from-[#D9A05B]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">⚙️</span>
-        <span class="font-display font-semibold text-coffee-light">{t('index.tools.grind')}</span>
-      </a>
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/water-temperature`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 md:col-span-1 col-span-2 relative overflow-hidden hover:border-[#D9A05B]/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        <div class="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🌡️</span>
-        <span class="font-display font-semibold text-coffee-light">{t('index.tools.temp')}</span>
-      </a>
-      <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/bean-freshness`} class="backdrop-blur-xl bg-coffee-dark/50 border border-coffee-sand/10 shadow-xl shadow-coffee-darker/50 rounded-2xl p-6 text-center group flex flex-col items-center gap-3 md:col-span-1 col-span-2 relative overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        <div class="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <span class="text-3xl group-hover:scale-110 transition-transform duration-300">🌱</span>
-        <span class="font-display font-semibold text-coffee-light">{t('index.tools.freshness')}</span>
-      </a>
+  <section id="brewer-picker" class="scroll-mt-24 rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-5 sm:p-7" aria-labelledby="brewer-title">
+    <p class="text-xs font-bold uppercase tracking-[0.18em] text-coffee-gold">{c.brewerEyebrow}</p><h2 id="brewer-title" class="mt-1 font-display text-3xl font-bold text-coffee-light">{c.brewerTitle}</h2><p class="mt-2 max-w-2xl text-sm leading-6 text-coffee-muted">{c.brewerBody}</p>
+    <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <a href="#brew-start" class="relative flex min-h-[124px] flex-col justify-between rounded-xl border-2 border-coffee-gold bg-coffee-gold/10 p-4 text-start transition hover:bg-coffee-gold/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold"><span class="absolute end-3 top-3 rounded-full bg-coffee-gold px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-coffee-dark">{c.recommended}</span><span class="text-2xl" aria-hidden="true">☕</span><span><strong class="block text-base text-coffee-light">{c.v60}</strong><span class="mt-1 block text-xs leading-5 text-coffee-muted">{c.v60Body}</span></span></a>
+      <a href={`${basePath}/tools/aeropress`} class="brewer-choice"><span class="text-2xl" aria-hidden="true">🪄</span><span><strong>{c.aero}</strong><small>{c.aeroBody}</small></span></a>
+      <a href={`${basePath}/tools/french-press`} class="brewer-choice"><span class="text-2xl" aria-hidden="true">🫖</span><span><strong>{c.french}</strong><small>{c.frenchBody}</small></span></a>
+      <a href={`${basePath}/tools/cold-brew`} class="brewer-choice"><span class="text-2xl" aria-hidden="true">🧊</span><span><strong>{c.cold}</strong><small>{c.coldBody}</small></span></a>
     </div>
   </section>
+
+  <section id="brew-start" class="scroll-mt-24 pt-12 sm:pt-16" aria-labelledby="setup-title">
+    <div class="mb-6"><p class="text-xs font-bold uppercase tracking-[0.18em] text-coffee-gold">{c.setupEyebrow}</p><h2 id="setup-title" class="mt-1 font-display text-3xl font-bold text-coffee-light sm:text-4xl">{c.setupTitle}</h2><p class="mt-2 max-w-3xl text-sm leading-6 text-coffee-muted">{c.setupBody}</p></div>
+    <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
+      <div id="parameter-form" class="scroll-mt-24 lg:col-span-5"><ParameterForm defaultRecipe={starterRecipe} /></div>
+      <div id="timer-interface" class="scroll-mt-24 lg:sticky lg:top-24 lg:col-span-7"><Timer /></div>
+    </div>
+  </section>
+
+  <section class="mt-14 border-t border-coffee-sand/10 pt-12 sm:mt-20 sm:pt-16" aria-labelledby="help-title">
+    <p class="text-xs font-bold uppercase tracking-[0.18em] text-coffee-gold">{c.helpEyebrow}</p><h2 id="help-title" class="mt-1 font-display text-3xl font-bold text-coffee-light">{c.helpTitle}</h2><p class="mt-2 max-w-2xl text-sm leading-6 text-coffee-muted">{c.helpBody}</p>
+    <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <a href={`${basePath}/guide`} class="problem-link">👋 <span>{c.first}</span></a><a href={`${basePath}/blog/dial-in-one-variable-at-a-time`} class="problem-link">🍋 <span>{c.sour}</span></a><a href={`${basePath}/blog/brew-temperature-and-extraction`} class="problem-link">🌰 <span>{c.bitter}</span></a><a href={`${basePath}/blog/grind-distribution-analysis`} class="problem-link">⚙️ <span>{c.grind}</span></a><a href={`${basePath}/glossary/channeling`} class="problem-link">💧 <span>{c.flow}</span></a><a href={`${basePath}/tools/v60-pour-over`} class="problem-link">⚖️ <span>{c.ratio}</span></a>
+    </div>
+  </section>
+
+  <details class="group mt-10 rounded-2xl border border-coffee-sand/10 bg-coffee-dark/35">
+    <summary class="flex min-h-[64px] cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold sm:px-6"><span><strong class="block font-display text-lg text-coffee-light">{c.moreTitle}</strong><span class="mt-1 block text-xs leading-5 text-coffee-muted">{c.moreBody}</span></span><span class="text-xl text-coffee-gold transition-transform group-open:rotate-45" aria-hidden="true">＋</span></summary>
+    <div class="grid gap-3 border-t border-coffee-sand/10 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-4"><a href={`${basePath}/recipes`} class="secondary-resource">{c.recipes}</a><a href={`${basePath}/tools/grind-converter`} class="secondary-resource">{c.tools}</a><a href={`${basePath}/blog`} class="secondary-resource">{c.knowledge}</a><a href={`${basePath}/data`} class="secondary-resource">{c.backup}</a></div>
+  </details>
+
+  <AdSlot type="bottom-utility" class="my-12" />
 </Layout>
 
-<script is:inline define:vars={{
-  m1: t('motivation.1'), m2: t('motivation.2'), m3: t('motivation.3'),
-  m4: t('motivation.4'), m5: t('motivation.5'), m6: t('motivation.6'),
-  m7: t('motivation.7'), m8: t('motivation.8'), m9: t('motivation.9')
-}}>
-  document.addEventListener('DOMContentLoaded', () => {
-    const slogans = [m1, m2, m3, m4, m5, m6, m7, m8, m9];
-    const banner = document.getElementById('motivation-banner');
-    if (!banner) return;
-    
-    let currentIndex = Math.floor(Math.random() * slogans.length);
-    let isPaused = false;
-    
-    const showSlogan = () => {
-      if (isPaused) return;
-      banner.style.opacity = '0';
-      setTimeout(() => {
-        if (isPaused) return;
-        banner.textContent = `"${slogans[currentIndex]}"`;
-        banner.style.opacity = '1';
-        currentIndex = (currentIndex + 1) % slogans.length;
-      }, 1000); // Wait for fade out to complete before changing text
-    };
-    
-    // Hover-to-Pause Logic
-    const pauseRotation = () => isPaused = true;
-    const resumeRotation = () => isPaused = false;
-    
-    banner.addEventListener('mouseenter', pauseRotation);
-    banner.addEventListener('mouseleave', resumeRotation);
-    banner.addEventListener('touchstart', pauseRotation, {passive: true});
-    banner.addEventListener('touchend', resumeRotation, {passive: true});
-    banner.addEventListener('pointerdown', pauseRotation, {passive: true});
-    
-    // Initial display
-    setTimeout(showSlogan, 100);
-    autoRotateInterval = setInterval(showSlogan, 6000); // Change slogan every 6 seconds
+<style>
+  .brewer-choice { display: flex; min-height: 124px; flex-direction: column; justify-content: space-between; border: 1px solid rgb(197 168 128 / .15); border-radius: .75rem; background: rgb(28 24 21 / .5); padding: 1rem; text-align: start; transition: border-color 160ms ease, background-color 160ms ease; }
+  .brewer-choice:hover { border-color: rgb(197 168 128 / .5); background: rgb(197 168 128 / .05); }
+  .brewer-choice strong { display: block; color: #f5f2eb; font-size: 1rem; }
+  .brewer-choice small { display: block; margin-top: .25rem; color: rgb(197 168 128 / .58); font-size: .75rem; line-height: 1.25rem; }
+  .problem-link { display: flex; min-height: 58px; align-items: center; gap: .75rem; border: 1px solid rgb(197 168 128 / .14); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: .875rem 1rem; color: rgb(245 242 235 / .88); font-size: .875rem; font-weight: 600; transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease; }
+  .problem-link:hover { border-color: rgb(197 168 128 / .5); background: rgb(197 168 128 / .07); color: #fff; }
+  .secondary-resource { display: flex; min-height: 48px; align-items: center; justify-content: center; border: 1px solid rgb(197 168 128 / .16); border-radius: .75rem; padding: .75rem; color: #c5a880; font-size: .875rem; font-weight: 700; text-align: center; }
+  .secondary-resource:hover { background: rgb(197 168 128 / .08); }
+  :is(.brewer-choice, .problem-link, .secondary-resource):focus-visible { outline: 2px solid #c5a880; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .brewer-choice, .problem-link, .secondary-resource, details summary span { transition: none; } }
+</style>
 
-    // Smooth Scrolling for Hash Links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href').substring(1);
-        const targetElem = document.getElementById(targetId);
-        if (targetElem) {
-          targetElem.scrollIntoView({ behavior: 'smooth' });
-          // Optional focus for accessibility
-          targetElem.setAttribute('tabindex', '-1');
-          targetElem.focus({ preventScroll: true });
-        }
+<script is:inline define:vars={{ returnBody: c.returnBody, latestFallback: c.latestFallback }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    let logs = [];
+    try { const parsed = JSON.parse(localStorage.getItem('barista_flow_logs') || '[]'); logs = Array.isArray(parsed) ? parsed : []; } catch (error) {}
+    const returnPanel = document.getElementById('returning-brewer');
+    const returnSummary = document.getElementById('returning-summary');
+    const compareLink = document.getElementById('compare-latest-link');
+    const repeatButton = document.getElementById('btn-repeat-last');
+    const latest = logs[0];
+    if (returnPanel && latest?.recipe) {
+      returnPanel.classList.remove('hidden');
+      const bean = String(latest.recipe.beanName || latestFallback);
+      const recommendation = String(latest.recommendation?.title || '');
+      if (returnSummary) returnSummary.textContent = recommendation ? `${bean} · ${recommendation}` : `${bean} · ${returnBody}`;
+      if (logs.length >= 2) { compareLink?.classList.remove('hidden'); compareLink?.classList.add('inline-flex'); }
+      repeatButton?.addEventListener('click', () => {
+        try { localStorage.setItem('barista_flow_recipe', JSON.stringify(latest.recipe)); } catch (error) {}
+        window.dispatchEvent(new CustomEvent('coffee-recipe-changed', { detail: latest.recipe }));
+        document.getElementById('brew-start')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        const selector = anchor.getAttribute('href');
+        const target = selector ? document.querySelector(selector) : null;
+        if (!target) return;
+        event.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   });

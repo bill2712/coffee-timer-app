@@ -117,6 +117,30 @@ const timerDict = {
     </div>
   </div>
 
+  <section id="brew-preflight" class="hidden w-full max-w-sm rounded-2xl border border-coffee-gold/30 bg-coffee-gold/5 p-4" aria-labelledby="brew-preflight-title">
+    <div class="mb-3">
+      <p class="text-[10px] font-bold uppercase tracking-widest text-coffee-gold">{isZh ? '第一次沖煮' : 'First brew'}</p>
+      <h4 id="brew-preflight-title" class="mt-1 font-display text-lg font-bold text-coffee-light">{isZh ? '開始前，先準備好四樣東西' : 'Get these four things ready'}</h4>
+      <p class="mt-1 text-xs leading-relaxed text-coffee-muted">{isZh ? '只會在第一次顯示，避免計時開始後才發現漏了器材。' : 'Shown only the first time, so nothing is missing once the timer starts.'}</p>
+    </div>
+    <div class="grid gap-2">
+      {[
+        isZh ? '濾紙和咖啡粉已放好' : 'Filter and coffee are ready',
+        isZh ? '熱水已準備好' : 'Hot water is ready',
+        isZh ? '電子磅已開啟並歸零' : 'Scale is on and zeroed',
+        isZh ? '杯和濾杯已放穩' : 'Cup and brewer are stable'
+      ].map((label) => (
+        <label class="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-xl border border-coffee-sand/15 bg-coffee-darker px-3 text-sm text-coffee-sand transition hover:border-coffee-gold/40">
+          <input type="checkbox" class="brew-preflight-check h-5 w-5 shrink-0 accent-coffee-gold" />
+          <span>{label}</span>
+        </label>
+      ))}
+    </div>
+    <button id="btn-preflight-ready" type="button" disabled class="mt-3 min-h-[48px] w-full rounded-xl bg-coffee-gold px-4 text-sm font-bold text-coffee-dark transition hover:bg-coffee-gold-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-light disabled:cursor-not-allowed disabled:opacity-40">
+      {isZh ? '我準備好了' : 'I’m ready'}
+    </button>
+  </section>
+
   <!-- Stage Indicators (Stepper Wizard) -->
   <div class="relative flex justify-between w-full max-w-sm px-2 mb-6 z-0">
     <!-- Connecting Line -->
@@ -183,10 +207,16 @@ const timerDict = {
     <p id="timer-instruction" class="text-sm font-medium text-coffee-light/80 italic break-words whitespace-normal">{t('timer.readyText')}</p>
   </div>
 
-  <!-- Dynamic Extraction Chart -->
-  <div class="w-full max-w-sm mb-6 h-[120px] relative">
-    <canvas id="extraction-chart"></canvas>
-  </div>
+  <!-- Optional predicted pour curve -->
+  <details id="extraction-chart-details" class="group mb-6 w-full max-w-sm rounded-xl border border-coffee-sand/10 bg-coffee-darker/30">
+    <summary class="flex min-h-[44px] cursor-pointer list-none items-center justify-between px-4 text-xs font-semibold text-coffee-muted marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold">
+      <span>{isZh ? '查看預估注水曲線（進階）' : 'View predicted pour curve (advanced)'}</span>
+      <span class="transition-transform group-open:rotate-180" aria-hidden="true">⌄</span>
+    </summary>
+    <div class="relative h-[120px] border-t border-coffee-sand/10 p-2">
+      <canvas id="extraction-chart"></canvas>
+    </div>
+  </details>
 
   <!-- Control Buttons -->
   <div class="w-full flex items-center justify-center gap-4 max-w-sm z-10">
@@ -219,7 +249,35 @@ const timerDict = {
       <p class="text-sm text-coffee-sand/80">{t('timer.modal.subtitle')}</p>
     </div>
 
-    <form id="tasting-form" class="space-y-5">
+    <form id="tasting-form" class="flex flex-col gap-5">
+      <!-- One-problem diagnosis -->
+      <fieldset class="rounded-2xl border border-coffee-gold/25 bg-coffee-gold/5 p-4">
+        <legend class="px-1 text-sm font-bold text-coffee-light">{t('timer.modal.issueTitle')}</legend>
+        <p class="mb-3 text-xs leading-relaxed text-coffee-muted">{t('timer.modal.issueHint')}</p>
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {[
+            ['balanced', t('timer.issue.balanced')],
+            ['sour', t('timer.issue.sour')],
+            ['bitter', t('timer.issue.bitter')],
+            ['weak', t('timer.issue.weak')],
+            ['strong', t('timer.issue.strong')],
+            ['slow', t('timer.issue.slow')],
+            ['fast', t('timer.issue.fast')]
+          ].map(([value, label], index) => (
+            <label class="diagnosis-choice relative flex min-h-[48px] cursor-pointer items-center justify-center rounded-xl border border-coffee-sand/15 bg-coffee-darker px-3 py-2 text-center text-xs font-semibold text-coffee-sand transition-colors hover:border-coffee-gold/50">
+              <input class="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" type="radio" name="brew-issue" value={value} checked={index === 0} />
+              <span class="pointer-events-none peer-checked:text-coffee-dark">{label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <details class="group rounded-2xl border border-coffee-sand/15 bg-coffee-dark/40">
+        <summary class="flex min-h-[48px] cursor-pointer list-none items-center justify-between px-4 text-sm font-semibold text-coffee-sand marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold">
+          <span>{isZh ? '詳細味道評分（選填）' : 'Detailed taste ratings (optional)'}</span>
+          <svg class="h-4 w-4 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
+        </summary>
+        <div class="space-y-5 border-t border-coffee-sand/10 p-4">
       <!-- Acidity -->
       <div>
         <label class="flex justify-between text-xs font-semibold uppercase tracking-wider text-coffee-sand mb-2">
@@ -267,28 +325,8 @@ const timerDict = {
           <span>1</span><span>5</span>
         </div>
       </div>
-
-      <!-- One-problem diagnosis -->
-      <fieldset class="rounded-2xl border border-coffee-sand/15 bg-coffee-dark/50 p-4">
-        <legend class="px-1 text-sm font-bold text-coffee-light">{t('timer.modal.issueTitle')}</legend>
-        <p class="mb-3 text-xs leading-relaxed text-coffee-muted">{t('timer.modal.issueHint')}</p>
-        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {[
-            ['balanced', t('timer.issue.balanced')],
-            ['sour', t('timer.issue.sour')],
-            ['bitter', t('timer.issue.bitter')],
-            ['weak', t('timer.issue.weak')],
-            ['strong', t('timer.issue.strong')],
-            ['slow', t('timer.issue.slow')],
-            ['fast', t('timer.issue.fast')]
-          ].map(([value, label], index) => (
-            <label class="diagnosis-choice relative flex min-h-[48px] cursor-pointer items-center justify-center rounded-xl border border-coffee-sand/15 bg-coffee-darker px-3 py-2 text-center text-xs font-semibold text-coffee-sand transition-colors hover:border-coffee-gold/50">
-              <input class="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" type="radio" name="brew-issue" value={value} checked={index === 0} />
-              <span class="pointer-events-none peer-checked:text-coffee-dark">{label}</span>
-            </label>
-          ))}
         </div>
-      </fieldset>
+      </details>
 
       <!-- Quick Notes -->
       <div>
@@ -499,6 +537,9 @@ const timerDict = {
   let focusStatus: HTMLSpanElement | null = null;
   let beanDisplay: HTMLSpanElement | null = null;
   let roastDisplay: HTMLHeadingElement | null = null;
+  let preflightPanel: HTMLElement | null = null;
+  let btnPreflightReady: HTMLButtonElement | null = null;
+  let preflightChecks: HTMLInputElement[] = [];
   
   // Modal Elements
   let tastingModal: HTMLDivElement | null = null;
@@ -542,6 +583,34 @@ const timerDict = {
   }
 
   const TIMER_SESSION_KEY = 'barista_flow_timer_session_v1';
+  const PREFLIGHT_KEY = 'barista_flow_preflight_seen_v1';
+
+  function setupPreflight(hasRestoredSession: boolean) {
+    let alreadySeen = false;
+    try { alreadySeen = localStorage.getItem(PREFLIGHT_KEY) === 'true'; } catch (error) {}
+    if (!preflightPanel || !btnStart || alreadySeen || hasRestoredSession) {
+      preflightPanel?.classList.add('hidden');
+      if (btnStart && remainingTime > 0) btnStart.disabled = false;
+      return;
+    }
+
+    preflightPanel.classList.remove('hidden');
+    btnStart.disabled = true;
+    const refreshReadyState = () => {
+      if (btnPreflightReady) btnPreflightReady.disabled = !preflightChecks.every((input) => input.checked);
+    };
+    preflightChecks.forEach((input) => input.addEventListener('change', refreshReadyState));
+    btnPreflightReady?.addEventListener('click', () => {
+      if (!preflightChecks.every((input) => input.checked)) return;
+      try { localStorage.setItem(PREFLIGHT_KEY, 'true'); } catch (error) {}
+      preflightPanel?.classList.add('hidden');
+      if (btnStart) {
+        btnStart.disabled = false;
+        btnStart.focus();
+      }
+    });
+    refreshReadyState();
+  }
 
   function vibrate(pattern: number | number[]) {
     try {
@@ -854,7 +923,7 @@ const timerDict = {
   }
 
   function startTimer() {
-    if (isRunning) return;
+    if (isRunning || (preflightPanel && !preflightPanel.classList.contains('hidden'))) return;
     if (timerId !== null) {
       window.clearInterval(timerId);
       timerId = null;
@@ -972,7 +1041,7 @@ const timerDict = {
     lastCompletedBeep = false;
     if (btnStart) {
       btnStart.textContent = dict.btnStart;
-      btnStart.disabled = false;
+      btnStart.disabled = Boolean(preflightPanel && !preflightPanel.classList.contains('hidden'));
       btnStart.classList.remove('opacity-50', 'bg-coffee-darker', 'text-coffee-muted');
       btnStart.classList.add('from-[#D9A05B]', 'to-[#B47B4B]');
     }
@@ -1372,6 +1441,9 @@ const timerDict = {
     focusStatus = document.getElementById('focus-status') as HTMLSpanElement;
     beanDisplay = document.getElementById('bean-display');
     roastDisplay = document.getElementById('roast-display') as HTMLHeadingElement;
+    preflightPanel = document.getElementById('brew-preflight');
+    btnPreflightReady = document.getElementById('btn-preflight-ready') as HTMLButtonElement;
+    preflightChecks = Array.from(document.querySelectorAll<HTMLInputElement>('.brew-preflight-check'));
     
     tastingModal = document.getElementById('tasting-log-modal') as HTMLDivElement;
     modalBackdrop = document.getElementById('tasting-modal-backdrop') as HTMLDivElement;
@@ -1450,6 +1522,9 @@ const timerDict = {
     btnApplyDiagnosis?.addEventListener('click', applyDiagnosis);
     document.getElementById('tasting-photo')?.addEventListener('change', handlePhotoInput);
     document.getElementById('btn-remove-photo')?.addEventListener('click', resetPhotoInput);
+    document.getElementById('extraction-chart-details')?.addEventListener('toggle', (event) => {
+      if ((event.currentTarget as HTMLDetailsElement).open) window.setTimeout(() => extractionChart?.resize?.(), 0);
+    });
     modalBackdrop?.addEventListener('click', hideTastingModal);
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && tastingModal && !tastingModal.classList.contains('hidden')) hideTastingModal();
@@ -1487,9 +1562,11 @@ const timerDict = {
       initOrUpdateChart(recipe);
     }
 
-    if (restoreTimerSession()) {
+    const restoredSession = restoreTimerSession();
+    if (restoredSession) {
       updateDisplay();
       if (btnStart) btnStart.textContent = dict.btnResume;
     }
+    setupPreflight(restoredSession);
   });
 </script>
