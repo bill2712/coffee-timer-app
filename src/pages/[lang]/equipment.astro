@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import EquipmentIllustration from '../../components/EquipmentIllustration.astro';
 import { getLanguagePaths } from '../../i18n/routes';
 import { getLangFromUrl } from '../../i18n/utils';
 
@@ -20,6 +21,11 @@ const c = isZh ? {
   aero: 'AeroPress', aeroWhy: '浸泡、微濾及下壓令它兼顧速度、便攜和多種配方，適合一至兩杯及希望快速清理的人。', aeroTrade: '一般容量較小，而且仍要選擇紙濾或金屬濾片；下壓時必須使用穩固杯具。',
   french: '法式濾壓壺', frenchWhy: '步驟直接、不依賴細緻注水，可做較大份量，適合喜歡厚身口感及多人分享。', frenchTrade: '杯中會保留較多油脂或細粉；沖完要處理濕咖啡渣，清潔不一定比 AeroPress 快。',
   cold: '冷萃壺／有蓋浸泡容器', coldWhy: '適合主要飲凍咖啡、願意預先準備的人；浸泡時不需守候，做完可放雪櫃。', coldTrade: '不能即沖即飲，研磨、濃度及雪櫃浸泡時間仍需按自己的味道調整。',
+  seeFirst: '未見過器材？先看外形', seeFirstBody: '不用記名詞。先認住器材的輪廓、放在哪裡，以及沖煮時會做甚麼；見到實物時便能立即對上。', spotIt: '一眼認樣', howItWorks: '實際上怎樣用', notSame: '最易混淆',
+  v60Origin: '「V」指 V 型錐形濾杯，「60」指錐角 60°。', v60Spot: '像一個有手柄和底座的倒三角漏斗，使用時放在杯或分享壺上，裡面鋪錐形濾紙。', v60Use: '從上面淋熱水，咖啡向下滴入杯中。你控制的是注水速度和位置。',
+  aeroOrigin: 'AeroPress 是品牌及產品名稱，不是角度或尺寸。', aeroSpot: '像兩支套在一起的粗直筒，上面是壓桿，下面外筒有闊邊，整套會直接放在穩固杯上。', aeroUse: '在外筒內浸泡咖啡，再向下按壓，咖啡穿過底部濾片進入杯中。', aeroMixup: '它不是法式濾壓壺：AeroPress 把咖啡壓出另一個杯；法式濾壓壺只在原壺內把咖啡渣壓到底。',
+  frenchOrigin: '名稱來自 French press 這類以壓桿及濾網分隔咖啡渣的浸泡壺。', frenchSpot: '像有直立壓桿的玻璃或金屬茶壺；圓形金屬濾網藏在壺內。', frenchUse: '咖啡粉和水在同一個壺浸泡，時間到才慢慢把濾網壓下，再倒出飲用。',
+  coldOrigin: '「冷萃」是沖煮方法，不限定單一品牌或固定外形。', coldSpot: '專用款通常像果汁壺，中央吊著一支長網籃；有蓋容器配濾袋也能做到。', coldUse: '把咖啡粉和冷水長時間放在雪櫃浸泡，完成後取走網籃或過濾。',
   kitTitle: '你的最低開局清單', kitIntro: '先買「開始必需」，其餘按實際痛點升級。勾選你已有的器材，我們會保留進度。', must: '開始必需', impact: '最有感升級', later: '可後買', startReady: '必需器材已齊，可以開始沖。', missing: '尚欠 {count} 件必需器材', owned: '已有',
   brewer: '對應沖煮器', filters: '相容濾紙／濾片', stableCup: '可承受下壓的穩固杯', press: '法式濾壓壺', coldVessel: '有蓋容器或冷萃壺', fridge: '雪櫃空間', scale: '電子磅（至少 1g 精度）', grinder: '磨盤式磨豆機', gooseneck: '細口手沖壺', kettle: '可安全加熱的水煲', server: '分享壺／保溫壺', timer: '計時器（可用本站）', storage: '密封儲存容器', thermometer: '溫度計或控溫水煲',
   matrixTitle: '四種器材，一眼看清取捨', matrixIntro: '先看操作方式和日常習慣，不要只看網上最熱門的器材。', method: '器材', cup: '杯中取向', effort: '學習／操作', cleanup: '清理', capacity: '常見情境', cleanBright: '清晰、可調整', balanced: '平衡、變化多', fullBody: '厚身、帶油脂感', coldSmooth: '凍飲、浸泡風格', higher: '較多技巧', low: '直接', medium: '簡單但要預備', quick: '快', grounds: '要處理咖啡渣', single: '日常一至兩杯', share: '較適合多人份', ahead: '預先製作',
@@ -36,6 +42,11 @@ const c = isZh ? {
   aero: 'AeroPress', aeroWhy: 'Immersion, micro-filtration, and pressing combine speed, portability, and recipe variety for one or two cups with fast cleanup.', aeroTrade: 'Capacity is usually modest, and you still choose paper or metal filtration. Always press onto a stable, sturdy mug.',
   french: 'French press', frenchWhy: 'Direct steps, no precision pouring, and larger batches suit people who want a fuller cup or often share coffee.', frenchTrade: 'More oils or fine sediment remain in the cup, and wet grounds can take longer to clean up than an AeroPress puck.',
   cold: 'Cold-brew pot / covered vessel', coldWhy: 'A strong fit if you mostly drink cold coffee and can prepare ahead. The brewer can steep unattended in the fridge.', coldTrade: 'It is not instant. Grind, strength, and fridge steep time still need adjustment to your taste.',
+  seeFirst: 'Never seen the gear? Start with the shape', seeFirstBody: 'There is no need to memorise names. Notice the silhouette, where it sits, and what moves during brewing so you can recognise the real object immediately.', spotIt: 'How to recognise it', howItWorks: 'What you actually do', notSame: 'Common mix-up',
+  v60Origin: '“V” refers to the V-shaped cone; “60” refers to its 60-degree cone angle.', v60Spot: 'It looks like an upside-down triangular funnel with a handle and base. It sits on a mug or server and holds a cone paper filter.', v60Use: 'Pour hot water from above and coffee drips into the vessel below. You control where and how quickly the water lands.',
+  aeroOrigin: 'AeroPress is the brand and product name, not an angle or size.', aeroSpot: 'Look for two wide tubes fitted together: a plunger on top and a flanged chamber that sits directly on a sturdy mug.', aeroUse: 'Coffee steeps inside the chamber, then you press down so the brew passes through the filter into the mug.', aeroMixup: 'It is not a French press: AeroPress pushes brewed coffee through a filter into another cup; a French press keeps the brew in its pot and pushes the grounds down.',
+  frenchOrigin: 'The name describes the French-press family of immersion pots with a plunger and mesh filter.', frenchSpot: 'It resembles a glass or metal teapot with a vertical rod; a round metal mesh filter sits inside the pot.', frenchUse: 'Grounds and water steep in the same pot. When time is up, lower the mesh slowly and pour the coffee out.',
+  coldOrigin: '“Cold brew” is a method, not one brand or one required shape.', coldSpot: 'A dedicated brewer often resembles a juice pitcher with a long mesh basket hanging inside. A covered vessel and filter bag also work.', coldUse: 'Coffee and cold water steep for hours in the fridge, then you remove the basket or filter the brew.',
   kitTitle: 'Your minimum starter kit', kitIntro: 'Buy “required to start” first, then upgrade only when a real limitation appears. Tick what you own; progress stays on this device.', must: 'Required to start', impact: 'High-impact upgrade', later: 'Can wait', startReady: 'You have the essentials and can start brewing.', missing: '{count} required item(s) still missing', owned: 'Owned',
   brewer: 'Matching brewer', filters: 'Compatible paper / filter', stableCup: 'Stable mug suitable for pressing', press: 'French press', coldVessel: 'Covered vessel or cold-brew pot', fridge: 'Fridge space', scale: 'Scale with at least 1 g resolution', grinder: 'Burr grinder', gooseneck: 'Gooseneck pouring kettle', kettle: 'Kettle suitable for heating water', server: 'Carafe / thermal server', timer: 'Timer (this site works)', storage: 'Airtight storage container', thermometer: 'Thermometer or temperature-control kettle',
   matrixTitle: 'Four brewers, clear trade-offs', matrixIntro: 'Compare the workflow and routine first, not whichever brewer is most popular online.', method: 'Brewer', cup: 'Cup direction', effort: 'Learning / operation', cleanup: 'Cleanup', capacity: 'Typical use', cleanBright: 'Clear and adjustable', balanced: 'Balanced and versatile', fullBody: 'Full-bodied, more oils', coldSmooth: 'Cold, immersion style', higher: 'More technique', low: 'Direct', medium: 'Easy but plan ahead', quick: 'Fast', grounds: 'Wet grounds to handle', single: 'Everyday 1–2 cups', share: 'Better for sharing', ahead: 'Prepare ahead',
@@ -53,7 +64,46 @@ const c = isZh ? {
       <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p>
     </header>
 
-    <section id="equipment-quiz" class="mt-10 rounded-2xl border border-coffee-gold/20 bg-coffee-darker/70 p-5 sm:p-8" aria-labelledby="quiz-title">
+    <section class="mt-10" aria-labelledby="gear-shapes-title">
+      <div class="mx-auto max-w-3xl text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-blue-300">{isZh ? '先建立畫面' : 'Build the picture first'}</p>
+        <h2 id="gear-shapes-title" class="mt-2 font-display text-3xl font-bold text-coffee-light sm:text-4xl">{c.seeFirst}</h2>
+        <p class="mx-auto mt-3 max-w-2xl text-sm leading-7 text-coffee-muted">{c.seeFirstBody}</p>
+      </div>
+      <div class="mt-7 grid gap-5 md:grid-cols-2">
+        <article class="gear-card">
+          <EquipmentIllustration type="v60" lang={lang} />
+          <div class="gear-card-copy">
+            <div><p class="gear-number">01</p><h3>{c.v60}</h3><p class="gear-origin">{c.v60Origin}</p></div>
+            <dl><div><dt>{c.spotIt}</dt><dd>{c.v60Spot}</dd></div><div><dt>{c.howItWorks}</dt><dd>{c.v60Use}</dd></div></dl>
+          </div>
+        </article>
+        <article class="gear-card">
+          <EquipmentIllustration type="aero" lang={lang} />
+          <div class="gear-card-copy">
+            <div><p class="gear-number">02</p><h3>{c.aero}</h3><p class="gear-origin">{c.aeroOrigin}</p></div>
+            <dl><div><dt>{c.spotIt}</dt><dd>{c.aeroSpot}</dd></div><div><dt>{c.howItWorks}</dt><dd>{c.aeroUse}</dd></div><div class="mixup"><dt>{c.notSame}</dt><dd>{c.aeroMixup}</dd></div></dl>
+          </div>
+        </article>
+        <article class="gear-card">
+          <EquipmentIllustration type="french" lang={lang} />
+          <div class="gear-card-copy">
+            <div><p class="gear-number">03</p><h3>{c.french}</h3><p class="gear-origin">{c.frenchOrigin}</p></div>
+            <dl><div><dt>{c.spotIt}</dt><dd>{c.frenchSpot}</dd></div><div><dt>{c.howItWorks}</dt><dd>{c.frenchUse}</dd></div></dl>
+          </div>
+        </article>
+        <article class="gear-card">
+          <EquipmentIllustration type="cold" lang={lang} />
+          <div class="gear-card-copy">
+            <div><p class="gear-number">04</p><h3>{c.cold}</h3><p class="gear-origin">{c.coldOrigin}</p></div>
+            <dl><div><dt>{c.spotIt}</dt><dd>{c.coldSpot}</dd></div><div><dt>{c.howItWorks}</dt><dd>{c.coldUse}</dd></div></dl>
+          </div>
+        </article>
+      </div>
+      <div class="mt-6 flex justify-center"><a href="#equipment-quiz" class="inline-flex min-h-[50px] items-center justify-center rounded-xl bg-coffee-gold px-6 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark">{isZh ? '我認得器材了，開始配對 ↓' : 'I recognise the gear — start matching ↓'}</a></div>
+    </section>
+
+    <section id="equipment-quiz" class="mt-12 scroll-mt-24 rounded-2xl border border-coffee-gold/20 bg-coffee-darker/70 p-5 sm:p-8" aria-labelledby="quiz-title">
       <div class="flex items-center justify-between gap-4"><h2 id="quiz-title" class="font-display text-2xl font-bold text-coffee-light">{isZh ? '器材配對問答' : 'Equipment matching quiz'}</h2><span id="quiz-progress" class="rounded-full border border-coffee-gold/25 px-3 py-1 text-xs font-bold text-coffee-gold">0 / 3</span></div>
       <div class="mt-4 h-2 overflow-hidden rounded-full bg-coffee-dark" aria-hidden="true"><div id="quiz-progress-bar" class="h-full w-0 rounded-full bg-coffee-gold transition-[width] duration-300"></div></div>
 
@@ -82,7 +132,7 @@ const c = isZh ? {
 
     <section id="equipment-result" class="mt-6 hidden scroll-mt-24 rounded-2xl border border-green-400/25 bg-green-400/5 p-5 sm:p-8" aria-live="polite">
       <div class="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(250px,0.65fr)]">
-        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-green-300">{c.resultEyebrow}</p><h2 id="result-name" class="mt-2 font-display text-4xl font-bold text-coffee-light"></h2><div class="mt-5 grid gap-4 sm:grid-cols-2"><div><h3 class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.why}</h3><p id="result-why" class="mt-2 text-sm leading-7 text-coffee-sand"></p></div><div><h3 class="text-xs font-bold uppercase tracking-wider text-amber-300">{c.tradeoff}</h3><p id="result-tradeoff" class="mt-2 text-sm leading-7 text-coffee-sand"></p></div></div></div>
+        <div><div class="grid gap-5 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-center"><div id="result-visuals"><div data-result-visual="v60" class="hidden"><EquipmentIllustration type="v60" lang={lang} compact /></div><div data-result-visual="aero" class="hidden"><EquipmentIllustration type="aero" lang={lang} compact /></div><div data-result-visual="french" class="hidden"><EquipmentIllustration type="french" lang={lang} compact /></div><div data-result-visual="cold" class="hidden"><EquipmentIllustration type="cold" lang={lang} compact /></div></div><div><p class="text-xs font-bold uppercase tracking-[0.18em] text-green-300">{c.resultEyebrow}</p><h2 id="result-name" class="mt-2 font-display text-4xl font-bold text-coffee-light"></h2></div></div><div class="mt-5 grid gap-4 sm:grid-cols-2"><div><h3 class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.why}</h3><p id="result-why" class="mt-2 text-sm leading-7 text-coffee-sand"></p></div><div><h3 class="text-xs font-bold uppercase tracking-wider text-amber-300">{c.tradeoff}</h3><p id="result-tradeoff" class="mt-2 text-sm leading-7 text-coffee-sand"></p></div></div></div>
         <aside class="rounded-xl border border-coffee-sand/12 bg-coffee-dark/60 p-5"><p class="text-[10px] font-bold uppercase tracking-wider text-coffee-muted">{c.alternative}</p><p id="alternative-name" class="mt-2 font-display text-2xl font-bold text-coffee-light"></p><a id="result-action" href={`${base}/guide`} class="mt-5 inline-flex min-h-[50px] w-full items-center justify-center rounded-xl bg-green-300 px-4 text-center text-sm font-bold text-coffee-dark hover:bg-green-200">{c.useGuide}</a><button id="btn-reset-quiz" type="button" class="mt-3 min-h-[46px] w-full rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand hover:text-coffee-light">{c.retake}</button></aside>
       </div>
       <p class="mt-5 text-xs font-semibold text-green-300">✓ {c.saved}</p>
@@ -106,6 +156,17 @@ const c = isZh ? {
 </Layout>
 
 <style>
+  .gear-card { display: grid; align-content: start; gap: 1.1rem; border: 1px solid rgb(197 168 128 / .16); border-radius: .875rem; background: rgb(28 24 21 / .52); padding: 1rem; }
+  .gear-card-copy { display: grid; gap: 1rem; padding: 0 .25rem .25rem; }
+  .gear-card-copy > div:first-child { position: relative; padding-inline-start: 2.5rem; }
+  .gear-number { position: absolute; inset-block-start: .15rem; inset-inline-start: 0; color: rgb(197 168 128 / .55); font-size: .7rem; font-weight: 800; letter-spacing: .12em; }
+  .gear-card h3 { color: #f5f2eb; font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; line-height: 1.2; }
+  .gear-origin { margin-top: .4rem; color: #f2c94c; font-size: .8rem; font-weight: 700; line-height: 1.35rem; }
+  .gear-card dl { display: grid; gap: .8rem; }
+  .gear-card dl > div { border-inline-start: 2px solid rgb(197 168 128 / .22); padding-inline-start: .75rem; }
+  .gear-card dt { color: rgb(117 185 210 / .95); font-size: .65rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .gear-card dd { margin-top: .25rem; color: rgb(197 168 128 / .74); font-size: .8rem; line-height: 1.35rem; }
+  .gear-card .mixup { border-color: rgb(242 201 76 / .45); border-radius: 0 .5rem .5rem 0; background: rgb(242 201 76 / .05); padding-block: .55rem; padding-inline-end: .55rem; }
   .quiz-option { display: grid; min-height: 92px; gap: .35rem; border: 1px solid rgb(197 168 128 / .16); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: 1rem; text-align: start; transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease; }
   .quiz-option strong { color: #f5f2eb; font-size: .95rem; }
   .quiz-option span { color: rgb(197 168 128 / .62); font-size: .75rem; line-height: 1.25rem; }
@@ -180,6 +241,7 @@ const c = isZh ? {
       if (!Object.values(answers).every(Boolean)) { result.classList.add('hidden'); starterKit.classList.add('hidden'); return; }
       const ranked = rank(); recommendation = ranked[0]; const best = methods[recommendation]; const second = methods[ranked[1]];
       document.getElementById('result-name').textContent = best.name; document.getElementById('result-why').textContent = best.why; document.getElementById('result-tradeoff').textContent = best.tradeoff; document.getElementById('alternative-name').textContent = second.name; document.getElementById('result-action').href = best.route;
+      document.querySelectorAll('[data-result-visual]').forEach((visual) => visual.classList.toggle('hidden', visual.dataset.resultVisual !== recommendation));
       status.textContent = `${pageCopy.resultEyebrow}: ${best.name}`; result.classList.remove('hidden'); renderKit(); save(); if (scroll) result.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
     const updateQuiz = (scroll = false) => { const count = Object.values(answers).filter(Boolean).length; progress.textContent=`${count} / 3`; progressBar.style.width=`${(count/3)*100}%`; document.querySelectorAll('.quiz-option').forEach((button) => button.setAttribute('aria-pressed', String(answers[button.dataset.question] === button.dataset.value))); if (count < 3) status.textContent=pageCopy.answerFirst; renderResult(scroll && count === 3); };

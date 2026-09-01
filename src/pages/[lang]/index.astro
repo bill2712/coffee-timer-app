@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import ParameterForm from '../../components/ParameterForm.astro';
 import Timer from '../../components/Timer.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import EquipmentIllustration from '../../components/EquipmentIllustration.astro';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import { getLanguagePaths } from '../../i18n/routes';
 
@@ -14,20 +15,20 @@ const basePath = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE
 
 const c = isZh ? {
   eyebrow: '第一次沖也不怕', title: '30 秒設定，跟住提示沖第一杯', intro: '選器材、輸入咖啡粉重量，其餘先交給推薦設定。完成後再按味道逐杯微調。', start: '開始設定第一杯', guide: '開始「首五杯」新手訓練',
-  step1: '選器材', step1Body: '先選你手上的沖煮工具。', step2: '輸入粉量', step2Body: '我們會自動計算水量、比例與溫度起點。', step3: '跟提示沖', step3Body: '畫面只突出現在要做的事。',
+  step1: '先看圖選器材', step1Body: '用外形認器材，不用先背 V60 等名詞。', step2: '輸入粉量', step2Body: '我們會自動計算水量、比例與溫度起點。', step3: '跟提示沖', step3Body: '畫面只突出現在要做的事。',
   welcomeBack: '歡迎回來', returnTitle: '繼續改善上一杯', returnBody: '可直接載入上次參數，或查看已累積的味道紀錄。', repeat: '再次使用上次配方', records: '查看沖煮紀錄', compare: '比較最近兩杯',
   brewerEyebrow: '步驟 1', brewerTitle: '你今日用甚麼器材？', brewerBody: '已有器材便直接選；未買或不確定，先用三題助手按味道與日常習慣配對。', chooseHelp: '未有器材？幫我揀', recommended: '新手推薦',
-  v60: 'V60 手沖', v60Body: '清楚的三階段視覺提示', aero: 'AeroPress', aeroBody: '快速、容易清理', french: '法式濾壓壺', frenchBody: '浸泡式、操作直接', cold: '冷萃', coldBody: '低溫長時間浸泡',
+  v60: 'V60 手沖', v60Body: 'V 型 60° 錐形濾杯，放在杯上淋水', aero: 'AeroPress', aeroBody: '兩支套筒放在杯上，用壓桿向下壓', french: '法式濾壓壺', frenchBody: '有直立壓桿的浸泡壺，把濾網壓到底', cold: '冷萃', coldBody: '像果汁壺，長網籃放入雪櫃浸泡',
   setupEyebrow: '步驟 2–3', setupTitle: '輸入粉量，然後跟著計時器', setupBody: '新手只需處理必要選項；豆名、研磨刻度、水溫及比例收在「進階設定」內。',
   helpEyebrow: '遇到問題時才看', helpTitle: '按杯中問題找答案', helpBody: '不用先讀完整個知識庫。沖完後選擇最接近的問題，再深入了解。',
   first: '第一次手沖，由哪裡開始？', sour: '咖啡太酸／尖銳', bitter: '咖啡太苦／乾口', grind: '不知道研磨度怎樣選', flow: '注水太快或太慢', ratio: '不知道要用多少粉和水',
   moreTitle: '進階工具與完整內容', moreBody: '器材選擇、咖啡豆護照、個人數據洞察、標準配方及完整文章都保留在這裡。', equipment: '器材選擇助手', recipes: '有來源配方庫', tools: '個人磨豆機校準', knowledge: '完整知識庫', beans: '咖啡豆護照', insights: '個人數據洞察', backup: '資料備份／搬機', latestFallback: '上一杯已儲存', trainingActive: '正在進行首五杯訓練', trainingContinue: '返回本杯設定', trainingView: '查看五杯進度', viewInsights: '查看個人洞察'
 } : {
   eyebrow: 'Your first brew, made simple', title: 'Set up in 30 seconds, then follow the prompts', intro: 'Choose your brewer and coffee dose. We will supply a sensible starting point, then help you adjust from what you taste.', start: 'Set up my first brew', guide: 'Start the First Five Brews course',
-  step1: 'Choose a brewer', step1Body: 'Start with the equipment in front of you.', step2: 'Enter your dose', step2Body: 'Water, ratio, and temperature get a recommended starting point.', step3: 'Follow the prompts', step3Body: 'The timer highlights only what matters now.',
+  step1: 'See and choose a brewer', step1Body: 'Recognise the shape; no need to learn names such as V60 first.', step2: 'Enter your dose', step2Body: 'Water, ratio, and temperature get a recommended starting point.', step3: 'Follow the prompts', step3Body: 'The timer highlights only what matters now.',
   welcomeBack: 'Welcome back', returnTitle: 'Improve your last brew', returnBody: 'Load the previous settings or review the taste records you have built up.', repeat: 'Brew the last recipe again', records: 'View brew records', compare: 'Compare the latest two',
   brewerEyebrow: 'Step 1', brewerTitle: 'What are you brewing with today?', brewerBody: 'Choose what you own. If you have not bought anything yet, use the three-question matcher for your taste and routine.', chooseHelp: 'No gear yet? Help me choose', recommended: 'Beginner pick',
-  v60: 'V60 pour-over', v60Body: 'Clear three-stage visual prompts', aero: 'AeroPress', aeroBody: 'Fast and easy to clean', french: 'French press', frenchBody: 'Direct immersion brewing', cold: 'Cold brew', coldBody: 'Long, low-temperature steep',
+  v60: 'V60 pour-over', v60Body: 'A 60° V-shaped cone that sits over a mug', aero: 'AeroPress', aeroBody: 'Two tubes on a mug; push the plunger down', french: 'French press', frenchBody: 'An immersion pot with a vertical plunger', cold: 'Cold brew', coldBody: 'A pitcher with a long basket for fridge steeping',
   setupEyebrow: 'Steps 2–3', setupTitle: 'Enter the dose, then follow the timer', setupBody: 'Beginners see only essential choices. Bean name, grinder setting, temperature, and ratio stay under Advanced settings.',
   helpEyebrow: 'Open only when needed', helpTitle: 'Find help by the problem in your cup', helpBody: 'You do not need to read the whole library first. Finish a brew, choose the closest problem, then learn more.',
   first: 'My first pour-over: where do I start?', sour: 'Coffee tastes sharp or too sour', bitter: 'Coffee tastes bitter or drying', grind: 'I do not know which grind to use', flow: 'The drawdown is too fast or slow', ratio: 'How much coffee and water?',
@@ -78,10 +79,10 @@ export function getStaticPaths() { return getLanguagePaths(); }
   <section id="brewer-picker" class="scroll-mt-24 rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-5 sm:p-7" aria-labelledby="brewer-title">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-bold uppercase tracking-[0.18em] text-coffee-gold">{c.brewerEyebrow}</p><h2 id="brewer-title" class="mt-1 font-display text-3xl font-bold text-coffee-light">{c.brewerTitle}</h2><p class="mt-2 max-w-2xl text-sm leading-6 text-coffee-muted">{c.brewerBody}</p></div><a href={`${basePath}/equipment`} class="inline-flex min-h-[48px] shrink-0 items-center justify-center rounded-xl border border-blue-300/30 bg-blue-300/5 px-4 text-sm font-bold text-blue-200 hover:bg-blue-300/10">{c.chooseHelp}</a></div>
     <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <a href="#brew-start" class="relative flex min-h-[124px] flex-col justify-between rounded-xl border-2 border-coffee-gold bg-coffee-gold/10 p-4 text-start transition hover:bg-coffee-gold/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold"><span class="absolute end-3 top-3 rounded-full bg-coffee-gold px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-coffee-dark">{c.recommended}</span><span class="text-2xl" aria-hidden="true">☕</span><span><strong class="block text-base text-coffee-light">{c.v60}</strong><span class="mt-1 block text-xs leading-5 text-coffee-muted">{c.v60Body}</span></span></a>
-      <a href={`${basePath}/tools/aeropress`} class="brewer-choice"><span class="text-2xl" aria-hidden="true">🪄</span><span><strong>{c.aero}</strong><small>{c.aeroBody}</small></span></a>
-      <a href={`${basePath}/tools/french-press`} class="brewer-choice"><span class="text-2xl" aria-hidden="true">🫖</span><span><strong>{c.french}</strong><small>{c.frenchBody}</small></span></a>
-      <a href={`${basePath}/tools/cold-brew`} class="brewer-choice"><span class="text-2xl" aria-hidden="true">🧊</span><span><strong>{c.cold}</strong><small>{c.coldBody}</small></span></a>
+      <a href="#brew-start" class="home-brewer-card relative border-2 border-coffee-gold bg-coffee-gold/10 hover:bg-coffee-gold/15"><span class="absolute end-3 top-3 z-10 rounded-full bg-coffee-gold px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-coffee-dark">{c.recommended}</span><EquipmentIllustration type="v60" lang={lang} compact /><span><strong>{c.v60}</strong><small>{c.v60Body}</small></span></a>
+      <a href={`${basePath}/tools/aeropress`} class="home-brewer-card brewer-choice"><EquipmentIllustration type="aero" lang={lang} compact /><span><strong>{c.aero}</strong><small>{c.aeroBody}</small></span></a>
+      <a href={`${basePath}/tools/french-press`} class="home-brewer-card brewer-choice"><EquipmentIllustration type="french" lang={lang} compact /><span><strong>{c.french}</strong><small>{c.frenchBody}</small></span></a>
+      <a href={`${basePath}/tools/cold-brew`} class="home-brewer-card brewer-choice"><EquipmentIllustration type="cold" lang={lang} compact /><span><strong>{c.cold}</strong><small>{c.coldBody}</small></span></a>
     </div>
   </section>
 
@@ -109,16 +110,17 @@ export function getStaticPaths() { return getLanguagePaths(); }
 </Layout>
 
 <style>
-  .brewer-choice { display: flex; min-height: 124px; flex-direction: column; justify-content: space-between; border: 1px solid rgb(197 168 128 / .15); border-radius: .75rem; background: rgb(28 24 21 / .5); padding: 1rem; text-align: start; transition: border-color 160ms ease, background-color 160ms ease; }
+  .home-brewer-card { display: grid; min-height: 220px; align-content: start; gap: .85rem; border-radius: .75rem; padding: .75rem; text-align: start; transition: border-color 160ms ease, background-color 160ms ease; }
+  .brewer-choice { border: 1px solid rgb(197 168 128 / .15); background: rgb(28 24 21 / .5); }
   .brewer-choice:hover { border-color: rgb(197 168 128 / .5); background: rgb(197 168 128 / .05); }
-  .brewer-choice strong { display: block; color: #f5f2eb; font-size: 1rem; }
-  .brewer-choice small { display: block; margin-top: .25rem; color: rgb(197 168 128 / .58); font-size: .75rem; line-height: 1.25rem; }
+  .home-brewer-card strong { display: block; color: #f5f2eb; font-size: 1rem; }
+  .home-brewer-card small { display: block; margin-top: .25rem; color: rgb(197 168 128 / .68); font-size: .75rem; line-height: 1.25rem; }
   .problem-link { display: flex; min-height: 58px; align-items: center; gap: .75rem; border: 1px solid rgb(197 168 128 / .14); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: .875rem 1rem; color: rgb(245 242 235 / .88); font-size: .875rem; font-weight: 600; transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease; }
   .problem-link:hover { border-color: rgb(197 168 128 / .5); background: rgb(197 168 128 / .07); color: #fff; }
   .secondary-resource { display: flex; min-height: 48px; align-items: center; justify-content: center; border: 1px solid rgb(197 168 128 / .16); border-radius: .75rem; padding: .75rem; color: #c5a880; font-size: .875rem; font-weight: 700; text-align: center; }
   .secondary-resource:hover { background: rgb(197 168 128 / .08); }
-  :is(.brewer-choice, .problem-link, .secondary-resource):focus-visible { outline: 2px solid #c5a880; outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { .brewer-choice, .problem-link, .secondary-resource, details summary span { transition: none; } }
+  :is(.home-brewer-card, .problem-link, .secondary-resource):focus-visible { outline: 2px solid #c5a880; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .home-brewer-card, .problem-link, .secondary-resource, details summary span { transition: none; } }
 </style>
 
 <script is:inline define:vars={{ returnBody: c.returnBody, latestFallback: c.latestFallback }}>

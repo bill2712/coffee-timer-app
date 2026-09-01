@@ -1,0 +1,96 @@
+---
+interface Props {
+  type: 'v60' | 'aero' | 'french' | 'cold';
+  lang?: string;
+  compact?: boolean;
+}
+
+const { type, lang = 'zh-TW', compact = false } = Astro.props;
+const isZh = lang === 'zh-TW';
+const labels = {
+  v60: isZh ? 'V60 錐形濾杯放在杯上沖煮的外形圖' : 'V60 cone dripper sitting over a mug',
+  aero: isZh ? 'AeroPress 外筒及壓桿放在杯上的外形圖' : 'AeroPress chamber and plunger over a mug',
+  french: isZh ? '法式濾壓壺連壓桿及金屬濾網的外形圖' : 'French press with plunger and mesh filter',
+  cold: isZh ? '冷萃壺連長形濾網籃的外形圖' : 'Cold-brew pitcher with a long filter basket'
+};
+---
+
+<div class:list={['equipment-illustration', { compact }]}>
+  <svg viewBox="0 0 240 180" role="img" aria-label={labels[type]}>
+    {type === 'v60' && (
+      <>
+        <path class="vessel" d="M83 134h69v24a12 12 0 0 1-12 12H95a12 12 0 0 1-12-12Z" />
+        <path class="outline" d="M152 142h11a10 10 0 0 1 0 20h-11" />
+        <path class="fill-soft" d="M60 48h120l-29 77H89Z" />
+        <path class="outline strong" d="M60 48h120l-29 77H89Z" />
+        <path class="outline" d="M53 48h134M82 126h77" />
+        <path class="outline" d="M180 61h9a15 15 0 0 1 0 30h-19" />
+        <path class="detail" d="M80 57c18 10 28 27 31 54M160 57c-18 10-28 27-31 54M101 57c8 13 12 30 13 51M139 57c-8 13-12 30-13 51" />
+        <path class="angle" d="M96 56 120 119l24-63M108 88a25 25 0 0 1 24 0" />
+        <text x="120" y="83" class="angle-label" text-anchor="middle">60°</text>
+        <path class="flow" d="M120 19v18m-5-6 5 6 5-6" />
+      </>
+    )}
+
+    {type === 'aero' && (
+      <>
+        <path class="vessel" d="M79 137h82v21a12 12 0 0 1-12 12H91a12 12 0 0 1-12-12Z" />
+        <path class="outline" d="M161 143h10a10 10 0 0 1 0 20h-10" />
+        <rect class="fill-soft strong-stroke" x="78" y="54" width="84" height="76" rx="5" />
+        <path class="outline strong" d="M68 126h104v10H68zM88 54V32h64v22" />
+        <rect class="fill" x="91" y="17" width="58" height="17" rx="5" />
+        <path class="detail" d="M91 69h16m-16 14h23m-23 14h16m-16 14h23" />
+        <path class="filter" d="M82 120h76" />
+        <path class="flow" d="M190 42v67m-6-7 6 7 6-7" />
+        <circle class="coffee-dot" cx="102" cy="111" r="2" /><circle class="coffee-dot" cx="119" cy="115" r="2" /><circle class="coffee-dot" cx="138" cy="110" r="2" />
+      </>
+    )}
+
+    {type === 'french' && (
+      <>
+        <path class="fill-soft strong-stroke" d="M66 45h96v112a13 13 0 0 1-13 13H79a13 13 0 0 1-13-13Z" />
+        <path class="coffee-fill" d="M72 101h84v54a9 9 0 0 1-9 9H81a9 9 0 0 1-9-9Z" />
+        <path class="outline strong" d="M58 44h112M74 31h80v13M114 15v92" />
+        <rect class="fill" x="96" y="9" width="36" height="11" rx="5" />
+        <path class="filter" d="M76 108h76m-70-5v10m12-10v10m12-10v10m12-10v10m12-10v10m12-10v10" />
+        <path class="outline" d="M162 65h12a20 20 0 0 1 0 40h-12" />
+        <path class="flow" d="M190 35v57m-6-7 6 7 6-7" />
+        <circle class="coffee-dot" cx="92" cy="128" r="2" /><circle class="coffee-dot" cx="116" cy="140" r="2" /><circle class="coffee-dot" cx="140" cy="125" r="2" />
+      </>
+    )}
+
+    {type === 'cold' && (
+      <>
+        <path class="fill-soft strong-stroke" d="M57 40h105v116a14 14 0 0 1-14 14H71a14 14 0 0 1-14-14Z" />
+        <path class="coffee-fill" d="M63 101h93v53a10 10 0 0 1-10 10H73a10 10 0 0 1-10-10Z" />
+        <path class="outline strong" d="M51 40h117M69 26h87v14" />
+        <path class="outline" d="M162 62h13a22 22 0 0 1 0 44h-13" />
+        <path class="filter-basket" d="M83 47h53l-7 91H90Z" />
+        <path class="detail" d="M93 62h33M92 77h35M91 92h37M90 107h39M89 122h41" />
+        <circle class="coffee-dot" cx="103" cy="69" r="2" /><circle class="coffee-dot" cx="116" cy="86" r="2" /><circle class="coffee-dot" cx="101" cy="103" r="2" /><circle class="coffee-dot" cx="117" cy="118" r="2" />
+        <path class="snow" d="M192 28v27m-12-20 24 13m-24 0 24-13m-12-7-5 5m5-5 5 5m-17 2 7 2m-7-2 2-7m22 7-7 2m7-2-2-7m-22 20 7-2m-7 2 2 7m22-7-7-2m7 2-2 7" />
+      </>
+    )}
+  </svg>
+</div>
+
+<style>
+  .equipment-illustration { display: grid; width: 100%; min-height: 188px; place-items: center; overflow: hidden; border: 1px solid rgb(197 168 128 / .12); border-radius: .75rem; background: radial-gradient(circle at 50% 42%, rgb(197 168 128 / .12), transparent 63%), #100e0c; }
+  .equipment-illustration.compact { min-height: 86px; }
+  svg { width: min(100%, 250px); height: auto; overflow: visible; }
+  .compact svg { width: 108px; }
+  .outline, .strong-stroke { fill: none; stroke: #c5a880; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+  .strong { stroke-width: 3; }
+  .vessel { fill: rgb(245 242 235 / .08); stroke: rgb(245 242 235 / .72); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+  .fill { fill: #c5a880; }
+  .fill-soft { fill: rgb(197 168 128 / .08); }
+  .detail { fill: none; stroke: rgb(197 168 128 / .48); stroke-linecap: round; stroke-width: 1.5; }
+  .angle { fill: none; stroke: #f2c94c; stroke-dasharray: 4 4; stroke-linecap: round; stroke-width: 1.5; }
+  .angle-label { fill: #f2c94c; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; font-weight: 800; }
+  .flow { fill: none; stroke: #75b9d2; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+  .filter { fill: none; stroke: #f2c94c; stroke-dasharray: 3 3; stroke-width: 3; }
+  .filter-basket { fill: rgb(242 201 76 / .08); stroke: #f2c94c; stroke-dasharray: 4 3; stroke-linejoin: round; stroke-width: 2; }
+  .coffee-fill { fill: rgb(126 81 52 / .46); stroke: rgb(197 168 128 / .35); stroke-width: 1; }
+  .coffee-dot { fill: #c5a880; }
+  .snow { fill: none; stroke: #75b9d2; stroke-linecap: round; stroke-width: 1.5; }
+</style>
