@@ -590,7 +590,7 @@ const formDict = {
     queryRecipe.totalWater = Math.round(queryRecipe.coffeeWeight * queryRecipe.waterRatio);
     
     applyRecipeData(queryRecipe);
-    if (advancedSettings) advancedSettings.open = true;
+    if (advancedSettings && !params.has('lesson')) advancedSettings.open = true;
     syncWithTimer(queryRecipe);
     
     // Clear URL to prevent reloading the same state

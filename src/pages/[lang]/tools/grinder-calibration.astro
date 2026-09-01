@@ -1,0 +1,92 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl } from '../../../i18n/utils';
+
+export function getStaticPaths() { return getLanguagePaths(); }
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const base = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+const c = isZh ? {
+  title: '個人磨豆機校準 | Barista Flow', desc: '建立磨豆機刻度方向與步幅，將太快、太慢、太酸或太苦轉成下一杯可直接使用的實際刻度。', crumb: '磨豆機校準', eyebrow: '個人化工具', h1: '把「磨幼一點」變成實際刻度', intro: '每部磨豆機的數字方向和步幅都不同。先建立一次個人檔案，之後診斷助手便會直接顯示下一杯應使用的刻度。',
+  profile: '1. 建立磨豆機檔案', model: '品牌／型號', modelPlaceholder: '例如：Comandante C40', min: '最低可用刻度', max: '最高可用刻度', increment: '每次微調幅度', direction: '哪個方向會磨得更幼？', higher: '數字越大越幼', lower: '數字越小越幼', current: '今杯使用刻度',
+  result: '2. 今杯結果', resultHint: '選擇最接近的情況，我們只建議改一個刻度變數。', fast: '流速太快／太酸', balanced: '流速與味道合適', slow: '流速太慢／太苦', calculate: '計算下一杯刻度', next: '下一杯建議', reason: '其他粉量、比例、水溫及注水方式保持不變，再比較結果。', save: '儲存校準檔案', apply: '套用到下一杯', saved: '磨豆機檔案已儲存。', invalid: '請檢查刻度範圍、目前刻度及微調幅度。', noChange: '維持現在刻度', finer: '調幼一個步幅', coarser: '調粗一個步幅'
+} : {
+  title: 'Personal Grinder Calibration | Barista Flow', desc: 'Map your grinder direction and step size so fast, slow, sour, or bitter brews become a specific next setting.', crumb: 'Grinder calibration', eyebrow: 'Personal tool', h1: 'Turn “a little finer” into a real setting', intro: 'Grinder numbers, direction, and step sizes differ. Create one personal profile so future diagnoses can name the exact setting for your next brew.',
+  profile: '1. Create a grinder profile', model: 'Brand / model', modelPlaceholder: 'For example: Comandante C40', min: 'Lowest usable setting', max: 'Highest usable setting', increment: 'Adjustment step', direction: 'Which direction is finer?', higher: 'Higher number is finer', lower: 'Lower number is finer', current: 'Setting used for this brew',
+  result: '2. What happened?', resultHint: 'Choose the closest result. Only the grinder setting will change.', fast: 'Too fast / too sour', balanced: 'Flow and taste are good', slow: 'Too slow / too bitter', calculate: 'Calculate next setting', next: 'Next-brew suggestion', reason: 'Keep dose, ratio, temperature, and pouring unchanged, then compare the result.', save: 'Save grinder profile', apply: 'Apply to next brew', saved: 'Grinder profile saved.', invalid: 'Check the range, current setting, and adjustment step.', noChange: 'Keep this setting', finer: 'Move one step finer', coarser: 'Move one step coarser'
+};
+---
+
+<Layout title={c.title} description={c.desc}>
+  <div class="mx-auto max-w-4xl py-8 sm:py-12">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: c.crumb }]} /></div>
+    <header class="mx-auto mt-5 max-w-3xl text-center"><p class="text-xs font-bold uppercase tracking-[0.2em] text-coffee-gold">{c.eyebrow}</p><h1 class="mt-3 text-balance font-display text-4xl font-bold text-coffee-light sm:text-5xl">{c.h1}</h1><p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p></header>
+
+    <form id="grinder-form" class="mt-10 grid gap-6 lg:grid-cols-2" novalidate>
+      <section class="rounded-2xl border border-coffee-sand/12 bg-coffee-darker/55 p-5 sm:p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-light">{c.profile}</h2>
+        <div class="mt-5 grid gap-4">
+          <label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.model}</span><input id="grinder-model" required maxlength="60" placeholder={c.modelPlaceholder} class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold focus:ring-2 focus:ring-coffee-gold/30" /></label>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.min}</span><input id="grinder-min" type="number" value="0" step="0.1" class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold" /></label><label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.max}</span><input id="grinder-max" type="number" value="40" step="0.1" class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold" /></label></div>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.increment}</span><input id="grinder-increment" type="number" value="1" min="0.1" step="0.1" class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold" /></label><label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.current}</span><input id="grinder-current" type="number" value="20" step="0.1" class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold" /></label></div>
+          <label class="grid min-w-0 gap-2 text-xs font-semibold text-coffee-sand"><span>{c.direction}</span><select id="grinder-direction" class="min-h-[48px] w-full min-w-0 rounded-xl border border-coffee-sand/20 bg-coffee-dark px-4 text-base text-coffee-light outline-none focus:border-coffee-gold"><option value="lower">{c.lower}</option><option value="higher">{c.higher}</option></select></label>
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-5 sm:p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-light">{c.result}</h2><p class="mt-2 text-sm leading-6 text-coffee-muted">{c.resultHint}</p>
+        <fieldset class="mt-5 grid gap-3"><label class="grinder-outcome"><input type="radio" name="grinder-outcome" value="finer" class="sr-only" /><span>{c.fast}</span></label><label class="grinder-outcome"><input type="radio" name="grinder-outcome" value="same" class="sr-only" checked /><span>{c.balanced}</span></label><label class="grinder-outcome"><input type="radio" name="grinder-outcome" value="coarser" class="sr-only" /><span>{c.slow}</span></label></fieldset>
+        <button id="btn-calculate-grinder" type="submit" class="mt-5 min-h-[50px] w-full rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover">{c.calculate}</button>
+
+        <div id="grinder-recommendation" class="mt-5 hidden rounded-xl border border-coffee-gold/25 bg-coffee-darker p-4" aria-live="polite"><p class="text-[10px] font-bold uppercase tracking-wider text-coffee-gold">{c.next}</p><p id="grinder-next-setting" class="mt-2 font-display text-3xl font-bold text-coffee-light"></p><p id="grinder-next-reason" class="mt-2 text-sm leading-6 text-coffee-sand"></p><p class="mt-2 text-xs leading-5 text-coffee-muted">{c.reason}</p></div>
+        <p id="grinder-status" class="mt-4 text-sm font-semibold text-coffee-gold" aria-live="polite"></p>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2"><button id="btn-save-grinder" type="button" class="min-h-[48px] rounded-xl border border-coffee-gold/35 px-4 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10">{c.save}</button><button id="btn-apply-grinder" type="button" disabled class="min-h-[48px] rounded-xl bg-coffee-gold px-4 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover disabled:cursor-not-allowed disabled:opacity-40">{c.apply}</button></div>
+      </section>
+    </form>
+  </div>
+</Layout>
+
+<style>
+  .grinder-outcome { display: flex; min-height: 50px; cursor: pointer; align-items: center; border: 1px solid rgb(197 168 128 / .18); border-radius: .75rem; background: rgb(18 15 13 / .65); padding-inline: 1rem; color: rgb(197 168 128 / .85); font-size: .875rem; font-weight: 650; transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease; }
+  .grinder-outcome:has(input:checked) { border-color: var(--color-coffee-gold); background: rgb(212 175 55 / .13); color: var(--color-coffee-light); box-shadow: inset 3px 0 0 var(--color-coffee-gold); }
+  .grinder-outcome:has(input:focus-visible) { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; }
+</style>
+
+<script is:inline define:vars={{ pageCopy: { invalid: c.invalid, saved: c.saved, noChange: c.noChange, finer: c.finer, coarser: c.coarser }, homeUrl: `${base}/` }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const KEY = 'barista_flow_grinder_profile_v1';
+    const fields = { model: document.getElementById('grinder-model'), min: document.getElementById('grinder-min'), max: document.getElementById('grinder-max'), increment: document.getElementById('grinder-increment'), current: document.getElementById('grinder-current'), direction: document.getElementById('grinder-direction') };
+    const recommendation = document.getElementById('grinder-recommendation');
+    const nextSettingEl = document.getElementById('grinder-next-setting');
+    const reasonEl = document.getElementById('grinder-next-reason');
+    const status = document.getElementById('grinder-status');
+    const applyButton = document.getElementById('btn-apply-grinder');
+    let calculated = null;
+    const cleanNumber = (input) => Number(input?.value);
+    const round = (value) => Math.round(value * 100) / 100;
+    const readProfile = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (error) { return null; } };
+    const saved = readProfile();
+    if (saved) { fields.model.value = String(saved.model || ''); fields.min.value = String(saved.minSetting ?? 0); fields.max.value = String(saved.maxSetting ?? 40); fields.increment.value = String(saved.increment ?? 1); fields.current.value = String(saved.currentSetting ?? 20); fields.direction.value = saved.finerDirection === 'higher' ? 'higher' : 'lower'; }
+
+    const calculate = () => {
+      const model = String(fields.model.value || '').trim().slice(0, 60);
+      const minSetting = cleanNumber(fields.min); const maxSetting = cleanNumber(fields.max); const increment = cleanNumber(fields.increment); const currentSetting = cleanNumber(fields.current);
+      if (!model || !Number.isFinite(minSetting) || !Number.isFinite(maxSetting) || minSetting >= maxSetting || !Number.isFinite(increment) || increment <= 0 || !Number.isFinite(currentSetting) || currentSetting < minSetting || currentSetting > maxSetting) { status.textContent = pageCopy.invalid; recommendation.classList.add('hidden'); applyButton.disabled = true; return null; }
+      const outcome = document.querySelector('input[name="grinder-outcome"]:checked')?.value || 'same';
+      const finerSign = fields.direction.value === 'higher' ? 1 : -1;
+      const delta = outcome === 'finer' ? finerSign * increment : outcome === 'coarser' ? -finerSign * increment : 0;
+      const nextSetting = round(Math.min(maxSetting, Math.max(minSetting, currentSetting + delta)));
+      const action = outcome === 'finer' ? pageCopy.finer : outcome === 'coarser' ? pageCopy.coarser : pageCopy.noChange;
+      calculated = { version: 1, model, minSetting, maxSetting, increment, finerDirection: fields.direction.value, currentSetting, recommendedSetting: nextSetting, lastOutcome: outcome, updatedAt: new Date().toISOString() };
+      nextSettingEl.textContent = `${model} · ${nextSetting}`;
+      reasonEl.textContent = `${action}: ${currentSetting} → ${nextSetting}`;
+      recommendation.classList.remove('hidden'); status.textContent = ''; applyButton.disabled = false;
+      return calculated;
+    };
+    document.getElementById('grinder-form')?.addEventListener('submit', (event) => { event.preventDefault(); calculate(); });
+    document.getElementById('btn-save-grinder')?.addEventListener('click', () => { const profile = calculate(); if (!profile) return; try { localStorage.setItem(KEY, JSON.stringify(profile)); status.textContent = pageCopy.saved; } catch (error) {} });
+    applyButton?.addEventListener('click', () => { const profile = calculated || calculate(); if (!profile) return; profile.currentSetting = profile.recommendedSetting; try { localStorage.setItem(KEY, JSON.stringify(profile)); } catch (error) {} const recipe = (() => { try { return JSON.parse(localStorage.getItem('barista_flow_recipe') || '{}'); } catch (error) { return {}; } })(); const next = { beanName: recipe.beanName || '', roastLevel: recipe.roastLevel || 'medium', grindSize: `${profile.model} · ${profile.recommendedSetting}`, waterTemp: Number(recipe.waterTemp) || 92, coffeeWeight: Number(recipe.coffeeWeight) || 15, waterRatio: Number(recipe.waterRatio) || 15 }; const params = new URLSearchParams({ bean: next.beanName, roast: next.roastLevel, grind: next.grindSize, t: String(next.waterTemp), w: String(next.coffeeWeight), r: String(next.waterRatio) }); window.location.href = `${homeUrl}?${params.toString()}#brew-start`; });
+  });
+</script>

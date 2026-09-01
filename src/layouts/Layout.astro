@@ -90,6 +90,8 @@ const finalKeywords = keywords || t('seo.keywords');
             <details class="group relative">
               <summary class="flex min-h-[44px] cursor-pointer list-none items-center gap-1 rounded-lg px-2 text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-xs transition-transform group-open:rotate-180" aria-hidden="true">⌄</span></summary>
               <div class="absolute end-0 top-full z-[70] mt-2 grid w-64 gap-1 rounded-xl border border-coffee-sand/15 bg-coffee-darker p-2 shadow-2xl">
+                <a href={`${base}${lang}/training`} class="nav-more-link">{lang === 'zh-TW' ? '首五杯新手訓練' : 'First Five Brews'}</a>
+                <a href={`${base}${lang}/tools/grinder-calibration`} class="nav-more-link">{lang === 'zh-TW' ? '個人磨豆機校準' : 'Grinder calibration'}</a>
                 <a href={`${base}${lang}/recipes`} class="nav-more-link">{lang === 'zh-TW' ? '有來源配方庫' : 'Source-backed recipes'}</a>
                 <a href={`${base}${lang}/tools/grind-converter`} class="nav-more-link">{lang === 'zh-TW' ? '沖煮工具與計算器' : 'Brewing tools & calculators'}</a>
                 <a href={`${base}${lang}/faq`} class="nav-more-link">{t('nav.faq')}</a>
@@ -118,6 +120,8 @@ const finalKeywords = keywords || t('seo.keywords');
         <details class="mobile-link group w-full max-w-sm opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
           <summary class="flex min-h-[52px] cursor-pointer list-none items-center justify-center gap-2 text-2xl font-light tracking-wide text-coffee-light">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-base transition-transform group-open:rotate-180">⌄</span></summary>
           <div class="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-coffee-sand/10 bg-coffee-darker/60 p-3 text-center text-sm text-coffee-sand">
+            <a href={`${base}${lang}/training`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '首五杯' : 'Five brews'}</a>
+            <a href={`${base}${lang}/tools/grinder-calibration`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '磨豆機校準' : 'Grinder'}</a>
             <a href={`${base}${lang}/recipes`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '配方庫' : 'Recipes'}</a>
             <a href={`${base}${lang}/tools/grind-converter`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '工具' : 'Tools'}</a>
             <a href={`${base}${lang}/faq`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{t('nav.faq')}</a>

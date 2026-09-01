@@ -13,7 +13,7 @@ const isZh = lang === 'zh-TW';
 const basePath = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
 
 const c = isZh ? {
-  eyebrow: '第一次沖也不怕', title: '30 秒設定，跟住提示沖第一杯', intro: '選器材、輸入咖啡粉重量，其餘先交給推薦設定。完成後再按味道逐杯微調。', start: '開始設定第一杯', guide: '先看 2 分鐘新手指南',
+  eyebrow: '第一次沖也不怕', title: '30 秒設定，跟住提示沖第一杯', intro: '選器材、輸入咖啡粉重量，其餘先交給推薦設定。完成後再按味道逐杯微調。', start: '開始設定第一杯', guide: '開始「首五杯」新手訓練',
   step1: '選器材', step1Body: '先選你手上的沖煮工具。', step2: '輸入粉量', step2Body: '我們會自動計算水量、比例與溫度起點。', step3: '跟提示沖', step3Body: '畫面只突出現在要做的事。',
   welcomeBack: '歡迎回來', returnTitle: '繼續改善上一杯', returnBody: '可直接載入上次參數，或查看已累積的味道紀錄。', repeat: '再次使用上次配方', records: '查看沖煮紀錄', compare: '比較最近兩杯',
   brewerEyebrow: '步驟 1', brewerTitle: '你今日用甚麼器材？', brewerBody: '不知道選甚麼？V60 是清晰易學的起點；其他器材會帶你到專用流程。', recommended: '新手推薦',
@@ -21,9 +21,9 @@ const c = isZh ? {
   setupEyebrow: '步驟 2–3', setupTitle: '輸入粉量，然後跟著計時器', setupBody: '新手只需處理必要選項；豆名、研磨刻度、水溫及比例收在「進階設定」內。',
   helpEyebrow: '遇到問題時才看', helpTitle: '按杯中問題找答案', helpBody: '不用先讀完整個知識庫。沖完後選擇最接近的問題，再深入了解。',
   first: '第一次手沖，由哪裡開始？', sour: '咖啡太酸／尖銳', bitter: '咖啡太苦／乾口', grind: '不知道研磨度怎樣選', flow: '注水太快或太慢', ratio: '不知道要用多少粉和水',
-  moreTitle: '進階工具與完整內容', moreBody: '標準配方、轉換器、養豆計算及完整文章都保留在這裡。', recipes: '有來源配方庫', tools: '全部沖煮工具', knowledge: '完整知識庫', backup: '資料備份／搬機', latestFallback: '上一杯已儲存'
+  moreTitle: '進階工具與完整內容', moreBody: '標準配方、磨豆機校準、轉換器及完整文章都保留在這裡。', recipes: '有來源配方庫', tools: '個人磨豆機校準', knowledge: '完整知識庫', backup: '資料備份／搬機', latestFallback: '上一杯已儲存', trainingActive: '正在進行首五杯訓練', trainingContinue: '返回本杯設定', trainingView: '查看五杯進度'
 } : {
-  eyebrow: 'Your first brew, made simple', title: 'Set up in 30 seconds, then follow the prompts', intro: 'Choose your brewer and coffee dose. We will supply a sensible starting point, then help you adjust from what you taste.', start: 'Set up my first brew', guide: 'Read the 2-minute beginner guide',
+  eyebrow: 'Your first brew, made simple', title: 'Set up in 30 seconds, then follow the prompts', intro: 'Choose your brewer and coffee dose. We will supply a sensible starting point, then help you adjust from what you taste.', start: 'Set up my first brew', guide: 'Start the First Five Brews course',
   step1: 'Choose a brewer', step1Body: 'Start with the equipment in front of you.', step2: 'Enter your dose', step2Body: 'Water, ratio, and temperature get a recommended starting point.', step3: 'Follow the prompts', step3Body: 'The timer highlights only what matters now.',
   welcomeBack: 'Welcome back', returnTitle: 'Improve your last brew', returnBody: 'Load the previous settings or review the taste records you have built up.', repeat: 'Brew the last recipe again', records: 'View brew records', compare: 'Compare the latest two',
   brewerEyebrow: 'Step 1', brewerTitle: 'What are you brewing with today?', brewerBody: 'Not sure? V60 is a clear starting point. Other choices open their dedicated workflow.', recommended: 'Beginner pick',
@@ -31,7 +31,7 @@ const c = isZh ? {
   setupEyebrow: 'Steps 2–3', setupTitle: 'Enter the dose, then follow the timer', setupBody: 'Beginners see only essential choices. Bean name, grinder setting, temperature, and ratio stay under Advanced settings.',
   helpEyebrow: 'Open only when needed', helpTitle: 'Find help by the problem in your cup', helpBody: 'You do not need to read the whole library first. Finish a brew, choose the closest problem, then learn more.',
   first: 'My first pour-over: where do I start?', sour: 'Coffee tastes sharp or too sour', bitter: 'Coffee tastes bitter or drying', grind: 'I do not know which grind to use', flow: 'The drawdown is too fast or slow', ratio: 'How much coffee and water?',
-  moreTitle: 'Advanced tools and full library', moreBody: 'Source-backed recipes, converters, freshness tools, and every article remain available here.', recipes: 'Source-backed recipes', tools: 'All brewing tools', knowledge: 'Full knowledge library', backup: 'Backup / device transfer', latestFallback: 'Your last brew is saved'
+  moreTitle: 'Advanced tools and full library', moreBody: 'Source-backed recipes, grinder calibration, converters, and every article remain available here.', recipes: 'Source-backed recipes', tools: 'Personal grinder calibration', knowledge: 'Full knowledge library', backup: 'Backup / device transfer', latestFallback: 'Your last brew is saved', trainingActive: 'First Five Brews in progress', trainingContinue: 'Return to this brew', trainingView: 'View five-brew progress'
 };
 
 const starterRecipe = { beanName: isZh ? '我的咖啡豆' : 'My coffee beans', roastLevel: 'medium', grindSize: isZh ? '中細研磨（像砂糖）' : 'Medium-fine (like table salt)', waterTemp: 92, coffeeWeight: 15, waterRatio: 15 };
@@ -61,7 +61,7 @@ export function getStaticPaths() { return getLanguagePaths(); }
     <p class="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-coffee-sand/80 sm:text-lg">{c.intro}</p>
     <div class="mt-7 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
       <a href="#brewer-picker" class="inline-flex min-h-[54px] items-center justify-center rounded-xl bg-coffee-gold px-7 text-base font-bold text-coffee-dark shadow-lg shadow-coffee-gold/15 transition hover:bg-coffee-gold-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-dark">{c.start}</a>
-      <a href={`${basePath}/guide`} class="inline-flex min-h-[54px] items-center justify-center rounded-xl border border-coffee-sand/20 px-7 text-sm font-semibold text-coffee-sand transition hover:border-coffee-gold/50 hover:text-coffee-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold">{c.guide}</a>
+      <a href={`${basePath}/training`} class="inline-flex min-h-[54px] items-center justify-center rounded-xl border border-coffee-sand/20 px-7 text-sm font-semibold text-coffee-sand transition hover:border-coffee-gold/50 hover:text-coffee-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold">{c.guide}</a>
     </div>
     <ol class="mx-auto mt-8 grid max-w-3xl gap-3 text-start sm:grid-cols-3" aria-label={isZh ? '開始沖煮三步' : 'Three steps to start brewing'}>
       {[[c.step1, c.step1Body], [c.step2, c.step2Body], [c.step3, c.step3Body]].map(([title, body], index) => (
@@ -69,6 +69,10 @@ export function getStaticPaths() { return getLanguagePaths(); }
       ))}
     </ol>
   </header>
+
+  <section id="active-training" class="mb-8 hidden rounded-2xl border border-blue-400/20 bg-blue-400/5 p-5" aria-live="polite">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><p class="text-[10px] font-bold uppercase tracking-wider text-blue-300">{c.trainingActive}</p><p id="active-training-copy" class="mt-1 font-display text-xl font-bold text-coffee-light"></p></div><div class="flex flex-col gap-2 sm:flex-row"><a href="#brew-start" class="inline-flex min-h-[46px] items-center justify-center rounded-xl bg-blue-300 px-4 text-sm font-bold text-coffee-dark">{c.trainingContinue}</a><a href={`${basePath}/training`} class="inline-flex min-h-[46px] items-center justify-center rounded-xl border border-blue-300/30 px-4 text-sm font-semibold text-blue-200">{c.trainingView}</a></div></div>
+  </section>
 
   <section id="brewer-picker" class="scroll-mt-24 rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-5 sm:p-7" aria-labelledby="brewer-title">
     <p class="text-xs font-bold uppercase tracking-[0.18em] text-coffee-gold">{c.brewerEyebrow}</p><h2 id="brewer-title" class="mt-1 font-display text-3xl font-bold text-coffee-light">{c.brewerTitle}</h2><p class="mt-2 max-w-2xl text-sm leading-6 text-coffee-muted">{c.brewerBody}</p>
@@ -97,7 +101,7 @@ export function getStaticPaths() { return getLanguagePaths(); }
 
   <details class="group mt-10 rounded-2xl border border-coffee-sand/10 bg-coffee-dark/35">
     <summary class="flex min-h-[64px] cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold sm:px-6"><span><strong class="block font-display text-lg text-coffee-light">{c.moreTitle}</strong><span class="mt-1 block text-xs leading-5 text-coffee-muted">{c.moreBody}</span></span><span class="text-xl text-coffee-gold transition-transform group-open:rotate-45" aria-hidden="true">＋</span></summary>
-    <div class="grid gap-3 border-t border-coffee-sand/10 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-4"><a href={`${basePath}/recipes`} class="secondary-resource">{c.recipes}</a><a href={`${basePath}/tools/grind-converter`} class="secondary-resource">{c.tools}</a><a href={`${basePath}/blog`} class="secondary-resource">{c.knowledge}</a><a href={`${basePath}/data`} class="secondary-resource">{c.backup}</a></div>
+    <div class="grid gap-3 border-t border-coffee-sand/10 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-4"><a href={`${basePath}/recipes`} class="secondary-resource">{c.recipes}</a><a href={`${basePath}/tools/grinder-calibration`} class="secondary-resource">{c.tools}</a><a href={`${basePath}/blog`} class="secondary-resource">{c.knowledge}</a><a href={`${basePath}/data`} class="secondary-resource">{c.backup}</a></div>
   </details>
 
   <AdSlot type="bottom-utility" class="my-12" />
@@ -125,6 +129,16 @@ export function getStaticPaths() { return getLanguagePaths(); }
     const compareLink = document.getElementById('compare-latest-link');
     const repeatButton = document.getElementById('btn-repeat-last');
     const latest = logs[0];
+    try {
+      const activeLesson = JSON.parse(localStorage.getItem('barista_flow_active_lesson_v1') || 'null');
+      const lessonNumber = Number(activeLesson?.lesson);
+      if (lessonNumber >= 1 && lessonNumber <= 5) {
+        const panel = document.getElementById('active-training');
+        const copy = document.getElementById('active-training-copy');
+        panel?.classList.remove('hidden');
+        if (copy) copy.textContent = document.documentElement.lang === 'zh-TW' ? `第 ${lessonNumber} 杯：完成沖煮並儲存味道記錄` : `Brew ${lessonNumber}: finish the brew and save the taste result`;
+      }
+    } catch (error) {}
     if (returnPanel && latest?.recipe) {
       returnPanel.classList.remove('hidden');
       const bean = String(latest.recipe.beanName || latestFallback);

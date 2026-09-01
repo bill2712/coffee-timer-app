@@ -71,6 +71,16 @@ const timerDict = {
   lessWaterBody: t('timer.diagnosis.lessWater.body'),
   moreWaterTitle: t('timer.diagnosis.moreWater.title'),
   moreWaterBody: t('timer.diagnosis.moreWater.body'),
+  trackingTitle: isZh ? '實際注水追蹤' : 'Actual pour tracking',
+  trackingOptional: isZh ? '選填：到達每段目標水量時按一下，後續時間會按真實節奏調整。' : 'Optional: tap at each target weight. Later timing adapts to your real pace.',
+  reachedTarget: isZh ? '已到 {weight}g' : 'Reached {weight}g',
+  trackingWaiting: isZh ? '開始計時後便可記錄。' : 'Start the timer to record targets.',
+  trackingDone: isZh ? '三段實際注水已記錄。' : 'All three actual pour targets are recorded.',
+  trackingAhead: isZh ? '快 {seconds} 秒' : '{seconds}s early',
+  trackingBehind: isZh ? '慢 {seconds} 秒' : '{seconds}s late',
+  trackingOnTime: isZh ? '準時' : 'on time',
+  trainingUrl: `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/training`,
+  historyUrl: `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/history`,
   stages: timerStages,
   timerMode: mode
 };
@@ -207,6 +217,19 @@ const timerDict = {
     <p id="timer-instruction" class="text-sm font-medium text-coffee-light/80 italic break-words whitespace-normal">{t('timer.readyText')}</p>
   </div>
 
+  <details id="pour-tracking-details" class="group mb-4 w-full max-w-sm rounded-xl border border-coffee-gold/20 bg-coffee-gold/5">
+    <summary class="flex min-h-[48px] cursor-pointer list-none items-center justify-between gap-3 px-4 text-start marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold">
+      <span><strong class="block text-xs text-coffee-light">{isZh ? '記錄實際到達水量' : 'Record actual target times'}</strong><span class="mt-0.5 block text-[10px] leading-4 text-coffee-muted">{isZh ? '選填；計時器會調整後續節奏' : 'Optional; later timing will adapt'}</span></span>
+      <span class="text-sm text-coffee-gold transition-transform group-open:rotate-180" aria-hidden="true">⌄</span>
+    </summary>
+    <div class="border-t border-coffee-sand/10 p-4">
+      <p class="text-xs leading-5 text-coffee-sand">{isZh ? '當電子磅顯示下一個目標水量，立即按下按鈕。' : 'Tap as soon as your scale reaches the next target weight.'}</p>
+      <button id="btn-mark-pour-target" type="button" disabled class="mt-3 min-h-[52px] w-full rounded-xl border border-coffee-gold/40 bg-coffee-darker px-4 text-sm font-bold text-coffee-gold transition hover:bg-coffee-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold disabled:cursor-not-allowed disabled:opacity-40">{isZh ? '開始計時後記錄' : 'Start the timer to record'}</button>
+      <p id="pour-tracking-status" class="mt-3 text-center text-[11px] leading-5 text-coffee-muted" aria-live="polite">{isZh ? '尚未記錄實際注水。' : 'No actual pour targets recorded yet.'}</p>
+      <ol id="pour-tracking-marks" class="mt-3 hidden gap-2"></ol>
+    </div>
+  </details>
+
   <!-- Optional predicted pour curve -->
   <details id="extraction-chart-details" class="group mb-6 w-full max-w-sm rounded-xl border border-coffee-sand/10 bg-coffee-darker/30">
     <summary class="flex min-h-[44px] cursor-pointer list-none items-center justify-between px-4 text-xs font-semibold text-coffee-muted marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold">
@@ -248,6 +271,12 @@ const timerDict = {
       <h3 id="tasting-modal-title" class="font-display text-2xl font-bold text-coffee-light mb-2">{t('timer.modal.title')}</h3>
       <p class="text-sm text-coffee-sand/80">{t('timer.modal.subtitle')}</p>
     </div>
+
+    <section id="pour-deviation-report" class="mb-5 hidden rounded-2xl border border-blue-400/20 bg-blue-400/5 p-4" aria-labelledby="pour-deviation-title">
+      <p class="text-[10px] font-bold uppercase tracking-wider text-blue-300">{isZh ? '實際注水報告' : 'Actual pour report'}</p>
+      <h4 id="pour-deviation-title" class="mt-1 font-display text-lg font-bold text-coffee-light"></h4>
+      <div id="pour-deviation-list" class="mt-3 grid gap-2"></div>
+    </section>
 
     <form id="tasting-form" class="flex flex-col gap-5">
       <!-- One-problem diagnosis -->
@@ -382,6 +411,11 @@ const timerDict = {
       <p id="diagnosis-result-body" class="mt-3 text-sm leading-relaxed text-coffee-sand"></p>
       <div id="diagnosis-ratio-change" class="mt-4 hidden rounded-xl border border-coffee-gold/20 bg-coffee-gold/10 px-4 py-3 text-center text-sm font-bold text-coffee-gold"></div>
       <p class="mt-5 rounded-xl border border-coffee-sand/10 bg-coffee-dark/60 p-4 text-xs leading-relaxed text-coffee-muted">{t('timer.diagnosis.disclaimer')}</p>
+      <div id="training-result" class="mt-5 hidden rounded-xl border border-green-400/25 bg-green-400/5 p-4">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-green-300">{isZh ? '首五杯訓練' : 'First Five Brews'}</p>
+        <p id="training-result-copy" class="mt-1 text-sm font-semibold text-coffee-light"></p>
+        <a id="training-result-link" href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/training`} class="mt-3 inline-flex min-h-[44px] items-center rounded-lg border border-green-400/30 px-4 text-xs font-bold text-green-300 hover:bg-green-400/10">{isZh ? '查看下一杯訓練' : 'View the next training brew'}</a>
+      </div>
       <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <button type="button" id="btn-close-diagnosis" class="min-h-[48px] rounded-xl border border-coffee-sand/20 bg-coffee-dark text-sm font-semibold text-coffee-sand hover:text-coffee-light">
           {t('timer.diagnosis.close')}
@@ -522,6 +556,9 @@ const timerDict = {
   let activeDiagnosis: any = null;
   let activeLogId = '';
   let pendingPhotoData = '';
+  let adaptiveOffset = 0;
+  let adaptiveTotalDuration = TOTAL_DURATION;
+  let actualStageMarks: Array<{ stageIndex: number; targetWeight: number; expectedElapsed: number; actualElapsed: number; deviation: number }> = [];
 
   // DOM Elements
   let timerProgress: SVGCircleElement | null = null;
@@ -540,6 +577,9 @@ const timerDict = {
   let preflightPanel: HTMLElement | null = null;
   let btnPreflightReady: HTMLButtonElement | null = null;
   let preflightChecks: HTMLInputElement[] = [];
+  let btnMarkPourTarget: HTMLButtonElement | null = null;
+  let pourTrackingStatus: HTMLElement | null = null;
+  let pourTrackingMarks: HTMLOListElement | null = null;
   
   // Modal Elements
   let tastingModal: HTMLDivElement | null = null;
@@ -585,6 +625,94 @@ const timerDict = {
   const TIMER_SESSION_KEY = 'barista_flow_timer_session_v1';
   const PREFLIGHT_KEY = 'barista_flow_preflight_seen_v1';
 
+  function getBaseStageEnds() {
+    let elapsed = 0;
+    return STAGES.map((stage) => (elapsed += stage.duration));
+  }
+
+  function getAdaptiveStageEnds() {
+    const baseEnds = getBaseStageEnds();
+    let offset = 0;
+    return baseEnds.map((baseEnd, index) => {
+      const mark = actualStageMarks.find((item) => item.stageIndex === index);
+      if (mark) {
+        offset = mark.actualElapsed - baseEnd;
+        return mark.actualElapsed;
+      }
+      return baseEnd + offset;
+    });
+  }
+
+  function getElapsedTime() {
+    return Math.max(0, adaptiveTotalDuration - remainingTime);
+  }
+
+  function getRecordedBrewDuration() {
+    const finalMark = actualStageMarks.find((mark) => mark.stageIndex === STAGES.length - 1);
+    return finalMark ? Math.max(0, finalMark.actualElapsed) : getElapsedTime();
+  }
+
+  function formatDeviation(seconds: number) {
+    const rounded = Math.abs(Math.round(seconds));
+    if (rounded <= 1) return dict.trackingOnTime;
+    return (seconds < 0 ? dict.trackingAhead : dict.trackingBehind).replace('{seconds}', String(rounded));
+  }
+
+  function renderPourTracking() {
+    const nextIndex = actualStageMarks.length;
+    const targets = getTargetWeights(recipe);
+    if (btnMarkPourTarget) {
+      btnMarkPourTarget.disabled = !isRunning || nextIndex >= STAGES.length;
+      btnMarkPourTarget.textContent = nextIndex >= STAGES.length
+        ? dict.trackingDone
+        : dict.reachedTarget.replace('{weight}', String(targets[nextIndex]));
+    }
+    if (pourTrackingStatus) {
+      pourTrackingStatus.textContent = nextIndex >= STAGES.length
+        ? dict.trackingDone
+        : isRunning
+          ? `${nextIndex + 1} / ${STAGES.length} · ${dict.reachedTarget.replace('{weight}', String(targets[nextIndex]))}`
+          : dict.trackingWaiting;
+    }
+    const marksList = pourTrackingMarks;
+    if (!marksList) return;
+    marksList.replaceChildren();
+    marksList.classList.toggle('hidden', actualStageMarks.length === 0);
+    marksList.classList.toggle('grid', actualStageMarks.length > 0);
+    actualStageMarks.forEach((mark) => {
+      const item = document.createElement('li');
+      item.className = 'flex min-h-[36px] items-center justify-between rounded-lg border border-coffee-sand/10 bg-coffee-dark/50 px-3 text-[11px]';
+      const label = document.createElement('span');
+      label.className = 'text-coffee-sand';
+      label.textContent = `${mark.targetWeight}g · ${formatTime(mark.actualElapsed)}`;
+      const deviation = document.createElement('span');
+      deviation.className = Math.abs(mark.deviation) <= 1 ? 'font-bold text-green-300' : 'font-bold text-coffee-gold';
+      deviation.textContent = formatDeviation(mark.deviation);
+      item.append(label, deviation);
+      marksList.appendChild(item);
+    });
+  }
+
+  function markNextPourTarget() {
+    if (!isRunning || actualStageMarks.length >= STAGES.length) return;
+    const stageIndex = actualStageMarks.length;
+    const baseEnd = getBaseStageEnds()[stageIndex];
+    const expectedElapsed = baseEnd + adaptiveOffset;
+    const actualElapsed = getElapsedTime();
+    const deviation = actualElapsed - expectedElapsed;
+    const nextOffset = Math.max(-30, Math.min(60, actualElapsed - baseEnd));
+    const offsetDelta = nextOffset - adaptiveOffset;
+    actualStageMarks.push({ stageIndex, targetWeight: getTargetWeights(recipe)[stageIndex], expectedElapsed, actualElapsed, deviation });
+    adaptiveOffset = nextOffset;
+    adaptiveTotalDuration = TOTAL_DURATION + adaptiveOffset;
+    remainingTime = Math.max(0, remainingTime + offsetDelta);
+    vibrate(60);
+    synth.beep(740, 0.08, 'sine');
+    if (stageIndex === STAGES.length - 1) remainingTime = 0;
+    updateDisplay();
+    persistTimerSession();
+  }
+
   function setupPreflight(hasRestoredSession: boolean) {
     let alreadySeen = false;
     try { alreadySeen = localStorage.getItem(PREFLIGHT_KEY) === 'true'; } catch (error) {}
@@ -626,6 +754,8 @@ const timerDict = {
         version: 1,
         totalDuration: TOTAL_DURATION,
         remainingTime,
+        adaptiveOffset,
+        actualStageMarks,
         running: isRunning,
         updatedAt: Date.now(),
         recipe
@@ -652,12 +782,23 @@ const timerDict = {
       let restored = Number(saved.remainingTime);
       if (!Number.isFinite(restored)) return false;
       if (saved.running) restored -= age / 1000;
-      remainingTime = Math.min(TOTAL_DURATION, Math.max(0, restored));
+      const restoredOffset = Number(saved.adaptiveOffset);
+      adaptiveOffset = Number.isFinite(restoredOffset) ? Math.max(-30, Math.min(60, restoredOffset)) : 0;
+      adaptiveTotalDuration = TOTAL_DURATION + adaptiveOffset;
+      const rawMarks = Array.isArray(saved.actualStageMarks) ? saved.actualStageMarks : [];
+      actualStageMarks = rawMarks.slice(0, STAGES.length).map((mark: any, index: number) => ({
+        stageIndex: index,
+        targetWeight: Math.max(0, Number(mark.targetWeight) || 0),
+        expectedElapsed: Math.max(0, Number(mark.expectedElapsed) || 0),
+        actualElapsed: Math.max(0, Number(mark.actualElapsed) || 0),
+        deviation: Math.max(-120, Math.min(120, Number(mark.deviation) || 0))
+      }));
+      remainingTime = Math.min(adaptiveTotalDuration, Math.max(0, restored));
       if (remainingTime <= 0) {
         clearTimerSession();
         return false;
       }
-      return remainingTime < TOTAL_DURATION;
+      return remainingTime < adaptiveTotalDuration;
     } catch (error) {
       clearTimerSession();
       return false;
@@ -720,6 +861,28 @@ const timerDict = {
     }
   }
 
+  function getCalibratedGrindAdjustment(kind: 'finer' | 'coarser') {
+    try {
+      const profile = JSON.parse(localStorage.getItem('barista_flow_grinder_profile_v1') || 'null');
+      const current = Number(profile?.currentSetting);
+      const increment = Number(profile?.increment);
+      const min = Number(profile?.minSetting);
+      const max = Number(profile?.maxSetting);
+      if (!profile || !Number.isFinite(current) || !Number.isFinite(increment) || increment <= 0 || !Number.isFinite(min) || !Number.isFinite(max) || min >= max) return null;
+      const finerSign = profile.finerDirection === 'higher' ? 1 : -1;
+      const delta = kind === 'finer' ? finerSign * increment : -finerSign * increment;
+      const nextSetting = Math.round(Math.min(max, Math.max(min, current + delta)) * 100) / 100;
+      return {
+        model: String(profile.model || 'Grinder').slice(0, 60),
+        currentSetting: current,
+        nextSetting,
+        label: `${String(profile.model || 'Grinder').slice(0, 40)} · ${nextSetting}`
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
   function buildDiagnosis(issue: string) {
     const zh = dict.lang === 'zh-TW';
     const currentRatio = Number.isFinite(Number(recipe.waterRatio))
@@ -732,7 +895,7 @@ const timerDict = {
     let ratioChange = '';
 
     const grind = String(recipe.grindSize || (zh ? '未記錄研磨刻度' : 'grind setting not recorded'));
-    const brewSeconds = Math.max(0, Math.round(TOTAL_DURATION - remainingTime));
+    const brewSeconds = Math.max(0, Math.round(getRecordedBrewDuration()));
     const timeLabel = `${Math.floor(brewSeconds / 60)}:${String(brewSeconds % 60).padStart(2, '0')}`;
     const context = zh
       ? `本杯：${grind}、${recipe.waterTemp}°C、1:${currentRatio}、${timeLabel}。`
@@ -742,12 +905,22 @@ const timerDict = {
       title = dict.finerTitle;
       body = context + dict.finerBody;
       variable = 'grind-finer';
-      nextRecipe.grindSize = zh ? `${grind}（稍細一格）` : `${grind} (one small step finer)`;
+      const calibrated = getCalibratedGrindAdjustment('finer');
+      nextRecipe.grindSize = calibrated?.label || (zh ? `${grind}（稍細一格）` : `${grind} (one small step finer)`);
+      if (calibrated) {
+        title = zh ? `下一杯使用 ${calibrated.nextSetting} 刻度` : `Use setting ${calibrated.nextSetting} next`;
+        body = `${context}${zh ? `依照你的 ${calibrated.model} 校準檔案，由 ${calibrated.currentSetting} 調至 ${calibrated.nextSetting}；其他變數保持不變。` : `Using your ${calibrated.model} profile, move from ${calibrated.currentSetting} to ${calibrated.nextSetting} and keep every other variable unchanged.`}`;
+      }
     } else if (issue === 'slow') {
       title = dict.coarserTitle;
       body = context + dict.coarserBody;
       variable = 'grind-coarser';
-      nextRecipe.grindSize = zh ? `${grind}（稍粗一格）` : `${grind} (one small step coarser)`;
+      const calibrated = getCalibratedGrindAdjustment('coarser');
+      nextRecipe.grindSize = calibrated?.label || (zh ? `${grind}（稍粗一格）` : `${grind} (one small step coarser)`);
+      if (calibrated) {
+        title = zh ? `下一杯使用 ${calibrated.nextSetting} 刻度` : `Use setting ${calibrated.nextSetting} next`;
+        body = `${context}${zh ? `依照你的 ${calibrated.model} 校準檔案，由 ${calibrated.currentSetting} 調至 ${calibrated.nextSetting}；其他變數保持不變。` : `Using your ${calibrated.model} profile, move from ${calibrated.currentSetting} to ${calibrated.nextSetting} and keep every other variable unchanged.`}`;
+      }
     } else if (issue === 'sour' && recipe.waterTemp <= 88) {
       const nextTemp = Math.min(100, recipe.waterTemp + 2);
       title = zh ? `水溫提高至 ${nextTemp}°C` : `Raise water temperature to ${nextTemp}°C`;
@@ -764,12 +937,22 @@ const timerDict = {
       title = dict.finerTitle;
       body = context + dict.finerBody;
       variable = 'grind-finer';
-      nextRecipe.grindSize = zh ? `${grind}（稍細一格）` : `${grind} (one small step finer)`;
+      const calibrated = getCalibratedGrindAdjustment('finer');
+      nextRecipe.grindSize = calibrated?.label || (zh ? `${grind}（稍細一格）` : `${grind} (one small step finer)`);
+      if (calibrated) {
+        title = zh ? `下一杯使用 ${calibrated.nextSetting} 刻度` : `Use setting ${calibrated.nextSetting} next`;
+        body = `${context}${zh ? `依照你的 ${calibrated.model} 校準檔案，由 ${calibrated.currentSetting} 調至 ${calibrated.nextSetting}；其他變數保持不變。` : `Using your ${calibrated.model} profile, move from ${calibrated.currentSetting} to ${calibrated.nextSetting} and keep every other variable unchanged.`}`;
+      }
     } else if (issue === 'bitter') {
       title = dict.coarserTitle;
       body = context + dict.coarserBody;
       variable = 'grind-coarser';
-      nextRecipe.grindSize = zh ? `${grind}（稍粗一格）` : `${grind} (one small step coarser)`;
+      const calibrated = getCalibratedGrindAdjustment('coarser');
+      nextRecipe.grindSize = calibrated?.label || (zh ? `${grind}（稍粗一格）` : `${grind} (one small step coarser)`);
+      if (calibrated) {
+        title = zh ? `下一杯使用 ${calibrated.nextSetting} 刻度` : `Use setting ${calibrated.nextSetting} next`;
+        body = `${context}${zh ? `依照你的 ${calibrated.model} 校準檔案，由 ${calibrated.currentSetting} 調至 ${calibrated.nextSetting}；其他變數保持不變。` : `Using your ${calibrated.model} profile, move from ${calibrated.currentSetting} to ${calibrated.nextSetting} and keep every other variable unchanged.`}`;
+      }
     } else if (issue === 'weak') {
       const newRatio = Math.max(10, currentRatio - 1);
       nextRecipe.waterRatio = newRatio;
@@ -789,33 +972,35 @@ const timerDict = {
     }
 
     if (issue === 'balanced') body = context + dict.keepBody;
-    return { issue, title, body, variable, ratioChange, nextRecipe };
+    const calibrated = variable === 'grind-finer' ? getCalibratedGrindAdjustment('finer') : variable === 'grind-coarser' ? getCalibratedGrindAdjustment('coarser') : null;
+    return { issue, title, body, variable, ratioChange, nextRecipe, grinderSetting: calibrated?.nextSetting };
   }
 
   function updateDisplay() {
     // Current Elapsed
-    const elapsed = TOTAL_DURATION - remainingTime;
+    const elapsed = getElapsedTime();
     
     // Find current stage
     let currentStageIndex = 0;
     let stageStartAccumulator = 0;
+    const adaptiveStageEnds = getAdaptiveStageEnds();
 
     for (let i = 0; i < STAGES.length; i++) {
-      const stage = STAGES[i];
-      if (elapsed >= stageStartAccumulator && elapsed < stageStartAccumulator + stage.duration) {
+      const stageEnd = adaptiveStageEnds[i];
+      if (elapsed >= stageStartAccumulator && elapsed < stageEnd) {
         currentStageIndex = i;
         break;
       }
-      stageStartAccumulator += stage.duration;
+      stageStartAccumulator = stageEnd;
       // If elapsed equals total duration, keep last stage active
-      if (elapsed >= TOTAL_DURATION) {
+      if (elapsed >= adaptiveTotalDuration) {
         currentStageIndex = STAGES.length - 1;
       }
     }
 
     const currentStage = STAGES[currentStageIndex];
     const stageElapsed = elapsed - stageStartAccumulator;
-    const stageRemaining = currentStage.duration - stageElapsed;
+    const stageRemaining = Math.max(0, adaptiveStageEnds[currentStageIndex] - elapsed);
     
     const targets = getTargetWeights(recipe);
 
@@ -876,8 +1061,9 @@ const timerDict = {
     }
 
     // Set Circle Progress
-    const totalPercent = (remainingTime / TOTAL_DURATION) * 100;
+    const totalPercent = (remainingTime / Math.max(1, adaptiveTotalDuration)) * 100;
     setProgress(totalPercent);
+    renderPourTracking();
 
     // Audio alerts (countdown + chord + speech)
     if (isRunning) {
@@ -1034,6 +1220,9 @@ const timerDict = {
 
   function resetTimer() {
     stopTimer();
+    adaptiveOffset = 0;
+    adaptiveTotalDuration = TOTAL_DURATION;
+    actualStageMarks = [];
     remainingTime = TOTAL_DURATION;
     clearTimerSession();
     lastPersistedSecond = -1;
@@ -1089,6 +1278,7 @@ const timerDict = {
     tastingModal.classList.remove('hidden');
     tastingModal.classList.add('flex');
     document.body.classList.add('brew-modal-active');
+    renderPourDeviationReport();
     
     // Animate in
     setTimeout(() => {
@@ -1097,6 +1287,33 @@ const timerDict = {
       modalContent!.classList.add('scale-100');
       (document.querySelector('input[name="brew-issue"]') as HTMLInputElement | null)?.focus();
     }, 10);
+  }
+
+  function renderPourDeviationReport() {
+    const report = document.getElementById('pour-deviation-report');
+    const title = document.getElementById('pour-deviation-title');
+    const list = document.getElementById('pour-deviation-list');
+    if (!report || !title || !list || actualStageMarks.length === 0) {
+      report?.classList.add('hidden');
+      return;
+    }
+    report.classList.remove('hidden');
+    title.textContent = dict.lang === 'zh-TW'
+      ? `已記錄 ${actualStageMarks.length}/${STAGES.length} 段 · 總節奏 ${formatDeviation(adaptiveOffset)}`
+      : `${actualStageMarks.length}/${STAGES.length} targets · overall pace ${formatDeviation(adaptiveOffset)}`;
+    list.replaceChildren();
+    actualStageMarks.forEach((mark) => {
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between rounded-lg border border-blue-400/10 bg-coffee-dark/40 px-3 py-2 text-xs';
+      const stage = document.createElement('span');
+      stage.className = 'text-coffee-sand';
+      stage.textContent = `${STAGES[mark.stageIndex]?.name || ''} · ${mark.targetWeight}g`;
+      const value = document.createElement('strong');
+      value.className = Math.abs(mark.deviation) <= 1 ? 'text-green-300' : 'text-blue-300';
+      value.textContent = `${formatTime(mark.actualElapsed)} · ${formatDeviation(mark.deviation)}`;
+      row.append(stage, value);
+      list.appendChild(row);
+    });
   }
 
   function hideTastingModal() {
@@ -1222,6 +1439,33 @@ const timerDict = {
     }
   }
 
+  function completeTrainingLesson(lesson: number) {
+    if (lesson < 1 || lesson > 5) return;
+    let storedProgress: any = {};
+    try {
+      const parsed = JSON.parse(localStorage.getItem('barista_flow_training_v1') || '{}');
+      if (parsed && typeof parsed === 'object') storedProgress = parsed;
+    } catch (error) {
+      storedProgress = {};
+    }
+    const completed = Array.from(new Set([
+      ...(Array.isArray(storedProgress.completed) ? storedProgress.completed : []),
+      lesson
+    ])).map(Number).filter((value) => value >= 1 && value <= 5);
+    try {
+      localStorage.setItem('barista_flow_training_v1', JSON.stringify({
+        version: 1,
+        completed,
+        activeCup: Math.min(5, lesson + 1),
+        startedAt: storedProgress.startedAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }));
+      localStorage.removeItem('barista_flow_active_lesson_v1');
+    } catch (error) {
+      console.warn('Training progress could not be saved:', error);
+    }
+  }
+
   async function saveTastingLog(e: Event) {
     e.preventDefault();
     
@@ -1253,12 +1497,26 @@ const timerDict = {
       ? (Number(parentLog.recipeVersion) || 1) + 1
       : (versions.length ? Math.max(...versions) + 1 : 1);
 
+    let activeLesson = 0;
+    try {
+      const lesson = JSON.parse(localStorage.getItem('barista_flow_active_lesson_v1') || 'null');
+      const parsedLesson = Number(lesson?.lesson);
+      if (parsedLesson >= 1 && parsedLesson <= 5) activeLesson = parsedLesson;
+    } catch (error) {}
+
     activeLogId = Date.now().toString();
     const newLog = {
       id: activeLogId,
       date: new Date().toISOString(),
       recipe: { ...recipe },
-      brewTimeSeconds: Math.max(1, Math.round(TOTAL_DURATION - remainingTime)),
+      brewTimeSeconds: Math.max(1, Math.round(getRecordedBrewDuration())),
+      trainingLesson: activeLesson || undefined,
+      pourTracking: actualStageMarks.length ? {
+        marks: actualStageMarks.map((mark) => ({ ...mark })),
+        scheduleOffsetSeconds: Math.round(adaptiveOffset),
+        plannedDurationSeconds: TOTAL_DURATION,
+        actualDurationSeconds: Math.max(1, Math.round(getRecordedBrewDuration()))
+      } : undefined,
       recipeVersion,
       parentLogId: parentLog ? parentLogId : undefined,
       evaluation: {
@@ -1314,6 +1572,7 @@ const timerDict = {
         : 'This browser is out of local storage, so this brew was not saved. Download a backup first, then remove some older records.');
       return;
     }
+    completeTrainingLesson(activeLesson);
 
     const resultTitle = document.getElementById('diagnosis-result-title');
     const resultBody = document.getElementById('diagnosis-result-body');
@@ -1323,6 +1582,23 @@ const timerDict = {
     if (ratioChange) {
       ratioChange.textContent = activeDiagnosis.ratioChange;
       ratioChange.classList.toggle('hidden', !activeDiagnosis.ratioChange);
+    }
+    const trainingResult = document.getElementById('training-result');
+    const trainingCopy = document.getElementById('training-result-copy');
+    const trainingLink = document.getElementById('training-result-link') as HTMLAnchorElement | null;
+    if (activeLesson && trainingResult && trainingCopy) {
+      trainingResult.classList.remove('hidden');
+      trainingCopy.textContent = dict.lang === 'zh-TW'
+        ? `第 ${activeLesson} 杯已完成並儲存。${activeLesson < 5 ? '下一杯訓練已解鎖。' : '五杯訓練已完成，可以到紀錄頁做 A/B 比較。'}`
+        : `Brew ${activeLesson} is saved. ${activeLesson < 5 ? 'The next training brew is unlocked.' : 'The five-brew course is complete. Compare versions in your records.'}`;
+      if (trainingLink) {
+        trainingLink.href = activeLesson === 5 ? dict.historyUrl : dict.trainingUrl;
+        trainingLink.textContent = activeLesson === 5
+          ? (dict.lang === 'zh-TW' ? '比較兩杯並儲存個人配方' : 'Compare two brews and save a personal recipe')
+          : (dict.lang === 'zh-TW' ? '查看下一杯訓練' : 'View the next training brew');
+      }
+    } else {
+      trainingResult?.classList.add('hidden');
     }
     tastingForm?.classList.add('hidden');
     diagnosisResult?.classList.remove('hidden');
@@ -1340,6 +1616,15 @@ const timerDict = {
         body: activeDiagnosis.body,
         parentLogId: activeLogId
       }));
+      if (Number.isFinite(Number(activeDiagnosis.grinderSetting))) {
+        const profile = JSON.parse(localStorage.getItem('barista_flow_grinder_profile_v1') || 'null');
+        if (profile && typeof profile === 'object') {
+          profile.currentSetting = Number(activeDiagnosis.grinderSetting);
+          profile.recommendedSetting = Number(activeDiagnosis.grinderSetting);
+          profile.updatedAt = new Date().toISOString();
+          localStorage.setItem('barista_flow_grinder_profile_v1', JSON.stringify(profile));
+        }
+      }
     } catch (error) {
       console.warn('Next-brew recommendation could not be stored:', error);
     }
@@ -1444,6 +1729,9 @@ const timerDict = {
     preflightPanel = document.getElementById('brew-preflight');
     btnPreflightReady = document.getElementById('btn-preflight-ready') as HTMLButtonElement;
     preflightChecks = Array.from(document.querySelectorAll<HTMLInputElement>('.brew-preflight-check'));
+    btnMarkPourTarget = document.getElementById('btn-mark-pour-target') as HTMLButtonElement;
+    pourTrackingStatus = document.getElementById('pour-tracking-status');
+    pourTrackingMarks = document.getElementById('pour-tracking-marks') as HTMLOListElement;
     
     tastingModal = document.getElementById('tasting-log-modal') as HTMLDivElement;
     modalBackdrop = document.getElementById('tasting-modal-backdrop') as HTMLDivElement;
@@ -1459,6 +1747,14 @@ const timerDict = {
       if (isFocusMode) exitFocusMode();
       else enterFocusMode();
     });
+    btnMarkPourTarget?.addEventListener('click', markNextPourTarget);
+    try {
+      const activeLesson = JSON.parse(localStorage.getItem('barista_flow_active_lesson_v1') || 'null');
+      if (Number(activeLesson?.lesson) === 3) {
+        const trackingDetails = document.getElementById('pour-tracking-details') as HTMLDetailsElement | null;
+        if (trackingDetails) trackingDetails.open = true;
+      }
+    } catch (error) {}
     document.addEventListener('fullscreenchange', () => {
       if (isFocusMode && !document.fullscreenElement) exitFocusMode(false);
     });
@@ -1568,5 +1864,6 @@ const timerDict = {
       if (btnStart) btnStart.textContent = dict.btnResume;
     }
     setupPreflight(restoredSession);
+    renderPourTracking();
   });
 </script>

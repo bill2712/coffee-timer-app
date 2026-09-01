@@ -114,6 +114,9 @@ export function getStaticPaths() {
   compareRebrew: t('history.compare.rebrew'),
   grind: lang === 'zh-TW' ? '研磨度' : 'Grind',
   brewTime: lang === 'zh-TW' ? '沖煮時間' : 'Brew time',
+  actualPour: lang === 'zh-TW' ? '實際注水' : 'Actual pour',
+  trainingBrew: lang === 'zh-TW' ? '訓練第 {lesson} 杯' : 'Training brew {lesson}',
+  targetsRecorded: lang === 'zh-TW' ? '記錄 {count}/3 段' : '{count}/3 targets',
   savePersonal: lang === 'zh-TW' ? '儲存為個人配方' : 'Save as personal recipe',
   savedPersonal: lang === 'zh-TW' ? '已儲存到個人配方' : 'Saved to personal recipes',
   locale: lang,
@@ -156,6 +159,13 @@ export function getStaticPaths() {
       variable: string;
       suggestedRecipe?: Record<string, unknown>;
     };
+    trainingLesson?: number;
+    pourTracking?: {
+      marks: Array<{ stageIndex: number; targetWeight: number; expectedElapsed: number; actualElapsed: number; deviation: number }>;
+      scheduleOffsetSeconds: number;
+      plannedDurationSeconds: number;
+      actualDurationSeconds: number;
+    };
   }
 
   function normalizeLog(raw: any): LogEntry | null {
@@ -180,6 +190,16 @@ export function getStaticPaths() {
         ? raw.recommendation.suggestedRecipe
         : undefined
     } : undefined;
+
+    const trainingLesson = Number(raw.trainingLesson);
+    const rawTracking = raw.pourTracking && typeof raw.pourTracking === 'object' ? raw.pourTracking : null;
+    const marks = Array.isArray(rawTracking?.marks) ? rawTracking.marks.slice(0, 3).map((mark: any, index: number) => ({
+      stageIndex: index,
+      targetWeight: clamp(mark.targetWeight, 0, 2500, 0),
+      expectedElapsed: clamp(mark.expectedElapsed, 0, 86400, 0),
+      actualElapsed: clamp(mark.actualElapsed, 0, 86400, 0),
+      deviation: clamp(mark.deviation, -120, 120, 0)
+    })) : [];
 
     return {
       id,
@@ -208,7 +228,14 @@ export function getStaticPaths() {
           ? raw.evaluation.photoData
           : undefined
       },
-      recommendation
+      recommendation,
+      trainingLesson: trainingLesson >= 1 && trainingLesson <= 5 ? trainingLesson : undefined,
+      pourTracking: marks.length ? {
+        marks,
+        scheduleOffsetSeconds: clamp(rawTracking?.scheduleOffsetSeconds, -120, 120, 0),
+        plannedDurationSeconds: clamp(rawTracking?.plannedDurationSeconds, 1, 86400, 150),
+        actualDurationSeconds: clamp(rawTracking?.actualDurationSeconds, 1, 86400, Math.round(clamp(raw.brewTimeSeconds, 1, 86400, 150)))
+      } : undefined
     };
   }
 
@@ -291,7 +318,7 @@ export function getStaticPaths() {
           </button>
           
           <div class="mb-4 pe-8">
-            <div class="mb-1 flex items-center gap-2 text-[10px] text-coffee-muted"><span>${dateStr}</span><span class="rounded-full border border-coffee-sand/15 px-2 py-0.5">${window.historyDict.version} ${log.recipeVersion}</span></div>
+            <div class="mb-1 flex flex-wrap items-center gap-2 text-[10px] text-coffee-muted"><span>${dateStr}</span><span class="rounded-full border border-coffee-sand/15 px-2 py-0.5">${window.historyDict.version} ${log.recipeVersion}</span>${log.trainingLesson ? `<span class="rounded-full border border-blue-400/25 bg-blue-400/5 px-2 py-0.5 text-blue-300">${window.historyDict.trainingBrew.replace('{lesson}', String(log.trainingLesson))}</span>` : ''}</div>
             <h3 class="font-display font-bold text-lg text-coffee-light truncate">${escapeHTML(log.recipe.beanName) || window.historyDict.unknownBean}</h3>
             <p class="text-xs text-coffee-sand/80 mt-1">${log.recipe.coffeeWeight}g ${window.historyDict.powder} | 1:${ratio} | ${log.recipe.totalWater}g ${window.historyDict.water}</p>
             <p class="mt-1 text-[11px] text-coffee-muted">${window.historyDict.grind}: ${escapeHTML(log.recipe.grindSize || '—')} · ${window.historyDict.brewTime}: ${formatDuration(log.brewTimeSeconds)}</p>
@@ -326,6 +353,8 @@ export function getStaticPaths() {
             <p class="text-[10px] font-bold uppercase tracking-wider text-coffee-gold">${window.historyDict.recommendation}</p>
             <p class="mt-1 text-xs font-semibold text-coffee-light">${escapeHTML(log.recommendation.title)}</p>
           </div>` : ''}
+
+          ${log.pourTracking ? `<div class="mt-4 flex items-center justify-between rounded-xl border border-blue-400/15 bg-blue-400/5 p-3 text-xs"><span class="font-semibold text-blue-200">${window.historyDict.actualPour}</span><span class="text-coffee-sand">${window.historyDict.targetsRecorded.replace('{count}', String(log.pourTracking.marks.length))} · ${log.pourTracking.scheduleOffsetSeconds > 0 ? '+' : ''}${Math.round(log.pourTracking.scheduleOffsetSeconds)}s</span></div>` : ''}
 
           ${log.evaluation.notes ? `
           <div class="mt-4 pt-4 border-t border-coffee-sand/10">
@@ -418,6 +447,7 @@ export function getStaticPaths() {
         changes.push(`${window.historyDict.grind}: ${escapeHTML(a.recipe.grindSize || '—')} → ${escapeHTML(b.recipe.grindSize || '—')}`);
       }
       if (a.brewTimeSeconds !== b.brewTimeSeconds) changes.push(`${window.historyDict.brewTime}: ${formatDuration(a.brewTimeSeconds)} → ${formatDuration(b.brewTimeSeconds)}`);
+      if ((a.pourTracking?.scheduleOffsetSeconds || 0) !== (b.pourTracking?.scheduleOffsetSeconds || 0)) changes.push(`${window.historyDict.actualPour}: ${a.pourTracking?.scheduleOffsetSeconds || 0}s → ${b.pourTracking?.scheduleOffsetSeconds || 0}s`);
 
       const metricRows = [
         [window.historyDict.powder, `${a.recipe.coffeeWeight}g`, `${b.recipe.coffeeWeight}g`],
@@ -426,6 +456,7 @@ export function getStaticPaths() {
         [window.historyDict.grind, escapeHTML(a.recipe.grindSize || '—'), escapeHTML(b.recipe.grindSize || '—')],
         [window.historyDict.temperature, `${a.recipe.waterTemp}°C`, `${b.recipe.waterTemp}°C`],
         [window.historyDict.brewTime, formatDuration(a.brewTimeSeconds), formatDuration(b.brewTimeSeconds)],
+        [window.historyDict.actualPour, a.pourTracking ? `${a.pourTracking.marks.length}/3 · ${a.pourTracking.scheduleOffsetSeconds > 0 ? '+' : ''}${Math.round(a.pourTracking.scheduleOffsetSeconds)}s` : '—', b.pourTracking ? `${b.pourTracking.marks.length}/3 · ${b.pourTracking.scheduleOffsetSeconds > 0 ? '+' : ''}${Math.round(b.pourTracking.scheduleOffsetSeconds)}s` : '—'],
         [window.historyDict.acidity, a.evaluation.acidity, b.evaluation.acidity],
         [window.historyDict.bitterness, a.evaluation.bitterness, b.evaluation.bitterness],
         [window.historyDict.body, a.evaluation.body, b.evaluation.body],
@@ -534,17 +565,20 @@ export function getStaticPaths() {
         return `"${text.replace(/"/g, '""')}"`;
       };
 
-      const headers = ['Date', 'Bean Name', 'Recipe Version', 'Coffee Weight (g)', 'Water Ratio', 'Grind Setting', 'Water Temp (C)', 'Total Water (g)', 'Brew Time (seconds)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Overall (1-5)', 'Issue', 'Next Recommendation', 'Notes'];
+      const headers = ['Date', 'Bean Name', 'Recipe Version', 'Training Lesson', 'Coffee Weight (g)', 'Water Ratio', 'Grind Setting', 'Water Temp (C)', 'Total Water (g)', 'Brew Time (seconds)', 'Pour Targets Recorded', 'Schedule Offset (seconds)', 'Acidity (1-5)', 'Bitterness (1-5)', 'Body (1-5)', 'Overall (1-5)', 'Issue', 'Next Recommendation', 'Notes'];
       const rows = logData.map(log => [
         csvCell(log.date),
         csvCell(log.recipe.beanName),
         log.recipeVersion,
+        log.trainingLesson || '',
         log.recipe.coffeeWeight,
         log.recipe.waterRatio,
         csvCell(log.recipe.grindSize),
         log.recipe.waterTemp,
         log.recipe.totalWater,
         log.brewTimeSeconds,
+        log.pourTracking?.marks.length || 0,
+        log.pourTracking?.scheduleOffsetSeconds || 0,
         log.evaluation.acidity,
         log.evaluation.bitterness,
         log.evaluation.body,
