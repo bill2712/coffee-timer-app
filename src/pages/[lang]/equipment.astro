@@ -1,0 +1,190 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../i18n/routes';
+import { getLangFromUrl } from '../../i18n/utils';
+
+export function getStaticPaths() { return getLanguagePaths(); }
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const base = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+const c = isZh ? {
+  title: '咖啡器材選擇助手 | Barista Flow', desc: '用三條問題找出適合自己的 V60、AeroPress、法式濾壓壺或冷萃器材，並建立不過度購買的入門清單。', crumb: '器材選擇助手', eyebrow: '先選沖法，再買器材', h1: '三條問題，找出你真正會用的器材', intro: '沒有一件器材適合所有人。先按味道、日常節奏及最重視的事情配對，再看清楚取捨和最低開局清單。這不是品牌排名，也沒有聯盟銷售連結。',
+  step: '完成進度', qTaste: '你最想飲到甚麼感覺？', qRoutine: '你的日常沖煮節奏？', qPriority: '現階段最重要的是？',
+  tasteClean: '清晰、明亮', tasteCleanBody: '想分辨花香、果酸及不同咖啡豆', tasteBody: '厚身、有口感', tasteBodyBody: '接受少量油脂或細粉，重視飽滿感', tasteVersatile: '想一件器材玩多種風格', tasteVersatileBody: '濃、淡、熱、凍都想試', tasteCold: '主要飲凍咖啡', tasteColdBody: '願意預先準備，打開雪櫃就能飲',
+  routineRitual: '享受慢慢沖', routineRitualBody: '願意練注水及觀察流速', routineFast: '早上越快越好', routineFastBody: '希望沖完和清理都直接', routineBatch: '一次沖多人份', routineBatchBody: '常與家人或同事分享', routineAhead: '前一晚預先整', routineAheadBody: '不介意等候長時間浸泡',
+  priorityEasy: '容易成功', priorityEasyBody: '不想一開始處理太多變數', priorityPortable: '方便帶走', priorityPortableBody: '旅行、辦公室或露營都想用', priorityControl: '控制及學習空間', priorityControlBody: '想練技巧並比較細微變化', priorityFew: '少買配件', priorityFewBody: '先用普通水煲和現有杯具開始',
+  answerFirst: '完成三題便會顯示建議。', resultEyebrow: '最適合你的起點', alternative: '第二選擇', why: '為甚麼適合', tradeoff: '先知道的取捨', useGuide: '打開這款器材的沖煮模式', retake: '重新選擇', saved: '選擇已保存在這部裝置。',
+  v60: 'V60 手沖', v60Why: '適合重視清晰風味、願意練注水，並想直接看見研磨與流速如何影響結果的人。', v60Trade: '對注水、研磨及濾紙較敏感；沒有細口壺也能開始，但穩定控制會較難。',
+  aero: 'AeroPress', aeroWhy: '浸泡、微濾及下壓令它兼顧速度、便攜和多種配方，適合一至兩杯及希望快速清理的人。', aeroTrade: '一般容量較小，而且仍要選擇紙濾或金屬濾片；下壓時必須使用穩固杯具。',
+  french: '法式濾壓壺', frenchWhy: '步驟直接、不依賴細緻注水，可做較大份量，適合喜歡厚身口感及多人分享。', frenchTrade: '杯中會保留較多油脂或細粉；沖完要處理濕咖啡渣，清潔不一定比 AeroPress 快。',
+  cold: '冷萃壺／有蓋浸泡容器', coldWhy: '適合主要飲凍咖啡、願意預先準備的人；浸泡時不需守候，做完可放雪櫃。', coldTrade: '不能即沖即飲，研磨、濃度及雪櫃浸泡時間仍需按自己的味道調整。',
+  kitTitle: '你的最低開局清單', kitIntro: '先買「開始必需」，其餘按實際痛點升級。勾選你已有的器材，我們會保留進度。', must: '開始必需', impact: '最有感升級', later: '可後買', startReady: '必需器材已齊，可以開始沖。', missing: '尚欠 {count} 件必需器材', owned: '已有',
+  brewer: '對應沖煮器', filters: '相容濾紙／濾片', stableCup: '可承受下壓的穩固杯', press: '法式濾壓壺', coldVessel: '有蓋容器或冷萃壺', fridge: '雪櫃空間', scale: '電子磅（至少 1g 精度）', grinder: '磨盤式磨豆機', gooseneck: '細口手沖壺', kettle: '可安全加熱的水煲', server: '分享壺／保溫壺', timer: '計時器（可用本站）', storage: '密封儲存容器', thermometer: '溫度計或控溫水煲',
+  matrixTitle: '四種器材，一眼看清取捨', matrixIntro: '先看操作方式和日常習慣，不要只看網上最熱門的器材。', method: '器材', cup: '杯中取向', effort: '學習／操作', cleanup: '清理', capacity: '常見情境', cleanBright: '清晰、可調整', balanced: '平衡、變化多', fullBody: '厚身、帶油脂感', coldSmooth: '凍飲、浸泡風格', higher: '較多技巧', low: '直接', medium: '簡單但要預備', quick: '快', grounds: '要處理咖啡渣', single: '日常一至兩杯', share: '較適合多人份', ahead: '預先製作',
+  buyTitle: '不浪費錢的購買次序', buySteps: ['先選你每星期真的會使用的沖煮方式。', '先用普通水煲也可以；V60 用到控制樽頸時才升級細口壺。', '電子磅有助重現；磨盤式磨豆機通常比裝飾性配件更直接影響一致性。', '沖 5–10 杯後，按自己的紀錄再決定是否需要溫控、分享壺或更多濾片。'],
+  sources: '器材特性來源', sourcesBody: '特性按製造商公開資料整理；推薦分數是本站把味道、節奏及使用情境配對的輔助，不代表性能排名。資料核對日期：2026 年 9 月 1 日。', sourceV60: 'Hario V60 官方產品資料', sourceAero: 'AeroPress 官方使用說明', sourceFrench: 'Bodum 法式濾壓壺官方說明', sourceCold: 'Hario Mizudashi 官方產品資料'
+} : {
+  title: 'Coffee Equipment Chooser | Barista Flow', desc: 'Answer three questions to choose between V60, AeroPress, French press, or cold brew, then build a minimal beginner kit without overbuying.', crumb: 'Equipment chooser', eyebrow: 'Choose the method before the gear', h1: 'Three questions to find gear you will actually use', intro: 'No brewer suits everyone. Match your taste, routine, and main priority first, then see the trade-offs and minimum setup. This is not a brand ranking and contains no affiliate shopping links.',
+  step: 'Progress', qTaste: 'What do you want in the cup?', qRoutine: 'What fits your daily routine?', qPriority: 'What matters most right now?',
+  tasteClean: 'Clear and bright', tasteCleanBody: 'Separate florals, fruit, and different beans', tasteBody: 'Rich and full-bodied', tasteBodyBody: 'Comfortable with some oils or fine sediment', tasteVersatile: 'Many styles from one brewer', tasteVersatileBody: 'Strong, light, hot, and cold recipes', tasteCold: 'Mostly cold coffee', tasteColdBody: 'Happy to prepare ahead and serve from the fridge',
+  routineRitual: 'I enjoy a slow ritual', routineRitualBody: 'Happy to practise pouring and watch flow', routineFast: 'As fast as possible', routineFastBody: 'Simple brewing and cleanup before work', routineBatch: 'Brew for several people', routineBatchBody: 'Often share with family or colleagues', routineAhead: 'Prepare it the night before', routineAheadBody: 'Long unattended steeping is fine',
+  priorityEasy: 'Easy early success', priorityEasyBody: 'Fewer variables at the beginning', priorityPortable: 'Portable', priorityPortableBody: 'Travel, office, or camping use', priorityControl: 'Control and learning', priorityControlBody: 'Practise technique and compare small changes', priorityFew: 'Fewer extra purchases', priorityFewBody: 'Start with a normal kettle and existing cups',
+  answerFirst: 'Answer all three questions to see a recommendation.', resultEyebrow: 'Your best starting point', alternative: 'Second choice', why: 'Why it fits', tradeoff: 'Trade-off to know first', useGuide: 'Open this brewer’s guided mode', retake: 'Start again', saved: 'Your choice is saved on this device.',
+  v60: 'V60 pour-over', v60Why: 'Best for people who value clarity, want to practise pouring, and want visible feedback from grind and flow changes.', v60Trade: 'Sensitive to pouring, grind, and filter choice. You can start without a gooseneck kettle, but precise control is harder.',
+  aero: 'AeroPress', aeroWhy: 'Immersion, micro-filtration, and pressing combine speed, portability, and recipe variety for one or two cups with fast cleanup.', aeroTrade: 'Capacity is usually modest, and you still choose paper or metal filtration. Always press onto a stable, sturdy mug.',
+  french: 'French press', frenchWhy: 'Direct steps, no precision pouring, and larger batches suit people who want a fuller cup or often share coffee.', frenchTrade: 'More oils or fine sediment remain in the cup, and wet grounds can take longer to clean up than an AeroPress puck.',
+  cold: 'Cold-brew pot / covered vessel', coldWhy: 'A strong fit if you mostly drink cold coffee and can prepare ahead. The brewer can steep unattended in the fridge.', coldTrade: 'It is not instant. Grind, strength, and fridge steep time still need adjustment to your taste.',
+  kitTitle: 'Your minimum starter kit', kitIntro: 'Buy “required to start” first, then upgrade only when a real limitation appears. Tick what you own; progress stays on this device.', must: 'Required to start', impact: 'High-impact upgrade', later: 'Can wait', startReady: 'You have the essentials and can start brewing.', missing: '{count} required item(s) still missing', owned: 'Owned',
+  brewer: 'Matching brewer', filters: 'Compatible paper / filter', stableCup: 'Stable mug suitable for pressing', press: 'French press', coldVessel: 'Covered vessel or cold-brew pot', fridge: 'Fridge space', scale: 'Scale with at least 1 g resolution', grinder: 'Burr grinder', gooseneck: 'Gooseneck pouring kettle', kettle: 'Kettle suitable for heating water', server: 'Carafe / thermal server', timer: 'Timer (this site works)', storage: 'Airtight storage container', thermometer: 'Thermometer or temperature-control kettle',
+  matrixTitle: 'Four brewers, clear trade-offs', matrixIntro: 'Compare the workflow and routine first, not whichever brewer is most popular online.', method: 'Brewer', cup: 'Cup direction', effort: 'Learning / operation', cleanup: 'Cleanup', capacity: 'Typical use', cleanBright: 'Clear and adjustable', balanced: 'Balanced and versatile', fullBody: 'Full-bodied, more oils', coldSmooth: 'Cold, immersion style', higher: 'More technique', low: 'Direct', medium: 'Easy but plan ahead', quick: 'Fast', grounds: 'Wet grounds to handle', single: 'Everyday 1–2 cups', share: 'Better for sharing', ahead: 'Prepare ahead',
+  buyTitle: 'A purchase order that avoids waste', buySteps: ['Choose the method you will really use each week.', 'A normal kettle can get you started; upgrade to a gooseneck only when pouring becomes the V60 bottleneck.', 'A scale improves repeatability; a burr grinder usually affects consistency more directly than decorative accessories.', 'After 5–10 brews, use your records to decide whether temperature control, a server, or extra filters solve a real problem.'],
+  sources: 'Sources for equipment characteristics', sourcesBody: 'Characteristics are summarised from manufacturer information. The matching score is Barista Flow’s taste-and-routine aid, not a performance ranking. Checked 1 September 2026.', sourceV60: 'Official Hario V60 product information', sourceAero: 'Official AeroPress instructions', sourceFrench: 'Official Bodum French press instructions', sourceCold: 'Official Hario Mizudashi product information'
+};
+---
+
+<Layout title={c.title} description={c.desc}>
+  <div class="mx-auto max-w-5xl py-7 sm:py-12">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: c.crumb }]} /></div>
+    <header class="mx-auto mt-5 max-w-3xl text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-coffee-gold">{c.eyebrow}</p>
+      <h1 class="mt-3 text-balance font-display text-4xl font-bold leading-tight text-coffee-light sm:text-5xl">{c.h1}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p>
+    </header>
+
+    <section id="equipment-quiz" class="mt-10 rounded-2xl border border-coffee-gold/20 bg-coffee-darker/70 p-5 sm:p-8" aria-labelledby="quiz-title">
+      <div class="flex items-center justify-between gap-4"><h2 id="quiz-title" class="font-display text-2xl font-bold text-coffee-light">{isZh ? '器材配對問答' : 'Equipment matching quiz'}</h2><span id="quiz-progress" class="rounded-full border border-coffee-gold/25 px-3 py-1 text-xs font-bold text-coffee-gold">0 / 3</span></div>
+      <div class="mt-4 h-2 overflow-hidden rounded-full bg-coffee-dark" aria-hidden="true"><div id="quiz-progress-bar" class="h-full w-0 rounded-full bg-coffee-gold transition-[width] duration-300"></div></div>
+
+      <div class="mt-7 grid gap-8">
+        <fieldset data-question-group="taste"><legend class="font-display text-xl font-bold text-coffee-light">1. {c.qTaste}</legend><div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <button type="button" class="quiz-option" data-question="taste" data-value="clean" aria-pressed="false"><strong>{c.tasteClean}</strong><span>{c.tasteCleanBody}</span></button>
+          <button type="button" class="quiz-option" data-question="taste" data-value="body" aria-pressed="false"><strong>{c.tasteBody}</strong><span>{c.tasteBodyBody}</span></button>
+          <button type="button" class="quiz-option" data-question="taste" data-value="versatile" aria-pressed="false"><strong>{c.tasteVersatile}</strong><span>{c.tasteVersatileBody}</span></button>
+          <button type="button" class="quiz-option" data-question="taste" data-value="cold" aria-pressed="false"><strong>{c.tasteCold}</strong><span>{c.tasteColdBody}</span></button>
+        </div></fieldset>
+        <fieldset data-question-group="routine"><legend class="font-display text-xl font-bold text-coffee-light">2. {c.qRoutine}</legend><div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <button type="button" class="quiz-option" data-question="routine" data-value="ritual" aria-pressed="false"><strong>{c.routineRitual}</strong><span>{c.routineRitualBody}</span></button>
+          <button type="button" class="quiz-option" data-question="routine" data-value="fast" aria-pressed="false"><strong>{c.routineFast}</strong><span>{c.routineFastBody}</span></button>
+          <button type="button" class="quiz-option" data-question="routine" data-value="batch" aria-pressed="false"><strong>{c.routineBatch}</strong><span>{c.routineBatchBody}</span></button>
+          <button type="button" class="quiz-option" data-question="routine" data-value="ahead" aria-pressed="false"><strong>{c.routineAhead}</strong><span>{c.routineAheadBody}</span></button>
+        </div></fieldset>
+        <fieldset data-question-group="priority"><legend class="font-display text-xl font-bold text-coffee-light">3. {c.qPriority}</legend><div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <button type="button" class="quiz-option" data-question="priority" data-value="easy" aria-pressed="false"><strong>{c.priorityEasy}</strong><span>{c.priorityEasyBody}</span></button>
+          <button type="button" class="quiz-option" data-question="priority" data-value="portable" aria-pressed="false"><strong>{c.priorityPortable}</strong><span>{c.priorityPortableBody}</span></button>
+          <button type="button" class="quiz-option" data-question="priority" data-value="control" aria-pressed="false"><strong>{c.priorityControl}</strong><span>{c.priorityControlBody}</span></button>
+          <button type="button" class="quiz-option" data-question="priority" data-value="few" aria-pressed="false"><strong>{c.priorityFew}</strong><span>{c.priorityFewBody}</span></button>
+        </div></fieldset>
+      </div>
+      <p id="quiz-status" class="mt-6 rounded-xl border border-coffee-sand/10 bg-coffee-dark/50 p-4 text-sm text-coffee-muted" aria-live="polite">{c.answerFirst}</p>
+    </section>
+
+    <section id="equipment-result" class="mt-6 hidden scroll-mt-24 rounded-2xl border border-green-400/25 bg-green-400/5 p-5 sm:p-8" aria-live="polite">
+      <div class="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(250px,0.65fr)]">
+        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-green-300">{c.resultEyebrow}</p><h2 id="result-name" class="mt-2 font-display text-4xl font-bold text-coffee-light"></h2><div class="mt-5 grid gap-4 sm:grid-cols-2"><div><h3 class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.why}</h3><p id="result-why" class="mt-2 text-sm leading-7 text-coffee-sand"></p></div><div><h3 class="text-xs font-bold uppercase tracking-wider text-amber-300">{c.tradeoff}</h3><p id="result-tradeoff" class="mt-2 text-sm leading-7 text-coffee-sand"></p></div></div></div>
+        <aside class="rounded-xl border border-coffee-sand/12 bg-coffee-dark/60 p-5"><p class="text-[10px] font-bold uppercase tracking-wider text-coffee-muted">{c.alternative}</p><p id="alternative-name" class="mt-2 font-display text-2xl font-bold text-coffee-light"></p><a id="result-action" href={`${base}/guide`} class="mt-5 inline-flex min-h-[50px] w-full items-center justify-center rounded-xl bg-green-300 px-4 text-center text-sm font-bold text-coffee-dark hover:bg-green-200">{c.useGuide}</a><button id="btn-reset-quiz" type="button" class="mt-3 min-h-[46px] w-full rounded-xl border border-coffee-sand/20 px-4 text-sm font-semibold text-coffee-sand hover:text-coffee-light">{c.retake}</button></aside>
+      </div>
+      <p class="mt-5 text-xs font-semibold text-green-300">✓ {c.saved}</p>
+    </section>
+
+    <section id="starter-kit" class="mt-8 hidden rounded-2xl border border-coffee-sand/12 bg-coffee-darker/55 p-5 sm:p-8" aria-labelledby="kit-title">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{isZh ? '按推薦自動整理' : 'Built from your match'}</p><h2 id="kit-title" class="mt-1 font-display text-3xl font-bold text-coffee-light">{c.kitTitle}</h2><p class="mt-2 max-w-2xl text-sm leading-6 text-coffee-muted">{c.kitIntro}</p></div><span id="kit-readiness" class="rounded-full border border-coffee-gold/25 px-3 py-2 text-xs font-bold text-coffee-gold" aria-live="polite"></span></div>
+      <div id="kit-groups" class="mt-6 grid gap-4 lg:grid-cols-3"></div>
+    </section>
+
+    <section class="mt-10" aria-labelledby="matrix-title">
+      <h2 id="matrix-title" class="font-display text-3xl font-bold text-coffee-light">{c.matrixTitle}</h2><p class="mt-2 text-sm leading-6 text-coffee-muted">{c.matrixIntro}</p>
+      <div class="mt-5 overflow-x-auto rounded-2xl border border-coffee-sand/12"><table class="w-full min-w-[760px] border-collapse text-start text-sm"><thead class="bg-coffee-gold/10 text-xs uppercase tracking-wider text-coffee-gold"><tr><th>{c.method}</th><th>{c.cup}</th><th>{c.effort}</th><th>{c.cleanup}</th><th>{c.capacity}</th></tr></thead><tbody class="divide-y divide-coffee-sand/10 bg-coffee-darker/55 text-coffee-sand"><tr><th>{c.v60}</th><td>{c.cleanBright}</td><td>{c.higher}</td><td>{c.quick}</td><td>{c.single}</td></tr><tr><th>{c.aero}</th><td>{c.balanced}</td><td>{c.low}</td><td>{c.quick}</td><td>{c.single}</td></tr><tr><th>{c.french}</th><td>{c.fullBody}</td><td>{c.low}</td><td>{c.grounds}</td><td>{c.share}</td></tr><tr><th>{c.cold}</th><td>{c.coldSmooth}</td><td>{c.medium}</td><td>{c.grounds}</td><td>{c.ahead}</td></tr></tbody></table></div>
+    </section>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-2">
+      <article class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-5 sm:p-6"><h2 class="font-display text-2xl font-bold text-coffee-light">{c.buyTitle}</h2><ol class="mt-5 grid gap-4">{c.buySteps.map((step, index) => <li class="flex gap-3 text-sm leading-6 text-coffee-sand"><span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-coffee-gold text-xs font-bold text-coffee-dark">{index + 1}</span><span>{step}</span></li>)}</ol></article>
+      <article class="rounded-2xl border border-coffee-sand/12 bg-coffee-dark/45 p-5 sm:p-6"><h2 class="font-display text-2xl font-bold text-coffee-light">{c.sources}</h2><p class="mt-3 text-sm leading-6 text-coffee-muted">{c.sourcesBody}</p><ul class="mt-5 grid gap-3 text-sm"><li><a class="source-link" href="https://www.hario-usa.com/products/v60-plastic-coffee-dripper-02" target="_blank" rel="noopener noreferrer">{c.sourceV60} ↗</a></li><li><a class="source-link" href="https://aeropress.com/pages/how-to-use" target="_blank" rel="noopener noreferrer">{c.sourceAero} ↗</a></li><li><a class="source-link" href="https://www.bodum.com/fr/fr/11910-16-douro" target="_blank" rel="noopener noreferrer">{c.sourceFrench} ↗</a></li><li><a class="source-link" href="https://www.hario-usa.com/products/mizudashi-cold-brew-coffee-pot" target="_blank" rel="noopener noreferrer">{c.sourceCold} ↗</a></li></ul></article>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .quiz-option { display: grid; min-height: 92px; gap: .35rem; border: 1px solid rgb(197 168 128 / .16); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: 1rem; text-align: start; transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease; }
+  .quiz-option strong { color: #f5f2eb; font-size: .95rem; }
+  .quiz-option span { color: rgb(197 168 128 / .62); font-size: .75rem; line-height: 1.25rem; }
+  .quiz-option:hover { border-color: rgb(197 168 128 / .5); background: rgb(197 168 128 / .07); }
+  .quiz-option[aria-pressed="true"] { border-color: #c5a880; background: rgb(197 168 128 / .14); box-shadow: inset 0 0 0 1px #c5a880; transform: translateY(-1px); }
+  .quiz-option[aria-pressed="true"]::before { content: '✓'; color: #c5a880; font-size: .75rem; font-weight: 800; }
+  .quiz-option:focus-visible, .source-link:focus-visible { outline: 2px solid #c5a880; outline-offset: 2px; }
+  table :is(th, td) { padding: 1rem; vertical-align: top; }
+  tbody th { color: #f5f2eb; font-family: var(--font-display); font-size: 1rem; text-align: start; }
+  .source-link { display: inline-flex; min-height: 44px; align-items: center; color: #c5a880; font-weight: 700; text-decoration: underline; text-underline-offset: .25rem; }
+  @media (prefers-reduced-motion: reduce) { .quiz-option, #quiz-progress-bar { transition: none; } }
+</style>
+
+<script is:inline define:vars={{ pageCopy: c, baseUrl: base }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const KEY = 'barista_flow_gear_profile_v1';
+    const answers = { taste: '', routine: '', priority: '' };
+    let recommendation = '';
+    let owned = [];
+    const methods = {
+      v60: { name: pageCopy.v60, why: pageCopy.v60Why, tradeoff: pageCopy.v60Trade, route: `${baseUrl}/tools/v60-pour-over` },
+      aero: { name: pageCopy.aero, why: pageCopy.aeroWhy, tradeoff: pageCopy.aeroTrade, route: `${baseUrl}/tools/aeropress` },
+      french: { name: pageCopy.french, why: pageCopy.frenchWhy, tradeoff: pageCopy.frenchTrade, route: `${baseUrl}/tools/french-press` },
+      cold: { name: pageCopy.cold, why: pageCopy.coldWhy, tradeoff: pageCopy.coldTrade, route: `${baseUrl}/tools/cold-brew` }
+    };
+    const kits = {
+      v60: { must: [['v60-brewer', pageCopy.brewer], ['v60-filters', pageCopy.filters], ['v60-kettle', pageCopy.kettle]], impact: [['shared-scale', pageCopy.scale], ['shared-grinder', pageCopy.grinder], ['v60-gooseneck', pageCopy.gooseneck]], later: [['shared-timer', pageCopy.timer], ['v60-server', pageCopy.server], ['shared-temp', pageCopy.thermometer]] },
+      aero: { must: [['aero-brewer', pageCopy.brewer], ['aero-filter', pageCopy.filters], ['aero-cup', pageCopy.stableCup], ['aero-kettle', pageCopy.kettle]], impact: [['shared-scale', pageCopy.scale], ['shared-grinder', pageCopy.grinder]], later: [['shared-timer', pageCopy.timer], ['shared-temp', pageCopy.thermometer], ['shared-storage', pageCopy.storage]] },
+      french: { must: [['french-press', pageCopy.press], ['french-kettle', pageCopy.kettle]], impact: [['shared-scale', pageCopy.scale], ['shared-grinder', pageCopy.grinder], ['shared-timer', pageCopy.timer]], later: [['french-server', pageCopy.server], ['shared-temp', pageCopy.thermometer], ['shared-storage', pageCopy.storage]] },
+      cold: { must: [['cold-vessel', pageCopy.coldVessel], ['cold-fridge', pageCopy.fridge]], impact: [['shared-scale', pageCopy.scale], ['shared-grinder', pageCopy.grinder], ['shared-timer', pageCopy.timer]], later: [['shared-storage', pageCopy.storage], ['cold-filters', pageCopy.filters]] }
+    };
+    const scoring = {
+      taste: { clean: {v60:5,aero:2}, body: {french:5,aero:3,cold:1}, versatile: {aero:5,v60:2,french:1}, cold: {cold:6,aero:1} },
+      routine: { ritual: {v60:5,french:1}, fast: {aero:5,v60:1}, batch: {french:5,cold:3,v60:1}, ahead: {cold:6} },
+      priority: { easy: {aero:4,french:4,cold:2}, portable: {aero:6,v60:2}, control: {v60:6,aero:2}, few: {french:5,cold:3,aero:2} }
+    };
+    const progress = document.getElementById('quiz-progress');
+    const progressBar = document.getElementById('quiz-progress-bar');
+    const status = document.getElementById('quiz-status');
+    const result = document.getElementById('equipment-result');
+    const starterKit = document.getElementById('starter-kit');
+    const kitGroups = document.getElementById('kit-groups');
+    const readiness = document.getElementById('kit-readiness');
+    const safeProfile = (raw) => {
+      if (!raw || typeof raw !== 'object') return null;
+      const a = raw.answers || {};
+      const valid = { taste: ['clean','body','versatile','cold'], routine: ['ritual','fast','batch','ahead'], priority: ['easy','portable','control','few'] };
+      return { answers: { taste: valid.taste.includes(a.taste) ? a.taste : '', routine: valid.routine.includes(a.routine) ? a.routine : '', priority: valid.priority.includes(a.priority) ? a.priority : '' }, recommendation: Object.keys(methods).includes(raw.recommendation) ? raw.recommendation : '', owned: Array.isArray(raw.owned) ? raw.owned.map(String).filter((id) => /^[a-z0-9-]{1,50}$/.test(id)).slice(0,30) : [] };
+    };
+    const load = () => { try { return safeProfile(JSON.parse(localStorage.getItem(KEY) || 'null')); } catch (error) { return null; } };
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ answers, recommendation, owned, updatedAt: new Date().toISOString() })); } catch (error) {} };
+    const rank = () => {
+      const scores = { v60: 0, aero: 0, french: 0, cold: 0 };
+      Object.entries(answers).forEach(([question, value]) => Object.entries(scoring[question]?.[value] || {}).forEach(([method, score]) => { scores[method] += score; }));
+      const tieOrder = { aero: 0, v60: 1, french: 2, cold: 3 };
+      return Object.keys(scores).sort((a,b) => scores[b] - scores[a] || tieOrder[a] - tieOrder[b]);
+    };
+    const renderKit = () => {
+      const kit = kits[recommendation]; if (!kit) return;
+      kitGroups.replaceChildren();
+      [['must', pageCopy.must], ['impact', pageCopy.impact], ['later', pageCopy.later]].forEach(([group, label]) => {
+        const article = document.createElement('article'); article.className = `rounded-xl border p-4 ${group === 'must' ? 'border-green-400/20 bg-green-400/5' : 'border-coffee-sand/10 bg-coffee-dark/45'}`;
+        const heading = document.createElement('h3'); heading.className = `text-xs font-bold uppercase tracking-wider ${group === 'must' ? 'text-green-300' : 'text-coffee-gold'}`; heading.textContent = label; article.appendChild(heading);
+        const list = document.createElement('div'); list.className = 'mt-3 grid gap-2';
+        kit[group].forEach(([id, name]) => { const item = document.createElement('label'); item.className = 'flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg border border-coffee-sand/10 px-3 py-2 text-sm text-coffee-sand hover:bg-coffee-sand/5'; const input = document.createElement('input'); input.type='checkbox'; input.checked=owned.includes(id); input.className='h-4 w-4 shrink-0 accent-coffee-gold'; input.addEventListener('change', () => { owned = input.checked ? [...new Set([...owned,id])] : owned.filter((item)=>item!==id); save(); updateReadiness(); }); const text=document.createElement('span'); text.textContent=name; item.append(input,text); list.appendChild(item); });
+        article.appendChild(list); kitGroups.appendChild(article);
+      });
+      updateReadiness(); starterKit.classList.remove('hidden');
+    };
+    const updateReadiness = () => { const must = kits[recommendation]?.must || []; const missing = must.filter(([id]) => !owned.includes(id)).length; readiness.textContent = missing ? pageCopy.missing.replace('{count}', String(missing)) : pageCopy.startReady; readiness.className = `rounded-full border px-3 py-2 text-xs font-bold ${missing ? 'border-coffee-gold/25 text-coffee-gold' : 'border-green-400/25 text-green-300'}`; };
+    const renderResult = (scroll = false) => {
+      if (!Object.values(answers).every(Boolean)) { result.classList.add('hidden'); starterKit.classList.add('hidden'); return; }
+      const ranked = rank(); recommendation = ranked[0]; const best = methods[recommendation]; const second = methods[ranked[1]];
+      document.getElementById('result-name').textContent = best.name; document.getElementById('result-why').textContent = best.why; document.getElementById('result-tradeoff').textContent = best.tradeoff; document.getElementById('alternative-name').textContent = second.name; document.getElementById('result-action').href = best.route;
+      status.textContent = `${pageCopy.resultEyebrow}: ${best.name}`; result.classList.remove('hidden'); renderKit(); save(); if (scroll) result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    const updateQuiz = (scroll = false) => { const count = Object.values(answers).filter(Boolean).length; progress.textContent=`${count} / 3`; progressBar.style.width=`${(count/3)*100}%`; document.querySelectorAll('.quiz-option').forEach((button) => button.setAttribute('aria-pressed', String(answers[button.dataset.question] === button.dataset.value))); if (count < 3) status.textContent=pageCopy.answerFirst; renderResult(scroll && count === 3); };
+    document.querySelectorAll('.quiz-option').forEach((button) => button.addEventListener('click', () => { answers[button.dataset.question]=button.dataset.value; updateQuiz(true); save(); }));
+    document.getElementById('btn-reset-quiz')?.addEventListener('click', () => { Object.keys(answers).forEach((key)=>answers[key]=''); recommendation=''; owned=[]; try { localStorage.removeItem(KEY); } catch(error){} updateQuiz(); document.getElementById('equipment-quiz')?.scrollIntoView({behavior:'smooth',block:'start'}); });
+    const stored=load(); if(stored){Object.assign(answers,stored.answers);recommendation=stored.recommendation;owned=stored.owned;} updateQuiz();
+  });
+</script>
