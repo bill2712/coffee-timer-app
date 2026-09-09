@@ -1,54 +1,208 @@
 ---
-import { defaultLang, languages } from '../i18n/ui';
-// This is the root index, responsible for auto-detecting browser language and redirecting.
+import '../styles/global.css';
+import EquipmentIllustration from '../components/EquipmentIllustration.astro';
+import { SITE_URL } from '../config';
 
-// We do NOT use Astro.redirect here because this is a statically generated site.
-// A static redirect requires a meta refresh or client-side JavaScript.
-const rawBase = import.meta.env.BASE_URL || '/';
-const baseUrl = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+const rootUrl = new URL('/', SITE_URL).toString();
+const zhUrl = new URL('/zh-TW/', SITE_URL).toString();
+const enUrl = new URL('/en/', SITE_URL).toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Barista Flow',
+  alternateName: 'Coffee Timer',
+  url: rootUrl,
+  description: 'A bilingual, evidence-led coffee brewing guide, timer and tasting journal for learning through repeatable experiments.',
+  inLanguage: ['zh-TW', 'en']
+};
 ---
 
-<!DOCTYPE html>
-<html lang={defaultLang}>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting... | Barista Flow</title>
-  
-  <script is:inline define:vars={{ supportedLanguages: Object.keys(languages), defaultLang, baseUrl }}>
-    (function() {
-      // Check localStorage first
-      const savedLang = localStorage.getItem('barista-flow-lang');
-      if (savedLang && supportedLanguages.includes(savedLang)) {
-        window.location.replace(baseUrl + savedLang + '/');
-        return;
-      }
-      
-      // Auto-detect browser language
-      const browserLang = navigator.language.split('-')[0];
-      const exactLang = navigator.language; // e.g. "zh-TW"
-      
-      let targetLang = defaultLang;
-      if (supportedLanguages.includes(exactLang)) {
-        targetLang = exactLang;
-      } else if (supportedLanguages.includes(browserLang)) {
-        targetLang = browserLang;
-      }
-      
-      // Save and redirect
-      localStorage.setItem('barista-flow-lang', targetLang);
-      window.location.replace(baseUrl + targetLang + '/');
-    })();
-  </script>
-  
-  <!-- Fallback meta refresh for non-JS browsers -->
-  <noscript>
-    <meta http-equiv="refresh" content={`0;url=${baseUrl}${defaultLang}/`} />
-  </noscript>
-</head>
-<body class="bg-[#1C120C] flex items-center justify-center min-h-screen">
-  <div class="text-[#D9A05B] font-sans">
-    Loading your perfect brew...
-  </div>
-</body>
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barista Flow｜手沖咖啡計時、診斷與學習工具</title>
+    <meta name="description" content="由第一杯開始，跟隨計時提示沖煮，記錄味道，再用單一變項建議改善下一杯。包括器材圖解、有來源配方、咖啡豆護照及個人數據洞察。" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="google-adsense-account" content="ca-pub-7189047900748105" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href={rootUrl} />
+    <link rel="alternate" hreflang="zh-TW" href={zhUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={rootUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={rootUrl} />
+    <meta property="og:title" content="Barista Flow｜從第一杯開始學懂手沖咖啡" />
+    <meta property="og:description" content="計時、味道診斷、A/B 比較與器材圖解，讓每次沖煮都成為可重現的小實驗。" />
+    <meta property="og:image" content={new URL('/images/og-default.jpg', SITE_URL).toString()} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    <!-- Kept on the review entry page; ad placements remain disabled until approval. -->
+    <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7189047900748105" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Barista Flow home">
+        <span aria-hidden="true">☕</span>
+        <span>BARISTA FLOW</span>
+      </a>
+      <nav aria-label="Language / 語言">
+        <a class="language-link" href="/zh-TW/" data-language="zh-TW" lang="zh-Hant">繁體中文</a>
+        <a class="language-link" href="/en/" data-language="en" lang="en">English</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="eyebrow">免費沖煮學習工具 · Free brewing companion</div>
+        <h1 id="hero-title">先沖一杯，再用味道決定下一步</h1>
+        <p class="hero-copy">Barista Flow 不只是一個倒數計時器。它會把豆量、水量、研磨、水溫、時間和你的味道感受放在同一份紀錄中，然後建議下一杯只改一個變數，讓初學者也能理解每次調整的原因。</p>
+        <p class="hero-copy english" lang="en">Brew with guided timing, record what you tasted, and change one variable at a time. Barista Flow turns coffee advice into a repeatable learning process instead of a list of rigid rules.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="/zh-TW/" data-language="zh-TW">用繁體中文開始</a>
+          <a class="button secondary" href="/en/" data-language="en">Start in English</a>
+        </div>
+        <p class="privacy-note">毋須註冊；沖煮紀錄預設只儲存在你的裝置。No account required; brewing records stay on your device by default.</p>
+      </section>
+
+      <section class="task-section" aria-labelledby="choose-title">
+        <div class="section-heading">
+          <p class="eyebrow">從你現在需要做的事開始</p>
+          <h2 id="choose-title">不需要先學懂全部咖啡術語</h2>
+          <p>選一個入口即可；計時、知識和紀錄會在需要時才出現。</p>
+        </div>
+        <div class="task-grid">
+          <article class="task-card featured">
+            <span class="step">01</span>
+            <h3>第一次沖煮</h3>
+            <p>選擇器材、輸入粉量，系統會計算水量並逐段提示。完成後用「酸、苦、淡、濃」等感受獲得下一杯建議。</p>
+            <a href="/zh-TW/">開始引導沖煮 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="task-card">
+            <span class="step">02</span>
+            <h3>完成首五杯訓練</h3>
+            <p>用五次有目的的練習，逐步認識比例、研磨、水溫和時間；每杯只比較一項改動。</p>
+            <a href="/zh-TW/training/">查看首五杯路線 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="task-card visual-card">
+            <div class="illustration"><EquipmentIllustration type="v60" lang="zh-TW" compact /></div>
+            <div>
+              <span class="step">03</span>
+              <h3>先認清器材</h3>
+              <p>用外形圖分辨 V60、AeroPress、法壓和冷萃，再按口味、預算、清潔與使用情境選擇。</p>
+              <a href="/zh-TW/equipment/">打開器材選擇助手 <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="task-card">
+            <span class="step">04</span>
+            <h3>理解沖煮原理</h3>
+            <p>閱讀由編輯整理、附參考來源與實際操作方法的文章；包括萃取、研磨、水質、注水和風味診斷。</p>
+            <a href="/zh-TW/blog/">進入咖啡知識庫 <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="evidence-section" aria-labelledby="evidence-title">
+        <div>
+          <p class="eyebrow">為何這裡的建議值得試</p>
+          <h2 id="evidence-title">有來源，也保留你的判斷</h2>
+          <p>咖啡豆、磨豆機和飲用偏好都不同，所以網站不把任何配方寫成唯一答案。文章與標準配方列出參考來源、適用情況和測試日期；診斷工具則解釋建議原因，並鼓勵你用下一杯驗證。</p>
+        </div>
+        <ul class="evidence-list">
+          <li><strong>可核對：</strong>方法頁交代比例、溫度和計算方式，配方頁標示來源。</li>
+          <li><strong>可重現：</strong>同時記錄六項沖煮變數，亦可 A/B 比較和保存較佳版本。</li>
+          <li><strong>屬於你：</strong>豆袋護照、個人洞察及完整匯出／匯入都由你控制。</li>
+        </ul>
+      </section>
+
+      <section class="english-section" lang="en" aria-labelledby="english-title">
+        <p class="eyebrow">English experience</p>
+        <h2 id="english-title">Learn by brewing, tasting and comparing</h2>
+        <p>The English edition includes the same guided timers, equipment chooser, source-backed recipes, brewing journal, A/B comparison, bean passports and personal insights. Start with a tool when you want an answer, or read the learning library when you want the reasoning behind it.</p>
+        <div class="english-links">
+          <a href="/en/">Guided brew</a>
+          <a href="/en/equipment/">Choose equipment</a>
+          <a href="/en/blog/">Learning library</a>
+          <a href="/en/methodology/">Methods & sources</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© {new Date().getFullYear()} Barista Flow · Built for curious coffee brewers.</p>
+      <div><a href="/zh-TW/about/">關於</a><a href="/zh-TW/methodology/">方法與來源</a><a href="/zh-TW/privacy-policy/">私隱政策</a><a href="/zh-TW/contact/">聯絡</a></div>
+    </footer>
+
+    <script>
+      document.querySelectorAll<HTMLAnchorElement>('[data-language]').forEach((link) => {
+        link.addEventListener('click', () => localStorage.setItem('barista-flow-lang', link.dataset.language || 'zh-TW'));
+      });
+      if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => undefined));
+    </script>
+  </body>
 </html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(html) { color-scheme: dark; scroll-behavior: smooth; }
+  :global(body) { margin: 0; min-width: 320px; overflow-x: hidden; background: #0d0b09; color: #f5f2eb; font-family: Outfit, ui-sans-serif, system-ui, -apple-system, sans-serif; line-height: 1.65; }
+  :global(a) { color: inherit; }
+  .site-header { position: sticky; top: 0; z-index: 10; display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgb(197 168 128 / .14); background: rgb(13 11 9 / .9); padding: .75rem clamp(1rem, 5vw, 4rem); backdrop-filter: blur(18px); }
+  .brand { display: flex; align-items: center; gap: .6rem; color: #d7b86e; font-family: Georgia, serif; font-weight: 700; letter-spacing: .08em; text-decoration: none; }
+  nav { display: flex; gap: .45rem; }
+  .language-link { min-height: 44px; display: inline-flex; align-items: center; border: 1px solid rgb(197 168 128 / .22); border-radius: 999px; padding: .55rem .9rem; color: #d9cbbb; font-size: .88rem; text-decoration: none; }
+  .language-link:hover, .language-link:focus-visible { border-color: #d7b86e; color: #f2c94c; }
+  main { isolation: isolate; }
+  .hero { position: relative; display: grid; min-height: 70vh; place-content: center; overflow: hidden; padding: clamp(5rem, 10vw, 8rem) max(1.25rem, calc((100vw - 1120px) / 2)); text-align: center; }
+  .hero::before { position: absolute; inset: -20%; z-index: -1; background: radial-gradient(circle at 30% 25%, rgb(215 184 110 / .19), transparent 28%), radial-gradient(circle at 78% 72%, rgb(126 81 52 / .20), transparent 32%); content: ''; }
+  .eyebrow { margin: 0 0 1rem; color: #d7b86e; font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+  h1, h2, h3 { margin-top: 0; font-family: Georgia, 'Times New Roman', serif; line-height: 1.18; }
+  h1 { max-width: 900px; margin-right: auto; margin-bottom: 1.5rem; margin-left: auto; font-size: clamp(2.55rem, 7vw, 5.6rem); letter-spacing: -.035em; }
+  h2 { margin-bottom: 1rem; font-size: clamp(2rem, 4vw, 3.3rem); }
+  h3 { margin-bottom: .8rem; font-size: 1.5rem; }
+  .hero-copy { max-width: 760px; margin: 0 auto 1rem; color: #cfc3b5; font-size: clamp(1rem, 2vw, 1.18rem); }
+  .hero-copy.english { color: #aa9d90; font-size: .98rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-top: 1.5rem; }
+  .button { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; border: 1px solid #d7b86e; border-radius: .7rem; padding: .75rem 1.25rem; font-weight: 750; text-decoration: none; }
+  .button.primary { background: #d7b86e; color: #17110c; }
+  .button.secondary { color: #f5f2eb; }
+  .button:hover, .button:focus-visible { transform: translateY(-2px); box-shadow: 0 10px 30px rgb(215 184 110 / .12); }
+  .privacy-note { margin: 1.2rem auto 0; color: #8f8479; font-size: .8rem; }
+  .task-section, .evidence-section, .english-section { max-width: 1120px; margin: 0 auto; padding: clamp(4.5rem, 8vw, 7rem) 1.25rem; }
+  .section-heading { max-width: 700px; margin-bottom: 2.5rem; }
+  .section-heading > p:last-child, .evidence-section p, .english-section > p { color: #b6aa9c; }
+  .task-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .task-card { min-width: 0; border: 1px solid rgb(197 168 128 / .16); border-radius: 1rem; background: #14110e; padding: clamp(1.35rem, 3vw, 2rem); }
+  .task-card.featured { background: linear-gradient(135deg, rgb(215 184 110 / .13), #14110e 60%); }
+  .task-card p { color: #aa9d90; }
+  .task-card a { display: inline-block; margin-top: .65rem; color: #f2c94c; font-weight: 750; text-underline-offset: .25em; }
+  .step { display: block; margin-bottom: 1rem; color: #d7b86e; font-size: .75rem; font-weight: 850; letter-spacing: .14em; }
+  .visual-card { display: grid; grid-template-columns: minmax(105px, .7fr) 1.3fr; align-items: center; gap: 1.4rem; }
+  .illustration { min-width: 0; }
+  .evidence-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 5rem); border-top: 1px solid rgb(197 168 128 / .14); }
+  .evidence-list { display: grid; align-content: start; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+  .evidence-list li { border-left: 2px solid #d7b86e; background: rgb(197 168 128 / .05); padding: 1rem 1.1rem; color: #b6aa9c; }
+  .evidence-list strong { color: #f5f2eb; }
+  .english-section { border-top: 1px solid rgb(197 168 128 / .14); }
+  .english-section > p { max-width: 780px; }
+  .english-links { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.5rem; }
+  .english-links a { border-bottom: 1px solid #d7b86e; padding: .4rem .1rem; color: #f2c94c; text-decoration: none; }
+  footer { display: flex; max-width: 1120px; margin: 0 auto; align-items: center; justify-content: space-between; gap: 1.5rem; border-top: 1px solid rgb(197 168 128 / .14); padding: 2rem 1.25rem 3rem; color: #8f8479; font-size: .8rem; }
+  footer div { display: flex; flex-wrap: wrap; gap: 1rem; }
+  footer a { text-underline-offset: .2em; }
+  :focus-visible { outline: 2px solid #f2c94c; outline-offset: 3px; }
+  @media (max-width: 720px) {
+    .site-header { align-items: flex-start; }
+    .brand { padding-top: .65rem; font-size: .9rem; }
+    nav { flex-direction: column; }
+    .task-grid, .evidence-section { grid-template-columns: 1fr; }
+    .visual-card { grid-template-columns: 1fr; }
+    footer { align-items: flex-start; flex-direction: column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: .01ms !important; }
+  }
+</style>

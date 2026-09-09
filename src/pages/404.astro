@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+import { SITE_URL } from '../config';
+---
+
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>找不到頁面 | Page not found | Barista Flow</title>
+    <meta name="description" content="這個 Barista Flow 頁面已不存在。請返回繁體中文或英文首頁。" />
+    <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href={new URL('/404', SITE_URL).toString()} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>這杯走錯路了</h1>
+      <p>你開啟的頁面可能已移除或網址有誤。網站目前提供經過編輯審核的繁體中文及英文版本。</p>
+      <p lang="en">The page may have moved or no longer exists. Choose one of our currently maintained editions.</p>
+      <div>
+        <a href="/zh-TW/">返回繁體中文首頁</a>
+        <a href="/en/">Go to English home</a>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(body) { display: grid; min-height: 100vh; margin: 0; place-items: center; background: radial-gradient(circle at 50% 25%, rgb(215 184 110 / .13), transparent 35%), #0d0b09; color: #f5f2eb; font-family: Outfit, ui-sans-serif, system-ui, sans-serif; }
+  main { width: min(620px, calc(100% - 2rem)); text-align: center; }
+  .code { margin: 0; color: #d7b86e; font-size: .8rem; font-weight: 800; letter-spacing: .3em; }
+  h1 { margin: .7rem 0 1rem; font-family: Georgia, serif; font-size: clamp(2.4rem, 8vw, 4rem); }
+  p { color: #b6aa9c; line-height: 1.7; }
+  div { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 1.8rem; }
+  a { display: inline-flex; min-height: 48px; align-items: center; border: 1px solid #d7b86e; border-radius: .7rem; padding: .7rem 1rem; color: #f2c94c; font-weight: 700; text-decoration: none; }
+  a:first-child { background: #d7b86e; color: #17110c; }
+  a:focus-visible { outline: 2px solid #f2c94c; outline-offset: 3px; }
+</style>

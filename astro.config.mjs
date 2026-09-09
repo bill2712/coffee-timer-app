@@ -18,6 +18,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      filter: (page) => !/\/(?:zh-TW|en)\/(?:history|beans|insights|data)\/?$/.test(page),
       i18n: {
         defaultLocale: 'zh-TW',
         locales: {
