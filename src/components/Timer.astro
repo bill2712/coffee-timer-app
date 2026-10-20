@@ -1640,7 +1640,8 @@ const timerDict = {
 
   function initOrUpdateChart(recipe: any) {
     const ctx = document.getElementById('extraction-chart') as HTMLCanvasElement;
-    if (!ctx) return;
+    // Chart.js comes from a CDN; if it is blocked, skip the chart so the timer still loads saved recipes.
+    if (!ctx || typeof (window as any).Chart !== 'function') return;
 
     // Calculate Y values based on recipe
     const targets = getTargetWeights(recipe);

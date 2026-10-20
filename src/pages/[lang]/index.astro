@@ -7,6 +7,8 @@ import AdSlot from '../../components/AdSlot.astro';
 import EquipmentIllustration from '../../components/EquipmentIllustration.astro';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 import { getLanguagePaths } from '../../i18n/routes';
+import { getCollection } from 'astro:content';
+import { changelog } from '../../data/changelog';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -42,6 +44,18 @@ const webAppJsonLd = {
 };
 
 export function getStaticPaths() { return getLanguagePaths(); }
+
+const guides = (await getCollection('blog', (entry) => entry.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && !entry.data.tags?.includes('Glossary')))
+  .map((entry) => ({ entry, slug: entry.id.split('/').slice(1).join('/').replace(/\.mdx?$/, ''), date: entry.data.updatedDate ?? entry.data.pubDate }))
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+  .slice(0, 6);
+const latestUpdate = changelog[0];
+const formatDate = (date: Date) => date.toLocaleDateString(lang, { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+const fresh = isZh ? {
+  eyebrow: '持續更新', title: '最新指南與網站更新', body: '指南會按讀者回饋和新資料擴寫，每篇都標示發佈及最後更新日期。', allGuides: '全部指南 →', allUpdates: '全部更新紀錄 →', updated: '更新', latest: '最近更新'
+} : {
+  eyebrow: 'Recently updated', title: 'Latest guides and site updates', body: 'Guides are expanded as feedback and new sources come in, and each one shows when it was published and last updated.', allGuides: 'All guides →', allUpdates: 'All site updates →', updated: 'Updated', latest: 'Latest update'
+};
 ---
 
 <Layout jsonld={webAppJsonLd} hideTopAd>
@@ -103,8 +117,27 @@ export function getStaticPaths() { return getLanguagePaths(); }
 
   <details class="group mt-10 rounded-2xl border border-coffee-sand/10 bg-coffee-dark/35">
     <summary class="flex min-h-[64px] cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-coffee-gold sm:px-6"><span><strong class="block font-display text-lg text-coffee-light">{c.moreTitle}</strong><span class="mt-1 block text-xs leading-5 text-coffee-muted">{c.moreBody}</span></span><span class="text-xl text-coffee-gold transition-transform group-open:rotate-45" aria-hidden="true">＋</span></summary>
-    <div class="grid gap-3 border-t border-coffee-sand/10 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-3"><a href={`${basePath}/equipment`} class="secondary-resource">{c.equipment}</a><a href={`${basePath}/beans`} class="secondary-resource">{c.beans}</a><a href={`${basePath}/insights`} class="secondary-resource">{c.insights}</a><a href={`${basePath}/recipes`} class="secondary-resource">{c.recipes}</a><a href={`${basePath}/tools/grinder-calibration`} class="secondary-resource">{c.tools}</a><a href={`${basePath}/blog`} class="secondary-resource">{c.knowledge}</a><a href={`${basePath}/data`} class="secondary-resource sm:col-span-2 lg:col-span-3">{c.backup}</a></div>
+    <div class="grid gap-3 border-t border-coffee-sand/10 p-5 sm:grid-cols-2 sm:p-6 lg:grid-cols-3"><a href={`${basePath}/equipment`} class="secondary-resource">{c.equipment}</a><a href={`${basePath}/beans`} class="secondary-resource">{c.beans}</a><a href={`${basePath}/insights`} class="secondary-resource">{c.insights}</a><a href={`${basePath}/recipes`} class="secondary-resource">{c.recipes}</a><a href={`${basePath}/tools/`} class="secondary-resource">{isZh ? '全部工具與計算器' : 'All tools and calculators'}</a><a href={`${basePath}/tools/grinder-calibration`} class="secondary-resource">{c.tools}</a><a href={`${basePath}/blog`} class="secondary-resource">{c.knowledge}</a><a href={`${basePath}/data`} class="secondary-resource sm:col-span-2 lg:col-span-3">{c.backup}</a></div>
   </details>
+
+  <section class="mt-14 border-t border-coffee-sand/10 pt-12" aria-labelledby="fresh-title">
+    <p class="text-xs font-bold uppercase tracking-[0.18em] text-coffee-gold">{fresh.eyebrow}</p>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><h2 id="fresh-title" class="mt-1 font-display text-3xl font-bold text-coffee-light">{fresh.title}</h2><a href={`${basePath}/blog/`} class="text-sm font-bold text-coffee-gold hover:text-coffee-light">{fresh.allGuides}</a></div>
+    <p class="mt-2 max-w-2xl text-sm leading-6 text-coffee-muted">{fresh.body}</p>
+    <div class="mt-6 grid gap-4 lg:grid-cols-[2fr_1fr]">
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {guides.map(({ entry, slug, date }) => (
+          <li><a href={`${basePath}/blog/${slug}/`} class="guide-link"><span class="text-[11px] font-semibold uppercase tracking-wider text-coffee-muted">{entry.data.updatedDate ? `${fresh.updated} ` : ''}<time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time></span><strong>{entry.data.title}</strong></a></li>
+        ))}
+      </ul>
+      <aside class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-5">
+        <p class="text-[11px] font-bold uppercase tracking-wider text-coffee-gold">{fresh.latest} · <time datetime={latestUpdate.date}>{formatDate(new Date(`${latestUpdate.date}T00:00:00Z`))}</time></p>
+        <h3 class="mt-2 font-display text-lg font-bold text-coffee-light">{isZh ? latestUpdate.zh.title : latestUpdate.en.title}</h3>
+        <ul class="mt-3 list-disc space-y-2 ps-5 text-xs leading-5 text-coffee-sand/80">{(isZh ? latestUpdate.zh.items : latestUpdate.en.items).slice(0, 3).map((item) => <li>{item}</li>)}</ul>
+        <a href={`${basePath}/changelog/`} class="mt-4 inline-block text-sm font-bold text-coffee-gold hover:text-coffee-light">{fresh.allUpdates}</a>
+      </aside>
+    </div>
+  </section>
 
   <AdSlot type="bottom-utility" class="my-12" />
 </Layout>
@@ -117,6 +150,9 @@ export function getStaticPaths() { return getLanguagePaths(); }
   .home-brewer-card small { display: block; margin-top: .25rem; color: rgb(197 168 128 / .68); font-size: .75rem; line-height: 1.25rem; }
   .problem-link { display: flex; min-height: 58px; align-items: center; gap: .75rem; border: 1px solid rgb(197 168 128 / .14); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: .875rem 1rem; color: rgb(245 242 235 / .88); font-size: .875rem; font-weight: 600; transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease; }
   .problem-link:hover { border-color: rgb(197 168 128 / .5); background: rgb(197 168 128 / .07); color: #fff; }
+  .guide-link { display: grid; gap: .35rem; height: 100%; border: 1px solid rgb(197 168 128 / .14); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: .9rem 1rem; transition: border-color 160ms ease; }
+  .guide-link:hover, .guide-link:focus-visible { border-color: rgb(197 168 128 / .5); }
+  .guide-link strong { color: #f5f2eb; font-size: .9rem; line-height: 1.45; }
   .secondary-resource { display: flex; min-height: 48px; align-items: center; justify-content: center; border: 1px solid rgb(197 168 128 / .16); border-radius: .75rem; padding: .75rem; color: #c5a880; font-size: .875rem; font-weight: 700; text-align: center; }
   .secondary-resource:hover { background: rgb(197 168 128 / .08); }
   :is(.home-brewer-card, .problem-link, .secondary-resource):focus-visible { outline: 2px solid #c5a880; outline-offset: 2px; }

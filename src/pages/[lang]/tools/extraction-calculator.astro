@@ -1,0 +1,336 @@
+---
+import { SITE_URL } from '../../../config';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl } from '../../../i18n/utils';
+
+export function getStaticPaths() { return getLanguagePaths(); }
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const base = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+
+const c = isZh ? {
+  title: '萃取率與濃度計算器（TDS → EY）| Barista Flow',
+  description: '輸入咖啡粉重量、成品重量及折射儀 TDS，計算萃取率與粉水比，並在沖煮控制圖上看出下一杯應先調整研磨還是粉量。',
+  crumb: '萃取率計算器', eyebrow: '測量工具', h1: '萃取率與濃度計算器',
+  intro: '已有折射儀讀數？把三個數字放進來，就能分清這杯是「萃取得不夠」還是「只是太淡」。兩個問題的修正方向完全不同，前者改研磨，後者改粉量。',
+  method: '沖煮方式', percolation: '滴濾（手沖、滴濾機）', immersion: '浸泡（法壓、冷萃、聰明濾杯）',
+  dose: '咖啡粉重量（g）', beverage: '成品咖啡重量（g）', beverageHint: '沖完後把杯放上電子磅量度，不包括杯重。', water: '總注水量（g）', waterHint: '浸泡法使用總注水量；粉渣中的液體與杯中濃度相同。',
+  estimate: '未量成品重量？按注水量估算', estimateWater: '總注水量（g）', estimateApply: '套用估算',
+  estimateNote: '估算假設每 1 g 咖啡粉吸住約 2 g 水，只適合濾紙手沖作粗略參考；直接量杯中重量會準確得多。',
+  tds: 'TDS（%）', tdsHint: '折射儀讀數，例如 1.35。', calculate: '計算',
+  resultTitle: '這杯的位置', ey: '萃取率', strength: '濃度（TDS）', ratio: '粉：成品咖啡', ratioImmersion: '粉水比', solids: '溶出物質',
+  chartTitle: '沖煮控制圖', chartCaption: '金色方框為常被引用的參考區：萃取率約 18–22%、TDS 約 1.15–1.35%。虛線代表你目前的粉量與成品重量：只改研磨或時間時，結果大致沿這條線移動；改粉量才會令整條線上下移。',
+  xAxis: '萃取率 EY（%）', yAxis: 'TDS（%）', under: '萃取不足', over: '萃取過度', strong: '偏濃', weak: '偏淡', you: '這杯',
+  invalid: '請輸入有效數字：粉量需大於 0，TDS 一般介乎 0.5% 至 3%（手沖），濃縮咖啡可達 15%。',
+  advice: {
+    lowEy: ['萃取不足', '先把研磨調幼一級，其餘條件不變。若已經很幼，可改為提高水溫 2–3°C 或延長接觸時間。'],
+    highEy: ['萃取偏高', '先把研磨調粗一級。若味道沒有苦澀或乾口，也可以視為個人偏好而保留。'],
+    lowTds: ['萃取合理但偏淡', '研磨先不要動，改用較多咖啡粉（例如 1:16 改為 1:15），濃度會上升而萃取率大致不變。'],
+    highTds: ['萃取合理但偏濃', '研磨先不要動，改用較多水（例如 1:15 改為 1:16），或在杯中加少量熱水稀釋。'],
+    ideal: ['落在參考區內', '把這組參數儲存為基準。之後換豆或換磨豆機時，用它作比較起點。'],
+    note: '參考區不是合格線。如果味道好喝，區外的結果同樣成立；數字的作用是告訴你下一步應該調哪一個變數。'
+  },
+  howTitle: '計算方法',
+  howBody: [
+    '萃取率（Extraction Yield，EY）是咖啡粉中有多少重量溶進了飲品；TDS 則是飲品本身有多濃。兩者用同一條公式連結：',
+    '滴濾：萃取率 = 成品重量 × TDS ÷ 咖啡粉重量',
+    '浸泡：溶出物質 = 注水量 × TDS ÷（1 − TDS），萃取率 = 溶出物質 ÷ 咖啡粉重量',
+    '浸泡法的粉渣裏仍有液體，而那些液體與杯中咖啡一樣濃，所以應該用總注水量計算，而不是倒出來的份量。否則萃取率會被低估。'
+  ],
+  exampleTitle: '實際例子',
+  exampleBody: '用 15 g 咖啡粉、注水 250 g，沖完杯中有 215 g 咖啡，折射儀讀數 1.38%。萃取率 = 215 × 1.38% ÷ 15 = 19.8%，濃度 1.38%。萃取落在參考區，但濃度略高於 1.35%，所以下一杯不需要改研磨，只需把水量增加至約 265 g，或改用 14 g 咖啡粉。',
+  measureTitle: '讓 TDS 讀數更可靠',
+  measure: [
+    '每次使用前，先用蒸餾水或製造商指定的液體把折射儀歸零。',
+    '取樣前把整杯咖啡攪勻；樣本放涼至室溫再量，溫差會令讀數漂移。',
+    '同一杯量兩至三次取平均；差距大時檢查樣本有沒有細粉或氣泡。',
+    '只比較同一部折射儀、同一個取樣方法的結果，不同儀器之間有誤差。'
+  ],
+  noMeterTitle: '沒有折射儀怎麼辦？',
+  noMeterBody: '大部分家用沖煮者不需要折射儀。固定粉量、記錄成品重量和沖煮時間，再按「酸、苦、淡、濃」判斷，同樣能找到修正方向。這個計算器最有用的地方，是把味道感受和數字對照，幫你校準自己的味覺。',
+  faqTitle: '常見問題',
+  faq: [
+    ['TDS 1.30% 是甚麼意思？', '每 100 g 咖啡液中約有 1.30 g 溶解了的咖啡物質，其餘是水。'],
+    ['為甚麼改粉水比後，萃取率幾乎沒有變？', '粉水比主要影響濃度。改用較多水時，杯中變淡，但每克咖啡粉溶出的比例變化不大，所以點子會沿著垂直方向移動，而不是左右移動。'],
+    ['濃縮咖啡可以用這個計算器嗎？', '可以用滴濾公式，以咖啡液重量計算；但濃縮咖啡的 TDS 常在 8–12% 之間，控制圖的參考區只適用於濾泡咖啡。'],
+    ['萃取率越高越好嗎？', '不是。過高時容易出現苦、澀或乾口。目標是在你喜歡的味道附近找出可重現的數值。']
+  ],
+  relatedTitle: '延伸閱讀',
+  related: [['blog/understanding-extraction-yield', '萃取率實用指南：公式、測量與風味診斷'], ['blog/sour-or-bitter-taste-diagnosis', '偏酸還是偏苦？味道診斷與修正'], ['blog/coffee-to-water-ratio-guide', '粉水比完全指南'], ['tools/grinder-calibration', '個人磨豆機校準']],
+  source: '參考區數值參考 Specialty Coffee Association 的咖啡標準資料。計算只用你輸入的數字，所有資料都留在你的瀏覽器。'
+} : {
+  title: 'Coffee Extraction Yield & TDS Calculator | Barista Flow',
+  description: 'Enter dose, beverage weight and refractometer TDS to calculate extraction yield and brew ratio, then see on a brewing control chart whether to change grind or dose next.',
+  crumb: 'Extraction calculator', eyebrow: 'Measurement tool', h1: 'Extraction yield and strength calculator',
+  intro: 'Have a refractometer reading? Add three numbers to separate an under-extracted cup from one that is simply weak. The fixes are different: the first needs a grind change, the second needs a dose change.',
+  method: 'Brew method', percolation: 'Percolation (pour-over, drip machine)', immersion: 'Immersion (French press, cold brew, Clever)',
+  dose: 'Coffee dose (g)', beverage: 'Beverage weight (g)', beverageHint: 'Weigh the brewed coffee in the cup after brewing, excluding the cup.', water: 'Total brew water (g)', waterHint: 'Immersion uses total water; the liquid held in the grounds has the same strength as the cup.',
+  estimate: 'Did not weigh the cup? Estimate from brew water', estimateWater: 'Total brew water (g)', estimateApply: 'Use estimate',
+  estimateNote: 'The estimate assumes about 2 g of water retained per gram of coffee and is only a rough guide for paper-filter pour-over. Weighing the cup is far more accurate.',
+  tds: 'TDS (%)', tdsHint: 'Your refractometer reading, for example 1.35.', calculate: 'Calculate',
+  resultTitle: 'Where this cup sits', ey: 'Extraction yield', strength: 'Strength (TDS)', ratio: 'Coffee : beverage', ratioImmersion: 'Brew ratio', solids: 'Dissolved solids',
+  chartTitle: 'Brewing control chart', chartCaption: 'The gold box is the commonly cited reference zone: about 18–22% extraction and 1.15–1.35% TDS. The dashed line is your current dose and beverage weight: changing grind or time moves the result roughly along this line, while changing dose moves the whole line up or down.',
+  xAxis: 'Extraction yield (%)', yAxis: 'TDS (%)', under: 'Under-extracted', over: 'Over-extracted', strong: 'Strong', weak: 'Weak', you: 'This cup',
+  invalid: 'Enter valid numbers: dose must be above 0 and TDS is usually 0.5–3% for filter coffee (up to 15% for espresso).',
+  advice: {
+    lowEy: ['Under-extracted', 'Grind one step finer and keep everything else the same. If you are already fine, raise the water by 2–3°C or extend contact time instead.'],
+    highEy: ['High extraction', 'Grind one step coarser. If the cup is not bitter or drying, you can also keep it as a personal preference.'],
+    lowTds: ['Well extracted but weak', 'Leave the grind alone and use more coffee (for example 1:16 to 1:15). Strength rises while extraction stays roughly the same.'],
+    highTds: ['Well extracted but strong', 'Leave the grind alone and use more water (for example 1:15 to 1:16), or dilute with a little hot water in the cup.'],
+    ideal: ['Inside the reference zone', 'Save these parameters as a baseline and compare against them when you change beans or grinders.'],
+    note: 'The reference zone is not a pass mark. If the cup tastes good outside it, that is still a valid result; the numbers tell you which variable to change next.'
+  },
+  howTitle: 'How the calculation works',
+  howBody: [
+    'Extraction yield (EY) is the share of the coffee grounds that dissolved into the drink; TDS is how concentrated the drink is. One formula links them:',
+    'Percolation: EY = beverage weight × TDS ÷ dose',
+    'Immersion: dissolved solids = brew water × TDS ÷ (1 − TDS); EY = dissolved solids ÷ dose',
+    'In immersion the spent grounds still hold liquid at the same strength as the cup, so total water is used rather than the amount you poured off. Using the poured amount would understate extraction.'
+  ],
+  exampleTitle: 'Worked example',
+  exampleBody: 'You brew 15 g of coffee with 250 g of water and get 215 g in the cup, reading 1.38% TDS. EY = 215 × 1.38% ÷ 15 = 19.8% and strength is 1.38%. Extraction is inside the reference zone but strength is a little above 1.35%, so the next brew does not need a grind change; raise the water to about 265 g or use 14 g of coffee.',
+  measureTitle: 'Making TDS readings reliable',
+  measure: [
+    'Zero the refractometer with distilled water or the manufacturer’s calibration liquid before each session.',
+    'Stir the whole cup before sampling and let the sample cool to room temperature; temperature differences shift the reading.',
+    'Take two or three readings from the same cup and average them. If they disagree, check the sample for fines or bubbles.',
+    'Only compare readings from the same refractometer and sampling method; instruments differ.'
+  ],
+  noMeterTitle: 'No refractometer?',
+  noMeterBody: 'Most home brewers do not need one. Fix the dose, record the beverage weight and brew time, and judge by sour, bitter, weak or strong; that already points to the right change. This calculator is most useful for comparing what you taste with the numbers, which helps you calibrate your own palate.',
+  faqTitle: 'Frequently asked questions',
+  faq: [
+    ['What does 1.30% TDS mean?', 'About 1.30 g of dissolved coffee material in every 100 g of drink; the rest is water.'],
+    ['Why did changing the ratio barely change extraction?', 'Ratio mainly changes strength. More water makes the cup weaker, but the share dissolved from each gram of coffee changes little, so the point moves vertically rather than sideways.'],
+    ['Can I use this for espresso?', 'Use the percolation formula with the shot weight. Espresso TDS is often 8–12%, so the chart’s reference zone only applies to filter coffee.'],
+    ['Is higher extraction better?', 'No. Too high often tastes bitter, astringent or drying. The goal is a repeatable number near the cup you enjoy.']
+  ],
+  relatedTitle: 'Keep learning',
+  related: [['blog/understanding-extraction-yield', 'Extraction yield: formula, measurement and diagnosis'], ['blog/sour-or-bitter-taste-diagnosis', 'Sour or bitter? Taste diagnosis'], ['blog/coffee-to-water-ratio-guide', 'Coffee-to-water ratio guide'], ['tools/grinder-calibration', 'Personal grinder calibration']],
+  source: 'Reference zone values follow the Specialty Coffee Association coffee standards. Calculations use only the numbers you enter and stay in your browser.'
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebApplication', name: c.h1, url: `${SITE_URL}/${lang}/tools/extraction-calculator`, description: c.description, applicationCategory: 'UtilityApplication', operatingSystem: 'All', inLanguage: lang, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: c.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }
+  ]
+};
+
+// Chart geometry shared with the client script.
+const chart = { w: 560, h: 380, left: 56, right: 16, top: 16, bottom: 48, eyMin: 14, eyMax: 26, tdsMin: 0.9, tdsMax: 1.7 };
+const px = (ey: number) => chart.left + ((ey - chart.eyMin) / (chart.eyMax - chart.eyMin)) * (chart.w - chart.left - chart.right);
+const py = (tds: number) => chart.top + (1 - (tds - chart.tdsMin) / (chart.tdsMax - chart.tdsMin)) * (chart.h - chart.top - chart.bottom);
+const eyTicks = [14, 16, 18, 20, 22, 24, 26];
+const tdsTicks = [0.9, 1.1, 1.3, 1.5, 1.7];
+---
+
+<Layout title={c.title} description={c.description} jsonld={jsonLd}>
+  <div class="mx-auto max-w-5xl py-8 sm:py-12">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: isZh ? '工具' : 'Tools', url: 'tools' }, { label: c.crumb }]} /></div>
+    <header class="mx-auto mt-5 max-w-3xl text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-coffee-gold">{c.eyebrow}</p>
+      <h1 class="mt-3 text-balance font-display text-4xl font-bold text-coffee-light sm:text-5xl">{c.h1}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p>
+    </header>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-[1fr_1.25fr]">
+      <form id="ey-form" class="rounded-2xl border border-coffee-sand/12 bg-coffee-darker/55 p-5 sm:p-6" novalidate>
+        <fieldset>
+          <legend class="text-xs font-semibold text-coffee-sand">{c.method}</legend>
+          <div class="mt-2 grid gap-2">
+            <label class="choice"><input type="radio" name="ey-method" value="percolation" class="sr-only" checked /><span>{c.percolation}</span></label>
+            <label class="choice"><input type="radio" name="ey-method" value="immersion" class="sr-only" /><span>{c.immersion}</span></label>
+          </div>
+        </fieldset>
+        <div class="mt-5 grid gap-4">
+          <label class="field"><span>{c.dose}</span><input id="ey-dose" type="number" inputmode="decimal" min="0.1" step="0.1" value="15" /></label>
+          <label class="field"><span id="ey-liquid-label">{c.beverage}</span><input id="ey-liquid" type="number" inputmode="decimal" min="1" step="1" value="215" /><small id="ey-liquid-hint">{c.beverageHint}</small></label>
+          <details id="ey-estimate" class="rounded-xl border border-coffee-sand/10 bg-coffee-dark/50 p-3 text-xs text-coffee-sand">
+            <summary class="cursor-pointer font-semibold text-coffee-gold">{c.estimate}</summary>
+            <div class="mt-3 flex gap-2"><label class="field flex-1"><span>{c.estimateWater}</span><input id="ey-estimate-water" type="number" inputmode="decimal" min="1" step="1" value="250" /></label><button id="ey-estimate-apply" type="button" class="mt-6 min-h-[48px] shrink-0 rounded-xl border border-coffee-gold/40 px-3 text-xs font-bold text-coffee-gold hover:bg-coffee-gold/10">{c.estimateApply}</button></div>
+            <p class="mt-2 leading-5 text-coffee-muted">{c.estimateNote}</p>
+          </details>
+          <label class="field"><span>{c.tds}</span><input id="ey-tds" type="number" inputmode="decimal" min="0.1" max="20" step="0.01" value="1.38" /><small>{c.tdsHint}</small></label>
+        </div>
+        <button type="submit" class="mt-5 min-h-[50px] w-full rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover">{c.calculate}</button>
+        <p id="ey-error" class="mt-3 hidden text-sm font-semibold text-red-300" role="alert">{c.invalid}</p>
+      </form>
+
+      <section class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-5 sm:p-6" aria-labelledby="ey-result-title" aria-live="polite">
+        <h2 id="ey-result-title" class="font-display text-2xl font-bold text-coffee-light">{c.resultTitle}</h2>
+        <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="stat"><dt>{c.ey}</dt><dd id="out-ey">–</dd></div>
+          <div class="stat"><dt>{c.strength}</dt><dd id="out-tds">–</dd></div>
+          <div class="stat"><dt id="out-ratio-label">{c.ratio}</dt><dd id="out-ratio">–</dd></div>
+          <div class="stat"><dt>{c.solids}</dt><dd id="out-solids">–</dd></div>
+        </dl>
+        <figure class="mt-5">
+          <figcaption class="sr-only">{c.chartTitle}</figcaption>
+          <svg viewBox={`0 0 ${chart.w} ${chart.h}`} class="h-auto w-full" role="img" aria-labelledby="ey-chart-title ey-chart-desc">
+            <title id="ey-chart-title">{c.chartTitle}</title>
+            <defs><clipPath id="ey-plot"><rect x={chart.left} y={chart.top} width={chart.w - chart.left - chart.right} height={chart.h - chart.top - chart.bottom} /></clipPath></defs>
+            <desc id="ey-chart-desc">{c.chartCaption}</desc>
+            <rect x={chart.left} y={chart.top} width={chart.w - chart.left - chart.right} height={chart.h - chart.top - chart.bottom} fill="rgb(18 15 13 / .6)" stroke="rgb(197 168 128 / .2)" />
+            {eyTicks.map((tick) => <g><line x1={px(tick)} x2={px(tick)} y1={chart.top} y2={chart.h - chart.bottom} stroke="rgb(197 168 128 / .08)" /><text x={px(tick)} y={chart.h - chart.bottom + 18} text-anchor="middle" class="tick">{tick}</text></g>)}
+            {tdsTicks.map((tick) => <g><line x1={chart.left} x2={chart.w - chart.right} y1={py(tick)} y2={py(tick)} stroke="rgb(197 168 128 / .08)" /><text x={chart.left - 8} y={py(tick) + 4} text-anchor="end" class="tick">{tick.toFixed(1)}</text></g>)}
+            <rect x={px(18)} y={py(1.35)} width={px(22) - px(18)} height={py(1.15) - py(1.35)} fill="rgb(212 175 55 / .14)" stroke="#d4af37" stroke-width="1.5" />
+            <text x={(chart.left + px(18)) / 2} y={py(1.25) + 4} text-anchor="middle" class="zone">{c.under}</text>
+            <text x={(px(22) + chart.w - chart.right) / 2} y={py(1.25) + 4} text-anchor="middle" class="zone">{c.over}</text>
+            <text x={px(20)} y={py(1.55)} text-anchor="middle" class="zone">{c.strong}</text>
+            <text x={px(20)} y={py(1.0)} text-anchor="middle" class="zone">{c.weak}</text>
+            <line id="ey-ratio-line" clip-path="url(#ey-plot)" x1="0" y1="0" x2="0" y2="0" stroke="#c5a880" stroke-width="1.5" stroke-dasharray="5 5" opacity="0" />
+            <g id="ey-point" opacity="0"><circle r="8" fill="#f2c94c" stroke="#120f0d" stroke-width="2" /><text id="ey-point-label" y="-14" text-anchor="middle" class="point-label">{c.you}</text></g>
+            <text x={(chart.left + chart.w - chart.right) / 2} y={chart.h - 8} text-anchor="middle" class="axis">{c.xAxis}</text>
+            <text transform={`translate(14 ${(chart.top + chart.h - chart.bottom) / 2}) rotate(-90)`} text-anchor="middle" class="axis">{c.yAxis}</text>
+          </svg>
+          <p class="mt-2 text-xs leading-5 text-coffee-muted">{c.chartCaption}</p>
+        </figure>
+        <div id="ey-advice" class="mt-4 hidden rounded-xl border border-coffee-gold/25 bg-coffee-darker p-4">
+          <p id="ey-advice-title" class="font-display text-xl font-bold text-coffee-light"></p>
+          <p id="ey-advice-body" class="mt-2 text-sm leading-6 text-coffee-sand"></p>
+          <p class="mt-2 text-xs leading-5 text-coffee-muted">{c.advice.note}</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      <section class="content-card">
+        <h2>{c.howTitle}</h2>
+        <p>{c.howBody[0]}</p>
+        <p class="formula">{c.howBody[1]}</p>
+        <p class="formula">{c.howBody[2]}</p>
+        <p>{c.howBody[3]}</p>
+      </section>
+      <section class="content-card">
+        <h2>{c.exampleTitle}</h2>
+        <p>{c.exampleBody}</p>
+        <h2 class="mt-6">{c.noMeterTitle}</h2>
+        <p>{c.noMeterBody}</p>
+      </section>
+      <section class="content-card">
+        <h2>{c.measureTitle}</h2>
+        <ol>{c.measure.map((item) => <li>{item}</li>)}</ol>
+      </section>
+      <section class="content-card">
+        <h2>{c.faqTitle}</h2>
+        {c.faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+      </section>
+    </div>
+
+    <section class="mt-10">
+      <h2 class="font-display text-2xl font-bold text-coffee-light">{c.relatedTitle}</h2>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">{c.related.map(([path, label]) => <a href={`${base}/${path}/`} class="related-link">{label} →</a>)}</div>
+      <p class="mt-6 text-xs leading-5 text-coffee-muted">{c.source} <a class="underline hover:text-coffee-gold" href="https://sca.coffee/research/coffee-standards" target="_blank" rel="noopener noreferrer">SCA Coffee Standards ↗</a></p>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .choice { display: flex; min-height: 48px; cursor: pointer; align-items: center; border: 1px solid rgb(197 168 128 / .18); border-radius: .75rem; background: rgb(18 15 13 / .65); padding-inline: 1rem; color: rgb(197 168 128 / .85); font-size: .875rem; font-weight: 650; }
+  .choice:has(input:checked) { border-color: var(--color-coffee-gold); background: rgb(212 175 55 / .13); color: var(--color-coffee-light); box-shadow: inset 3px 0 0 var(--color-coffee-gold); }
+  .choice:has(input:focus-visible) { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; }
+  .field { display: grid; min-width: 0; gap: .5rem; font-size: .75rem; font-weight: 600; color: var(--color-coffee-sand); }
+  .field input { min-height: 48px; width: 100%; min-width: 0; border: 1px solid rgb(197 168 128 / .2); border-radius: .75rem; background: var(--color-coffee-dark); padding-inline: 1rem; color: var(--color-coffee-light); font-size: 1rem; outline: none; }
+  .field input:focus { border-color: var(--color-coffee-gold); box-shadow: 0 0 0 2px rgb(212 175 55 / .3); }
+  .field small { color: var(--color-coffee-muted); font-weight: 400; line-height: 1.4; }
+  .stat { border: 1px solid rgb(197 168 128 / .12); border-radius: .75rem; background: rgb(18 15 13 / .7); padding: .75rem; text-align: center; }
+  .stat dt { color: var(--color-coffee-muted); font-size: .65rem; letter-spacing: .06em; text-transform: uppercase; }
+  .stat dd { margin: .25rem 0 0; color: var(--color-coffee-light); font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; }
+  .tick { fill: rgb(197 168 128 / .7); font-size: 11px; }
+  .axis { fill: rgb(197 168 128 / .85); font-size: 12px; font-weight: 600; }
+  .zone { fill: rgb(245 242 235 / .35); font-size: 12px; font-weight: 600; }
+  .point-label { fill: #f2c94c; font-size: 12px; font-weight: 700; }
+  .content-card { border: 1px solid rgb(197 168 128 / .1); border-radius: 1rem; background: rgb(28 24 21 / .5); padding: 1.5rem; }
+  .content-card h2 { color: var(--color-coffee-gold); font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; }
+  .content-card p, .content-card li { margin-top: .75rem; color: rgb(245 242 235 / .82); font-size: .9rem; line-height: 1.75; }
+  .content-card ol { margin-top: .5rem; padding-left: 1.25rem; list-style: decimal; }
+  .content-card .formula { border-left: 2px solid var(--color-coffee-gold); background: rgb(212 175 55 / .06); padding: .5rem .75rem; font-weight: 600; color: var(--color-coffee-light); }
+  .content-card details { margin-top: .75rem; border-top: 1px solid rgb(197 168 128 / .1); padding-top: .75rem; }
+  .content-card summary { cursor: pointer; color: var(--color-coffee-light); font-size: .9rem; font-weight: 650; }
+  .related-link { display: flex; min-height: 52px; align-items: center; border: 1px solid rgb(197 168 128 / .14); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: .75rem 1rem; color: rgb(245 242 235 / .88); font-size: .875rem; font-weight: 600; }
+  .related-link:hover, .related-link:focus-visible { border-color: rgb(197 168 128 / .5); }
+</style>
+
+<script is:inline define:vars={{ copy: { ratio: c.ratio, ratioImmersion: c.ratioImmersion, beverage: c.beverage, beverageHint: c.beverageHint, water: c.water, waterHint: c.waterHint, advice: c.advice }, chart }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('ey-form');
+    const dose = document.getElementById('ey-dose');
+    const liquid = document.getElementById('ey-liquid');
+    const tds = document.getElementById('ey-tds');
+    const liquidLabel = document.getElementById('ey-liquid-label');
+    const liquidHint = document.getElementById('ey-liquid-hint');
+    const estimateBox = document.getElementById('ey-estimate');
+    const error = document.getElementById('ey-error');
+    const point = document.getElementById('ey-point');
+    const line = document.getElementById('ey-ratio-line');
+    const advice = document.getElementById('ey-advice');
+    const px = (ey) => chart.left + ((ey - chart.eyMin) / (chart.eyMax - chart.eyMin)) * (chart.w - chart.left - chart.right);
+    const py = (value) => chart.top + (1 - (value - chart.tdsMin) / (chart.tdsMax - chart.tdsMin)) * (chart.h - chart.top - chart.bottom);
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const method = () => form.querySelector('input[name="ey-method"]:checked')?.value || 'percolation';
+    const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+
+    function syncMethod() {
+      const immersion = method() === 'immersion';
+      liquidLabel.textContent = immersion ? copy.water : copy.beverage;
+      liquidHint.textContent = immersion ? copy.waterHint : copy.beverageHint;
+      estimateBox.classList.toggle('hidden', immersion);
+      set('out-ratio-label', immersion ? copy.ratioImmersion : copy.ratio);
+    }
+
+    function calculate() {
+      const d = Number(dose.value);
+      const l = Number(liquid.value);
+      const t = Number(tds.value) / 100;
+      if (!(d > 0) || !(l > 0) || !(t > 0) || t >= 0.2) { error.classList.remove('hidden'); return; }
+      error.classList.add('hidden');
+      const immersion = method() === 'immersion';
+      // Immersion: liquid left in the grounds matches the cup's strength, so solve for solids in all the water.
+      const solids = immersion ? (l * t) / (1 - t) : l * t;
+      const beverage = immersion ? l + solids : l;
+      const ey = (solids / d) * 100;
+      const tdsPct = t * 100;
+      set('out-ey', `${ey.toFixed(1)}%`);
+      set('out-tds', `${tdsPct.toFixed(2)}%`);
+      set('out-ratio', `1:${(l / d).toFixed(1)}`);
+      set('out-solids', `${solids.toFixed(2)} g`);
+
+      // Points along this dose/beverage line share the same brew ratio: TDS = EY × dose / beverage.
+      const tdsAt = (eyValue) => (eyValue / 100) * d / beverage * 100;
+      line.setAttribute('x1', String(px(chart.eyMin)));
+      line.setAttribute('y1', String(py(clamp(tdsAt(chart.eyMin), chart.tdsMin - 1, chart.tdsMax + 1))));
+      line.setAttribute('x2', String(px(chart.eyMax)));
+      line.setAttribute('y2', String(py(clamp(tdsAt(chart.eyMax), chart.tdsMin - 1, chart.tdsMax + 1))));
+      line.setAttribute('opacity', tdsPct < 3 ? '0.8' : '0');
+      const x = px(clamp(ey, chart.eyMin, chart.eyMax));
+      const y = py(clamp(tdsPct, chart.tdsMin, chart.tdsMax));
+      point.setAttribute('transform', `translate(${x} ${y})`);
+      point.setAttribute('opacity', tdsPct < 3 ? '1' : '0');
+
+      let key = 'ideal';
+      if (ey < 18) key = 'lowEy';
+      else if (ey > 22) key = 'highEy';
+      else if (tdsPct < 1.15) key = 'lowTds';
+      else if (tdsPct > 1.35) key = 'highTds';
+      set('ey-advice-title', copy.advice[key][0]);
+      set('ey-advice-body', copy.advice[key][1]);
+      advice.classList.remove('hidden');
+    }
+
+    form.querySelectorAll('input[name="ey-method"]').forEach((input) => input.addEventListener('change', () => { syncMethod(); calculate(); }));
+    form.addEventListener('submit', (event) => { event.preventDefault(); calculate(); });
+    [dose, liquid, tds].forEach((input) => input.addEventListener('input', calculate));
+    document.getElementById('ey-estimate-apply')?.addEventListener('click', () => {
+      const water = Number(document.getElementById('ey-estimate-water').value);
+      const d = Number(dose.value);
+      if (water > 0 && d > 0) { liquid.value = String(Math.max(1, Math.round(water - 2 * d))); calculate(); }
+    });
+    syncMethod();
+    calculate();
+  });
+</script>

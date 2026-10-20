@@ -2,6 +2,17 @@
 import '../styles/global.css';
 import EquipmentIllustration from '../components/EquipmentIllustration.astro';
 import { SITE_URL } from '../config';
+import { getCollection } from 'astro:content';
+import { changelog } from '../data/changelog';
+
+const latestGuides = (lang: string, count: number) => getCollection('blog', (entry) => entry.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && !entry.data.tags?.includes('Glossary'))
+  .then((entries) => entries
+    .map((entry) => ({ entry, slug: entry.id.split('/').slice(1).join('/').replace(/\.mdx?$/, ''), date: entry.data.updatedDate ?? entry.data.pubDate }))
+    .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+    .slice(0, count));
+const zhGuides = await latestGuides('zh-TW', 6);
+const enGuides = await latestGuides('en', 4);
+const latestUpdate = changelog[0];
 
 const rootUrl = new URL('/', SITE_URL).toString();
 const zhUrl = new URL('/zh-TW/', SITE_URL).toString();
@@ -117,14 +128,35 @@ const jsonLd = {
         </ul>
       </section>
 
+      <section class="guides-section" aria-labelledby="guides-title">
+        <div class="section-heading">
+          <p class="eyebrow">最新指南</p>
+          <h2 id="guides-title">由原理到實作的沖煮指南</h2>
+          <p>每篇指南都附實際例子、診斷表、常見錯誤與參考來源，並標示最後更新日期。</p>
+        </div>
+        <ul class="guide-grid">
+          {zhGuides.map(({ entry, slug, date }) => (
+            <li><a href={`/zh-TW/blog/${slug}/`}><time datetime={date.toISOString().slice(0, 10)}>{date.toISOString().slice(0, 10)}</time><strong>{entry.data.title}</strong><span>{entry.data.description}</span></a></li>
+          ))}
+        </ul>
+        <div class="update-note">
+          <p><strong>最近更新（{latestUpdate.date}）：</strong>{latestUpdate.zh.title}</p>
+          <div><a href="/zh-TW/blog/">全部指南 →</a><a href="/zh-TW/tools/">全部工具 →</a><a href="/zh-TW/changelog/">網站更新紀錄 →</a></div>
+        </div>
+      </section>
+
       <section class="english-section" lang="en" aria-labelledby="english-title">
         <p class="eyebrow">English experience</p>
         <h2 id="english-title">Learn by brewing, tasting and comparing</h2>
         <p>The English edition includes the same guided timers, equipment chooser, source-backed recipes, brewing journal, A/B comparison, bean passports and personal insights. Start with a tool when you want an answer, or read the learning library when you want the reasoning behind it.</p>
+        <ul class="english-guides">
+          {enGuides.map(({ entry, slug }) => <li><a href={`/en/blog/${slug}/`}>{entry.data.title}</a></li>)}
+        </ul>
         <div class="english-links">
           <a href="/en/">Guided brew</a>
           <a href="/en/equipment/">Choose equipment</a>
           <a href="/en/blog/">Learning library</a>
+          <a href="/en/tools/">All tools</a>
           <a href="/en/methodology/">Methods & sources</a>
         </div>
       </section>
@@ -132,7 +164,7 @@ const jsonLd = {
 
     <footer>
       <p>© {new Date().getFullYear()} Barista Flow · Built for curious coffee brewers.</p>
-      <div><a href="/zh-TW/about/">關於</a><a href="/zh-TW/methodology/">方法與來源</a><a href="/zh-TW/privacy-policy/">私隱政策</a><a href="/zh-TW/contact/">聯絡</a></div>
+      <div><a href="/zh-TW/about/">關於</a><a href="/zh-TW/changelog/">更新紀錄</a><a href="/zh-TW/methodology/">方法與來源</a><a href="/zh-TW/privacy-policy/">私隱政策</a><a href="/zh-TW/contact/">聯絡</a></div>
     </footer>
 
     <script>
@@ -186,6 +218,20 @@ const jsonLd = {
   .evidence-list li { border-left: 2px solid #d7b86e; background: rgb(197 168 128 / .05); padding: 1rem 1.1rem; color: #b6aa9c; }
   .evidence-list strong { color: #f5f2eb; }
   .english-section { border-top: 1px solid rgb(197 168 128 / .14); }
+  .guides-section { max-width: 1120px; margin: 0 auto; padding: clamp(4.5rem, 8vw, 7rem) 1.25rem; border-top: 1px solid rgb(197 168 128 / .14); }
+  .guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .guide-grid a { display: grid; gap: .45rem; height: 100%; border: 1px solid rgb(197 168 128 / .16); border-radius: 1rem; background: #14110e; padding: 1.25rem; text-decoration: none; }
+  .guide-grid a:hover, .guide-grid a:focus-visible { border-color: #d7b86e; }
+  .guide-grid time { color: #8f8479; font-size: .75rem; }
+  .guide-grid strong { color: #f5f2eb; font-size: 1.02rem; line-height: 1.45; }
+  .guide-grid span { color: #aa9d90; font-size: .85rem; line-height: 1.6; }
+  .update-note { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; border-left: 2px solid #d7b86e; background: rgb(197 168 128 / .05); padding: 1rem 1.1rem; color: #b6aa9c; font-size: .9rem; }
+  .update-note p { margin: 0; }
+  .update-note strong { color: #f5f2eb; }
+  .update-note div { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .update-note a { color: #f2c94c; font-weight: 700; text-underline-offset: .25em; }
+  .english-guides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1.5rem; margin: 1.25rem 0 0; padding-left: 1.1rem; color: #b6aa9c; }
+  .english-guides a { color: #e8dccb; text-underline-offset: .2em; }
   .english-section > p { max-width: 780px; }
   .english-links { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.5rem; }
   .english-links a { border-bottom: 1px solid #d7b86e; padding: .4rem .1rem; color: #f2c94c; text-decoration: none; }
@@ -197,7 +243,7 @@ const jsonLd = {
     .site-header { align-items: flex-start; }
     .brand { padding-top: .65rem; font-size: .9rem; }
     nav { flex-direction: column; }
-    .task-grid, .evidence-section { grid-template-columns: 1fr; }
+    .task-grid, .evidence-section, .guide-grid, .english-guides { grid-template-columns: 1fr; }
     .visual-card { grid-template-columns: 1fr; }
     footer { align-items: flex-start; flex-direction: column; }
   }

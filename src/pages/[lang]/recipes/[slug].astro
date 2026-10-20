@@ -3,6 +3,7 @@ import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { languages } from '../../../i18n/ui';
 import { getStandardRecipes, type StandardRecipe } from '../../../data/standardRecipes';
+import { getBrewerGuide } from '../../../data/brewerGuides';
 
 export function getStaticPaths() {
   return Object.keys(languages).flatMap((lang) => getStandardRecipes(lang).map((recipe) => ({ params: { lang, slug: recipe.slug }, props: { recipe } })));
@@ -33,6 +34,18 @@ const query = new URLSearchParams({
   source: recipe.id
 });
 const applyUrl = `/${lang}${recipe.toolPath}?${query.toString()}`;
+const guide = getBrewerGuide(recipe.brewer, lang);
+const ratio = recipe.recipe.waterRatio;
+const scaleRows = Array.from(new Set([...guide.scaleDoses, recipe.recipe.coffeeWeight])).sort((a, b) => a - b).map((dose) => ({ dose, water: Math.round((dose * ratio) / 5) * 5, isRecipe: dose === recipe.recipe.coffeeWeight }));
+const g = isZh ? {
+  scaleTitle: '按份量換算', scaleIntro: `以本配方 1:${Math.round(ratio * 10) / 10} 的比例計算，水量取最接近的 5 g。`, dose: '咖啡粉', water: '總水量', original: '原配方',
+  tableTitle: '按味道調整：下一杯只改一項', symptom: '杯中感覺', change: '先改這一項', why: '原因',
+  mistakesTitle: '常見錯誤', relatedTitle: '延伸閱讀'
+} : {
+  scaleTitle: 'Scale this recipe', scaleIntro: `Calculated at this recipe’s 1:${Math.round(ratio * 10) / 10} ratio, with water rounded to the nearest 5 g.`, dose: 'Coffee', water: 'Total water', original: 'Original',
+  tableTitle: 'Adjust by taste: change one thing next time', symptom: 'In the cup', change: 'Change this first', why: 'Why',
+  mistakesTitle: 'Common mistakes', relatedTitle: 'Keep learning'
+};
 const jsonld = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
@@ -100,6 +113,56 @@ const jsonld = {
           <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{c.notes}</p>
           <ul class="mt-2 list-disc space-y-2 ps-5 text-xs leading-6 text-coffee-muted">{recipe.notes.map((note) => <li>{note}</li>)}</ul>
         </div>
+      </section>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+      <section class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6 sm:p-8">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{guide.readTitle}</h2>
+        <ol class="mt-4 list-decimal space-y-3 ps-5 text-sm leading-7 text-coffee-sand/90">{guide.read.map((item) => <li>{item}</li>)}</ol>
+      </section>
+      <section class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{g.scaleTitle}</h2>
+        <p class="mt-2 text-xs text-coffee-muted">{g.scaleIntro}</p>
+        <table class="mt-4 w-full text-sm">
+          <thead><tr class="text-left text-[11px] uppercase tracking-wider text-coffee-muted"><th class="pb-2 font-semibold">{g.dose}</th><th class="pb-2 font-semibold">{g.water}</th></tr></thead>
+          <tbody>
+            {scaleRows.map((row) => (
+              <tr class={`border-t border-coffee-sand/10 ${row.isRecipe ? 'text-coffee-gold' : 'text-coffee-sand/90'}`}><td class="py-2">{row.dose} g{row.isRecipe && <span class="ms-2 text-[10px] font-bold uppercase">{g.original}</span>}</td><td class="py-2">{row.water} g</td></tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="mt-4 text-xs leading-6 text-coffee-muted">{guide.scaleNote}</p>
+      </section>
+    </div>
+
+    <section class="mt-8 rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6 sm:p-8">
+      <h2 class="font-display text-2xl font-bold text-coffee-gold">{g.tableTitle}</h2>
+      <ul class="mt-5 space-y-3 sm:hidden">
+        {guide.table.map(([symptom, change, why]) => (
+          <li class="rounded-2xl border border-coffee-sand/10 bg-coffee-dark/50 p-4"><p class="text-sm font-semibold text-coffee-light">{symptom}</p><p class="mt-2 text-sm font-semibold text-coffee-gold">→ {change}</p><p class="mt-2 text-xs leading-5 text-coffee-sand/80">{why}</p></li>
+        ))}
+      </ul>
+      <div class="mt-5 hidden sm:block">
+        <table class="w-full text-sm">
+          <thead><tr class="text-left text-[11px] uppercase tracking-wider text-coffee-muted"><th class="pb-3 pe-4 font-semibold">{g.symptom}</th><th class="pb-3 pe-4 font-semibold">{g.change}</th><th class="pb-3 font-semibold">{g.why}</th></tr></thead>
+          <tbody>
+            {guide.table.map(([symptom, change, why]) => (
+              <tr class="border-t border-coffee-sand/10 align-top"><td class="py-3 pe-4 font-semibold text-coffee-light">{symptom}</td><td class="py-3 pe-4 text-coffee-gold">{change}</td><td class="py-3 leading-6 text-coffee-sand/80">{why}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+      <section class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{g.mistakesTitle}</h2>
+        <ul class="mt-4 space-y-4">{guide.mistakes.map(([title, body]) => <li><strong class="block text-sm text-coffee-light">{title}</strong><span class="mt-1 block text-sm leading-6 text-coffee-sand/80">{body}</span></li>)}</ul>
+      </section>
+      <section class="rounded-3xl border border-coffee-sand/10 bg-coffee-darker/70 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{g.relatedTitle}</h2>
+        <div class="mt-4 grid gap-3">{guide.related.map(([path, label]) => <a href={`/${lang}/${path}/`} class="flex min-h-[48px] items-center rounded-xl border border-coffee-sand/14 bg-coffee-dark/50 px-4 text-sm font-semibold text-coffee-light hover:border-coffee-gold/50">{label} →</a>)}</div>
       </section>
     </div>
 

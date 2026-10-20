@@ -1,5 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import { SITE_URL } from '../../../config';
 import Layout from '../../../layouts/Layout.astro';
 import SearchBar from '../../../components/SearchBar.astro';
 import AdSlot from '../../../components/AdSlot.astro';
@@ -9,7 +10,7 @@ import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const allGlossary = await getCollection('blog', (entry) => entry.data.tags?.includes('Glossary') && entry.id.startsWith(`${lang}/`)) || [];
+const allGlossary = await getCollection('blog', (entry) => entry.data.tags?.includes("Glossary") && entry.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`)) || [];
 
 // Sort by term (A-Z)
 const sortedGlossary = [...allGlossary].sort((a, b) => {
@@ -18,24 +19,29 @@ const sortedGlossary = [...allGlossary].sort((a, b) => {
   return termA.localeCompare(termB);
 });
 
-// Group by first letter
-const groupedGlossary = sortedGlossary.reduce((acc, entry) => {
-  const term = (entry.data as any).term || entry.data.title;
-  const firstLetter = term.charAt(0).toUpperCase();
-  if (!acc[firstLetter]) {
-    acc[firstLetter] = [];
-  }
-  acc[firstLetter].push(entry);
-  return acc;
-}, {} as Record<string, typeof allGlossary>);
 
-const letters = Object.keys(groupedGlossary).sort();
+
+const isZh = lang === 'zh-TW';
+const entries = await Promise.all(sortedGlossary.map(async (entry) => ({
+  entry,
+  slug: entry.id.split('/').pop()?.replace(/\.mdx?$/, '') || '',
+  term: (entry.data as any).term || entry.data.title,
+  Content: (await render(entry)).Content
+})));
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "DefinedTermSet",
-  "name": "Barista Flow Coffee Glossary",
-  "description": "Comprehensive encyclopedia of specialty coffee terms, techniques, and chemistry.",
+  "name": isZh ? "Barista Flow 咖啡沖煮詞彙表" : "Barista Flow coffee brewing glossary",
+  "description": t('glossary.meta.desc'),
+  "inLanguage": lang,
+  "hasDefinedTerm": entries.map(({ entry, slug, term }) => ({
+    "@type": "DefinedTerm",
+    "name": entry.data.title,
+    "alternateName": term,
+    "description": entry.data.description,
+    "url": `${SITE_URL}/${lang}/glossary/#${slug}`
+  }))
 };
 
 export function getStaticPaths() {
@@ -63,47 +69,24 @@ export function getStaticPaths() {
   <SearchBar />
 
   <div class="max-w-4xl mx-auto">
-    <!-- A-Z Index Navigation -->
-    <div class="flex flex-wrap justify-center gap-2 mb-16 p-6 glass-card rounded-2xl">
-      {letters.map((letter) => (
-        <a href={`#letter-${letter}`} class="w-10 h-10 flex items-center justify-center rounded-lg bg-coffee-darker border border-coffee-sand/20 text-coffee-gold font-display font-bold hover:bg-coffee-gold hover:text-coffee-dark transition-all duration-300">
-          {letter}
-        </a>
+    <nav class="mb-12 flex flex-wrap justify-center gap-2 rounded-2xl p-5 glass-card" aria-label={isZh ? '詞彙索引' : 'Term index'}>
+      {entries.map(({ slug, term }) => (
+        <a href={`#${slug}`} class="rounded-full border border-coffee-sand/20 bg-coffee-darker px-3 py-1.5 text-sm font-semibold text-coffee-gold transition-colors hover:bg-coffee-gold hover:text-coffee-dark">{term}</a>
+      ))}
+    </nav>
+
+    <div class="space-y-8">
+      {entries.map(({ entry, slug, term, Content }) => (
+        <article id={slug} class="glossary-entry scroll-mt-28 rounded-2xl border border-coffee-sand/10 bg-coffee-darker/60 p-6 sm:p-8">
+          <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{term}</p>
+          <h2 class="mt-1 font-display text-2xl font-bold text-coffee-light sm:text-3xl">{entry.data.title}</h2>
+          <p class="mt-3 border-s-2 border-coffee-gold/60 ps-4 text-base leading-7 text-coffee-sand">{entry.data.description}</p>
+          <div class="glossary-body mt-4"><Content /></div>
+          <a href={`#${slug}`} class="mt-4 inline-block text-xs text-coffee-muted hover:text-coffee-gold">{isZh ? '連結到此詞彙' : 'Link to this term'} #</a>
+        </article>
       ))}
     </div>
 
-    <!-- Glossary List -->
-    <div class="space-y-16">
-      {letters.map((letter) => (
-        <section id={`letter-${letter}`} class="scroll-mt-32 relative">
-          <div class="absolute -start-4 sm:-start-12 top-0 text-5xl sm:text-7xl font-display font-black text-coffee-sand/10 select-none -z-10">
-            {letter}
-          </div>
-          <h2 class="text-3xl font-display font-bold text-coffee-gold border-b border-coffee-sand/10 pb-4 mb-8">
-            {letter}
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {groupedGlossary[letter].map((entry) => (
-              <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/glossary/${entry.id.split('/').pop()}`} class="glass-card-interactive p-6 rounded-xl group flex flex-col justify-between h-full">
-                <div>
-                  <h3 class="text-xl font-bold text-coffee-light mb-1 group-hover:text-coffee-gold transition-colors">
-                    {(entry.data as any).term || entry.data.title}
-                  </h3>
-                  <p class="text-xs text-coffee-muted uppercase tracking-wider mb-3">{entry.data.title}</p>
-                  <p class="text-sm text-coffee-sand/80 leading-relaxed line-clamp-3">
-                    {entry.data.description}
-                  </p>
-                </div>
-                <div class="mt-4 flex items-center text-xs text-coffee-gold font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  {t('glossary.readMore')} <span class="ms-1">→</span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
-    
     <div class="mt-16 pt-8 border-t border-coffee-sand/10 max-w-3xl mx-auto">
       <AdSlot type="top-leaderboard" id="glossary-index-ad" />
     </div>
@@ -111,7 +94,12 @@ export function getStaticPaths() {
 </Layout>
 
 <style>
-  html {
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
+  .glossary-body :global(h2) { margin-top: 1.5rem; color: var(--color-coffee-gold); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+  .glossary-body :global(h3) { margin-top: 1.25rem; color: var(--color-coffee-sand); font-size: 1rem; font-weight: 650; }
+  .glossary-body :global(p), .glossary-body :global(li) { margin-top: .6rem; color: rgb(245 242 235 / .82); font-size: .925rem; line-height: 1.8; }
+  .glossary-body :global(ul) { padding-left: 1.25rem; list-style: disc; }
+  .glossary-body :global(ol) { padding-left: 1.25rem; list-style: decimal; }
+  .glossary-body :global(strong) { color: var(--color-coffee-light); }
+  .glossary-body :global(a) { color: var(--color-coffee-gold); text-decoration: underline; }
 </style>

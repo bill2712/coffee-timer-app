@@ -1,0 +1,278 @@
+---
+import { SITE_URL } from '../../../config';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl } from '../../../i18n/utils';
+
+export function getStaticPaths() { return getLanguagePaths(); }
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const base = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+
+const c = isZh ? {
+  title: '咖啡沖煮用水配方計算器（硬度與鹼度）| Barista Flow',
+  description: '用蒸餾水、瀉鹽和梳打粉自製咖啡沖煮用水：輸入目標硬度與鹼度，計算濃縮液及蒸餾水份量，並列出鎂、鈉含量。',
+  crumb: '沖煮用水計算器', eyebrow: '水質工具', h1: '沖煮用水配方計算器',
+  intro: '同一包豆，用不同的水沖，味道可以差很遠。自己調水的好處是每次都一樣：只要記住兩個數字，就能在任何地方重做同一款水，令沖煮紀錄可以互相比較。',
+  preset: '起點', presetSca: 'SCA 參考值（硬度 68、鹼度 40）', presetSoft: '較軟的測試起點（硬度 50、鹼度 25）', presetCustom: '自訂',
+  hardness: '目標總硬度（mg/L，以 CaCO₃ 計）', alkalinity: '目標總鹼度（mg/L，以 CaCO₃ 計）', volume: '要調配的水量（L）',
+  concTitle: '濃縮液濃度（每 1000 g 蒸餾水）', epsomConc: '瀉鹽濃縮液（g）', sodaConc: '梳打粉濃縮液（g）',
+  calculate: '計算',
+  resultTitle: '調配份量', resultConc: '用濃縮液（建議）', resultDirect: '直接加粉（需 0.01 g 電子磅）',
+  epsomLiquid: '瀉鹽濃縮液', sodaLiquid: '梳打粉濃縮液', distilled: '蒸餾水', epsom: '瀉鹽', soda: '梳打粉',
+  mineralsTitle: '完成後每公升含量（估算）', magnesium: '鎂', sodium: '鈉', sulfate: '硫酸根', bicarbonate: '碳酸氫根',
+  invalid: '請輸入有效數字：硬度 0–300、鹼度 0–200、水量大於 0，濃縮液濃度大於 0。',
+  tooMuch: '濃縮液份量超過總水量，請提高濃縮液濃度或減少目標值。',
+  whyTitle: '為甚麼要用濃縮液？',
+  whyBody: '調 1 L 硬度 68 的水只需要約 0.17 g 瀉鹽。一般廚房磅的最小單位是 0.1 g，讀數 0.2 g 可以代表 0.15 至 0.25 g，誤差高達三成。先把 10 g 瀉鹽溶在 1000 g 蒸餾水中，就變成每次量十幾克液體，誤差便很小。',
+  ingredientsTitle: '材料與安全',
+  ingredients: [
+    '瀉鹽：食用級硫酸鎂七水合物（Epsom salt），不可使用加了香料或精油的沐浴鹽。',
+    '梳打粉：碳酸氫鈉（baking soda），不要與含酸性成分的泡打粉（baking powder）混淆。',
+    '基底水：標示可飲用的蒸餾水或逆滲透水。基底水本身已有礦物質時，計算結果會偏高。',
+    '濃縮液用乾淨瓶子分開盛載，標明名稱、濃度及日期，放雪櫃保存；出現混濁或異味便重新調配。'
+  ],
+  stepsTitle: '調配步驟',
+  steps: [
+    '按上方濃度，各自用電子磅量好瀉鹽和梳打粉，分別加入 1000 g 蒸餾水搖勻至完全溶解。',
+    '把空水壺放在磅上歸零，先加入計算出的瀉鹽濃縮液，再歸零加入梳打粉濃縮液。',
+    '最後加入蒸餾水至計算份量，蓋好搖勻，即可用來沖煮。',
+    '在沖煮紀錄的筆記中寫下「硬度／鹼度」兩個數字，方便日後比較。'
+  ],
+  exampleTitle: '實際例子',
+  exampleBody: '想調 2 L、硬度 68、鹼度 40 的水，濃縮液各為每 1000 g 加 10 g。計算結果：瀉鹽濃縮液約 33.5 g、梳打粉濃縮液約 13.4 g，再加蒸餾水約 1953 g。完成後每公升約含鎂 16.5 mg、鈉 18.4 mg。',
+  tasteTitle: '怎樣判斷這款水適不適合？',
+  tasteBody: '用同一包豆、同一個配方，分別用你平常的水和新調的水各沖一杯，盲飲比較。鹼度較高通常令酸質較圓、較平；鹼度較低則酸質較明亮，但太低時可能變得尖銳。每次只改一個數字，例如鹼度 40 改 25，其餘不變。',
+  faqTitle: '常見問題',
+  faq: [
+    ['可以用自來水代替蒸餾水嗎？', '不建議。自來水本身已有硬度和鹼度，而且每區、每季都不同，加入礦物後會偏離目標。若要了解自來水，可查閱供水機構的水質報告。'],
+    ['為甚麼用鎂而不用鈣？', '家用最易買到、又容易溶解的是硫酸鎂。碳酸鈣在清水中幾乎不溶，氯化鈣則較難買到食用級。硬度的計算單位已統一換算成 CaCO₃，兩者可以直接比較。'],
+    ['德國度（°dH）怎樣換算？', '1 °dH 約等於 17.8 mg/L（以 CaCO₃ 計）。例如 4 °dH 約為 71 mg/L。'],
+    ['濃縮咖啡機也可以用這款水嗎？', '咖啡機製造商通常有自己的水質要求，硬度太高會積水垢，鹼度太低或含氯化物的水則可能有腐蝕風險。用於咖啡機前，請先按機器說明書的範圍調整。'],
+    ['TDS 筆量出來的數字為甚麼跟計算不同？', 'TDS 筆量的是導電度，再用固定係數換算，不能分辨不同礦物。用它檢查每批水是否一致便可以。']
+  ],
+  relatedTitle: '延伸閱讀',
+  related: [['blog/water-chemistry-for-coffee', '咖啡沖煮用水：硬度、鹼度與可重現測試'], ['blog/brew-temperature-and-extraction', '沖煮水溫實驗'], ['tools/extraction-calculator', '萃取率與濃度計算器'], ['blog/dial-in-one-variable-at-a-time', '每次只改一個變數']],
+  source: '參考值來自 Specialty Coffee Association 的沖煮用水標準；換算使用硫酸鎂七水合物（246.47 g/mol）、碳酸氫鈉（84.01 g/mol）及碳酸鈣（100.09 g/mol）的分子量。'
+} : {
+  title: 'Coffee Brew Water Recipe Calculator (Hardness & Alkalinity) | Barista Flow',
+  description: 'Make coffee brewing water from distilled water, Epsom salt and baking soda. Enter target hardness and alkalinity to get concentrate and water amounts, plus magnesium and sodium content.',
+  crumb: 'Brew water calculator', eyebrow: 'Water tool', h1: 'Brew water recipe calculator',
+  intro: 'The same beans can taste very different with different water. Mixing your own makes the water identical every time: remember two numbers and you can recreate it anywhere, so your brew logs stay comparable.',
+  preset: 'Starting point', presetSca: 'SCA reference (hardness 68, alkalinity 40)', presetSoft: 'Softer test (hardness 50, alkalinity 25)', presetCustom: 'Custom',
+  hardness: 'Target total hardness (mg/L as CaCO₃)', alkalinity: 'Target total alkalinity (mg/L as CaCO₃)', volume: 'Batch size (L)',
+  concTitle: 'Concentrate strength (per 1000 g distilled water)', epsomConc: 'Epsom salt concentrate (g)', sodaConc: 'Baking soda concentrate (g)',
+  calculate: 'Calculate',
+  resultTitle: 'What to mix', resultConc: 'Using concentrates (recommended)', resultDirect: 'Adding powder directly (needs a 0.01 g scale)',
+  epsomLiquid: 'Epsom concentrate', sodaLiquid: 'Baking soda concentrate', distilled: 'Distilled water', epsom: 'Epsom salt', soda: 'Baking soda',
+  mineralsTitle: 'Estimated content per litre', magnesium: 'Magnesium', sodium: 'Sodium', sulfate: 'Sulfate', bicarbonate: 'Bicarbonate',
+  invalid: 'Enter valid numbers: hardness 0–300, alkalinity 0–200, batch size above 0 and concentrate strengths above 0.',
+  tooMuch: 'The concentrates exceed the batch size. Use stronger concentrates or lower targets.',
+  whyTitle: 'Why use concentrates?',
+  whyBody: 'One litre of water at hardness 68 needs only about 0.17 g of Epsom salt. Most kitchen scales read in 0.1 g steps, so a 0.2 g reading could be anything from 0.15 to 0.25 g, an error of around 30%. Dissolving 10 g in 1000 g of distilled water first means you weigh a dozen or more grams of liquid instead, and the error becomes small.',
+  ingredientsTitle: 'Ingredients and safety',
+  ingredients: [
+    'Epsom salt: food-grade magnesium sulfate heptahydrate. Do not use bath salts with fragrance or oils.',
+    'Baking soda: sodium bicarbonate. Do not confuse it with baking powder, which contains acids.',
+    'Base water: distilled or reverse-osmosis water sold as drinkable. If the base water already contains minerals, results will run high.',
+    'Keep each concentrate in its own clean bottle labelled with name, strength and date, stored in the fridge. Remake it if it turns cloudy or smells off.'
+  ],
+  stepsTitle: 'How to mix',
+  steps: [
+    'Weigh the Epsom salt and baking soda at the strengths above and dissolve each in its own 1000 g of distilled water.',
+    'Place an empty jug on the scale and tare. Add the Epsom concentrate, tare again, then add the baking soda concentrate.',
+    'Top up with distilled water to the calculated amount, cap and shake. It is ready to brew with.',
+    'Write the hardness and alkalinity numbers in your brew notes so later comparisons are meaningful.'
+  ],
+  exampleTitle: 'Worked example',
+  exampleBody: 'For 2 L at hardness 68 and alkalinity 40, with both concentrates at 10 g per 1000 g: about 33.5 g of Epsom concentrate, 13.4 g of baking soda concentrate and about 1953 g of distilled water. Each litre then contains about 16.5 mg of magnesium and 18.4 mg of sodium.',
+  tasteTitle: 'How do I know if the water suits me?',
+  tasteBody: 'Brew the same beans with the same recipe twice, once with your usual water and once with the new water, and compare blind. Higher alkalinity usually makes acidity rounder and flatter; lower alkalinity keeps it brighter but can turn sharp if it goes too low. Change one number at a time, for example alkalinity 40 to 25, and keep everything else fixed.',
+  faqTitle: 'Frequently asked questions',
+  faq: [
+    ['Can I use tap water instead of distilled?', 'Not recommended. Tap water already has hardness and alkalinity that vary by area and season, so adding minerals will overshoot the target. Check your water supplier’s quality report to understand your tap water.'],
+    ['Why magnesium instead of calcium?', 'Magnesium sulfate is the easiest food-grade salt to buy and dissolve at home. Calcium carbonate barely dissolves in plain water, and food-grade calcium chloride is harder to find. Hardness is expressed as CaCO₃ either way, so the numbers are comparable.'],
+    ['How do I convert German degrees (°dH)?', '1 °dH is about 17.8 mg/L as CaCO₃. For example, 4 °dH is about 71 mg/L.'],
+    ['Can I use this water in an espresso machine?', 'Machine makers usually specify their own water ranges. High hardness causes scale, while very low alkalinity or chloride-rich water can increase corrosion risk. Check the machine manual before using any custom water.'],
+    ['Why does my TDS pen disagree with the calculation?', 'TDS pens measure conductivity and convert it with a fixed factor, so they cannot tell minerals apart. Use the pen to check that each batch is consistent.']
+  ],
+  relatedTitle: 'Keep learning',
+  related: [['blog/water-chemistry-for-coffee', 'Water for coffee: hardness, alkalinity and repeatable tests'], ['blog/brew-temperature-and-extraction', 'Brew temperature experiments'], ['tools/extraction-calculator', 'Extraction yield calculator'], ['blog/dial-in-one-variable-at-a-time', 'Change one variable at a time']],
+  source: 'Reference values follow the Specialty Coffee Association water standard. Conversions use the molar masses of magnesium sulfate heptahydrate (246.47 g/mol), sodium bicarbonate (84.01 g/mol) and calcium carbonate (100.09 g/mol).'
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebApplication', name: c.h1, url: `${SITE_URL}/${lang}/tools/water-recipe`, description: c.description, applicationCategory: 'UtilityApplication', operatingSystem: 'All', inLanguage: lang, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'HowTo', name: c.h1, description: c.description, supply: c.ingredients.map((item) => ({ '@type': 'HowToSupply', name: item.split(/[：:]/)[0] })), step: c.steps.map((text, index) => ({ '@type': 'HowToStep', position: index + 1, text })) },
+    { '@type': 'FAQPage', mainEntity: c.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }
+  ]
+};
+---
+
+<Layout title={c.title} description={c.description} jsonld={jsonLd}>
+  <div class="mx-auto max-w-5xl py-8 sm:py-12">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: isZh ? '工具' : 'Tools', url: 'tools' }, { label: c.crumb }]} /></div>
+    <header class="mx-auto mt-5 max-w-3xl text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-coffee-gold">{c.eyebrow}</p>
+      <h1 class="mt-3 text-balance font-display text-4xl font-bold text-coffee-light sm:text-5xl">{c.h1}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p>
+    </header>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <form id="water-form" class="rounded-2xl border border-coffee-sand/12 bg-coffee-darker/55 p-5 sm:p-6" novalidate>
+        <label class="field"><span>{c.preset}</span>
+          <select id="water-preset">
+            <option value="68,40">{c.presetSca}</option>
+            <option value="50,25">{c.presetSoft}</option>
+            <option value="custom">{c.presetCustom}</option>
+          </select>
+        </label>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <label class="field"><span>{c.hardness}</span><input id="water-gh" type="number" inputmode="decimal" min="0" max="300" step="1" value="68" /></label>
+          <label class="field"><span>{c.alkalinity}</span><input id="water-kh" type="number" inputmode="decimal" min="0" max="200" step="1" value="40" /></label>
+        </div>
+        <label class="field mt-4"><span>{c.volume}</span><input id="water-volume" type="number" inputmode="decimal" min="0.1" step="0.1" value="2" /></label>
+        <fieldset class="mt-5 rounded-xl border border-coffee-sand/10 p-4">
+          <legend class="px-1 text-xs font-semibold text-coffee-sand">{c.concTitle}</legend>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="field"><span>{c.epsomConc}</span><input id="water-epsom-conc" type="number" inputmode="decimal" min="0.1" step="0.1" value="10" /></label>
+            <label class="field"><span>{c.sodaConc}</span><input id="water-soda-conc" type="number" inputmode="decimal" min="0.1" step="0.1" value="10" /></label>
+          </div>
+        </fieldset>
+        <button type="submit" class="mt-5 min-h-[50px] w-full rounded-xl bg-coffee-gold px-5 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover">{c.calculate}</button>
+        <p id="water-error" class="mt-3 hidden text-sm font-semibold text-red-300" role="alert"></p>
+      </form>
+
+      <section class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-5 sm:p-6" aria-labelledby="water-result-title" aria-live="polite">
+        <h2 id="water-result-title" class="font-display text-2xl font-bold text-coffee-light">{c.resultTitle}</h2>
+        <h3 class="mt-4 text-xs font-bold tracking-wider text-coffee-gold">{c.resultConc}</h3>
+        <dl class="mt-2 grid grid-cols-3 gap-3">
+          <div class="stat"><dt>{c.epsomLiquid}</dt><dd id="out-epsom-conc">–</dd></div>
+          <div class="stat"><dt>{c.sodaLiquid}</dt><dd id="out-soda-conc">–</dd></div>
+          <div class="stat"><dt>{c.distilled}</dt><dd id="out-distilled">–</dd></div>
+        </dl>
+        <h3 class="mt-5 text-xs font-bold tracking-wider text-coffee-gold">{c.resultDirect}</h3>
+        <dl class="mt-2 grid grid-cols-2 gap-3">
+          <div class="stat"><dt>{c.epsom}</dt><dd id="out-epsom">–</dd></div>
+          <div class="stat"><dt>{c.soda}</dt><dd id="out-soda">–</dd></div>
+        </dl>
+        <h3 class="mt-5 text-xs font-bold tracking-wider text-coffee-gold">{c.mineralsTitle}</h3>
+        <dl class="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="stat small"><dt>{c.magnesium}</dt><dd id="out-mg">–</dd></div>
+          <div class="stat small"><dt>{c.sodium}</dt><dd id="out-na">–</dd></div>
+          <div class="stat small"><dt>{c.sulfate}</dt><dd id="out-so4">–</dd></div>
+          <div class="stat small"><dt>{c.bicarbonate}</dt><dd id="out-hco3">–</dd></div>
+        </dl>
+      </section>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      <section class="content-card"><h2>{c.whyTitle}</h2><p>{c.whyBody}</p><h2 class="mt-6">{c.exampleTitle}</h2><p>{c.exampleBody}</p></section>
+      <section class="content-card"><h2>{c.ingredientsTitle}</h2><ul>{c.ingredients.map((item) => <li>{item}</li>)}</ul></section>
+      <section class="content-card"><h2>{c.stepsTitle}</h2><ol>{c.steps.map((item) => <li>{item}</li>)}</ol><h2 class="mt-6">{c.tasteTitle}</h2><p>{c.tasteBody}</p></section>
+      <section class="content-card"><h2>{c.faqTitle}</h2>{c.faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</section>
+    </div>
+
+    <section class="mt-10">
+      <h2 class="font-display text-2xl font-bold text-coffee-light">{c.relatedTitle}</h2>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">{c.related.map(([path, label]) => <a href={`${base}/${path}/`} class="related-link">{label} →</a>)}</div>
+      <p class="mt-6 text-xs leading-5 text-coffee-muted">{c.source} <a class="underline hover:text-coffee-gold" href="https://sca.coffee/research/coffee-standards" target="_blank" rel="noopener noreferrer">SCA Coffee Standards ↗</a></p>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .field { display: grid; min-width: 0; gap: .5rem; font-size: .75rem; font-weight: 600; color: var(--color-coffee-sand); }
+  .field input, .field select { min-height: 48px; width: 100%; min-width: 0; border: 1px solid rgb(197 168 128 / .2); border-radius: .75rem; background: var(--color-coffee-dark); padding-inline: 1rem; color: var(--color-coffee-light); font-size: 1rem; outline: none; }
+  .field input:focus, .field select:focus { border-color: var(--color-coffee-gold); box-shadow: 0 0 0 2px rgb(212 175 55 / .3); }
+  .stat { border: 1px solid rgb(197 168 128 / .12); border-radius: .75rem; background: rgb(18 15 13 / .7); padding: .75rem; text-align: center; }
+  .stat dt { color: var(--color-coffee-muted); font-size: .7rem; }
+  .stat dd { margin: .25rem 0 0; color: var(--color-coffee-light); font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; }
+  .stat.small dd { font-size: 1.05rem; }
+  .content-card { border: 1px solid rgb(197 168 128 / .1); border-radius: 1rem; background: rgb(28 24 21 / .5); padding: 1.5rem; }
+  .content-card h2 { color: var(--color-coffee-gold); font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; }
+  .content-card p, .content-card li { margin-top: .75rem; color: rgb(245 242 235 / .82); font-size: .9rem; line-height: 1.75; }
+  .content-card ol { margin-top: .5rem; padding-left: 1.25rem; list-style: decimal; }
+  .content-card ul { margin-top: .5rem; padding-left: 1.25rem; list-style: disc; }
+  .content-card details { margin-top: .75rem; border-top: 1px solid rgb(197 168 128 / .1); padding-top: .75rem; }
+  .content-card summary { cursor: pointer; color: var(--color-coffee-light); font-size: .9rem; font-weight: 650; }
+  .related-link { display: flex; min-height: 52px; align-items: center; border: 1px solid rgb(197 168 128 / .14); border-radius: .75rem; background: rgb(28 24 21 / .55); padding: .75rem 1rem; color: rgb(245 242 235 / .88); font-size: .875rem; font-weight: 600; }
+  .related-link:hover, .related-link:focus-visible { border-color: rgb(197 168 128 / .5); }
+</style>
+
+<script is:inline define:vars={{ copy: { invalid: c.invalid, tooMuch: c.tooMuch } }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    // mg/L "as CaCO3" contributed by 1 g of salt dissolved in 1 L.
+    const HARDNESS_PER_G_EPSOM = 100.09 / 246.47 * 1000; // MgSO4·7H2O → ~406 mg/L
+    const ALKALINITY_PER_G_SODA = 50.04 / 84.01 * 1000;  // NaHCO3 → ~596 mg/L (one equivalent)
+    const MG_FRACTION = 24.305 / 246.47;
+    const SO4_FRACTION = 96.06 / 246.47;
+    const NA_FRACTION = 22.99 / 84.01;
+    const HCO3_FRACTION = 61.02 / 84.01;
+    const $ = (id) => document.getElementById(id);
+    const form = $('water-form');
+    const preset = $('water-preset');
+    const gh = $('water-gh');
+    const kh = $('water-kh');
+    const volume = $('water-volume');
+    const epsomConc = $('water-epsom-conc');
+    const sodaConc = $('water-soda-conc');
+    const error = $('water-error');
+    const set = (id, text) => { const el = $(id); if (el) el.textContent = text; };
+    const grams = (value, digits = 1) => `${value.toFixed(digits)} g`;
+
+    function showError(message) {
+      error.textContent = message;
+      error.classList.remove('hidden');
+      ['out-epsom-conc', 'out-soda-conc', 'out-distilled', 'out-epsom', 'out-soda', 'out-mg', 'out-na', 'out-so4', 'out-hco3'].forEach((id) => set(id, '–'));
+    }
+
+    function calculate() {
+      const hardness = Number(gh.value);
+      const alkalinity = Number(kh.value);
+      const litres = Number(volume.value);
+      const epsomStrength = Number(epsomConc.value) / 1000;
+      const sodaStrength = Number(sodaConc.value) / 1000;
+      if (!(hardness >= 0 && hardness <= 300) || !(alkalinity >= 0 && alkalinity <= 200) || !(litres > 0) || !(epsomStrength > 0) || !(sodaStrength > 0) || gh.value === '' || kh.value === '') {
+        showError(copy.invalid);
+        return;
+      }
+      const epsomPerLitre = hardness / HARDNESS_PER_G_EPSOM;
+      const sodaPerLitre = alkalinity / ALKALINITY_PER_G_SODA;
+      const epsomTotal = epsomPerLitre * litres;
+      const sodaTotal = sodaPerLitre * litres;
+      // Dilute concentrates are treated as ~1 g per mL, so they count toward the batch volume.
+      const epsomLiquid = epsomTotal / epsomStrength;
+      const sodaLiquid = sodaTotal / sodaStrength;
+      const distilled = litres * 1000 - epsomLiquid - sodaLiquid;
+      if (distilled < 0) { showError(copy.tooMuch); return; }
+      error.classList.add('hidden');
+      set('out-epsom-conc', grams(epsomLiquid));
+      set('out-soda-conc', grams(sodaLiquid));
+      set('out-distilled', grams(distilled, 0));
+      set('out-epsom', grams(epsomTotal, 2));
+      set('out-soda', grams(sodaTotal, 2));
+      set('out-mg', `${(epsomPerLitre * MG_FRACTION * 1000).toFixed(1)} mg`);
+      set('out-na', `${(sodaPerLitre * NA_FRACTION * 1000).toFixed(1)} mg`);
+      set('out-so4', `${(epsomPerLitre * SO4_FRACTION * 1000).toFixed(1)} mg`);
+      set('out-hco3', `${(sodaPerLitre * HCO3_FRACTION * 1000).toFixed(1)} mg`);
+    }
+
+    preset.addEventListener('change', () => {
+      if (preset.value !== 'custom') {
+        const [hardness, alkalinity] = preset.value.split(',');
+        gh.value = hardness;
+        kh.value = alkalinity;
+      }
+      calculate();
+    });
+    [gh, kh].forEach((input) => input.addEventListener('input', () => { preset.value = 'custom'; calculate(); }));
+    [volume, epsomConc, sodaConc].forEach((input) => input.addEventListener('input', calculate));
+    form.addEventListener('submit', (event) => { event.preventDefault(); calculate(); });
+    calculate();
+  });
+</script>
