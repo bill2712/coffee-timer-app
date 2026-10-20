@@ -1,0 +1,196 @@
+---
+import { SITE_URL } from '../../../config';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl } from '../../../i18n/utils';
+
+export function getStaticPaths() { return getLanguagePaths(); }
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const base = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+
+type Tool = { path: string; icon: string; name: string; does: string; when: string; isNew?: boolean };
+type Group = { id: string; title: string; intro: string; tools: Tool[] };
+
+const c = isZh ? {
+  title: '咖啡沖煮工具與計算器總覽 | Barista Flow',
+  description: '按沖煮前、沖煮中及沖煮後整理 Barista Flow 的全部免費工具：粉水比計時器、萃取率計算、沖煮用水配方、研磨刻度轉換、養豆時間及磨豆機校準。',
+  crumb: '工具', eyebrow: '全部免費・毋須註冊', h1: '沖煮工具與計算器',
+  intro: '每個工具只負責一件事。按你現在卡在哪一步選擇即可：未開始沖、正在沖，還是沖完想知道下一杯怎樣改。',
+  workflowTitle: '工具之間怎樣配合？',
+  workflow: [
+    '沖煮前：用「器材選擇助手」確認器材，用「養豆時間」判斷豆是否適合開始試飲，必要時用「沖煮用水計算器」固定水質。',
+    '沖煮中：在對應器材的計時器輸入粉量，跟著累積水量提示注水；沒有溫度計時，用「熱水降溫估算」決定等待多久。',
+    '沖煮後：在計時器完成頁選擇最明顯的問題，取得「下一杯只改一項」的建議；有折射儀便用「萃取率計算器」確認方向。',
+    '換磨豆機或刻度不清楚時，先用「研磨刻度轉換」估算起點，再用「磨豆機校準」把建議轉成實際刻度。'
+  ],
+  newBadge: '新',
+  open: '打開工具',
+  privacyTitle: '資料留在你的裝置',
+  privacy: '所有計算都在瀏覽器內完成。沖煮紀錄、配方與磨豆機檔案只儲存在這部裝置的 localStorage，不會上傳；需要搬機時可使用資料備份功能。',
+  methodTitle: '計算方法公開',
+  method: '每個工具使用的公式、假設與限制都列在「計算方法與來源」頁，方便你自行核對。',
+  methodLink: '查看計算方法與來源 →',
+  groups: [
+    {
+      id: 'before', title: '沖煮前', intro: '先決定用甚麼器材、甚麼水，以及咖啡豆是否已經適合沖煮。',
+      tools: [
+        { path: 'equipment', icon: '🧭', name: '器材選擇助手', does: '三條問題，按口味、預算與清潔習慣配對 V60、愛樂壓、法壓或冷萃。', when: '未買器材，或想知道手上器材適合沖甚麼。' },
+        { path: 'tools/bean-freshness', icon: '📅', name: '養豆時間參考', does: '輸入烘焙日期與焙度，取得一般的試飲起點與觀察重點。', when: '剛開新一包豆，不肯定要等幾天。' },
+        { path: 'tools/water-recipe', icon: '💧', name: '沖煮用水配方計算器', does: '用蒸餾水、瀉鹽和梳打粉，按目標硬度與鹼度計算份量。', when: '想固定水質，令不同日子的沖煮可以比較。', isNew: true },
+        { path: 'tools/grind-converter', icon: '🔁', name: '研磨刻度轉換', does: '按各磨豆機的常用區間，估算另一部磨豆機的對應刻度。', when: '換了磨豆機，或照著別人用另一部磨豆機的配方。' }
+      ]
+    },
+    {
+      id: 'during', title: '沖煮中', intro: '輸入粉量後，計時器會計算總水量並逐段提示累積注水目標。',
+      tools: [
+        { path: '', icon: '☕', name: '引導式沖煮（V60）', does: '選器材、輸入粉量，跟著三段注水提示完成第一杯，完成後記錄味道。', when: '第一次手沖，或想有人一步步提示。' },
+        { path: 'tools/v60-pour-over', icon: '⏱️', name: 'V60 粉水比與計時器', does: '按粉量和比例計算總水量及每段累積目標，附語音提示。', when: '已熟悉 V60，只需要準確的時間與水量提示。' },
+        { path: 'tools/aeropress', icon: '🧪', name: '愛樂壓計算器', does: '直立式沖法的粉水比、浸泡時間與下壓提示。', when: '用 AeroPress 沖一杯，或出外旅行。' },
+        { path: 'tools/french-press', icon: '🫖', name: '法式濾壓壺計時器', does: '浸泡、破渣、撈渣與下壓的完整步驟及計時。', when: '想用最少技巧沖出厚實口感。' },
+        { path: 'tools/cold-brew', icon: '🧊', name: '冷萃比例計算器', does: '計算濃縮液或即飲冷萃的粉量與水量，附冷藏安全提示。', when: '準備隔夜冷萃。' },
+        { path: 'tools/water-temperature', icon: '🌡️', name: '熱水降溫估算', does: '按室溫及壺身材質，估算煮沸後降到目標水溫需要多久。', when: '沒有溫度計或控溫壺。' }
+      ]
+    },
+    {
+      id: 'after', title: '沖煮後', intro: '把味道感受變成下一杯的具體改動，並追蹤哪些改動有效。',
+      tools: [
+        { path: 'tools/extraction-calculator', icon: '📈', name: '萃取率與濃度計算器', does: '用粉量、成品重量和 TDS 計算萃取率，並在沖煮控制圖上標示位置。', when: '有折射儀，想分清「萃取不足」與「只是太淡」。', isNew: true },
+        { path: 'tools/grinder-calibration', icon: '⚙️', name: '個人磨豆機校準', does: '記錄磨豆機方向與步幅，把「調幼一點」轉成實際刻度。', when: '診斷建議改研磨，但不知道要轉幾多。' },
+        { path: 'training', icon: '🎯', name: '首五杯新手訓練', does: '五杯循序漸進的練習，每杯只認識一個變數。', when: '想有系統地學懂比例、研磨、水溫與時間。' },
+        { path: 'recipes', icon: '📖', name: '有來源配方庫', does: '六個附原始來源的標準配方，可直接套用到計時器。', when: '想由公開、可核對的配方開始。' }
+      ]
+    }
+  ] as Group[]
+} : {
+  title: 'Coffee Brewing Tools and Calculators | Barista Flow',
+  description: 'Every free Barista Flow tool grouped by before, during and after brewing: ratio timers, extraction yield, brew-water recipes, grind conversion, bean resting and grinder calibration.',
+  crumb: 'Tools', eyebrow: 'All free, no account', h1: 'Brewing tools and calculators',
+  intro: 'Each tool does one job. Pick by where you are stuck: before brewing, while brewing, or after brewing when you want to know what to change next.',
+  workflowTitle: 'How the tools fit together',
+  workflow: [
+    'Before brewing: confirm your brewer with the equipment chooser, check whether the beans are ready to taste with the resting calculator, and fix your water with the brew-water calculator if you want consistency.',
+    'While brewing: enter your dose in the timer for your brewer and pour to the cumulative targets. Without a thermometer, use the cooling estimate to decide how long to wait.',
+    'After brewing: pick the most obvious problem on the timer’s finish screen to get a one-change suggestion. If you own a refractometer, confirm the direction with the extraction calculator.',
+    'When you change grinders or are unsure of a setting, estimate a starting point with the grind converter, then turn suggestions into real settings with grinder calibration.'
+  ],
+  newBadge: 'New',
+  open: 'Open tool',
+  privacyTitle: 'Your data stays on your device',
+  privacy: 'All calculations run in your browser. Brew records, recipes and grinder profiles are stored only in this device’s localStorage and are never uploaded; use the backup feature to move them.',
+  methodTitle: 'Open methodology',
+  method: 'The formulas, assumptions and limits behind each tool are listed on the methodology page so you can check them yourself.',
+  methodLink: 'Read the methodology and sources →',
+  groups: [
+    {
+      id: 'before', title: 'Before brewing', intro: 'Decide which brewer and water to use, and whether the beans are ready.',
+      tools: [
+        { path: 'equipment', icon: '🧭', name: 'Equipment chooser', does: 'Three questions match a V60, AeroPress, French press or cold brew to your taste, budget and cleaning habits.', when: 'You have not bought gear yet, or want to know what yours suits.' },
+        { path: 'tools/bean-freshness', icon: '📅', name: 'Bean resting calculator', does: 'Enter the roast date and level to get a typical tasting starting point and what to watch for.', when: 'You opened a new bag and are not sure how long to wait.' },
+        { path: 'tools/water-recipe', icon: '💧', name: 'Brew-water recipe calculator', does: 'Calculates distilled water, Epsom salt and baking soda for a target hardness and alkalinity.', when: 'You want consistent water so brews on different days are comparable.', isNew: true },
+        { path: 'tools/grind-converter', icon: '🔁', name: 'Grind size converter', does: 'Estimates the equivalent setting on another grinder from each grinder’s typical range.', when: 'You changed grinders or are following a recipe written for a different one.' }
+      ]
+    },
+    {
+      id: 'during', title: 'While brewing', intro: 'Enter a dose and the timer calculates total water and prompts each cumulative pour target.',
+      tools: [
+        { path: '', icon: '☕', name: 'Guided brew (V60)', does: 'Choose a brewer, enter a dose and follow three pour prompts, then record how it tasted.', when: 'It is your first pour-over or you want step-by-step prompts.' },
+        { path: 'tools/v60-pour-over', icon: '⏱️', name: 'V60 ratio calculator and timer', does: 'Calculates total water and each stage’s target from dose and ratio, with voice cues.', when: 'You know the V60 and just want accurate time and water prompts.' },
+        { path: 'tools/aeropress', icon: '🧪', name: 'AeroPress calculator', does: 'Ratio, steep time and press cues for the upright method.', when: 'You are brewing a single AeroPress cup or travelling.' },
+        { path: 'tools/french-press', icon: '🫖', name: 'French press timer', does: 'Steep, break, skim and press steps with timing.', when: 'You want a full-bodied cup with minimal technique.' },
+        { path: 'tools/cold-brew', icon: '🧊', name: 'Cold brew ratio calculator', does: 'Coffee and water for concentrate or ready-to-drink cold brew, with refrigeration safety notes.', when: 'You are preparing an overnight batch.' },
+        { path: 'tools/water-temperature', icon: '🌡️', name: 'Water cooling estimate', does: 'Estimates how long boiled water takes to reach your target from room temperature and kettle material.', when: 'You have no thermometer or temperature-controlled kettle.' }
+      ]
+    },
+    {
+      id: 'after', title: 'After brewing', intro: 'Turn what you tasted into a specific change for the next cup and track what worked.',
+      tools: [
+        { path: 'tools/extraction-calculator', icon: '📈', name: 'Extraction yield and strength calculator', does: 'Calculates extraction from dose, beverage weight and TDS and plots it on a brewing control chart.', when: 'You own a refractometer and want to separate under-extraction from a weak cup.', isNew: true },
+        { path: 'tools/grinder-calibration', icon: '⚙️', name: 'Personal grinder calibration', does: 'Records your grinder’s direction and step size so “a little finer” becomes a real setting.', when: 'A diagnosis says to change grind and you are not sure how far to turn.' },
+        { path: 'training', icon: '🎯', name: 'First Five Brews course', does: 'Five progressive brews, each introducing one variable.', when: 'You want a structured way to learn ratio, grind, temperature and time.' },
+        { path: 'recipes', icon: '📖', name: 'Source-backed recipes', does: 'Six standard recipes linked to their original sources, ready to load into the timer.', when: 'You want to start from a public recipe you can check.' }
+      ]
+    }
+  ] as Group[]
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: c.h1,
+  description: c.description,
+  itemListElement: c.groups.flatMap((group) => group.tools).map((tool, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: tool.name,
+    url: `${SITE_URL}/${lang}/${tool.path ? `${tool.path}/` : ''}`
+  }))
+};
+---
+
+<Layout title={c.title} description={c.description} jsonld={jsonLd}>
+  <div class="mx-auto max-w-6xl py-8 sm:py-12">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: c.crumb }]} /></div>
+    <header class="mx-auto mt-5 max-w-3xl text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-coffee-gold">{c.eyebrow}</p>
+      <h1 class="mt-3 text-balance font-display text-4xl font-bold text-coffee-light sm:text-5xl">{c.h1}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p>
+      <nav class="mt-6 flex flex-wrap justify-center gap-2" aria-label={c.h1}>
+        {c.groups.map((group) => <a href={`#${group.id}`} class="rounded-full border border-coffee-gold/30 px-4 py-2 text-sm font-semibold text-coffee-gold hover:bg-coffee-gold/10">{group.title}</a>)}
+      </nav>
+    </header>
+
+    {c.groups.map((group) => (
+      <section id={group.id} class="mt-14 scroll-mt-24" aria-labelledby={`${group.id}-title`}>
+        <h2 id={`${group.id}-title`} class="font-display text-3xl font-bold text-coffee-light">{group.title}</h2>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-coffee-muted">{group.intro}</p>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {group.tools.map((tool) => (
+            <a href={`${base}/${tool.path ? `${tool.path}/` : ''}`} class="tool-card">
+              <span class="flex items-start justify-between gap-3">
+                <span class="text-2xl" aria-hidden="true">{tool.icon}</span>
+                {tool.isNew && <span class="rounded-full bg-coffee-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-coffee-dark">{c.newBadge}</span>}
+              </span>
+              <strong>{tool.name}</strong>
+              <span class="does">{tool.does}</span>
+              <span class="when"><b>{isZh ? '適合：' : 'Use when: '}</b>{tool.when}</span>
+              <span class="open">{c.open} →</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="mt-16 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <div class="rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{c.workflowTitle}</h2>
+        <ol class="mt-4 list-decimal space-y-3 ps-5 text-sm leading-7 text-coffee-sand/85">{c.workflow.map((item) => <li>{item}</li>)}</ol>
+      </div>
+      <div class="grid gap-6">
+        <div class="rounded-2xl border border-green-400/20 bg-green-400/5 p-6">
+          <h2 class="font-display text-xl font-bold text-coffee-light">{c.privacyTitle}</h2>
+          <p class="mt-2 text-sm leading-6 text-coffee-sand/80">{c.privacy}</p>
+        </div>
+        <div class="rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 p-6">
+          <h2 class="font-display text-xl font-bold text-coffee-light">{c.methodTitle}</h2>
+          <p class="mt-2 text-sm leading-6 text-coffee-sand/80">{c.method}</p>
+          <a href={`${base}/methodology/`} class="mt-3 inline-block text-sm font-bold text-coffee-gold hover:text-coffee-light">{c.methodLink}</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .tool-card { display: grid; align-content: start; gap: .6rem; min-height: 100%; border: 1px solid rgb(197 168 128 / .14); border-radius: 1rem; background: rgb(28 24 21 / .55); padding: 1.25rem; transition: border-color 160ms ease, background-color 160ms ease; }
+  .tool-card:hover, .tool-card:focus-visible { border-color: rgb(197 168 128 / .5); background: rgb(197 168 128 / .05); }
+  .tool-card:focus-visible { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; }
+  .tool-card strong { color: var(--color-coffee-light); font-size: 1.05rem; line-height: 1.35; }
+  .tool-card .does { color: rgb(245 242 235 / .78); font-size: .85rem; line-height: 1.6; }
+  .tool-card .when { color: var(--color-coffee-muted); font-size: .78rem; line-height: 1.55; }
+  .tool-card .when b { color: var(--color-coffee-sand); font-weight: 650; }
+  .tool-card .open { margin-top: .25rem; color: var(--color-coffee-gold); font-size: .8rem; font-weight: 700; }
+  @media (prefers-reduced-motion: reduce) { .tool-card { transition: none; } }
+</style>

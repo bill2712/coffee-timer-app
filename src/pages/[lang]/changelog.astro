@@ -1,0 +1,75 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getLanguagePaths } from '../../i18n/routes';
+import { getLangFromUrl } from '../../i18n/utils';
+import { changelog } from '../../data/changelog';
+
+export function getStaticPaths() { return getLanguagePaths(); }
+
+const lang = getLangFromUrl(Astro.url);
+const isZh = lang === 'zh-TW';
+const base = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+const c = isZh ? {
+  title: '網站更新紀錄 | Barista Flow',
+  description: 'Barista Flow 每次新增工具、擴寫指南或修正內容的公開紀錄，附日期與相關頁面連結。',
+  crumb: '更新紀錄',
+  eyebrow: '持續維護',
+  h1: '網站更新紀錄',
+  intro: '這裏記錄讀者會留意到的改動：新工具、內容擴寫、來源覆核及索引政策。完整的逐行修改可在公開 GitHub 原始碼查看。',
+  repo: '查看完整 GitHub 版本紀錄 ↗',
+  report: '發現錯誤？提交內容更正 ↗'
+} : {
+  title: 'Site updates | Barista Flow',
+  description: 'A dated public record of new tools, expanded guides and content corrections on Barista Flow, with links to the affected pages.',
+  crumb: 'Updates',
+  eyebrow: 'Ongoing maintenance',
+  h1: 'Site updates',
+  intro: 'This log records changes readers will notice: new tools, expanded guides, source reviews and indexing policy. Line-by-line history is available in the public GitHub repository.',
+  repo: 'View the full GitHub history ↗',
+  report: 'Spotted an error? Request a correction ↗'
+};
+
+function formatDate(date: string) {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+}
+---
+
+<Layout title={c.title} description={c.description}>
+  <article class="mx-auto max-w-3xl py-8 sm:py-12">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: c.crumb }]} /></div>
+    <header class="mt-6 text-center">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-coffee-gold">{c.eyebrow}</p>
+      <h1 class="mt-3 font-display text-4xl font-bold text-coffee-light sm:text-5xl">{c.h1}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-coffee-sand/80">{c.intro}</p>
+    </header>
+
+    <ol class="mt-12 space-y-6 border-s border-coffee-gold/25 ps-6">
+      {changelog.map((entry) => {
+        const copy = isZh ? entry.zh : entry.en;
+        return (
+          <li class="relative">
+            <span class="absolute -start-[1.95rem] top-1.5 h-3 w-3 rounded-full bg-coffee-gold" aria-hidden="true"></span>
+            <time datetime={entry.date} class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{formatDate(entry.date)}</time>
+            <h2 class="mt-1 font-display text-2xl font-bold text-coffee-light">{copy.title}</h2>
+            <ul class="mt-3 list-disc space-y-2 ps-5 text-sm leading-7 text-coffee-sand/85">
+              {copy.items.map((item) => <li>{item}</li>)}
+            </ul>
+            {entry.links && (
+              <div class="mt-3 flex flex-wrap gap-2">
+                {entry.links.map((link) => (
+                  <a href={`${base}/${link.path}/`} class="rounded-full border border-coffee-gold/30 px-3 py-1.5 text-xs font-semibold text-coffee-gold hover:bg-coffee-gold/10">{isZh ? link.zh : link.en} →</a>
+                ))}
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+
+    <div class="mt-12 flex flex-col gap-3 sm:flex-row">
+      <a href="https://github.com/bill2712/coffee-timer-app/commits/main" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-coffee-gold/40 px-5 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10">{c.repo}</a>
+      <a href="https://github.com/bill2712/coffee-timer-app/issues/new/choose" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-coffee-sand/20 px-5 text-sm font-semibold text-coffee-sand hover:text-coffee-light">{c.report}</a>
+    </div>
+  </article>
+</Layout>

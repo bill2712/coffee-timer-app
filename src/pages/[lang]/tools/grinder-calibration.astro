@@ -17,6 +17,45 @@ const c = isZh ? {
   profile: '1. Create a grinder profile', model: 'Brand / model', modelPlaceholder: 'For example: Comandante C40', min: 'Lowest usable setting', max: 'Highest usable setting', increment: 'Adjustment step', direction: 'Which direction is finer?', higher: 'Higher number is finer', lower: 'Lower number is finer', current: 'Setting used for this brew',
   result: '2. What happened?', resultHint: 'Choose the closest result. Only the grinder setting will change.', fast: 'Too fast / too sour', balanced: 'Flow and taste are good', slow: 'Too slow / too bitter', calculate: 'Calculate next setting', next: 'Next-brew suggestion', reason: 'Keep dose, ratio, temperature, and pouring unchanged, then compare the result.', save: 'Save grinder profile', apply: 'Apply to next brew', saved: 'Grinder profile saved.', invalid: 'Check the range, current setting, and adjustment step.', noChange: 'Keep this setting', finer: 'Move one step finer', coarser: 'Move one step coarser'
 };
+const guide = isZh ? {
+  howTitle: '怎樣填寫磨豆機檔案',
+  how: [
+    ['最低與最高可用刻度', '不是磨豆機的物理極限，而是你實際會用的範圍。例如手搖磨豆機由歸零點計算，手沖常用 15–30 格，可填 10 至 40。'],
+    ['每次微調幅度', '你願意一次轉動的最小步幅。大部分手搖磨豆機一格已足夠明顯；步進較細的電動磨豆機，可以填 2 或更多。'],
+    ['哪個方向較幼', '先找到歸零點（刀盤剛好接觸的位置）。由歸零點起計的磨豆機，數字越大通常越粗；刻度環標示粗幼的電動磨豆機則要看機身說明。'],
+    ['今杯使用刻度', '剛才沖煮時用的刻度。工具會以它為起點，按結果向幼或粗移動一個步幅。']
+  ],
+  exampleTitle: '實際例子',
+  example: '你用手搖磨豆機，由歸零點計 22 格沖 V60，3:40 才滴完而且偏苦。檔案設定「數字越小越幼」、步幅 1 格，結果選「流速太慢／太苦」，工具會建議下一杯用 23 格。粉量、水溫、注水方式都不變，再沖一杯比較。',
+  whyTitle: '為甚麼每次只動一格？',
+  why: '研磨同時影響流速和萃取，一次轉太多很容易越過理想點，令你在「太酸」和「太苦」之間來回。每次一格，連續兩三杯，便能看出這部磨豆機每格對味道的影響有多大，之後判斷會快得多。',
+  faqTitle: '常見問題',
+  faq: [
+    ['不同豆要重新校準嗎？', '磨豆機的方向和步幅不會變，所以檔案可以沿用；只是不同豆的起點刻度會不同，換豆時更新「今杯使用刻度」便可。'],
+    ['可以把別人的刻度直接套用嗎？', '同一型號的歸零點、刀盤磨損也會有差異。可先用研磨刻度轉換估算起點，再用這裏逐格校正。'],
+    ['結果合適時要做甚麼？', '選「流速與味道合適」並儲存檔案。下次換豆時，以這個刻度作起點。']
+  ],
+  related: [['tools/grind-converter', '研磨刻度轉換'], ['blog/grind-distribution-analysis', '研磨粒徑分佈如何影響流速'], ['blog/sour-or-bitter-taste-diagnosis', '偏酸還是偏苦？味道診斷']]
+} : {
+  howTitle: 'How to fill in the grinder profile',
+  how: [
+    ['Lowest and highest usable setting', 'Not the grinder’s physical limits, but the range you actually use. For a hand grinder counted from zero, pour-over often sits around 15–30 clicks, so 10 to 40 works.'],
+    ['Adjustment step', 'The smallest change you are willing to make at once. One click is usually noticeable on hand grinders; for finely stepped electric grinders, 2 or more may be better.'],
+    ['Which direction is finer', 'Find the zero point first (where the burrs just touch). On grinders counted from zero, higher numbers are usually coarser; for electric grinders with marked dials, check the manual.'],
+    ['Setting used for this brew', 'The setting you just brewed with. The tool moves one step finer or coarser from here based on the result.']
+  ],
+  exampleTitle: 'Worked example',
+  example: 'You brew a V60 at 22 clicks from zero on a hand grinder. It takes 3:40 to drain and tastes bitter. With “lower number is finer”, a step of 1 and the result “too slow / too bitter”, the tool suggests 23 clicks next time. Keep dose, temperature and pouring the same and compare.',
+  whyTitle: 'Why move only one step?',
+  why: 'Grind changes both flow and extraction. Turning too far easily overshoots, and you end up swinging between too sour and too bitter. One step at a time over two or three brews shows how much each step changes the taste on this grinder, which makes later decisions much faster.',
+  faqTitle: 'Common questions',
+  faq: [
+    ['Do I recalibrate for every coffee?', 'The grinder’s direction and step size do not change, so the profile carries over. Different coffees start at different settings, so update the current setting when you change beans.'],
+    ['Can I copy someone else’s setting?', 'Even the same model differs in zero point and burr wear. Use the grind converter to estimate a start, then fine-tune here step by step.'],
+    ['What do I do when the result is good?', 'Choose “flow and taste are good” and save the profile. Use that setting as the starting point next time you change beans.']
+  ],
+  related: [['tools/grind-converter', 'Grind size converter'], ['blog/grind-distribution-analysis', 'How grind distribution changes flow'], ['blog/sour-or-bitter-taste-diagnosis', 'Sour or bitter? Taste diagnosis']]
+};
 ---
 
 <Layout title={c.title} description={c.desc}>
@@ -45,6 +84,27 @@ const c = isZh ? {
         <div class="mt-4 grid gap-3 sm:grid-cols-2"><button id="btn-save-grinder" type="button" class="min-h-[48px] rounded-xl border border-coffee-gold/35 px-4 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10">{c.save}</button><button id="btn-apply-grinder" type="button" disabled class="min-h-[48px] rounded-xl bg-coffee-gold px-4 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover disabled:cursor-not-allowed disabled:opacity-40">{c.apply}</button></div>
       </section>
     </form>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      <section class="rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{guide.howTitle}</h2>
+        <dl class="mt-4 space-y-4">{guide.how.map(([term, body]) => <div><dt class="text-sm font-bold text-coffee-light">{term}</dt><dd class="mt-1 text-sm leading-6 text-coffee-sand/80">{body}</dd></div>)}</dl>
+      </section>
+      <section class="rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{guide.exampleTitle}</h2>
+        <p class="mt-3 text-sm leading-7 text-coffee-sand/85">{guide.example}</p>
+        <h2 class="mt-6 font-display text-2xl font-bold text-coffee-gold">{guide.whyTitle}</h2>
+        <p class="mt-3 text-sm leading-7 text-coffee-sand/85">{guide.why}</p>
+      </section>
+      <section class="rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{guide.faqTitle}</h2>
+        {guide.faq.map(([q, a]) => <details class="mt-3 border-t border-coffee-sand/10 pt-3"><summary class="cursor-pointer text-sm font-semibold text-coffee-light">{q}</summary><p class="mt-2 text-sm leading-6 text-coffee-sand/80">{a}</p></details>)}
+      </section>
+      <section class="rounded-2xl border border-coffee-sand/10 bg-coffee-darker/55 p-6">
+        <h2 class="font-display text-2xl font-bold text-coffee-gold">{isZh ? '延伸閱讀' : 'Keep learning'}</h2>
+        <div class="mt-4 grid gap-3">{guide.related.map(([path, label]) => <a href={`${base}/${path}/`} class="flex min-h-[48px] items-center rounded-xl border border-coffee-sand/14 bg-coffee-dark/50 px-4 text-sm font-semibold text-coffee-light hover:border-coffee-gold/50">{label} →</a>)}</div>
+      </section>
+    </div>
   </div>
 </Layout>
 

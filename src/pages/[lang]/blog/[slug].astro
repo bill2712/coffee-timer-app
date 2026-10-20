@@ -28,7 +28,26 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
+const isZh = lang === 'zh-TW';
+const localeBase = `${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}`;
+const updatedDate = entry.data.updatedDate;
+const toc = headings.filter((heading) => heading.depth === 2);
+
+// Related guides: same language, most shared tags first, newest as tie-breaker.
+const ownSlug = entry.id.split('/').slice(1).join('/').replace(/\.mdx?$/, '');
+const siblings = await getCollection('blog', (other) =>
+  other.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && !other.data.tags?.includes('Glossary') && other.id !== entry.id
+);
+const related = siblings
+  .map((other) => ({
+    other,
+    slug: other.id.split('/').slice(1).join('/').replace(/\.mdx?$/, ''),
+    shared: other.data.tags.filter((tag) => entry.data.tags.includes(tag)).length
+  }))
+  .filter((item) => item.slug !== ownSlug)
+  .sort((a, b) => b.shared - a.shared || b.other.data.pubDate.valueOf() - a.other.data.pubDate.valueOf())
+  .slice(0, 3);
 
 function formatDate(date: Date) {
   return date.toLocaleDateString(lang, {
@@ -53,6 +72,8 @@ const jsonLd = {
   "headline": entry.data.title,
   "description": entry.data.description,
   "datePublished": entry.data.pubDate.toISOString(),
+  "dateModified": (entry.data.updatedDate ?? entry.data.pubDate).toISOString(),
+  "inLanguage": lang,
   "author": {
     "@type": "Organization",
     "name": entry.data.author,
@@ -89,7 +110,13 @@ const jsonLd = {
     <!-- Header info -->
     <header class="mb-10 sm:mb-12">
       <div class="flex flex-wrap gap-2 items-center text-xs text-coffee-sand mb-4">
-        <span>{formatDate(entry.data.pubDate)}</span>
+        <span>{isZh ? '發佈：' : 'Published '}<time datetime={entry.data.pubDate.toISOString().slice(0, 10)}>{formatDate(entry.data.pubDate)}</time></span>
+        {updatedDate && (
+          <>
+            <span class="text-coffee-muted">•</span>
+            <span class="text-coffee-gold">{isZh ? '最後更新：' : 'Updated '}<time datetime={updatedDate.toISOString().slice(0, 10)}>{formatDate(updatedDate)}</time></span>
+          </>
+        )}
         <span class="text-coffee-muted">•</span>
         <span>{t('blog.author')}{entry.data.author}</span>
       </div>
@@ -114,6 +141,15 @@ const jsonLd = {
         <!-- Google AdSense Article Inline Banner Placeholder -->
         <AdSlot type="top-leaderboard" id="adsense-article-inline" class="mb-10" />
 
+        {toc.length >= 4 && (
+          <nav class="article-toc mb-10 rounded-2xl border border-coffee-sand/10 bg-coffee-darker/60 p-5" aria-label={isZh ? '本文目錄' : 'In this guide'}>
+            <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{isZh ? '本文目錄' : 'In this guide'}</p>
+            <ol>
+              {toc.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}
+            </ol>
+          </nav>
+        )}
+
         <article class="prose prose-invert prose-coffee max-w-none mb-12">
           <Content components={{ AdSlot }} />
         </article>
@@ -126,6 +162,20 @@ const jsonLd = {
         <AdSlot type="sidebar-skyscraper" id="adsense-article-sidebar" class="sticky top-28" />
       </aside>
     </div>
+
+    {related.length > 0 && (
+      <section class="mt-14 border-t border-coffee-sand/10 pt-10" aria-labelledby="related-title">
+        <h2 id="related-title" class="font-display text-2xl font-bold text-coffee-light">{isZh ? '延伸閱讀' : 'Keep learning'}</h2>
+        <div class="mt-5 grid gap-4 md:grid-cols-3">
+          {related.map(({ other, slug }) => (
+            <a href={`${localeBase}/blog/${slug}/`} class="related-card">
+              <strong>{other.data.title}</strong>
+              <span>{other.data.description}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     <!-- CTA & Footer of Post -->
     <div class="mt-16 border-t border-coffee-sand/10 pt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -149,6 +199,13 @@ const jsonLd = {
 
 <!-- Markdown Specific Custom Styles for Premium Look -->
 <style is:global>
+  .article-toc ol { margin: .75rem 0 0; padding-left: 1.25rem; list-style: decimal; display: grid; gap: .35rem; font-size: .875rem; }
+  .article-toc a { color: rgb(245 242 235 / .82); text-decoration: none; }
+  .article-toc a:hover, .article-toc a:focus-visible { color: var(--color-coffee-gold); text-decoration: underline; }
+  .related-card { display: grid; gap: .5rem; border: 1px solid rgb(197 168 128 / .14); border-radius: 1rem; background: rgb(28 24 21 / .55); padding: 1.1rem; transition: border-color 160ms ease; }
+  .related-card:hover, .related-card:focus-visible { border-color: rgb(197 168 128 / .5); }
+  .related-card strong { color: var(--color-coffee-light); font-size: .95rem; line-height: 1.4; }
+  .related-card span { color: rgb(197 168 128 / .75); font-size: .8rem; line-height: 1.55; }
   .blog-content {
     /* Headings */
     h2 {

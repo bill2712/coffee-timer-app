@@ -98,7 +98,7 @@ const finalKeywords = keywords || t('seo.keywords');
                 <a href={`${base}${lang}/insights`} class="nav-more-link">{lang === 'zh-TW' ? '個人數據洞察' : 'Personal insights'}</a>
                 <a href={`${base}${lang}/tools/grinder-calibration`} class="nav-more-link">{lang === 'zh-TW' ? '個人磨豆機校準' : 'Grinder calibration'}</a>
                 <a href={`${base}${lang}/recipes`} class="nav-more-link">{lang === 'zh-TW' ? '有來源配方庫' : 'Source-backed recipes'}</a>
-                <a href={`${base}${lang}/tools/grind-converter`} class="nav-more-link">{lang === 'zh-TW' ? '沖煮工具與計算器' : 'Brewing tools & calculators'}</a>
+                <a href={`${base}${lang}/tools/`} class="nav-more-link">{lang === 'zh-TW' ? '沖煮工具與計算器' : 'Brewing tools & calculators'}</a>
                 <a href={`${base}${lang}/faq`} class="nav-more-link">{t('nav.faq')}</a>
                 <a href={`${base}${lang}/data`} class="nav-more-link">{lang === 'zh-TW' ? '資料備份／搬機' : 'Backup / transfer'}</a>
               </div>
@@ -131,7 +131,7 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${base}${lang}/insights`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '個人洞察' : 'Insights'}</a>
             <a href={`${base}${lang}/tools/grinder-calibration`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '磨豆機校準' : 'Grinder'}</a>
             <a href={`${base}${lang}/recipes`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '配方庫' : 'Recipes'}</a>
-            <a href={`${base}${lang}/tools/grind-converter`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '工具' : 'Tools'}</a>
+            <a href={`${base}${lang}/tools/`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '工具' : 'Tools'}</a>
             <a href={`${base}${lang}/faq`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{t('nav.faq')}</a>
             <a href={`${base}${lang}/data`} class="rounded-lg p-3 hover:bg-coffee-gold/10">{lang === 'zh-TW' ? '備份' : 'Backup'}</a>
           </div>
@@ -177,6 +177,9 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/about`} class="hover:text-coffee-gold transition-colors">{t('nav.about')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/methodology`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '計算方法與來源' : 'Methodology & sources'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '標準配方庫' : 'Standard recipes'}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '全部工具' : 'All tools'}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/glossary/`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '詞彙表' : 'Glossary'}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/changelog/`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '網站更新紀錄' : 'Site updates'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/equipment`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '器材選擇助手' : 'Equipment chooser'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/beans`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '咖啡豆護照' : 'Bean passports'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/insights`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '個人數據洞察' : 'Personal insights'}</a>
