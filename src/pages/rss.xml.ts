@@ -3,8 +3,11 @@ import { getCollection } from 'astro:content';
 import { SITE_URL } from '../config.js';
 
 export async function GET(context: any) {
-  // Fetch all posts and glossary entries
-  const allEntries = await getCollection('blog', (entry) => entry.id.toLowerCase().startsWith('zh-tw/'));
+  // Full guides only; short glossary definitions are kept out of feeds and the sitemap.
+  const allEntries = await getCollection(
+    'blog',
+    (entry) => entry.id.toLowerCase().startsWith('zh-tw/') && !entry.data.tags?.includes('Glossary')
+  );
   
   // Sort by pubDate descending
   const sortedEntries = allEntries.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -13,7 +16,7 @@ export async function GET(context: any) {
     // `<title>` field in output xml
     title: 'Barista Flow | 知識庫與百科',
     // `<description>` field in output xml
-    description: '最專業的精品咖啡沖煮知識、原理與詞彙百科。',
+    description: '手沖咖啡沖煮原理、風味診斷與可重現實驗指南。',
     // Pull in your project "site" from the endpoint context
     // https://docs.astro.build/en/reference/api-reference/#contextsite
     site: context.site || SITE_URL,

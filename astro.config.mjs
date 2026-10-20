@@ -18,7 +18,11 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !/\/(?:zh-TW|en)\/(?:history|beans|insights|data)\/?$/.test(page),
+      // Exclude private, device-only views and short glossary detail pages
+      // (glossary pages are noindex; the glossary index and full guides are indexed).
+      filter: (page) =>
+        !/\/(?:zh-TW|en)\/(?:history|beans|insights|data)\/?$/.test(page) &&
+        !/\/(?:zh-TW|en)\/glossary\/[^/]+\/?$/.test(page),
       i18n: {
         defaultLocale: 'zh-TW',
         locales: {
