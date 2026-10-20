@@ -253,6 +253,14 @@ const jsonLd = {
       border-collapse: collapse;
       margin: 2rem 0;
       font-size: 0.875rem;
+      /* Wide comparison tables scroll inside the article on phones instead of widening the page. */
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    th, td {
+      min-width: 6.5rem;
     }
 
     th, td {
