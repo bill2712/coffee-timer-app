@@ -191,6 +191,25 @@ const finalKeywords = keywords || t('seo.keywords');
           </div>
         </div>
         
+        <!-- Donation prompt -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 text-center rounded-2xl border border-coffee-gold/20 bg-coffee-gold/5 px-4 py-4">
+          <p class="text-xs sm:text-sm text-coffee-sand/80">
+            {lang === 'zh-TW'
+              ? '覺得 Barista Flow 有幫助？歡迎請我飲杯咖啡，支持網站繼續免費更新。'
+              : 'Find Barista Flow useful? Buy me a coffee to help keep the site free and updated.'}
+          </p>
+          <a
+            href="https://ko-fi.com/beyond01hk"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full bg-coffee-gold/90 hover:bg-coffee-gold text-coffee-darker font-semibold text-xs sm:text-sm px-4 py-2 transition-colors"
+          >
+            <span aria-hidden="true">☕</span>
+            <span>{lang === 'zh-TW' ? '在 Ko-fi 支持我們' : 'Support on Ko-fi'}</span>
+            <span class="sr-only">(Ko-fi.com/beyond01hk)</span>
+          </a>
+        </div>
+
         <div class="border-t border-coffee-gray/40 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p class="text-xs text-coffee-muted">
             &copy; {new Date().getFullYear()} Barista Flow. {t('footer.rights')}
