@@ -8,30 +8,30 @@ const isZh = lang === 'zh-TW';
 const copy = isZh ? {
   title: '私隱政策',
   description: 'Barista Flow 的本機儲存、第三方請求、廣告狀態及使用者控制說明。',
-  updated: '更新日期：2026 年 8 月 30 日',
+  updated: '更新日期：2026 年 10 月 21 日',
   intro: '本政策說明當你使用 Barista Flow 時，哪些資料會留在瀏覽器、哪些第三方資源可能收到一般網絡請求，以及你可以如何控制或刪除資料。',
   sections: [
-    ['1. 不設帳戶，也不收集表單資料', '網站不提供註冊或登入，也沒有把聯絡表單送到伺服器。問題回報會連到 GitHub；你在 GitHub 提交的內容受 GitHub 自身的條款與私隱政策規管。請勿在公開 Issues 張貼個人或敏感資料。'],
+    ['1. 不設帳戶，也不收集表單資料', '網站不提供註冊或登入，也沒有表單把資料送到伺服器。你主動寄來的電郵只會用於回覆你的查詢；問題回報亦可連到 GitHub，你在 GitHub 提交的內容受 GitHub 自身的條款與私隱政策規管。請勿在公開 Issues 張貼個人或敏感資料。'],
     ['2. 只在本機儲存的資料', '咖啡配方、沖煮紀錄、靜音設定、語言偏好和 PWA 提示狀態使用瀏覽器 localStorage 儲存在你的裝置。Barista Flow 不會把這些資料上傳到自己的伺服器。清除本網站的瀏覽資料即可刪除。'],
     ['3. 分享連結', '當你主動使用「分享配方」時，咖啡豆名稱和沖煮參數會寫入網址查詢字串，方便另一部裝置讀取。連結不會自動送出，但任何收到連結的人都能看到其中的參數，因此請勿在咖啡豆名稱輸入個人資料。'],
-    ['4. 第三方網絡請求', '頁面會從 Google Fonts 下載字型，計時圖表會從 jsDelivr 取得 Chart.js。網站亦保留 Google AdSense 的站點驗證程式供審核；即使目前沒有顯示廣告，第三方仍可能收到 IP 位址、瀏覽器類型、請求時間和來源頁等標準技術資料。請參閱相應供應商的私隱政策。'],
-    ['5. 分析與廣告狀態', '網站目前沒有載入 Google Analytics，亦沒有顯示廣告單元。若日後啟用 AdSense，會在適用地區先配置 Google 認證的同意管理平台，並更新本政策和頁面上的披露。'],
+    ['4. 第三方網絡請求', '頁面會從 Google Fonts 下載字型。除非你在私隱選擇中拒絕廣告 Cookie，頁面亦會載入 Google AdSense 程式碼供網站審核；即使目前沒有顯示廣告，Google 仍可能收到 IP 位址、瀏覽器類型、請求時間和來源頁等標準技術資料。Ko-fi 及 GitHub 只會在你點擊相關連結後才收到請求。請參閱相應供應商的私隱政策。'],
+    ['5. 分析、廣告與你的選擇', '網站目前沒有載入 Google Analytics，亦沒有顯示廣告單元。首次瀏覽時會顯示私隱選擇：選擇「拒絕廣告 Cookie」後，網站不會再載入 AdSense 程式碼；未作選擇前，只會要求非個人化廣告；選擇「接受」後才可能提供個人化廣告。你可隨時在頁尾「Cookie 設定」更改。在歐洲經濟區、英國及瑞士，日後顯示廣告前會另外使用 Google 認證的同意管理平台。'],
     ['6. 保安與資料保留', '網站是靜態頁面，沒有 Barista Flow 使用者資料庫。公開原始碼及修正紀錄可供檢視；安全問題應使用 GitHub 的私密漏洞回報，而不是公開 Issue。'],
-    ['7. 聯絡', '如對本政策有疑問，請使用「聯絡與回報問題」頁面的公開或私密回報渠道。']
+    ['7. 聯絡', '如對本政策有疑問，請電郵 hello@coffeetimer.online，或使用「聯絡與回報問題」頁面的公開或私密回報渠道。']
   ]
 } : {
   title: 'Privacy policy',
   description: 'How Barista Flow handles local storage, third-party requests, advertising status, and user controls.',
-  updated: 'Updated: 30 August 2026',
+  updated: 'Updated: 21 October 2026',
   intro: 'This policy explains what stays in your browser when you use Barista Flow, which external resources may receive ordinary network requests, and how you can control or delete data.',
   sections: [
-    ['1. No accounts or submitted form data', 'The site has no registration or login and does not send a contact form to a Barista Flow server. Issue reporting links to GitHub, where anything you submit is governed by GitHub’s terms and privacy policy. Do not post personal or sensitive information in public issues.'],
+    ['1. No accounts or submitted form data', 'The site has no registration or login and no form that sends data to a server. Emails you choose to send are used only to reply to you. Issue reporting can also link to GitHub, where anything you submit is governed by GitHub’s terms and privacy policy. Do not post personal or sensitive information in public issues.'],
     ['2. Data stored only on your device', 'Coffee recipes, brew logs, mute state, language preference, and PWA prompt state use browser localStorage on your device. Barista Flow does not upload this data to its own server. Clear this site’s browsing data to delete it.'],
     ['3. Shared links', 'When you choose “share recipe,” the bean name and brew parameters are placed in the URL query string so another device can read them. The link is not sent automatically, but anyone who receives it can read those parameters. Do not put personal data in a bean name.'],
-    ['4. Third-party network requests', 'Pages download fonts from Google Fonts, and the timer chart obtains Chart.js from jsDelivr. The site also retains the Google AdSense site-review script. Although no ads are currently displayed, these providers may receive standard technical request data such as IP address, browser type, request time, and referring page. Consult each provider’s privacy policy.'],
-    ['5. Analytics and advertising status', 'The site currently does not load Google Analytics and displays no ad units. If AdSense is enabled later, a Google-certified consent management platform will be configured where required, and this policy and on-page disclosures will be updated.'],
+    ['4. Third-party network requests', 'Pages download fonts from Google Fonts. Unless you decline ad cookies in the privacy choice, pages also load Google AdSense code for site review. Although no ads are currently displayed, Google may receive standard technical request data such as IP address, browser type, request time, and referring page. Ko-fi and GitHub only receive a request when you follow a link to them. Consult each provider’s privacy policy.'],
+    ['5. Analytics, advertising and your choice', 'The site does not load Google Analytics and displays no ad units. A privacy choice appears on your first visit: after “Decline ad cookies”, the site stops loading AdSense code; before you choose, only non-personalised ads may be requested; personalised ads are possible only after “Accept”. Change your choice at any time with “Cookie settings” in the footer. In the EEA, UK and Switzerland, a Google-certified consent management platform will also be used before any ads are shown.'],
     ['6. Security and retention', 'This is a static site with no Barista Flow user database. Source and fix history are public for review. Security concerns should use GitHub private vulnerability reporting, not a public issue.'],
-    ['7. Contact', 'For questions about this policy, use the public or private channels on the Contact and issue reporting page.']
+    ['7. Contact', 'For questions about this policy, email hello@coffeetimer.online or use the public or private channels on the Contact and issue reporting page.']
   ]
 };
 

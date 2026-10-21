@@ -428,8 +428,6 @@ const timerDict = {
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
   const timerRoot = document.getElementById('timer-root');
   const dict = timerRoot ? JSON.parse(timerRoot.dataset.dict || '{}') : {};
@@ -1638,12 +1636,11 @@ const timerDict = {
   // --- Chart.js Integration ---
   let extractionChart: any = null;
 
-  function initOrUpdateChart(recipe: any) {
-    const ctx = document.getElementById('extraction-chart') as HTMLCanvasElement;
-    // Chart.js comes from a CDN; if it is blocked, skip the chart so the timer still loads saved recipes.
-    if (!ctx || typeof (window as any).Chart !== 'function') return;
+  // Chart.js is bundled from npm but loaded only when the chart is first drawn, so it never blocks the timer.
+  let chartLibrary: Promise<any> | null = null;
+  let latestChartRecipe: any = null;
 
-    // Calculate Y values based on recipe
+  function chartPoints(recipe: any) {
     const targets = getTargetWeights(recipe);
     let elapsed = 0;
     const dataPoints = [{ x: 0, y: 0 }];
@@ -1651,13 +1648,31 @@ const timerDict = {
       elapsed += stage.duration;
       dataPoints.push({ x: elapsed, y: targets[index] });
     });
+    return dataPoints;
+  }
+
+  function initOrUpdateChart(recipe: any) {
+    latestChartRecipe = recipe;
+    const ctx = document.getElementById('extraction-chart') as HTMLCanvasElement;
+    if (!ctx) return;
 
     if (extractionChart) {
-      extractionChart.data.datasets[0].data = dataPoints;
+      extractionChart.data.datasets[0].data = chartPoints(recipe);
       extractionChart.update();
-    } else {
-      // First initialization
-      extractionChart = new (window as any).Chart(ctx, {
+      return;
+    }
+
+    chartLibrary ??= import('chart.js/auto').then((module) => module.default).catch(() => null);
+    chartLibrary.then((Chart) => {
+      // If the library failed to load, skip the chart; the timer works without it.
+      if (!Chart) return;
+      if (extractionChart) {
+        extractionChart.data.datasets[0].data = chartPoints(latestChartRecipe);
+        extractionChart.update();
+        return;
+      }
+      const dataPoints = chartPoints(latestChartRecipe);
+      extractionChart = new Chart(ctx, {
         type: 'line',
         data: {
           datasets: [{
@@ -1711,7 +1726,7 @@ const timerDict = {
           }
         }
       });
-    }
+    });
   }
 
   // --- Initialization ---

@@ -5,10 +5,9 @@ Barista Flow is a static coffee-brewing companion published at [coffeetimer.onli
 ## Published languages
 
 - Hong Kong Traditional Chinese (`zh-TW`)
+- English (`en`)
 
-Other locale files remain unpublished drafts until their terminology, claims, links, and natural language have completed a human editorial review.
-
-Additional translations remain in the repository as unpublished drafts until they receive a human review. They are excluded from navigation, generated routes, hreflang, search, RSS, and the sitemap.
+Earlier machine-translated drafts for other languages were removed on 2026-10-21; they remain in the git history if a reviewed translation is ever started.
 
 ## Local development
 
@@ -16,8 +15,9 @@ Requires Node.js 22.12 or newer.
 
 ```sh
 npm ci
-npm run astro -- check
+npm run check        # Astro type and template check
 npm run build
+npm run check:links  # fails on any broken internal link in dist/
 npm run preview
 ```
 
@@ -27,7 +27,7 @@ The site has no user database. Recipes, preferences, and brew logs remain in bro
 
 ## Content and advertising status
 
-Ad placements are disabled while the site is under publisher review. The AdSense account meta tag, review loader, and root `ads.txt` remain available for verification. Advertising must not be enabled until the site is approved and a Google-certified CMP is configured where required.
+Ad placements are disabled while the site is under publisher review. The AdSense account meta tag, root `ads.txt` and a consent-aware loader (`src/components/AdsLoader.astro`) remain for verification. The loader skips AdSense entirely after a visitor declines in the cookie banner and requests only non-personalised ads until they accept. Advertising must not be enabled until the site is approved and Google's certified CMP is turned on for the EEA, UK and Switzerland.
 
 ## Reporting problems
 
@@ -36,4 +36,8 @@ Ad placements are disabled while the site is under publisher review. The AdSense
 
 ## Deployment
 
-Pushes to `main` are built and deployed through the GitHub Pages workflow in `.github/workflows/deploy.yml`.
+Cloudflare Workers Builds builds and deploys `main` to coffeetimer.online (see `wrangler.jsonc`); pull requests get a preview URL. `public/_headers` sets security and caching headers.
+
+GitHub Actions (`.github/workflows/ci.yml`) runs the check, build and link check on every pull request and push to `main`. It does not deploy.
+
+Mail to `hello@coffeetimer.online` relies on Cloudflare Email Routing.

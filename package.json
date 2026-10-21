@@ -10,8 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --nojekyll -t"
+    "check": "astro check",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
@@ -19,13 +19,11 @@
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.9",
-    "glob": "^13.0.6",
-    "tailwindcss": "^4.3.3",
-    "unist-util-visit": "^5.1.0"
+    "chart.js": "4.5.1",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "gh-pages": "^6.3.0",
     "typescript": "^6.0.3"
   }
 }

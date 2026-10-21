@@ -87,7 +87,24 @@ const jsonld = {
         </div>
         <a href={recipe.sourceUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-coffee-gold/40 px-4 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10">{c.sourceLink}</a>
       </div>
-      <p class="mt-5 border-t border-coffee-gold/15 pt-4 text-xs leading-6 text-coffee-sand">{c.untested}</p>
+      {recipe.siteTest ? (
+        <div class="mt-5 border-t border-coffee-gold/15 pt-4">
+          <p class="text-xs font-bold uppercase tracking-wider text-coffee-gold">{isZh ? 'Barista Flow 實測' : 'Barista Flow test'} · <time datetime={recipe.siteTest.date}>{recipe.siteTest.date}</time></p>
+          <div class="mt-3 grid gap-4 sm:grid-cols-[1fr_auto]">
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-coffee-sand">
+              <dt class="text-coffee-muted">{isZh ? '器材' : 'Equipment'}</dt><dd>{recipe.siteTest.equipment}</dd>
+              <dt class="text-coffee-muted">{isZh ? '研磨刻度' : 'Grind setting'}</dt><dd>{recipe.siteTest.grindSetting}</dd>
+              <dt class="text-coffee-muted">{isZh ? '完成時間' : 'Brew time'}</dt><dd>{recipe.siteTest.brewTime}</dd>
+              {recipe.siteTest.tds && <><dt class="text-coffee-muted">TDS</dt><dd>{recipe.siteTest.tds}%</dd></>}
+            </dl>
+            {recipe.siteTest.photo && <img src={recipe.siteTest.photo} alt={isZh ? `${recipe.title} 實測照片` : `${recipe.title} test photo`} width="240" height="180" class="h-44 w-full rounded-xl object-cover sm:w-60" loading="lazy" />}
+          </div>
+          <p class="mt-3 text-sm leading-6 text-coffee-light">{recipe.siteTest.result}</p>
+          {recipe.siteTest.adjustment && <p class="mt-2 text-xs leading-6 text-coffee-sand">{isZh ? '我們的調整：' : 'Our adjustment: '}{recipe.siteTest.adjustment}</p>}
+        </div>
+      ) : (
+        <p class="mt-5 border-t border-coffee-gold/15 pt-4 text-xs leading-6 text-coffee-sand">{c.untested}</p>
+      )}
     </section>
 
     <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_1.6fr]">

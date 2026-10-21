@@ -5,6 +5,8 @@ import AdSlot from '../components/AdSlot.astro';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
 import PageFeedback from '../components/PageFeedback.astro';
+import AdsLoader from '../components/AdsLoader.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import { getLangFromUrl, useTranslations, rtlLanguages } from '../i18n/utils';
 import { languages } from '../i18n/ui';
 
@@ -62,8 +64,8 @@ const finalKeywords = keywords || t('seo.keywords');
     <meta name="google-adsense-account" content="ca-pub-7189047900748105" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-    <!-- The AdSense loader remains for site review; ad units stay disabled until approval. -->
-    <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7189047900748105" crossorigin="anonymous"></script>
+    <!-- The AdSense loader respects the visitor's cookie choice; ad units stay disabled until approval. -->
+    <AdsLoader />
   </head>
   <body class="bg-coffee-dark text-coffee-light min-h-screen flex flex-col selection:bg-coffee-gold selection:text-coffee-dark overflow-x-hidden transition-colors duration-500 break-words hyphens-auto">
     <!-- Navbar -->
@@ -188,6 +190,7 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/contact`} class="hover:text-coffee-gold transition-colors">{t('nav.contact')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/terms-of-service`} class="hover:text-coffee-gold transition-colors">{t('nav.terms')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/privacy-policy`} class="hover:text-coffee-gold transition-colors">{t('nav.privacy')}</a>
+            <button type="button" data-cookie-settings class="text-start hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? 'Cookie 設定' : 'Cookie settings'}</button>
           </div>
         </div>
         
@@ -319,5 +322,6 @@ const finalKeywords = keywords || t('seo.keywords');
       });
     </script>
     <PWAInstallPrompt />
+    <CookieBanner lang={lang} />
   </body>
 </html>

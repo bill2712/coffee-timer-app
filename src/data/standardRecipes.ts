@@ -15,6 +15,20 @@ export interface StandardRecipe {
   steps: string[];
   notes: string[];
   toolPath: string;
+  /**
+   * Barista Flow's own test of this recipe. Add one after brewing it yourself; the recipe page then
+   * shows it instead of the "not independently tested" notice. Put photos in public/images/tests/.
+   */
+  siteTest?: {
+    date: string;
+    equipment: string;
+    grindSetting: string;
+    brewTime: string;
+    tds?: number;
+    result: string;
+    adjustment?: string;
+    photo?: string;
+  };
   recipe: {
     beanName: string;
     roastLevel: 'light' | 'medium' | 'dark';
