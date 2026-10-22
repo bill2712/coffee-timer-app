@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import EquipmentIllustration from '../components/EquipmentIllustration.astro';
+import AdsLoader from '../components/AdsLoader.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import { SITE_URL } from '../config';
 import { getCollection } from 'astro:content';
 import { changelog } from '../data/changelog';
@@ -43,15 +45,21 @@ const jsonLd = {
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={rootUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0d0b09" />
     <link rel="manifest" href="/manifest.json" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={rootUrl} />
     <meta property="og:title" content="Barista Flow｜從第一杯開始學懂手沖咖啡" />
     <meta property="og:description" content="計時、味道診斷、A/B 比較與器材圖解，讓每次沖煮都成為可重現的小實驗。" />
     <meta property="og:image" content={new URL('/images/og-default.jpg', SITE_URL).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
-    <!-- Kept on the review entry page; ad placements remain disabled until approval. -->
-    <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7189047900748105" crossorigin="anonymous"></script>
+    <!-- Respects the visitor's cookie choice; ad placements remain disabled until approval. -->
+    <AdsLoader />
   </head>
   <body>
     <header class="site-header">
@@ -164,8 +172,9 @@ const jsonLd = {
 
     <footer>
       <p>© {new Date().getFullYear()} Barista Flow · Built for curious coffee brewers.</p>
-      <div><a href="/zh-TW/about/">關於</a><a href="/zh-TW/changelog/">更新紀錄</a><a href="/zh-TW/methodology/">方法與來源</a><a href="/zh-TW/privacy-policy/">私隱政策</a><a href="/zh-TW/contact/">聯絡</a><a href="https://ko-fi.com/beyond01hk" target="_blank" rel="noopener noreferrer">☕ 喜歡這個網站？在 Ko-fi 請我飲杯咖啡</a></div>
+      <div><a href="/zh-TW/about/">關於</a><a href="/zh-TW/changelog/">更新紀錄</a><a href="/zh-TW/methodology/">方法與來源</a><a href="/zh-TW/privacy-policy/">私隱政策</a><a href="/zh-TW/contact/">聯絡</a><a href="https://ko-fi.com/beyond01hk" target="_blank" rel="noopener noreferrer">☕ 喜歡這個網站？在 Ko-fi 請我飲杯咖啡</a><button type="button" class="cookie-settings" data-cookie-settings>Cookie 設定</button></div>
     </footer>
+    <CookieBanner lang="zh-TW" />
 
     <script>
       document.querySelectorAll<HTMLAnchorElement>('[data-language]').forEach((link) => {
@@ -238,6 +247,7 @@ const jsonLd = {
   footer { display: flex; max-width: 1120px; margin: 0 auto; align-items: center; justify-content: space-between; gap: 1.5rem; border-top: 1px solid rgb(197 168 128 / .14); padding: 2rem 1.25rem 3rem; color: #8f8479; font-size: .8rem; }
   footer div { display: flex; flex-wrap: wrap; gap: 1rem; }
   footer a { text-underline-offset: .2em; }
+  .cookie-settings { border: 0; background: none; padding: 0; color: inherit; font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: .2em; }
   :focus-visible { outline: 2px solid #f2c94c; outline-offset: 3px; }
   @media (max-width: 720px) {
     .site-header { align-items: flex-start; }

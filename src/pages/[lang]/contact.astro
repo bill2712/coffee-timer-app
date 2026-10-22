@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { CONTACT_EMAIL } from '../../config';
 import { getLanguagePaths } from '../../i18n/routes';
 import { getLangFromUrl } from '../../i18n/utils';
 
@@ -8,7 +9,8 @@ const isZh = lang === 'zh-TW';
 const copy = isZh ? {
   title: '聯絡與回報問題',
   description: '透過公開的 GitHub 專案回報 Barista Flow 錯誤、提出功能建議或檢視修正進度。',
-  intro: '這是一個免費、開源的瀏覽器工具。為避免展示一個實際不會送出的表單，我們把問題回報集中到公開的 GitHub 專案，讓每個回報都有可追蹤的處理紀錄。',
+  intro: '有內容更正、合作查詢或一般問題，可以直接電郵聯絡。功能錯誤亦可在公開的 GitHub 專案回報，讓處理進度可以追蹤。',
+  emailTitle: '電郵聯絡', emailBody: '適合內容更正、合作或私隱查詢，以及沒有 GitHub 帳戶的讀者。請在標題寫明頁面名稱，方便跟進。',
   bugTitle: '回報功能錯誤',
   bugBody: '請寫下使用的裝置、瀏覽器、操作步驟，以及你預期和實際看到的結果。請勿公開張貼個人資料、密碼或任何敏感資訊。',
   bugButton: '建立問題回報',
@@ -18,11 +20,12 @@ const copy = isZh ? {
   codeTitle: '查看原始碼與修正紀錄',
   codeBody: '所有網站程式、版本紀錄和已知問題都可以公開檢視。你可以先搜尋是否已有相同問題，再新增回報。',
   codeButton: '前往 GitHub 專案',
-  response: '回報通常會在 GitHub 上回覆；處理時間會依問題複雜度而異。'
+  response: '電郵及 GitHub 回報一般會在數個工作天內回覆；處理時間會依問題複雜度而異。'
 } : {
   title: 'Contact and issue reporting',
   description: 'Report Barista Flow bugs, request features, or review fixes through the public GitHub project.',
-  intro: 'Barista Flow is a free, open-source browser tool. Instead of presenting a form that does not actually send, we route reports to the public GitHub project so every issue has a traceable status.',
+  intro: 'For corrections, partnership enquiries or general questions, email us directly. Functional bugs can also be reported in the public GitHub project, where progress is visible.',
+  emailTitle: 'Email', emailBody: 'Best for content corrections, partnership or privacy questions, and readers without a GitHub account. Please name the page in the subject line.',
   bugTitle: 'Report a functional bug',
   bugBody: 'Include your device, browser, steps to reproduce, and the expected and actual result. Do not post personal information, passwords, or other sensitive data publicly.',
   bugButton: 'Create an issue',
@@ -32,7 +35,7 @@ const copy = isZh ? {
   codeTitle: 'Review source and fixes',
   codeBody: 'The site source, version history, and known issues are public. Search for an existing report before opening a new one.',
   codeButton: 'Open the GitHub project',
-  response: 'Replies are normally posted on GitHub; timing depends on the complexity of the issue.'
+  response: 'Email and GitHub reports are usually answered within a few working days; timing depends on the complexity of the issue.'
 };
 
 export function getStaticPaths() {
@@ -49,6 +52,12 @@ export function getStaticPaths() {
     </header>
 
     <div class="grid md:grid-cols-2 gap-6">
+      <section class="glass-card rounded-3xl border border-coffee-gold/30 bg-coffee-gold/5 p-7 sm:p-8 md:col-span-2">
+        <h2 class="font-display text-2xl font-bold text-coffee-light mb-4">{copy.emailTitle}</h2>
+        <p class="text-sm text-coffee-sand/80 leading-relaxed mb-5">{copy.emailBody}</p>
+        <a href={`mailto:${CONTACT_EMAIL}`} class="inline-flex items-center justify-center rounded-xl bg-coffee-gold px-5 py-3 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover transition-colors">{CONTACT_EMAIL}</a>
+      </section>
+
       <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-8">
         <h2 class="font-display text-2xl font-bold text-coffee-light mb-4">{copy.bugTitle}</h2>
         <p class="text-sm text-coffee-sand/80 leading-relaxed mb-7">{copy.bugBody}</p>
@@ -56,7 +65,7 @@ export function getStaticPaths() {
           href="https://github.com/bill2712/coffee-timer-app/issues/new/choose"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center justify-center rounded-xl bg-coffee-gold px-5 py-3 text-sm font-bold text-coffee-dark hover:bg-coffee-gold-hover transition-colors"
+          class="inline-flex items-center justify-center rounded-xl border border-coffee-gold/50 px-5 py-3 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10 transition-colors"
         >
           {copy.bugButton}<span aria-hidden="true" class="ms-2">↗</span>
         </a>

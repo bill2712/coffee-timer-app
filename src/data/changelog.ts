@@ -10,6 +10,31 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-21',
+    zh: {
+      title: '私隱選擇、電郵聯絡與網站維護',
+      items: [
+        '新增私隱選擇：拒絕廣告 Cookie 後不再載入 AdSense 程式碼，可隨時在頁尾「Cookie 設定」更改，私隱政策亦已同步更新。',
+        '新增電郵聯絡 hello@coffeetimer.online，不需要 GitHub 帳戶也可以查詢或要求更正。',
+        '修正分享到社交平台時缺少預覽圖的問題。',
+        '計時圖表改為隨網站一併提供，不再依賴外部 CDN；加入安全標頭，並在每次更新前自動檢查網站有沒有失效連結。'
+      ]
+    },
+    en: {
+      title: 'Privacy choice, email contact and maintenance',
+      items: [
+        'Added a privacy choice: declining ad cookies stops AdSense code from loading, and “Cookie settings” in the footer changes it at any time. The privacy policy was updated to match.',
+        'Added email contact at hello@coffeetimer.online, so questions and correction requests no longer need a GitHub account.',
+        'Fixed the missing preview image when pages are shared on social platforms.',
+        'The timer chart is now served with the site instead of an external CDN; security headers were added, and every update is now checked automatically for broken links.'
+      ]
+    },
+    links: [
+      { path: 'privacy-policy', zh: '私隱政策', en: 'Privacy policy' },
+      { path: 'contact', zh: '聯絡', en: 'Contact' }
+    ]
+  },
+  {
     date: '2026-10-20',
     zh: {
       title: '新增萃取率及沖煮用水計算器，配方頁加入調整指南',

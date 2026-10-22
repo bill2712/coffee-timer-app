@@ -1,0 +1,23 @@
+---
+// Loads the AdSense script according to the visitor's choice in CookieBanner.
+// - "declined": the script is never requested.
+// - no choice yet: the script loads (needed for site review and Google's CMP) but only non-personalised ads may be requested.
+// - "accepted": personalised ads are allowed.
+// In the EEA, UK and Switzerland, Google's certified consent message (enabled in the AdSense dashboard) runs on top of this.
+const client = 'ca-pub-7189047900748105';
+---
+
+<script is:inline define:vars={{ client }}>
+  (function () {
+    var choice = null;
+    try { choice = localStorage.getItem('barista_flow_cookie_consent'); } catch (error) {}
+    if (choice === 'declined') return;
+    window.adsbygoogle = window.adsbygoogle || [];
+    if (choice !== 'accepted') window.adsbygoogle.requestNonPersonalizedAds = 1;
+    var script = document.createElement('script');
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + client;
+    document.head.appendChild(script);
+  })();
+</script>

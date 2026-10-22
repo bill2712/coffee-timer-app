@@ -6,6 +6,7 @@ import AdSlot from '../../../components/AdSlot.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { languages } from '../../../i18n/ui';
 import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+import { editor, hasEditor } from '../../../data/editor';
 
 
 export async function getStaticPaths() {
@@ -74,11 +75,9 @@ const jsonLd = {
   "datePublished": entry.data.pubDate.toISOString(),
   "dateModified": (entry.data.updatedDate ?? entry.data.pubDate).toISOString(),
   "inLanguage": lang,
-  "author": {
-    "@type": "Organization",
-    "name": entry.data.author,
-    "url": `${siteOrigin}${basePath}/${lang}/about`
-  },
+  "author": hasEditor
+    ? { "@type": "Person", "name": editor.name, "url": `${siteOrigin}${basePath}/${lang}/about/#editor` }
+    : { "@type": "Organization", "name": entry.data.author, "url": `${siteOrigin}${basePath}/${lang}/about` },
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": canonicalURL.toString()
@@ -88,7 +87,7 @@ const jsonLd = {
     "name": "Barista Flow",
     "logo": {
       "@type": "ImageObject",
-      "url": `${siteOrigin}${basePath}/favicon.svg`
+      "url": `${siteOrigin}${basePath}/icons/icon-512.png`
     }
   }
 };
@@ -118,7 +117,9 @@ const jsonLd = {
           </>
         )}
         <span class="text-coffee-muted">•</span>
-        <span>{t('blog.author')}{entry.data.author}</span>
+        {hasEditor
+          ? <span>{isZh ? '撰寫及審閱：' : 'Written and reviewed by '}<a href={`${localeBase}/about/#editor`} class="text-coffee-gold hover:underline">{editor.name}</a></span>
+          : <span>{t('blog.author')}{entry.data.author}</span>}
       </div>
 
       <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-coffee-light leading-tight">
