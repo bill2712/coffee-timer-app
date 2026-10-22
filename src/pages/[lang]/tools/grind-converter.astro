@@ -73,7 +73,7 @@ export function getStaticPaths() {
           <div class="flex flex-col gap-2">
             <label for="source-value" class="text-xs font-semibold uppercase tracking-wider text-coffee-muted">{t('grind.currentScale')} <span id="source-unit" class="lowercase"></span></label>
             <div class="flex items-center gap-4">
-              <input type="range" id="source-slider" class="flex-grow accent-coffee-gold h-2 bg-coffee-darker rounded-lg appearance-none cursor-pointer" />
+              <input type="range" id="source-slider" aria-label={t('grind.currentScale')} class="flex-grow accent-coffee-gold h-2 bg-coffee-darker rounded-lg appearance-none cursor-pointer" />
               <input type="number" id="source-value" class="w-20 bg-coffee-darker border border-coffee-sand/20 rounded-xl px-3 py-2 text-center text-lg font-bold text-coffee-light focus:ring-2 focus:ring-coffee-gold/50" />
             </div>
             <div class="flex justify-between text-[10px] text-coffee-muted font-mono mt-1">
@@ -127,7 +127,7 @@ export function getStaticPaths() {
           </div>
           
           <!-- Method Labels -->
-          <div class="absolute inset-0 flex text-[9px] sm:text-[10px] font-semibold text-coffee-muted/50 pointer-events-none select-none">
+          <div class="absolute inset-0 flex text-[9px] sm:text-[10px] font-semibold text-coffee-sand pointer-events-none select-none">
             <div class="flex-1 flex items-center justify-center">{t("grind.label.turkish")}</div>
             <div class="flex-1 flex items-center justify-center">{t("grind.label.espresso")}</div>
             <div class="flex-1 flex items-center justify-center">{t("grind.label.v60")}</div>

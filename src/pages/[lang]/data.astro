@@ -124,8 +124,14 @@ const c = isZh ? {
   const status = document.getElementById('backup-status');
   let validatedBackup: BackupFile | null = null;
 
+  // Some privacy settings make any localStorage access throw; the page must still load and explain why.
+  const storageAvailable = (() => {
+    try { localStorage.getItem('barista_flow_logs'); return true; } catch (error) { return false; }
+  })();
+
   function parseStored(key: string): unknown {
-    const raw = localStorage.getItem(key);
+    let raw: string | null = null;
+    try { raw = localStorage.getItem(key); } catch (error) { return undefined; }
     if (raw === null) return undefined;
     try { return JSON.parse(raw); } catch (error) { return raw; }
   }
@@ -242,11 +248,11 @@ const c = isZh ? {
   importButton?.addEventListener('click', () => {
     if (!validatedBackup || !(confirmInput instanceof HTMLInputElement) || !confirmInput.checked) return;
     const previousData: Record<string, string> = {};
-    STORAGE_KEYS.forEach((key) => {
-      const raw = localStorage.getItem(key);
-      if (raw !== null) previousData[key] = raw;
-    });
     try {
+      STORAGE_KEYS.forEach((key) => {
+        const raw = localStorage.getItem(key);
+        if (raw !== null) previousData[key] = raw;
+      });
       STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
       Object.entries(validatedBackup.data).forEach(([key, value]) => localStorage.setItem(key, JSON.stringify(value)));
       if (status) status.textContent = message.imported;
@@ -260,5 +266,13 @@ const c = isZh ? {
     }
   });
 
-  refreshCounts();
+  if (storageAvailable) {
+    refreshCounts();
+  } else {
+    if (status) status.textContent = isZhPage
+      ? '這個瀏覽器封鎖了本機儲存（例如私密瀏覽或私隱設定），因此無法備份或匯入紀錄。請在一般視窗或允許本網站儲存資料後再試。'
+      : 'This browser blocks local storage (for example private browsing or a privacy setting), so records cannot be backed up or imported. Try a normal window or allow this site to store data.';
+    document.querySelectorAll<HTMLButtonElement>('#btn-export-backup, #btn-import-backup').forEach((button) => { button.disabled = true; });
+    if (fileInput instanceof HTMLInputElement) fileInput.disabled = true;
+  }
 </script>
