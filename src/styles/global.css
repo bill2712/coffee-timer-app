@@ -194,3 +194,79 @@ body.brew-modal-active {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-coffee-accent);
 }
+
+/*
+ * Light theme. Pages opt in with <Layout themeAware>, which adds `theme-auto` to
+ * <html>; the existing dark pages are unaffected until they are reviewed in light
+ * mode too. Overriding the colour tokens re-skins every Tailwind utility that uses them.
+ */
+@media (prefers-color-scheme: light) {
+  html.theme-auto {
+    color-scheme: light;
+    --color-coffee-dark: #FAF6EF;
+    --color-coffee-darker: #F1E9DD;
+    --color-coffee-gold: #7B4E0D;
+    --color-coffee-gold-hover: #643F0A;
+    --color-coffee-sand: #5A3E23;
+    --color-coffee-accent: #9A5426;
+    --color-coffee-light: #2B1E15;
+    --color-coffee-gray: #E7DCCD;
+    --color-coffee-muted: #67594F;
+  }
+  html.theme-auto .glass-card,
+  html.theme-auto .glass-card-interactive {
+    background: rgb(255 255 255 / 0.72);
+    border-color: rgb(106 74 42 / 0.16);
+    box-shadow: 0 8px 28px rgb(80 55 30 / 0.08);
+  }
+  html.theme-auto [data-language-picker] .hover\:text-white:hover { color: var(--color-coffee-gold); }
+  html.theme-auto ::selection { color: #FAF6EF; }
+}
+
+/* Long-form caffeine content (tool explainer and /guides). Token-based so it works in light and dark. */
+.cc-prose { max-width: 46rem; color: color-mix(in srgb, var(--color-coffee-light) 88%, transparent); font-size: 1.02rem; line-height: 1.8; }
+.cc-prose h2 { margin: 2.75rem 0 1rem; scroll-margin-top: 6rem; color: var(--color-coffee-light); font-family: var(--font-display); font-size: 1.65rem; font-weight: 700; line-height: 1.25; }
+.cc-prose > h2:first-child { margin-top: 0; }
+.cc-prose h3 { margin: 2rem 0 .6rem; scroll-margin-top: 6rem; color: var(--color-coffee-gold); font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; line-height: 1.35; }
+.cc-prose p { margin: 0 0 1.15rem; }
+.cc-prose ul, .cc-prose ol { margin: 0 0 1.25rem; padding-inline-start: 1.4rem; }
+.cc-prose ul { list-style: disc; }
+.cc-prose ol { list-style: decimal; }
+.cc-prose li { margin-bottom: .55rem; padding-inline-start: .2rem; }
+.cc-prose li::marker { color: var(--color-coffee-gold); }
+.cc-prose strong { color: var(--color-coffee-light); font-weight: 700; }
+.cc-prose a { color: var(--color-coffee-gold); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+.cc-prose a:hover { color: var(--color-coffee-light); }
+.cc-prose table { display: block; width: 100%; max-width: 100%; margin: 1.25rem 0 1.75rem; overflow-x: auto; border-collapse: collapse; font-size: .9rem; line-height: 1.5; -webkit-overflow-scrolling: touch; }
+.cc-prose th, .cc-prose td { border-bottom: 1px solid color-mix(in srgb, var(--color-coffee-sand) 20%, transparent); padding: .6rem .75rem; text-align: start; vertical-align: top; }
+.cc-prose th { color: var(--color-coffee-light); font-weight: 700; white-space: nowrap; background: color-mix(in srgb, var(--color-coffee-gold) 8%, transparent); }
+.cc-prose td:first-child { color: var(--color-coffee-light); font-weight: 600; }
+.cc-prose .ad-slot { margin: 2.25rem 0; }
+.cc-toc { border: 1px solid color-mix(in srgb, var(--color-coffee-sand) 18%, transparent); border-radius: 1rem; padding: 1rem 1.1rem; }
+.cc-toc-title { margin: 0 0 .5rem; color: var(--color-coffee-muted); font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.cc-toc ol { margin: 0; padding: 0; list-style: none; }
+.cc-toc a { display: block; border-radius: .5rem; padding: .4rem .5rem; color: var(--color-coffee-sand); font-size: .85rem; line-height: 1.4; }
+.cc-toc a:hover, .cc-toc a:focus-visible { background: color-mix(in srgb, var(--color-coffee-gold) 10%, transparent); color: var(--color-coffee-light); }
+.cc-faq { border: 1px solid color-mix(in srgb, var(--color-coffee-sand) 18%, transparent); border-radius: 1rem; background: color-mix(in srgb, var(--color-coffee-darker) 50%, transparent); }
+.cc-faq summary { display: flex; min-height: 56px; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1.1rem; cursor: pointer; list-style: none; }
+.cc-faq summary::-webkit-details-marker { display: none; }
+.cc-faq summary::after { content: '+'; flex: none; color: var(--color-coffee-gold); font-size: 1.4rem; line-height: 1; transition: transform .2s ease; }
+.cc-faq[open] summary::after { transform: rotate(45deg); }
+.cc-faq summary:focus-visible { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; border-radius: 1rem; }
+.cc-faq h3 { margin: 0; color: var(--color-coffee-light); font-size: 1rem; font-weight: 700; line-height: 1.45; }
+.cc-faq p { margin: 0; padding: 0 1.1rem 1.1rem; color: color-mix(in srgb, var(--color-coffee-light) 82%, transparent); font-size: .95rem; line-height: 1.75; }
+.cc-guide-card { display: grid; height: 100%; align-content: start; gap: .5rem; border: 1px solid color-mix(in srgb, var(--color-coffee-sand) 18%, transparent); border-radius: 1rem; background: color-mix(in srgb, var(--color-coffee-darker) 50%, transparent); padding: 1.15rem 1.25rem; transition: border-color .15s ease; }
+.cc-guide-card:hover, .cc-guide-card:focus-visible { border-color: color-mix(in srgb, var(--color-coffee-gold) 55%, transparent); }
+.cc-guide-card:focus-visible { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; }
+.cc-guide-card strong { color: var(--color-coffee-light); font-size: 1rem; line-height: 1.4; }
+.cc-guide-card span { color: var(--color-coffee-muted); font-size: .85rem; line-height: 1.6; }
+.cc-guide-card .cc-guide-more { color: var(--color-coffee-gold); font-weight: 700; }
+.cc-cta { margin-top: 2.5rem; border: 1px solid color-mix(in srgb, var(--color-coffee-gold) 35%, transparent); border-radius: 1.25rem; background: color-mix(in srgb, var(--color-coffee-gold) 8%, transparent); padding: 1.5rem; }
+.cc-prose .cc-cta h2 { margin: 0 0 .5rem; font-size: 1.35rem; }
+.cc-cta p { margin: 0 0 1rem; }
+.cc-prose .cc-cta a { display: inline-flex; min-height: 48px; align-items: center; border-radius: .8rem; background: var(--color-coffee-gold); padding: .6rem 1.2rem; color: var(--color-coffee-dark); font-weight: 700; text-decoration: none; }
+.cc-prose .cc-cta a:hover { background: var(--color-coffee-gold-hover); color: var(--color-coffee-dark); }
+@media (prefers-reduced-motion: reduce) { .cc-faq summary::after, .cc-guide-card { transition: none; } }
+.cc-prose table { hyphens: manual; }
+.cc-prose th, .cc-prose td { min-width: 6.5rem; }
+.cc-prose td:last-child, .cc-prose th:last-child { min-width: 13rem; }

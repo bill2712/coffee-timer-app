@@ -5,33 +5,46 @@ import { getLangFromUrl } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const isZh = lang === 'zh-TW';
+
+// Section bodies are trusted, static HTML written here (they contain links).
+const link = (href: string, label: string) => `<a href="${href}" target="_blank" rel="noopener noreferrer" class="font-semibold text-coffee-gold underline underline-offset-4">${label}</a>`;
+const internal = (path: string, label: string) => `<a href="/${lang}/${path}" class="font-semibold text-coffee-gold underline underline-offset-4">${label}</a>`;
+const ADS_SETTINGS = 'https://adssettings.google.com/';
+const PARTNER_SITES = 'https://policies.google.com/technologies/partner-sites';
+const ABOUT_ADS = 'https://www.aboutads.info/choices/';
+const YOUR_ONLINE_CHOICES = 'https://www.youronlinechoices.eu/';
+
 const copy = isZh ? {
   title: '私隱政策',
-  description: 'Barista Flow 的本機儲存、第三方請求、廣告狀態及使用者控制說明。',
-  updated: '更新日期：2026 年 8 月 30 日',
-  intro: '本政策說明當你使用 Barista Flow 時，哪些資料會留在瀏覽器、哪些第三方資源可能收到一般網絡請求，以及你可以如何控制或刪除資料。',
+  description: 'Barista Flow 的本機儲存（包括咖啡因計算器）、Google AdSense Cookie、第三方廣告、第三方請求及使用者控制說明。',
+  updated: '更新日期：2026 年 10 月 27 日',
+  intro: '本政策說明當你使用 Barista Flow 時，哪些資料會留在瀏覽器、哪些第三方資源可能收到一般網絡請求或設置 Cookie，以及你可以如何控制或刪除資料。',
   sections: [
     ['1. 不設帳戶，也不收集表單資料', '網站不提供註冊或登入，也沒有把聯絡表單送到伺服器。問題回報會連到 GitHub；你在 GitHub 提交的內容受 GitHub 自身的條款與私隱政策規管。請勿在公開 Issues 張貼個人或敏感資料。'],
-    ['2. 只在本機儲存的資料', '咖啡配方、沖煮紀錄、靜音設定、語言偏好和 PWA 提示狀態使用瀏覽器 localStorage 儲存在你的裝置。Barista Flow 不會把這些資料上傳到自己的伺服器。清除本網站的瀏覽資料即可刪除。'],
-    ['3. 分享連結', '當你主動使用「分享配方」時，咖啡豆名稱和沖煮參數會寫入網址查詢字串，方便另一部裝置讀取。連結不會自動送出，但任何收到連結的人都能看到其中的參數，因此請勿在咖啡豆名稱輸入個人資料。'],
-    ['4. 第三方網絡請求', '頁面會從 Google Fonts 下載字型，計時圖表會從 jsDelivr 取得 Chart.js。網站亦保留 Google AdSense 的站點驗證程式供審核；即使目前沒有顯示廣告，第三方仍可能收到 IP 位址、瀏覽器類型、請求時間和來源頁等標準技術資料。請參閱相應供應商的私隱政策。'],
-    ['5. 分析與廣告狀態', '網站目前沒有載入 Google Analytics，亦沒有顯示廣告單元。若日後啟用 AdSense，會在適用地區先配置 Google 認證的同意管理平台，並更新本政策和頁面上的披露。'],
-    ['6. 保安與資料保留', '網站是靜態頁面，沒有 Barista Flow 使用者資料庫。公開原始碼及修正紀錄可供檢視；安全問題應使用 GitHub 的私密漏洞回報，而不是公開 Issue。'],
-    ['7. 聯絡', '如對本政策有疑問，請使用「聯絡與回報問題」頁面的公開或私密回報渠道。']
+    ['2. 只在本機儲存的資料（localStorage）', `咖啡配方、沖煮紀錄、靜音設定、語言偏好和 PWA 提示狀態使用瀏覽器 localStorage 儲存在你的裝置。${internal('caffeine-calculator/', '咖啡因計算器')}的飲品紀錄（飲品、咖啡因毫克數、時間）、設定（睡覺時間、半衰期、上限、時間格式）及「支持我們」提示的關閉時間，同樣只儲存在 localStorage。這些資料可能與健康有關，因此我們刻意不把它們上傳、不作分析，也不與任何人分享。你可以在計算器按「清除我的資料」，或清除本網站的瀏覽資料，隨時刪除。`],
+    ['3. 分享連結與分享圖片', '當你主動使用「分享配方」時，咖啡豆名稱和沖煮參數會寫入網址查詢字串。咖啡因計算器的分享圖片完全在你的裝置上以瀏覽器繪製，只有在你選擇下載或透過系統分享功能傳送時才會離開裝置；圖片只包含總量、估算值和最後一杯時間。'],
+    ['4. 第三方網絡請求', '頁面會從 Google Fonts 下載字型，計時圖表會從 jsDelivr 取得 Chart.js，並會在頁面載入後於背景載入 Google AdSense 程式碼。這些供應商可能收到 IP 位址、瀏覽器類型、請求時間和來源頁等標準技術資料。請參閱相應供應商的私隱政策。'],
+    ['5. Google AdSense 與廣告 Cookie', `本網站使用（或準備使用）Google AdSense 顯示廣告。Google 等第三方供應商會使用 Cookie，根據使用者過往瀏覽本網站或其他網站的紀錄投放廣告。Google 使用廣告 Cookie，令 Google 及其合作夥伴能根據使用者瀏覽本網站及／或互聯網上其他網站的情況投放廣告。你可以前往 ${link(ADS_SETTINGS, 'Google 廣告設定')} 停用個人化廣告，亦可前往 ${link(ABOUT_ADS, 'aboutads.info')} 或 ${link(YOUR_ONLINE_CHOICES, 'Your Online Choices')} 停用其他第三方供應商的個人化廣告 Cookie。了解 Google 如何使用資料，請參閱 ${link(PARTNER_SITES, 'Google 如何使用合作夥伴網站的資料')}。`],
+    ['6. 第三方廣告與目前狀態', '廣告由 Google 及其認證的第三方廣告供應商提供，並會清楚標示為「廣告」；廣告內容不會影響計算器結果或編輯內容，我們不會把你的咖啡因紀錄或任何本機資料提供給廣告商。網站在審核期間不顯示廣告單元。啟用前，我們會在適用地區（例如歐洲經濟區、英國及瑞士）配置 Google 認證的同意管理平台，讓你選擇是否接受個人化廣告。網站目前沒有載入 Google Analytics。'],
+    ['7. 支持連結', '「請我飲杯咖啡」按鈕會開啟 Ko-fi 或 Buy Me a Coffee 等外部網站。我們不會收到你的付款資料；你在這些網站提供的資料受其私隱政策規管。'],
+    ['8. 保安與資料保留', '網站是靜態頁面，沒有 Barista Flow 使用者資料庫。咖啡因計算器只保留最近約 72 小時、仍會影響估算的飲品紀錄，較舊的紀錄會在你下次開啟頁面時自動刪除。公開原始碼及修正紀錄可供檢視；安全問題應使用 GitHub 的私密漏洞回報。'],
+    ['9. 聯絡', `如對本政策有疑問，請使用${internal('contact', '聯絡與回報問題')}頁面的公開或私密回報渠道。`]
   ]
 } : {
   title: 'Privacy policy',
-  description: 'How Barista Flow handles local storage, third-party requests, advertising status, and user controls.',
-  updated: 'Updated: 30 August 2026',
-  intro: 'This policy explains what stays in your browser when you use Barista Flow, which external resources may receive ordinary network requests, and how you can control or delete data.',
+  description: 'How Barista Flow handles local storage (including the caffeine calculator), Google AdSense cookies, third-party advertising, external requests and your controls.',
+  updated: 'Updated: 27 October 2026',
+  intro: 'This policy explains what stays in your browser when you use Barista Flow, which external services may receive ordinary network requests or set cookies, and how you can control or delete data.',
   sections: [
     ['1. No accounts or submitted form data', 'The site has no registration or login and does not send a contact form to a Barista Flow server. Issue reporting links to GitHub, where anything you submit is governed by GitHub’s terms and privacy policy. Do not post personal or sensitive information in public issues.'],
-    ['2. Data stored only on your device', 'Coffee recipes, brew logs, mute state, language preference, and PWA prompt state use browser localStorage on your device. Barista Flow does not upload this data to its own server. Clear this site’s browsing data to delete it.'],
-    ['3. Shared links', 'When you choose “share recipe,” the bean name and brew parameters are placed in the URL query string so another device can read them. The link is not sent automatically, but anyone who receives it can read those parameters. Do not put personal data in a bean name.'],
-    ['4. Third-party network requests', 'Pages download fonts from Google Fonts, and the timer chart obtains Chart.js from jsDelivr. The site also retains the Google AdSense site-review script. Although no ads are currently displayed, these providers may receive standard technical request data such as IP address, browser type, request time, and referring page. Consult each provider’s privacy policy.'],
-    ['5. Analytics and advertising status', 'The site currently does not load Google Analytics and displays no ad units. If AdSense is enabled later, a Google-certified consent management platform will be configured where required, and this policy and on-page disclosures will be updated.'],
-    ['6. Security and retention', 'This is a static site with no Barista Flow user database. Source and fix history are public for review. Security concerns should use GitHub private vulnerability reporting, not a public issue.'],
-    ['7. Contact', 'For questions about this policy, use the public or private channels on the Contact and issue reporting page.']
+    ['2. Data stored only on your device (localStorage)', `Coffee recipes, brew logs, mute state, language preference and PWA prompt state use browser localStorage on your device. The ${internal('caffeine-calculator/', 'caffeine calculator')} stores your drink log (drink, milligrams of caffeine, time), your settings (bedtime, half-life, thresholds, time format) and when you dismissed the support card in localStorage too. Because this information can relate to your health, we deliberately never upload, analyse or share it. Delete it at any time with “Clear my data” in the calculator or by clearing this site’s browsing data.`],
+    ['3. Shared links and share images', 'When you choose “share recipe”, the bean name and brew parameters are placed in the URL query string. Caffeine share images are drawn entirely in your browser and only leave your device if you choose to download them or send them with your device’s share feature; they contain only totals, estimates and your last-call time.'],
+    ['4. Third-party network requests', 'Pages download fonts from Google Fonts, the timer chart obtains Chart.js from jsDelivr, and the Google AdSense script is loaded in the background after the page has loaded. These providers may receive standard technical request data such as IP address, browser type, request time and referring page. Consult each provider’s privacy policy.'],
+    ['5. Google AdSense and advertising cookies', `This site uses (or is preparing to use) Google AdSense to show ads. Third-party vendors, including Google, use cookies to serve ads based on a user’s prior visits to this website or other websites. Google’s use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the Internet. You may opt out of personalised advertising by visiting ${link(ADS_SETTINGS, 'Google Ads Settings')}. You can also opt out of some third-party vendors’ use of cookies for personalised advertising at ${link(ABOUT_ADS, 'aboutads.info')} or ${link(YOUR_ONLINE_CHOICES, 'Your Online Choices')}. To learn more, see ${link(PARTNER_SITES, 'how Google uses information from sites that use its services')}.`],
+    ['6. Third-party advertising and current status', 'Ads are provided by Google and certified third-party ad vendors and are clearly labelled “Advertisement”. Advertising never influences calculator results or editorial content, and we never give advertisers your caffeine log or any other locally stored data. Ad units are not displayed while the site is under review. Before they are enabled, a Google-certified consent management platform will be configured where required (for example in the EEA, the UK and Switzerland) so you can choose whether to allow personalised ads. The site does not currently load Google Analytics.'],
+    ['7. Support links', '“Buy me a coffee” buttons open external sites such as Ko-fi or Buy Me a Coffee. We never receive your payment details; anything you provide there is governed by that site’s privacy policy.'],
+    ['8. Security and retention', 'This is a static site with no Barista Flow user database. The caffeine calculator keeps only the last ~72 hours of drinks that can still affect its estimate; older entries are deleted automatically the next time you open it. Source and fix history are public for review. Security concerns should use GitHub private vulnerability reporting, not a public issue.'],
+    ['9. Contact', `For questions about this policy, use the public or private channels on the ${internal('contact', 'contact and issue reporting')} page.`]
   ]
 };
 
@@ -52,7 +65,7 @@ export function getStaticPaths() {
       {copy.sections.map(([heading, body]) => (
         <section class="glass-card rounded-3xl border border-coffee-sand/10 p-7 sm:p-8">
           <h2 class="font-display text-xl font-bold text-coffee-light mb-3">{heading}</h2>
-          <p class="text-sm text-coffee-sand/85 leading-7">{body}</p>
+          <p class="text-sm text-coffee-sand/85 leading-7" set:html={body} />
         </section>
       ))}
     </div>

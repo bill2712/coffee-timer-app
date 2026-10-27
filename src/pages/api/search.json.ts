@@ -22,6 +22,23 @@ export async function GET() {
     };
   });
 
+  const guides = (await getCollection('guides'))
+    .map((entry) => {
+      const [rawLang, ...slugParts] = entry.id.split('/');
+      const lang = publishedLocales.find((locale) => locale.toLowerCase() === rawLang.toLowerCase());
+      return lang ? { lang, title: entry.data.title, description: entry.data.description, term: '', tags: ['Caffeine'], url: `/${lang}/guides/${slugParts.join('/')}/` } : null;
+    })
+    .filter(Boolean);
+  const tools = publishedLocales.map((lang) => ({
+    lang,
+    title: lang === 'zh-TW' ? '咖啡因計算器' : 'Caffeine calculator',
+    description: lang === 'zh-TW' ? '估算體內咖啡因、睡前剩餘量及最後一杯咖啡的時間。' : 'Estimate caffeine in your body, at bedtime, and your last-call time for coffee.',
+    term: '',
+    tags: ['Caffeine', 'Tool'],
+    url: `/${lang}/caffeine-calculator/`
+  }));
+  searchIndex.push(...(guides as typeof searchIndex), ...tools);
+
   return new Response(JSON.stringify(searchIndex), {
     status: 200,
     headers: {

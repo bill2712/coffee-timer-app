@@ -112,6 +112,13 @@ const jsonLd = {
             <p>閱讀由編輯整理、附參考來源與實際操作方法的文章；包括萃取、研磨、水質、注水和風味診斷。</p>
             <a href="/zh-TW/blog/">進入咖啡知識庫 <span aria-hidden="true">→</span></a>
           </article>
+          <article class="task-card wide">
+            <span class="step">05</span>
+            <h3>咖啡因與睡眠</h3>
+            <p>記錄今天喝過的咖啡、茶或能量飲品，估算體內現在還有多少咖啡因、睡覺時會剩多少，以及最遲幾點可以再喝一杯。資料只留在你的裝置。</p>
+            <a href="/zh-TW/caffeine-calculator/">打開咖啡因計算器 <span aria-hidden="true">→</span></a>
+            <a href="/en/caffeine-calculator/" lang="en" data-language="en">Caffeine calculator in English <span aria-hidden="true">→</span></a>
+          </article>
         </div>
       </section>
 
@@ -157,6 +164,7 @@ const jsonLd = {
           <a href="/en/equipment/">Choose equipment</a>
           <a href="/en/blog/">Learning library</a>
           <a href="/en/tools/">All tools</a>
+          <a href="/en/caffeine-calculator/">Caffeine calculator</a>
           <a href="/en/methodology/">Methods & sources</a>
         </div>
       </section>
@@ -211,6 +219,8 @@ const jsonLd = {
   .task-card p { color: #aa9d90; }
   .task-card a { display: inline-block; margin-top: .65rem; color: #f2c94c; font-weight: 750; text-underline-offset: .25em; }
   .step { display: block; margin-bottom: 1rem; color: #d7b86e; font-size: .75rem; font-weight: 850; letter-spacing: .14em; }
+  .task-card.wide { grid-column: 1 / -1; }
+  .task-card.wide a + a { margin-inline-start: 1.25rem; }
   .visual-card { display: grid; grid-template-columns: minmax(105px, .7fr) 1.3fr; align-items: center; gap: 1.4rem; }
   .illustration { min-width: 0; }
   .evidence-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 5rem); border-top: 1px solid rgb(197 168 128 / .14); }
