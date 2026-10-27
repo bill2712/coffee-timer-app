@@ -11,7 +11,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --nojekyll -t"
+    "deploy": "gh-pages -d dist --nojekyll -t",
+    "test": "TZ=Asia/Hong_Kong vitest run",
+    "test:watch": "TZ=Asia/Hong_Kong vitest"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "gh-pages": "^6.3.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
   }
 }

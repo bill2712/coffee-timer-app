@@ -1,0 +1,108 @@
+---
+import { getCollection, render } from 'astro:content';
+import { SITE_URL } from '../../../config';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import Disclaimer from '../../../components/caffeine/Disclaimer.astro';
+import { languages } from '../../../i18n/ui';
+import { useCaffeineT } from '../../../i18n/caffeine';
+
+export async function getStaticPaths() {
+  const locales = Object.keys(languages);
+  const entries = await getCollection('guides');
+  // Collection ids are lower-cased ("zh-tw/..."), so map them back to the exact locale code.
+  return entries.flatMap((entry) => {
+    const [prefix, ...rest] = entry.id.split('/');
+    const lang = locales.find((locale) => locale.toLowerCase() === prefix.toLowerCase());
+    return lang ? [{ params: { lang, slug: rest.join('/') }, props: { entry } }] : [];
+  });
+}
+
+const { entry } = Astro.props;
+const { lang, slug } = Astro.params as { lang: string; slug: string };
+const t = useCaffeineT(lang);
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2);
+const pageUrl = `${SITE_URL}/${lang}/guides/${slug}/`;
+const updated = entry.data.updatedDate ?? entry.data.pubDate;
+const formatDate = (date: Date) =>
+  date.toLocaleDateString(lang === 'zh-TW' ? 'zh-HK' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+const related = (await getCollection('guides', (other) => other.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && other.id !== entry.id))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((other) => ({ slug: other.id.split('/').slice(1).join('/'), title: other.data.title, description: other.data.description }));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.description,
+  inLanguage: lang,
+  datePublished: entry.data.pubDate.toISOString(),
+  dateModified: updated.toISOString(),
+  image: `${SITE_URL}/images/og-caffeine.jpg`,
+  author: { '@type': 'Organization', name: entry.data.author, url: `${SITE_URL}/${lang}/about/` },
+  publisher: { '@type': 'Organization', name: 'Barista Flow', logo: { '@type': 'ImageObject', url: `${SITE_URL}/favicon.svg` } },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+  isPartOf: { '@type': 'WebSite', name: 'Barista Flow', url: SITE_URL }
+};
+---
+
+<Layout title={`${entry.data.seoTitle ?? entry.data.title} | Barista Flow`} description={entry.data.description} jsonld={jsonLd} article ogImage="/images/og-caffeine.jpg" themeAware hideTopAd>
+  <div class="mx-auto max-w-6xl">
+    <Breadcrumbs items={[{ label: t('breadcrumb'), url: 'caffeine-calculator/' }, { label: entry.data.title }]} />
+
+    <header class="mb-8 max-w-3xl">
+      <p class="text-xs text-coffee-muted">
+        {t('article.published')} <time datetime={entry.data.pubDate.toISOString().slice(0, 10)}>{formatDate(entry.data.pubDate)}</time>
+        {entry.data.updatedDate && (<> · {t('article.updated')} <time datetime={entry.data.updatedDate.toISOString().slice(0, 10)}>{formatDate(entry.data.updatedDate)}</time></>)}
+      </p>
+      <h1 class="mt-3 text-balance font-display text-3xl font-bold leading-tight tracking-tight text-coffee-light sm:text-4xl md:text-5xl">{entry.data.title}</h1>
+      <p class="mt-4 text-pretty text-base leading-7 text-coffee-sand sm:text-lg">{entry.data.description}</p>
+      <p class="mt-3 text-xs text-coffee-muted">{t('article.reviewed')}</p>
+    </header>
+
+    <Disclaimer lang={lang} class="mb-10 max-w-3xl" />
+
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <article class="cc-prose" lang={lang}>
+        <Content />
+
+        <aside class="cc-cta not-prose">
+          <h2>{t('article.toolCta')}</h2>
+          <p>{t('article.toolCtaBody')}</p>
+          <a href={`/${lang}/caffeine-calculator/`}>☕ {t('article.toolCtaButton')}</a>
+        </aside>
+      </article>
+
+      <aside class="hidden lg:block" aria-label={t('toc.heading')}>
+        <div class="sticky top-28 space-y-6">
+          <nav class="cc-toc" aria-label={t('toc.heading')}>
+            <p class="cc-toc-title">{t('toc.heading')}</p>
+            <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+          </nav>
+          <AdSlot type="sidebar" id={`guide-sidebar-ad-${slug}`} />
+        </div>
+      </aside>
+    </div>
+
+    {related.length > 0 && (
+      <section class="mt-14" aria-labelledby="related-title">
+        <h2 id="related-title" class="font-display text-2xl font-bold text-coffee-light">{t('article.related')}</h2>
+        <ul class="mt-5 grid gap-4 md:grid-cols-2">
+          {related.map((guide) => (
+            <li>
+              <a href={`/${lang}/guides/${guide.slug}/`} class="cc-guide-card">
+                <strong>{guide.title}</strong>
+                <span>{guide.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <Disclaimer lang={lang} class="mt-12" />
+  </div>
+</Layout>

@@ -10,6 +10,32 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-27',
+    zh: {
+      title: '新增咖啡因計算器及三篇咖啡因指南',
+      items: [
+        '新增「咖啡因計算器」：記錄咖啡、茶、可樂或能量飲品，估算體內現有咖啡因、睡覺時剩餘量，以及再喝一杯 95 毫克咖啡的最遲時間。',
+        '計算器附 24 小時曲線圖、「如果……會怎樣？」模擬、半衰期與睡前上限設定，以及可下載的分享圖片；所有資料只儲存在你的裝置。',
+        '新增三篇附參考來源的指南：咖啡因半衰期、咖啡因與睡眠、常見飲品的咖啡因含量。',
+        '私隱政策加入咖啡因計算器的本機儲存說明，以及 Google AdSense Cookie 和第三方廣告的披露。'
+      ]
+    },
+    en: {
+      title: 'New caffeine calculator and three caffeine guides',
+      items: [
+        'Added a caffeine calculator: log coffee, tea, cola or energy drinks to estimate the caffeine in your body now, at bedtime, and the latest time for one more 95 mg cup.',
+        'The calculator includes a 24-hour chart, a “What if?” simulator, half-life and sleep-threshold settings, and a downloadable share image; all data stays on your device.',
+        'Added three source-backed guides: caffeine half-life, caffeine and sleep, and caffeine in common drinks.',
+        'The privacy policy now covers the calculator’s local storage and discloses Google AdSense cookies and third-party advertising.'
+      ]
+    },
+    links: [
+      { path: 'caffeine-calculator', zh: '咖啡因計算器', en: 'Caffeine calculator' },
+      { path: 'guides/caffeine-and-sleep', zh: '咖啡因與睡眠', en: 'Caffeine and sleep' },
+      { path: 'privacy-policy', zh: '私隱政策', en: 'Privacy policy' }
+    ]
+  },
+  {
     date: '2026-10-20',
     zh: {
       title: '新增萃取率及沖煮用水計算器，配方頁加入調整指南',
