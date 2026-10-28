@@ -60,7 +60,7 @@ const jsonLd = {
 };
 ---
 
-<Layout title={`${entry.data.seoTitle ?? entry.data.title} | Barista Flow`} description={entry.data.description} jsonld={jsonLd} article ogImage={toolInfo.og} themeAware hideTopAd>
+<Layout title={`${entry.data.seoTitle ?? entry.data.title} | Barista Flow`} description={entry.data.description} jsonld={jsonLd} article ogImage={toolInfo.og} hideTopAd>
   <div class="mx-auto max-w-6xl">
     <Breadcrumbs items={[{ label: toolInfo.crumb, url: toolInfo.path }, { label: entry.data.title }]} />
 
@@ -76,7 +76,7 @@ const jsonLd = {
 
     <Disclaimer lang={lang} class="mb-10 max-w-3xl" {...disclaimer} />
 
-    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
       <article class="cc-prose" lang={lang}>
         <Content />
 

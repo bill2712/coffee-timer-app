@@ -23,7 +23,7 @@ const i18nJson = JSON.stringify(focusStrings[focusLang(lang)]).replace(/</g, '\\
 const tiers = [...CUP_TIERS].reverse();
 ---
 
-<Layout title={t('stats.meta.title')} description={t('stats.meta.desc')} noindex themeAware hideTopAd ogImage="/images/og-focus.jpg">
+<Layout title={t('stats.meta.title')} description={t('stats.meta.desc')} noindex hideTopAd ogImage="/images/og-focus.jpg">
   <div id="bf-stats" class="bf mx-auto max-w-4xl" data-lang={lang}>
     <script is:inline type="application/json" id="bf-i18n" set:html={i18nJson} />
     <Breadcrumbs items={[{ label: t('breadcrumb'), url: 'focus/' }, { label: t('breadcrumb.stats') }]} />
@@ -159,6 +159,6 @@ const tiers = [...CUP_TIERS].reverse();
   .st-history small { color: var(--color-coffee-muted); }
   .st-ok { color: var(--bf-good); font-weight: 700; }
   .st-bad { color: var(--bf-bad); font-weight: 700; }
-  .cc-dialog { max-width: min(28rem, calc(100vw - 2rem)); border: 1px solid color-mix(in srgb, var(--color-coffee-sand) 20%, transparent); border-radius: 1.25rem; background: var(--color-coffee-darker); padding: 1.5rem; color: var(--color-coffee-light); }
+  .cc-dialog { margin: auto; max-height: calc(100dvh - 2rem); overflow-y: auto; max-width: min(28rem, calc(100vw - 2rem)); border: 1px solid color-mix(in srgb, var(--color-coffee-sand) 20%, transparent); border-radius: 1.25rem; background: var(--color-coffee-darker); padding: 1.5rem; color: var(--color-coffee-light); }
   .cc-dialog::backdrop { background: rgb(0 0 0 / .55); }
 </style>
