@@ -22,8 +22,6 @@ interface Props {
   jsonld?: any;
   hideTopAd?: boolean;
   noindex?: boolean;
-  /** Follow the system light/dark preference (opt-in per page while the rest of the site is dark-only). */
-  themeAware?: boolean;
 }
 
 const {
@@ -34,8 +32,7 @@ const {
   article = false,
   jsonld,
   hideTopAd = false,
-  noindex = false,
-  themeAware = false
+  noindex = false
 } = Astro.props;
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
@@ -53,11 +50,11 @@ const finalKeywords = keywords || t('seo.keywords');
 ---
 
 <!doctype html>
-<html lang={lang} dir={isRTL ? "rtl" : "ltr"} class={themeAware ? 'theme-auto' : undefined}>
+<html lang={lang} dir={isRTL ? "rtl" : "ltr"}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content={themeAware ? 'light dark' : 'dark'} />
+    <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/svg+xml" href={base + "favicon.svg"} />
     <link rel="manifest" href={base + "manifest.json"} />
     

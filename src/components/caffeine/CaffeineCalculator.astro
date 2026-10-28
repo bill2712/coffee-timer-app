@@ -297,31 +297,20 @@ const quickDrinks = DRINKS.filter((d) => d.quick);
     --cc-warn: #f2c94c;
     --cc-bad: #f19a90;
     --cc-ghost: #a9bcff;
-    --cc-card-bg: rgb(28 24 21 / 0.62);
-    --cc-card-border: rgb(197 168 128 / 0.16);
-    --cc-input-bg: rgb(10 8 7 / 0.6);
-  }
-  @media (prefers-color-scheme: light) {
-    html.theme-auto .cc {
-      --cc-good: #1c6e38;
-      --cc-warn: #7a5000;
-      --cc-bad: #a8251a;
-      --cc-ghost: #2f4fb8;
-      --cc-card-bg: rgb(255 255 255 / 0.8);
-      --cc-card-border: rgb(106 74 42 / 0.16);
-      --cc-input-bg: #fffdf9;
-    }
+    --cc-card-bg: rgba(42, 36, 32, 0.4);
+    --cc-card-border: rgba(197, 168, 128, 0.15);
+    --cc-input-bg: var(--color-coffee-darker);
   }
   .cc { hyphens: manual; }
-  .cc-card { border: 1px solid var(--cc-card-border); border-radius: 1.25rem; background: var(--cc-card-bg); padding: 1.25rem; box-shadow: 0 10px 30px rgb(0 0 0 / 0.08); }
-  @media (min-width: 640px) { .cc-card { padding: 1.5rem; } }
+  .cc-card { border: 1px solid rgba(197, 168, 128, 0.15); border-radius: 1.5rem; background: rgba(42, 36, 32, 0.4); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); padding: 1.25rem; }
+  @media (min-width: 640px) { .cc-card { padding: 1.75rem; } }
   .cc-eyebrow { margin: 0; color: var(--color-coffee-gold); font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-  .cc-h2 { margin: 0; color: var(--color-coffee-light); font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; line-height: 1.25; }
-  .cc-big { display: inline-block; color: var(--color-coffee-light); font-size: clamp(3.5rem, 15vw, 5.25rem); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; line-height: 1; }
+  .cc-h2 { margin: 0; color: var(--color-coffee-gold); font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; line-height: 1.25; }
+  .cc-big { display: inline-block; color: var(--color-coffee-gold); font-family: var(--font-display); font-size: clamp(3.5rem, 15vw, 5.25rem); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1; }
   .cc-big-unit { margin-inline-start: .35rem; color: var(--color-coffee-sand); font-size: 1.5rem; font-weight: 600; }
-  .cc-stat { display: grid; align-content: start; gap: .35rem; min-height: 8.5rem; border: 1px solid var(--cc-card-border); border-radius: 1rem; background: color-mix(in srgb, var(--color-coffee-darker) 55%, transparent); padding: .9rem 1rem; }
+  .cc-stat { display: grid; align-content: start; gap: .35rem; min-height: 8.5rem; border: 1px solid var(--cc-card-border); border-radius: 1rem; background: var(--color-coffee-darker); padding: .9rem 1rem; }
   .cc-stat-label { color: var(--color-coffee-muted); font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-  .cc-stat-value { display: block; color: var(--color-coffee-light); font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .cc-stat-value { display: block; color: var(--color-coffee-light); font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.15; }
   .cc-stat-value small { color: var(--color-coffee-sand); font-size: .9rem; font-weight: 600; }
   .cc-stat-note { display: block; margin-top: .35rem; color: var(--color-coffee-muted); font-size: .75rem; line-height: 1.45; }
   .cc-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: .2rem .6rem; font-size: .8rem; font-weight: 700; }
@@ -336,24 +325,25 @@ const quickDrinks = DRINKS.filter((d) => d.quick);
   .cc-alert-danger { border-color: color-mix(in srgb, var(--cc-bad) 55%, transparent); background: color-mix(in srgb, var(--cc-bad) 12%, transparent); color: var(--color-coffee-light); }
   .cc-alert-info { border-color: var(--cc-card-border); background: color-mix(in srgb, var(--color-coffee-gold) 8%, transparent); color: var(--color-coffee-light); }
   .cc-field { display: grid; gap: .35rem; min-width: 0; border: 0; margin: 0; padding: 0; color: var(--color-coffee-sand); font-size: .85rem; font-weight: 600; }
-  .cc-input { min-height: 48px; width: 100%; border: 1px solid var(--cc-card-border); border-radius: .75rem; background: var(--cc-input-bg); padding: .6rem .8rem; color: var(--color-coffee-light); font-size: 1rem; font-weight: 500; color-scheme: inherit; }
-  .cc-input:focus-visible, .cc-range:focus-visible { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; }
+  .cc-input { min-height: 48px; width: 100%; border: 1px solid var(--cc-card-border); border-radius: 1rem; background: var(--cc-input-bg); padding: .6rem .9rem; color: var(--color-coffee-light); font-size: 1rem; font-weight: 500; color-scheme: dark; transition: border-color .2s ease, box-shadow .2s ease; }
+  .cc-input:focus-visible { outline: none; border-color: var(--color-coffee-gold); box-shadow: 0 0 0 2px rgb(212 175 55 / .5); }
+  .cc-range:focus-visible { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; }
   .cc-input[aria-invalid="true"] { border-color: var(--cc-bad); }
   .cc-hint { color: var(--color-coffee-muted); font-size: .75rem; font-weight: 400; line-height: 1.45; }
   .cc-error { color: var(--cc-bad); font-size: .8rem; font-weight: 600; }
   .cc-range { width: 100%; min-height: 44px; accent-color: var(--color-coffee-gold); }
-  .cc-btn { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: .4rem; border-radius: .8rem; border: 1px solid transparent; padding: .6rem 1.1rem; font-size: .9rem; font-weight: 700; text-align: center; transition: background-color .15s ease, border-color .15s ease, transform .15s ease; cursor: pointer; }
+  .cc-btn { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: .4rem; border-radius: 1rem; border: 1px solid transparent; padding: .6rem 1.1rem; font-size: .9rem; font-weight: 700; text-align: center; transition: background-color .15s ease, border-color .15s ease, transform .15s ease; cursor: pointer; }
   .cc-btn:focus-visible, .cc-quick:focus-visible, .cc-chip:focus-visible, .cc-chip:has(input:focus-visible), .cc-chart:focus-visible { outline: 2px solid var(--color-coffee-gold); outline-offset: 2px; }
-  .cc-btn-primary { background: var(--color-coffee-gold); color: var(--color-coffee-dark); }
-  .cc-btn-primary:hover { background: var(--color-coffee-gold-hover); }
-  .cc-btn-outline { border-color: color-mix(in srgb, var(--color-coffee-gold) 45%, transparent); color: var(--color-coffee-gold); }
+  .cc-btn-primary { background: linear-gradient(to right, var(--color-coffee-gold), var(--color-coffee-sand)); color: var(--color-coffee-dark); box-shadow: 0 10px 15px -3px rgb(212 175 55 / .2); }
+  .cc-btn-primary:hover { background: linear-gradient(to right, var(--color-coffee-gold-hover), var(--color-coffee-gold)); box-shadow: 0 12px 20px -3px rgb(212 175 55 / .4); }
+  .cc-btn-outline { border-color: rgb(212 175 55 / .4); background: var(--color-coffee-darker); color: var(--color-coffee-gold); }
   .cc-btn-outline:hover { background: color-mix(in srgb, var(--color-coffee-gold) 10%, transparent); }
-  .cc-btn-ghost { border-color: var(--cc-card-border); color: var(--color-coffee-sand); }
-  .cc-btn-ghost:hover { color: var(--color-coffee-light); }
+  .cc-btn-ghost { border-color: rgba(197, 168, 128, 0.2); background: var(--color-coffee-darker); color: var(--color-coffee-sand); }
+  .cc-btn-ghost:hover { border-color: var(--color-coffee-gold); color: var(--color-coffee-light); }
   .cc-btn-danger { border-color: color-mix(in srgb, var(--cc-bad) 50%, transparent); color: var(--cc-bad); }
   .cc-btn-danger:hover { background: color-mix(in srgb, var(--cc-bad) 10%, transparent); }
   .cc-btn-danger-solid { background: var(--cc-bad); color: var(--color-coffee-dark); }
-  .cc-quick { display: grid; min-height: 84px; align-content: start; gap: .15rem; border: 1px solid var(--cc-card-border); border-radius: .9rem; background: color-mix(in srgb, var(--color-coffee-darker) 55%, transparent); padding: .7rem .8rem; text-align: start; transition: border-color .15s ease, background-color .15s ease, transform .15s ease; cursor: pointer; }
+  .cc-quick { display: grid; min-height: 84px; align-content: start; gap: .15rem; border: 1px solid var(--cc-card-border); border-radius: 1rem; background: var(--color-coffee-darker); padding: .7rem .8rem; text-align: start; transition: border-color .15s ease, background-color .15s ease, transform .15s ease; cursor: pointer; }
   .cc-quick:hover { border-color: color-mix(in srgb, var(--color-coffee-gold) 55%, transparent); background: color-mix(in srgb, var(--color-coffee-gold) 8%, transparent); }
   .cc-quick:active, .cc-btn:active { transform: scale(.97); }
   .cc-quick-name { color: var(--color-coffee-light); font-size: .85rem; font-weight: 700; line-height: 1.3; }
@@ -364,7 +354,7 @@ const quickDrinks = DRINKS.filter((d) => d.quick);
   .cc-details > summary::-webkit-details-marker { display: none; }
   .cc-details > summary::before { content: '+'; display: inline-grid; width: 1.4rem; height: 1.4rem; place-items: center; border-radius: 999px; border: 1px solid currentColor; font-size: .9rem; transition: transform .2s ease; }
   .cc-details[open] > summary::before { transform: rotate(45deg); }
-  .cc-chip { display: flex; min-height: 44px; align-items: center; justify-content: center; border: 1px solid var(--cc-card-border); border-radius: .75rem; padding: .5rem .7rem; color: var(--color-coffee-sand); font-size: .8rem; font-weight: 600; text-align: center; cursor: pointer; }
+  .cc-chip { display: flex; min-height: 44px; align-items: center; justify-content: center; border: 1px solid var(--cc-card-border); border-radius: 1rem; background: var(--color-coffee-darker); padding: .5rem .7rem; color: var(--color-coffee-sand); font-size: .8rem; font-weight: 600; text-align: center; cursor: pointer; }
   .cc-chip[aria-pressed="true"], .cc-chip:has(input:checked) { border-color: var(--color-coffee-gold); background: color-mix(in srgb, var(--color-coffee-gold) 14%, transparent); color: var(--color-coffee-light); }
   .cc-empty { border: 1px dashed var(--cc-card-border); border-radius: 1rem; padding: 1.25rem; text-align: center; }
   .cc-entry { display: flex; align-items: center; gap: .75rem; border-bottom: 1px solid var(--cc-card-border); padding: .6rem 0; }
@@ -408,10 +398,10 @@ const quickDrinks = DRINKS.filter((d) => d.quick);
   .cc-share-preview { display: block; width: auto; max-width: 100%; max-height: 420px; margin: 0 auto; border-radius: .9rem; border: 1px solid var(--cc-card-border); }
   .cc-support { border: 1px solid color-mix(in srgb, var(--color-coffee-gold) 35%, transparent); border-radius: 1rem; background: color-mix(in srgb, var(--color-coffee-gold) 8%, transparent); padding: 1rem; animation: cc-rise .35s ease both; }
   .cc-privacy { border-top: 1px solid var(--cc-card-border); padding-top: 1.25rem; }
-  .cc-dialog { max-width: min(28rem, calc(100vw - 2rem)); border: 1px solid var(--cc-card-border); border-radius: 1.25rem; background: var(--color-coffee-darker); padding: 1.5rem; color: var(--color-coffee-light); }
+  .cc-dialog { margin: auto; max-height: calc(100dvh - 2rem); overflow-y: auto; max-width: min(28rem, calc(100vw - 2rem)); border: 1px solid var(--cc-card-border); border-radius: 1.25rem; background: var(--color-coffee-darker); padding: 1.5rem; color: var(--color-coffee-light); }
   .cc-dialog::backdrop { background: rgb(0 0 0 / .55); }
   .cc-toast { position: fixed; inset-inline: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom)); z-index: 80; display: flex; max-width: 32rem; align-items: center; justify-content: space-between; gap: 1rem; margin-inline: auto; border: 1px solid var(--cc-card-border); border-radius: 1rem; background: var(--color-coffee-darker); padding: .75rem 1rem; color: var(--color-coffee-light); font-size: .875rem; box-shadow: 0 12px 30px rgb(0 0 0 / .3); animation: cc-rise .25s ease both; }
-  .cc-toast-btn { min-height: 44px; border-radius: .6rem; padding: 0 .8rem; color: var(--color-coffee-gold); font-weight: 700; }
+  .cc-toast-btn { flex: none; white-space: nowrap; min-height: 44px; border-radius: .6rem; padding: 0 .8rem; color: var(--color-coffee-gold); font-weight: 700; }
   @keyframes cc-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) {
     .cc *, .cc *::before { animation: none !important; transition: none !important; }
