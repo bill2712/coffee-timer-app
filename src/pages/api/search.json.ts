@@ -36,7 +36,14 @@ export async function GET() {
     term: '',
     tags: ['Caffeine', 'Tool'],
     url: `/${lang}/caffeine-calculator/`
-  }));
+  })).concat(publishedLocales.map((lang) => ({
+    lang,
+    title: lang === 'zh-TW' ? '專注沖煮（番茄鐘計時器）' : 'Brew Focus (Pomodoro timer)',
+    description: lang === 'zh-TW' ? '番茄鐘及放下手機挑戰：專注時咖啡杯注滿，離開分頁就打瀉。' : 'Pomodoro and Phone Down Challenge: a cup fills while you focus and spills if you leave.',
+    term: '',
+    tags: ['Focus', 'Tool'],
+    url: `/${lang}/focus/`
+  })));
   searchIndex.push(...(guides as typeof searchIndex), ...tools);
 
   return new Response(JSON.stringify(searchIndex), {

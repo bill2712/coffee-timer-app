@@ -28,6 +28,10 @@ const guides = defineCollection({
     author: z.string().default('Barista Flow editorial team'),
     /** Sort order in "related guides" lists. */
     order: z.number().default(0),
+    /** Which tool the guide belongs to (breadcrumb, call to action, share image). */
+    tool: z.enum(['caffeine', 'focus']).default('caffeine'),
+    /** Disclaimer shown on the page: health (not medical advice) or general productivity. */
+    disclaimer: z.enum(['health', 'general']).optional(),
   }),
 });
 

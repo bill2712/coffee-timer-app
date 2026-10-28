@@ -1,0 +1,135 @@
+---
+import { getCollection } from 'astro:content';
+import { SITE_URL } from '../../../config';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import BrewFocus from '../../../components/focus/BrewFocus.astro';
+import Disclaimer from '../../../components/caffeine/Disclaimer.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl } from '../../../i18n/utils';
+import { focusFaq, focusLang, useFocusT } from '../../../i18n/focus';
+import ExplainerEn, { getHeadings as headingsEn } from '../../../content/focus-tool/en.mdx';
+import ExplainerZh, { getHeadings as headingsZh } from '../../../content/focus-tool/zh-TW.mdx';
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useFocusT(lang);
+const faq = focusFaq[focusLang(lang)];
+const Explainer = lang === 'zh-TW' ? ExplainerZh : ExplainerEn;
+const toc: [string, string][] = [
+  ...(lang === 'zh-TW' ? headingsZh() : headingsEn()).filter((h) => h.depth === 2).map((h): [string, string] => [h.slug, h.text]),
+  ['faq', t('faq.heading')]
+];
+const pageUrl = `${SITE_URL}/${lang}/focus/`;
+const guides = (await getCollection('guides', (e) => e.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && e.data.tool === 'focus'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((e) => ({ slug: e.id.split('/').slice(1).join('/'), title: e.data.title, description: e.data.description }));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': `${pageUrl}#app`,
+      name: t('hero.title'),
+      alternateName: 'Brew Focus',
+      url: pageUrl,
+      description: t('meta.desc'),
+      inLanguage: lang,
+      applicationCategory: 'ProductivityApplication',
+      operatingSystem: 'All',
+      browserRequirements: 'Requires JavaScript. Requires HTML5.',
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      featureList: [t('mode.focus.desc'), t('mode.challenge.desc'), t('gentle.desc'), t('stats.heatmap'), t('stats.shelf')],
+      publisher: { '@type': 'Organization', name: 'Barista Flow', url: SITE_URL }
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${pageUrl}#faq`,
+      inLanguage: lang,
+      mainEntity: faq.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } }))
+    }
+  ]
+};
+---
+
+<Layout title={t('meta.title')} description={t('meta.desc')} jsonld={jsonLd} ogImage="/images/og-focus.jpg" themeAware hideTopAd>
+  <div class="mx-auto max-w-6xl">
+    <div class="flex justify-center"><Breadcrumbs items={[{ label: t('breadcrumb') }]} /></div>
+
+    <header class="mx-auto mb-8 max-w-3xl text-center">
+      <p class="inline-flex items-center gap-2 rounded-full border border-coffee-gold/25 bg-coffee-gold/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-coffee-gold">🍅 {t('hero.eyebrow')}</p>
+      <h1 class="mt-4 text-balance font-display text-4xl font-bold tracking-tight text-coffee-light sm:text-5xl">{t('hero.title')}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-coffee-sand sm:text-lg">{t('hero.subtitle')}</p>
+      <a href="#how" class="mt-3 inline-flex min-h-[44px] items-center text-sm font-semibold text-coffee-gold underline underline-offset-4 hover:text-coffee-light">{t('hero.jump')} ↓</a>
+    </header>
+
+    <div class="mx-auto max-w-3xl">
+      <BrewFocus lang={lang} />
+    </div>
+
+    <AdSlot type="results" id="focus-ad" class="mx-auto mt-8 max-w-3xl" />
+
+    <section id="bf-progress" class="mx-auto mt-10 max-w-3xl" aria-labelledby="bf-progress-title">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="bf-progress-title" class="font-display text-2xl font-bold text-coffee-light">{t('progress.heading')}</h2>
+        <a href={`/${lang}/focus/stats/`} class="inline-flex min-h-[44px] items-center text-sm font-bold text-coffee-gold hover:text-coffee-light">{t('progress.link')}</a>
+      </div>
+      <dl class="mt-4 grid grid-cols-3 gap-3">
+        <div class="bf-tile"><dt>{t('progress.streak')}</dt><dd id="bf-progress-streak">—</dd></div>
+        <div class="bf-tile"><dt>{t('progress.today')}</dt><dd id="bf-progress-today">—</dd></div>
+        <div class="bf-tile"><dt>{t('progress.cups')}</dt><dd id="bf-progress-cups">—</dd></div>
+      </dl>
+      <p id="bf-progress-empty" class="mt-3 text-sm text-coffee-muted">{t('progress.empty')}</p>
+    </section>
+
+    <div class="mt-14 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <article id="how" class="cc-prose scroll-mt-24" lang={lang}>
+        <Explainer />
+      </article>
+      <aside class="hidden lg:block" aria-label={t('toc.heading')}>
+        <div class="sticky top-28 space-y-6">
+          <nav class="cc-toc" aria-label={t('toc.heading')}>
+            <p class="cc-toc-title">{t('toc.heading')}</p>
+            <ol>{toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}</ol>
+          </nav>
+          <AdSlot type="sidebar" id="focus-sidebar-ad" />
+        </div>
+      </aside>
+    </div>
+
+    <section id="faq" class="mt-14 scroll-mt-24" aria-labelledby="faq-title">
+      <h2 id="faq-title" class="font-display text-3xl font-bold text-coffee-light">{t('faq.heading')}</h2>
+      <div class="mt-6 grid gap-3">
+        {faq.map((item) => (
+          <details class="cc-faq">
+            <summary><h3>{item.q}</h3></summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14" aria-labelledby="guides-title">
+      <h2 id="guides-title" class="font-display text-3xl font-bold text-coffee-light">{t('guides.heading')}</h2>
+      <ul class="mt-6 grid gap-4 md:grid-cols-3">
+        {guides.map((guide) => (
+          <li>
+            <a href={`/${lang}/guides/${guide.slug}/`} class="cc-guide-card">
+              <strong>{guide.title}</strong>
+              <span>{guide.description}</span>
+              <span class="cc-guide-more">{lang === 'zh-TW' ? '閱讀指南 →' : 'Read the guide →'}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <Disclaimer lang={lang} class="mt-12" text={t('disclaimer')} label={t('disclaimer.label')} />
+  </div>
+</Layout>

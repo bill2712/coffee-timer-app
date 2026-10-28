@@ -1,0 +1,227 @@
+---
+/**
+ * Brew Focus UI shell: setup card, results card, progress summary and the
+ * full-screen session view. Behaviour lives in src/lib/focus/app.ts.
+ */
+import { focusStrings, focusLang, useFocusT } from '../../i18n/focus';
+import { PRESETS_MIN } from '../../lib/focus/timer';
+import { SUPPORT_URL } from '../../config/monetization';
+import '../../styles/focus.css';
+
+interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
+const t = useFocusT(lang);
+const i18nJson = JSON.stringify(focusStrings[focusLang(lang)]).replace(/</g, '\\u003c');
+const statsUrl = `/${lang}/focus/stats/`;
+---
+
+<div id="bf-app" class="bf" data-lang={lang} data-support-url={SUPPORT_URL} data-stats-url={statsUrl}>
+  <script is:inline type="application/json" id="bf-i18n" set:html={i18nJson} />
+  <p id="bf-storage-warning" class="bf-alert mb-4" role="status" hidden>{t('storage.off')}</p>
+  <noscript><p class="bf-alert mb-4">{t('noscript')}</p></noscript>
+
+  <!-- Setup -->
+  <section id="bf-setup" class="bf-card" aria-labelledby="bf-setup-title">
+    <h2 id="bf-setup-title" class="bf-h2">{t('setup.heading')}</h2>
+
+    <fieldset class="bf-group mt-4">
+      <legend class="bf-legend">{t('setup.mode')}</legend>
+      <div class="grid gap-2 sm:grid-cols-2">
+        <label class="bf-option">
+          <input type="radio" name="bf-mode" value="focus" class="sr-only" checked />
+          <span class="bf-option-title">🍅 {t('mode.focus')}</span>
+          <span class="bf-option-desc">{t('mode.focus.desc')}</span>
+        </label>
+        <label class="bf-option">
+          <input type="radio" name="bf-mode" value="challenge" class="sr-only" />
+          <span class="bf-option-title">📵 {t('mode.challenge')}</span>
+          <span class="bf-option-desc">{t('mode.challenge.desc')}</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div id="bf-focus-opts" class="mt-5 grid gap-4">
+      <fieldset class="bf-group">
+        <legend class="bf-legend">{t('setup.pattern')}</legend>
+        <div class="grid grid-cols-3 gap-2">
+          {['25-5', '50-10', 'custom'].map((id, i) => (
+            <label class="bf-chip"><input type="radio" name="bf-pattern" value={id} class="sr-only" checked={i === 0} />{t(`pattern.${id}` as any)}</label>
+          ))}
+        </div>
+      </fieldset>
+      <div id="bf-custom-pattern" class="grid grid-cols-2 gap-3" hidden>
+        <label class="bf-field"><span>{t('setup.duration')} (min)</span>
+          <input id="bf-focus-min" class="bf-input" type="number" inputmode="numeric" min="5" max="180" step="1" value="25" aria-describedby="bf-focus-min-error" />
+          <small id="bf-focus-min-error" class="bf-error" hidden></small>
+        </label>
+        <label class="bf-field"><span>{t('setup.break')}</span>
+          <input id="bf-break-min" class="bf-input" type="number" inputmode="numeric" min="1" max="60" step="1" value="5" aria-describedby="bf-break-min-error" />
+          <small id="bf-break-min-error" class="bf-error" hidden></small>
+        </label>
+      </div>
+      <div class="bf-field">
+        <span id="bf-rounds-label">{t('setup.rounds')}</span>
+        <div class="flex items-center gap-2" role="group" aria-labelledby="bf-rounds-label">
+          <button type="button" class="bf-step" id="bf-rounds-dec" aria-label="−1">−</button>
+          <input id="bf-rounds" class="bf-input w-20 text-center" type="number" inputmode="numeric" min="1" max="8" value="4" aria-labelledby="bf-rounds-label" aria-describedby="bf-rounds-help" />
+          <button type="button" class="bf-step" id="bf-rounds-inc" aria-label="+1">+</button>
+        </div>
+        <small id="bf-rounds-help" class="bf-hint">{t('setup.roundsHelp')}</small>
+      </div>
+    </div>
+
+    <div id="bf-challenge-opts" class="mt-5" hidden>
+      <fieldset class="bf-group">
+        <legend class="bf-legend">{t('setup.duration')}</legend>
+        <div class="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          {PRESETS_MIN.map((m) => (
+            <label class="bf-chip"><input type="radio" name="bf-duration" value={m} class="sr-only" checked={m === 25} />{m}</label>
+          ))}
+          <label class="bf-chip"><input type="radio" name="bf-duration" value="custom" class="sr-only" />{t('pattern.custom')}</label>
+        </div>
+      </fieldset>
+      <label id="bf-custom-duration" class="bf-field mt-3" hidden><span>{t('setup.custom')}</span>
+        <input id="bf-duration-min" class="bf-input" type="number" inputmode="numeric" min="5" max="180" step="1" value="30" aria-describedby="bf-duration-error" />
+        <small id="bf-duration-error" class="bf-error" hidden></small>
+      </label>
+    </div>
+
+    <label class="bf-field mt-5"><span>{t('setup.label')}</span>
+      <input id="bf-label" class="bf-input" type="text" maxlength="80" autocomplete="off" placeholder={t('setup.labelPlaceholder')} />
+    </label>
+
+    <fieldset class="bf-group mt-5">
+      <legend class="bf-legend">{t('setup.enforcement')}</legend>
+      <div class="grid gap-2 sm:grid-cols-2">
+        <label class="bf-option">
+          <input type="radio" name="bf-strict" value="strict" class="sr-only" />
+          <span class="bf-option-title">🔒 {t('strict')}</span>
+          <span class="bf-option-desc">{t('strict.desc')}</span>
+        </label>
+        <label class="bf-option">
+          <input type="radio" name="bf-strict" value="gentle" class="sr-only" checked />
+          <span class="bf-option-title">🌿 {t('gentle')}</span>
+          <span class="bf-option-desc">{t('gentle.desc')}</span>
+        </label>
+      </div>
+      <p id="bf-challenge-note" class="bf-hint mt-2" hidden>{t('setup.challengeStrict')}</p>
+      <p id="bf-mobile-note" class="bf-hint mt-2" hidden>📱 {t('setup.mobileNote')}</p>
+    </fieldset>
+
+    <details class="bf-details mt-5">
+      <summary>{t('setup.sound')} · {t('setup.alerts')}</summary>
+      <fieldset class="bf-group mt-4">
+        <legend class="bf-legend">{t('setup.sound')}</legend>
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {['off', 'brown', 'rain', 'cafe'].map((s) => (
+            <label class="bf-chip"><input type="radio" name="bf-sound" value={s} class="sr-only" checked={s === 'off'} />{t(`sound.${s}` as any)}</label>
+          ))}
+        </div>
+        <div class="mt-3 flex flex-wrap items-center gap-3">
+          <label class="bf-field flex-1"><span>{t('sound.volume')}</span>
+            <input id="bf-volume" class="bf-range" type="range" min="0" max="1" step="0.05" value="0.5" />
+          </label>
+          <button id="bf-preview" type="button" class="bf-btn bf-btn-ghost" aria-pressed="false">{t('sound.preview')}</button>
+        </div>
+        <p class="bf-hint mt-1">{t('sound.note')}</p>
+      </fieldset>
+      <fieldset class="bf-group mt-4">
+        <legend class="bf-legend">{t('setup.alerts')}</legend>
+        <label class="bf-check"><input id="bf-notify" type="checkbox" /> <span>{t('setup.notify')}</span></label>
+        <p id="bf-notify-note" class="bf-hint" hidden></p>
+        <label class="bf-check"><input id="bf-chime" type="checkbox" checked /> <span>{t('setup.chime')}</span></label>
+      </fieldset>
+    </details>
+
+    <p id="bf-summary" class="mt-5 text-sm text-coffee-sand" aria-live="polite"></p>
+    <button id="bf-start" type="button" class="bf-btn bf-btn-primary bf-start mt-3">☕ {t('setup.start')}</button>
+  </section>
+
+  <!-- Results -->
+  <section id="bf-result" class="bf-card" aria-labelledby="bf-result-title" tabindex="-1" hidden>
+    <p id="bf-result-restored" class="bf-alert mb-4" hidden>{t('result.restored')}</p>
+    <div class="flex flex-col items-center text-center">
+      <div id="bf-result-cup" class="bf-result-cup" aria-hidden="true"></div>
+      <h2 id="bf-result-title" class="bf-h2 mt-3"></h2>
+      <p id="bf-result-body" class="mt-2 max-w-md text-coffee-sand"></p>
+      <p id="bf-result-tip" class="mt-2 max-w-md text-sm text-coffee-muted" hidden>{t('result.failed.tip')}</p>
+      <ul id="bf-result-meta" class="bf-meta mt-4"></ul>
+    </div>
+    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <button id="bf-again" type="button" class="bf-btn bf-btn-primary">{t('result.again')}</button>
+      <a href={statsUrl} class="bf-btn bf-btn-ghost">{t('result.stats')}</a>
+    </div>
+    <aside id="bf-support" class="bf-support mt-5" hidden>
+      <p id="bf-support-text" class="m-0 text-sm leading-6 text-coffee-light"></p>
+      <div class="mt-3 flex flex-wrap items-center gap-3">
+        <a id="bf-support-link" class="bf-btn bf-btn-primary" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">☕ {t('support.cta')}</a>
+        <button id="bf-support-dismiss" type="button" class="bf-btn bf-btn-ghost">✕ {t('support.dismiss')}</button>
+      </div>
+    </aside>
+    <div class="mt-6 border-t border-coffee-sand/15 pt-5">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-coffee-sand">{t('share.heading')}</h3>
+      <div class="mt-3 grid grid-cols-2 gap-3">
+        <button type="button" class="bf-btn bf-btn-ghost" data-share="story">📱 {t('share.story')}</button>
+        <button type="button" class="bf-btn bf-btn-ghost" data-share="square">🟫 {t('share.square')}</button>
+      </div>
+      <div id="bf-share-result" class="mt-4" hidden>
+        <img id="bf-share-img" alt={t('share.alt')} class="bf-share-preview" width="1080" height="1920" decoding="async" />
+        <div class="mt-3 grid grid-cols-2 gap-3">
+          <a id="bf-share-download" class="bf-btn bf-btn-primary" href="#" download="brew-focus.png">⬇️ {t('share.download')}</a>
+          <button id="bf-share-native" type="button" class="bf-btn bf-btn-ghost" hidden>↗️ {t('share.share')}</button>
+        </div>
+      </div>
+      <p id="bf-share-error" class="bf-error mt-2" role="alert" hidden>{t('share.error')}</p>
+    </div>
+  </section>
+
+  <p class="bf-detection">🔎 {t('setup.detection')}</p>
+
+  <!-- Full-screen session view -->
+  <div id="bf-session" class="bf-session" role="dialog" aria-modal="true" aria-labelledby="bf-phase" hidden>
+    <div class="bf-session-inner">
+      <p id="bf-phase" class="bf-phase">{t('session.focus')}</p>
+      <p id="bf-session-label" class="bf-session-label" hidden></p>
+      <div class="bf-bigcup-wrap">
+        <svg id="bf-bigcup" class="bf-bigcup" viewBox="0 0 220 220" role="img" aria-label={t('session.cupLabel', { pct: 0 })}>
+          <defs>
+            <clipPath id="bf-cup-clip"><path d="M50 68h120l-10 110c-1.3 12-8 16-18 16H78c-10 0-16.7-4-18-16Z" /></clipPath>
+          </defs>
+          <g class="bf-cupbody">
+            <g class="bf-steam" aria-hidden="true">
+              <path d="M88 52c-8-10 8-16 0-28" /><path d="M110 50c-8-10 8-16 0-28" /><path d="M132 52c-8-10 8-16 0-28" />
+            </g>
+            <ellipse cx="110" cy="200" rx="78" ry="9" class="bf-saucer" />
+            <path d="M170 92c26 0 26 52-6 52" class="bf-handle" />
+            <g clip-path="url(#bf-cup-clip)">
+              <rect x="40" y="60" width="140" height="140" class="bf-cup-bg" />
+              <g id="bf-liquid" transform="translate(0 194)">
+                <g class="bf-wave">
+                  <path d="M0 0q15-6 30 0t30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0 30 0V220H0Z" class="bf-coffee" />
+                </g>
+              </g>
+            </g>
+            <path d="M50 68h120l-10 110c-1.3 12-8 16-18 16H78c-10 0-16.7-4-18-16Z" class="bf-cup-outline" />
+          </g>
+          <ellipse cx="62" cy="206" rx="0" ry="0" class="bf-puddle" />
+        </svg>
+      </div>
+      <p id="bf-time" class="bf-time" aria-hidden="true">25:00</p>
+      <p id="bf-session-hint" class="bf-session-hint"></p>
+      <p id="bf-notice" class="bf-notice" role="status" hidden></p>
+      <div class="bf-session-actions">
+        <button id="bf-pause" type="button" class="bf-btn bf-btn-ghost">{t('session.pause')}</button>
+        <button id="bf-stop" type="button" class="bf-btn bf-btn-stop">{t('session.stop')}</button>
+      </div>
+    </div>
+  </div>
+  <div id="bf-live" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+</div>
+
+<script>
+  import { initBrewFocus } from '../../lib/focus/app';
+  initBrewFocus();
+</script>

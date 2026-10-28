@@ -1,0 +1,75 @@
+## How Brew Focus works
+
+Brew Focus is a simple promise to yourself: for the next few minutes, this one task gets your attention. You choose a rhythm, press **Start brewing**, and the page switches to a calm, full-screen view with a coffee cup, a countdown and very little else. As you work, the cup slowly fills. When the session ends you “brew” a cup, which joins the shelf on your stats page.
+
+There are two ways to brew:
+
+- **Focus mode** follows the Pomodoro idea of working in blocks with short breaks in between. The classic rhythm is 25 minutes of focus and a 5-minute break; 50/10 suits longer, deeper tasks; and you can set your own. Choose how many rounds you want, from one to eight. In this mode you can pause, and if you stop after finishing at least one round, the completed rounds still count.
+- **The Phone Down Challenge** is a single block of 15, 25, 45, 60 or 90 minutes (or any length from 5 to 180). There is no pause and no break, and it is always strict. It is designed for the moments when you want to prove — to yourself — that you can leave your phone alone.
+
+An optional label (“What are you focusing on?”) is shown during the session and in your history. Naming the task before you start is a small but useful commitment: it is much easier to notice drift when you know exactly what you meant to do.
+
+## Strict mode and gentle mode
+
+Brew Focus cares about one thing during a focus block: whether the page stays in front of you.
+
+**Strict mode** is uncompromising. If the page is hidden during a focus block — you switch tabs, minimise the window, open another app — the session ends immediately and the cup spills. The attempt is recorded as “spilled” and does not add to your streak. Strict mode works best on a computer, where staying on one tab is entirely within your control.
+
+**Gentle mode** is forgiving. When you leave, a 10-second grace period starts. Come back within it and you will only see a short welcome-back note. Stay away longer and Brew Focus counts an *interruption*, tells you how long you were away and keeps brewing. The session never fails in gentle mode, but the number of interruptions is shown on your results and in your history, which makes patterns visible without punishing you for them.
+
+Breaks are never enforced in either mode: stepping away from the screen is the whole point of a break. Paused time is not enforced either.
+
+## What counts as “leaving” — and the screen-lock problem
+
+Brew Focus uses the browser’s **Page Visibility API**. It is the same signal browsers use to pause videos in background tabs, and it only reports whether the page is visible or hidden. Brew Focus cannot see which app or website you opened, cannot read your notifications and sends nothing to a server.
+
+There is an honest limitation here. On most phones, **locking the screen hides the page in exactly the same way as switching apps**, and browsers deliberately do not let websites tell the difference. If your phone auto-locks after 30 seconds, a strict session would spill even though you did nothing wrong. Brew Focus handles this in three ways:
+
+1. On touch-screen devices, **gentle mode is the default**.
+2. During a session it asks the browser to keep the screen awake using the **Screen Wake Lock API**, where it is supported. This prevents most automatic locks while the page is open. You can still lock the phone yourself.
+3. The setup screen explains the behaviour, so you can choose strict mode knowingly.
+
+The same applies to some desktop situations: switching virtual desktops or minimising the browser counts as leaving, while simply clicking into another window that leaves this one visible may not.
+
+## Why the timer stays accurate
+
+Browsers save battery by slowing down timers in background tabs — sometimes to once per minute — and phones may pause pages entirely when the screen is off. A timer that counts “one second, one second, one second” drifts badly under those conditions.
+
+Brew Focus never counts ticks. It stores the moment your session started and any time spent paused, and calculates the remaining time from the current clock every time it updates. If the page was asleep for ten minutes, the next update simply shows ten minutes less. The remaining time is also shown in the **tab title**, so you can glance at it from another tab during a break.
+
+If you close or reload the page during a session, Brew Focus restores it from your browser’s storage. In strict mode, closing the page during a focus block counts as leaving. In gentle mode, a quick reload is forgiven and a longer absence counts as one interruption.
+
+## Breaks, sound and notifications
+
+When a focus block ends, Brew Focus can play a soft chime and, if you allow it, show a **browser notification** — useful when you have stepped away during a break. Notification permission is only requested when you switch the option on, and you can turn it off at any time in the setup or in your browser settings. Because browsers throttle background tabs, a notification may occasionally arrive a little late; the timer itself remains exact.
+
+**Ambient sound** is off by default. You can choose brown noise, rain or a café murmur. All three are generated live in your browser with the Web Audio API from random noise and filters, so there are no audio files and no licensing questions. Your choice and volume are remembered on this device.
+
+## Tips for a good session
+
+- **Decide the task first.** Write it in the label. Vague goals (“work on the report”) invite wandering; concrete ones (“draft the methods section”) do not.
+- **Prepare before you press Start.** Fill a glass of water, open the documents you need and close the ones you do not.
+- **Put your phone out of reach.** Face down on the desk is better than in your hand; another room is better still. Silencing notifications helps even if the phone stays nearby.
+- **Start smaller than you think.** A completed 15-minute session builds momentum and a streak; an abandoned 90-minute one does not.
+- **Use breaks for real breaks.** Stand up, stretch, look out of a window. Scrolling a feed is not a rest for an overloaded mind.
+- **Review your pattern, not just your score.** The stats page shows when you focus best and how often you get interrupted. Adjust the length or mode to fit what you see.
+
+Our guides on [the Pomodoro Technique](/en/guides/pomodoro-technique/), [reducing phone distraction](/en/guides/phone-distraction/) and [coffee and focus](/en/guides/coffee-and-focus/) go deeper.
+
+## Privacy and your data
+
+Brew Focus has no accounts and no backend. Sessions, streaks, cups and settings are stored only in your browser’s localStorage. Nothing about when or how long you focus is sent to us. On the stats page you can export a JSON backup, import it on another device or clear everything with one button.
+
+## Limitations
+
+- **Leaving cannot be detected perfectly.** Visibility is the only signal browsers offer. A second device, a book or a daydream will not be noticed — Brew Focus helps you keep a commitment; it is not surveillance.
+- **Some browsers behave differently.** Screen Wake Lock and notifications are not available everywhere, and some in-app browsers handle visibility unusually. If something seems wrong, open the page in your main browser.
+- **Streaks follow your device’s time zone.** If you travel, a day may be shorter or longer than 24 hours; Brew Focus uses the calendar day where you are when each session ends.
+- **It is not a medical tool.** If difficulty concentrating is persistent or affects your daily life, talk to a doctor or another qualified professional.
+
+## Sources
+
+- MDN Web Docs. [Page Visibility API](https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API).
+- MDN Web Docs. [Screen Wake Lock API](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API).
+- MDN Web Docs. [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API).
+- Cirillo, F. [The Pomodoro Technique](https://www.francescocirillo.com/).

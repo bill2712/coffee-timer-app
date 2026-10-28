@@ -82,6 +82,56 @@ How `AdSlot` (`src/components/AdSlot.astro`) behaves:
 
 The AdSense script is injected after page load or idle time by `AdSenseLoader.astro`. Keep ads away from buttons, inputs and the drink logger, as required by AdSense policy.
 
+## Brew Focus
+
+`/[lang]/focus/` is a coffee-themed focus timer. A cup fills while you work and spills if you leave the tab. Your personal stats are at `/[lang]/focus/stats/`; that page is noindex and left out of the sitemap because it only shows data stored in the browser. Three guides (`tool: focus`) live in `src/content/guides/{en,zh-TW}/`.
+
+### How focus detection works and its limits
+
+- **Signal:** the **Page Visibility API** (`visibilitychange`). It reports only whether the page is visible or hidden, never which app or site the user opened. Nothing is sent to a server.
+- **Strict mode:** hiding the page during a focus block fails the session immediately. The spill animation plays when the user returns.
+- **Gentle mode:** gives a 10-second grace period. Returning within it shows a reminder; a longer absence counts one interruption and the session keeps going.
+- **Never enforced:** breaks and paused time.
+- **Reloads:** an in-progress session is saved to localStorage with a 10-second heartbeat. On reload, strict mode treats the time the page was closed as leaving; gentle mode applies the grace period.
+- **Phone screen locks:** on most phones, locking the screen hides the page exactly like switching apps, and browsers don't let sites tell the two apart. To reduce false failures:
+  - gentle mode is the default on touch devices (`pointer: coarse`);
+  - the Screen Wake Lock API keeps the screen on during a session where supported;
+  - the setup screen explains the limitation.
+- **What it can't see:** a second device or a book. It's a commitment aid, not surveillance.
+- **Timer accuracy:** time is computed from timestamps (start time, accumulated pause time and `Date.now()`), not tick counting, so background throttling or device sleep can't make it drift. Notifications fired from a background tab may still arrive late because browsers throttle timers.
+
+### Code
+
+| File | Purpose |
+| --- | --- |
+| `src/lib/focus/timer.ts` | Pure timestamp timer: plans, focus/break segments, pause/resume, position |
+| `src/lib/focus/guard.ts` | Pure strict/gentle rules, grace period, restore after reload |
+| `src/lib/focus/stats.ts` | Pure streaks (time-zone aware day keys), totals, weekly and heatmap data, cup styles |
+| `src/lib/focus/storage.ts` | localStorage with fallback, sanitising, JSON export/import merge, active-session persistence |
+| `src/lib/focus/audio.ts` | Ambient sound generated with Web Audio (brown noise, rain, café murmur) and chimes. No audio files |
+| `src/lib/focus/notify.ts` | Opt-in notifications (through the service worker when available) |
+| `src/lib/focus/app.ts`, `statsApp.ts` | Browser controllers for the two pages |
+| `src/components/focus/BrewFocus.astro`, `src/styles/focus.css` | Markup and styles |
+| `src/i18n/focus.ts` | All strings (en and zh-TW), singular forms (`<key>.one`), and the FAQ used for FAQPage structured data |
+
+Run the tests with `npm test`. They cover:
+- timer accuracy and pause/resume;
+- the gentle grace period and strict failure;
+- reload restore;
+- streaks across midnight, time zones and daylight-saving changes, and a missed day resetting the streak;
+- cups, and export/import.
+
+### Ads and support on Brew Focus
+
+Ads and support links use the same `src/config/monetization.ts` settings described above:
+- `PUBLIC_ADSENSE_CLIENT`, `PUBLIC_ADS_ENABLED` and the `PUBLIC_AD_SLOT_*` IDs;
+- `PUBLIC_BMC_USERNAME` for Buy Me a Coffee.
+
+Placement rules:
+- `html.bf-session-active` hides every ad while a session runs.
+- Ads appear below the setup and results card (separated from controls by text), on the stats page, and in the guides.
+- The Buy Me a Coffee card shows only on the success screen from the 3rd completed session, and a dismissal snoozes it for 7 days.
+
 ## Data handling
 
 The site has no user database. Recipes, preferences, and brew logs remain in browser `localStorage`. Shared recipe links contain only the parameters the user chooses to place in the URL. See the public privacy policy and methodology pages for the current disclosures and calculation assumptions.

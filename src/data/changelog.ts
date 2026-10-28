@@ -10,6 +10,32 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: '2026-10-28',
+    zh: {
+      title: '新增「專注沖煮」計時器及三篇專注指南',
+      items: [
+        '新增「專注沖煮」：番茄鐘式專注模式及放下手機挑戰，專注時咖啡杯慢慢注滿，離開分頁會打瀉（嚴格模式）或計算中斷（寬鬆模式）。',
+        '以時間戳計時，背景分頁亦準確；可選環境聲音（即時生成）、通知及提示音，並在手機上保持螢幕開啟。',
+        '新增統計頁：連續日數、每週圖表、日曆熱圖、已沖煮的咖啡杯，以及 JSON 匯出／匯入。',
+        '新增三篇附參考來源的指南：番茄鐘工作法、減少看手機、咖啡與專注；私隱政策加入通知及專注資料說明。'
+      ]
+    },
+    en: {
+      title: 'New Brew Focus timer and three focus guides',
+      items: [
+        'Added Brew Focus: Pomodoro-style focus mode and a Phone Down Challenge. A coffee cup fills while you focus and spills if you leave the tab (strict) or counts an interruption (gentle).',
+        'Timestamp-based timing stays accurate in background tabs; optional generated ambient sound, notifications and chimes, and the screen stays awake on supported phones.',
+        'Added a stats page with streaks, a weekly chart, a calendar heatmap, cups brewed, and JSON export/import.',
+        'Added three source-backed guides: the Pomodoro Technique, reducing phone distraction, and coffee and focus. The privacy policy now covers notifications and focus data.'
+      ]
+    },
+    links: [
+      { path: 'focus', zh: '專注沖煮', en: 'Brew Focus' },
+      { path: 'guides/pomodoro-technique', zh: '番茄鐘工作法', en: 'Pomodoro guide' },
+      { path: 'privacy-policy', zh: '私隱政策', en: 'Privacy policy' }
+    ]
+  },
+  {
     date: '2026-10-27',
     zh: {
       title: '新增咖啡因計算器及三篇咖啡因指南',
