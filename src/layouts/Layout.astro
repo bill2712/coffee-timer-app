@@ -8,6 +8,7 @@ import PageFeedback from '../components/PageFeedback.astro';
 import AdSenseLoader from '../components/AdSenseLoader.astro';
 import { ADSENSE_CLIENT, BMC_CONFIGURED, BMC_URL } from '../config/monetization';
 import { useCaffeineT } from '../i18n/caffeine';
+import { useFocusT } from '../i18n/focus';
 import { getLangFromUrl, useTranslations, rtlLanguages } from '../i18n/utils';
 import { languages } from '../i18n/ui';
 
@@ -42,6 +43,7 @@ const lang = getLangFromUrl(Astro.url);
 const localeHome = `${base}${lang}/`.replace(/\/+/g, '/');
 const t = useTranslations(lang);
 const tc = useCaffeineT(lang);
+const tf = useFocusT(lang);
 const isRTL = rtlLanguages.includes(lang);
 const hasMultipleLanguages = Object.keys(languages).length > 1;
 
@@ -97,7 +99,8 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${base}${lang}/`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{lang === 'zh-TW' ? '開始沖煮' : 'Start brewing'}</a>
             <a href={`${base}${lang}/history`} class="text-sm font-medium tracking-wide text-coffee-gold hover:text-coffee-light transition-colors duration-200">{lang === 'zh-TW' ? '我的紀錄' : 'My records'}</a>
             <a href={`${base}${lang}/blog`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{lang === 'zh-TW' ? '學習' : 'Learn'}</a>
-            <a href={`${base}${lang}/caffeine-calculator/`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{tc('nav.caffeine')}</a>
+            <a href={`${base}${lang}/focus/`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{tf('nav.focus')}</a>
+            <a href={`${base}${lang}/caffeine-calculator/`} class="text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold transition-colors duration-200">{tc('nav.caffeineShort')}</a>
             <details class="group relative">
               <summary class="flex min-h-[44px] cursor-pointer list-none items-center gap-1 rounded-lg px-2 text-sm font-medium tracking-wide text-coffee-light/80 hover:text-coffee-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coffee-gold">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-xs transition-transform group-open:rotate-180" aria-hidden="true">⌄</span></summary>
               <div class="absolute end-0 top-full z-[70] mt-2 grid w-64 gap-1 rounded-xl border border-coffee-sand/15 bg-coffee-darker p-2 shadow-2xl">
@@ -132,6 +135,7 @@ const finalKeywords = keywords || t('seo.keywords');
         <a href={`${base}${lang}/history`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-gold opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-light active:scale-95">{lang === 'zh-TW' ? '我的紀錄' : 'My records'}</a>
         <a href={`${base}${lang}/blog`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold active:scale-95">{lang === 'zh-TW' ? '學習' : 'Learn'}</a>
         <a href={`${base}${lang}/caffeine-calculator/`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold active:scale-95">☕ {tc('nav.caffeine')}</a>
+        <a href={`${base}${lang}/focus/`} class="mobile-link text-2xl sm:text-3xl font-light tracking-wide text-coffee-light opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:text-coffee-gold active:scale-95">🍅 {tf('nav.focus')}</a>
         <details class="mobile-link group w-full max-w-sm opacity-0 translate-y-12 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
           <summary class="flex min-h-[52px] cursor-pointer list-none items-center justify-center gap-2 text-2xl font-light tracking-wide text-coffee-light">{lang === 'zh-TW' ? '更多' : 'More'} <span class="text-base transition-transform group-open:rotate-180">⌄</span></summary>
           <div class="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-coffee-sand/10 bg-coffee-darker/60 p-3 text-center text-sm text-coffee-sand">
@@ -189,6 +193,7 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/recipes`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '標準配方庫' : 'Standard recipes'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/tools/`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '全部工具' : 'All tools'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/caffeine-calculator/`} class="hover:text-coffee-gold transition-colors">{tc('nav.caffeine')}</a>
+            <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/focus/`} class="hover:text-coffee-gold transition-colors">{tf('nav.focus')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/glossary/`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '詞彙表' : 'Glossary'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/changelog/`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '網站更新紀錄' : 'Site updates'}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/equipment`} class="hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? '器材選擇助手' : 'Equipment chooser'}</a>

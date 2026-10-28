@@ -7,6 +7,7 @@ import AdSlot from '../../../components/AdSlot.astro';
 import Disclaimer from '../../../components/caffeine/Disclaimer.astro';
 import { languages } from '../../../i18n/ui';
 import { useCaffeineT } from '../../../i18n/caffeine';
+import { useFocusT } from '../../../i18n/focus';
 
 export async function getStaticPaths() {
   const locales = Object.keys(languages);
@@ -22,15 +23,25 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { lang, slug } = Astro.params as { lang: string; slug: string };
 const t = useCaffeineT(lang);
+const tf = useFocusT(lang);
 const { Content, headings } = await render(entry);
+const tool = entry.data.tool;
+// Per-tool breadcrumb, call to action, share image and disclaimer.
+const toolInfo = tool === 'focus'
+  ? { crumb: tf('breadcrumb'), path: 'focus/', ctaTitle: tf('article.toolCta'), ctaBody: tf('article.toolCtaBody'), ctaButton: `🍅 ${tf('article.toolCtaButton')}`, og: '/images/og-focus.jpg' }
+  : { crumb: t('breadcrumb'), path: 'caffeine-calculator/', ctaTitle: t('article.toolCta'), ctaBody: t('article.toolCtaBody'), ctaButton: `☕ ${t('article.toolCtaButton')}`, og: '/images/og-caffeine.jpg' };
+const disclaimerKind = entry.data.disclaimer ?? (tool === 'focus' ? 'general' : 'health');
+const disclaimer = disclaimerKind === 'general' ? { text: tf('disclaimer'), label: tf('disclaimer.label') } : {};
 const toc = headings.filter((h) => h.depth === 2);
 const pageUrl = `${SITE_URL}/${lang}/guides/${slug}/`;
 const updated = entry.data.updatedDate ?? entry.data.pubDate;
 const formatDate = (date: Date) =>
   date.toLocaleDateString(lang === 'zh-TW' ? 'zh-HK' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 
+// Same-tool guides first, then the rest (cross-links caffeine and focus content).
 const related = (await getCollection('guides', (other) => other.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && other.id !== entry.id))
-  .sort((a, b) => a.data.order - b.data.order)
+  .sort((a, b) => Number(b.data.tool === tool) - Number(a.data.tool === tool) || a.data.order - b.data.order)
+  .slice(0, 4)
   .map((other) => ({ slug: other.id.split('/').slice(1).join('/'), title: other.data.title, description: other.data.description }));
 
 const jsonLd = {
@@ -41,7 +52,7 @@ const jsonLd = {
   inLanguage: lang,
   datePublished: entry.data.pubDate.toISOString(),
   dateModified: updated.toISOString(),
-  image: `${SITE_URL}/images/og-caffeine.jpg`,
+  image: `${SITE_URL}${toolInfo.og}`,
   author: { '@type': 'Organization', name: entry.data.author, url: `${SITE_URL}/${lang}/about/` },
   publisher: { '@type': 'Organization', name: 'Barista Flow', logo: { '@type': 'ImageObject', url: `${SITE_URL}/favicon.svg` } },
   mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
@@ -49,9 +60,9 @@ const jsonLd = {
 };
 ---
 
-<Layout title={`${entry.data.seoTitle ?? entry.data.title} | Barista Flow`} description={entry.data.description} jsonld={jsonLd} article ogImage="/images/og-caffeine.jpg" themeAware hideTopAd>
+<Layout title={`${entry.data.seoTitle ?? entry.data.title} | Barista Flow`} description={entry.data.description} jsonld={jsonLd} article ogImage={toolInfo.og} themeAware hideTopAd>
   <div class="mx-auto max-w-6xl">
-    <Breadcrumbs items={[{ label: t('breadcrumb'), url: 'caffeine-calculator/' }, { label: entry.data.title }]} />
+    <Breadcrumbs items={[{ label: toolInfo.crumb, url: toolInfo.path }, { label: entry.data.title }]} />
 
     <header class="mb-8 max-w-3xl">
       <p class="text-xs text-coffee-muted">
@@ -63,16 +74,16 @@ const jsonLd = {
       <p class="mt-3 text-xs text-coffee-muted">{t('article.reviewed')}</p>
     </header>
 
-    <Disclaimer lang={lang} class="mb-10 max-w-3xl" />
+    <Disclaimer lang={lang} class="mb-10 max-w-3xl" {...disclaimer} />
 
     <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
       <article class="cc-prose" lang={lang}>
         <Content />
 
         <aside class="cc-cta not-prose">
-          <h2>{t('article.toolCta')}</h2>
-          <p>{t('article.toolCtaBody')}</p>
-          <a href={`/${lang}/caffeine-calculator/`}>☕ {t('article.toolCtaButton')}</a>
+          <h2>{toolInfo.ctaTitle}</h2>
+          <p>{toolInfo.ctaBody}</p>
+          <a href={`/${lang}/${toolInfo.path}`}>{toolInfo.ctaButton}</a>
         </aside>
       </article>
 
@@ -103,6 +114,6 @@ const jsonLd = {
       </section>
     )}
 
-    <Disclaimer lang={lang} class="mt-12" />
+    <Disclaimer lang={lang} class="mt-12" {...disclaimer} />
   </div>
 </Layout>

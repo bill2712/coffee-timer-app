@@ -4,15 +4,18 @@ import { useCaffeineT } from '../../i18n/caffeine';
 interface Props {
   lang: string;
   class?: string;
+  /** Override the default (health) disclaimer text and label. */
+  text?: string;
+  label?: string;
 }
 
-const { lang, class: className = '' } = Astro.props;
+const { lang, class: className = '', text, label } = Astro.props;
 const t = useCaffeineT(lang);
 ---
 
 <p class={`cc-disclaimer ${className}`} role="note">
   <span aria-hidden="true">ℹ️</span>
-  <span><strong>{t('disclaimer.label')}:</strong> {t('disclaimer')}</span>
+  <span><strong>{label ?? t('disclaimer.label')}:</strong> {text ?? t('disclaimer')}</span>
 </p>
 
 <style>

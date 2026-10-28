@@ -22,7 +22,7 @@ const faq = caffeineFaq[caffeineLang(lang)];
 const Explainer = lang === 'zh-TW' ? ExplainerZh : ExplainerEn;
 const pageUrl = `${SITE_URL}/${lang}/caffeine-calculator/`;
 
-const guides = (await getCollection('guides', (entry) => entry.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`)))
+const guides = (await getCollection('guides', (entry) => entry.id.toLowerCase().startsWith(`${lang.toLowerCase()}/`) && entry.data.tool === 'caffeine'))
   .sort((a, b) => a.data.order - b.data.order)
   .map((entry) => ({ slug: entry.id.split('/').slice(1).join('/'), title: entry.data.title, description: entry.data.description }));
 
