@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import ScrollTable from '../../../components/ScrollTable.astro';
 import { SITE_URL } from '../../../config';
 import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
@@ -60,7 +61,7 @@ const jsonLd = {
 };
 ---
 
-<Layout title={`${entry.data.seoTitle ?? entry.data.title} | Barista Flow`} description={entry.data.description} jsonld={jsonLd} article ogImage={toolInfo.og} hideTopAd>
+<Layout title={`${entry.data.seoTitle ?? entry.data.title} | Barista Flow`} description={entry.data.description} jsonld={jsonLd} article ogImage={toolInfo.og} noindex={entry.data.noindex} hideTopAd>
   <div class="mx-auto max-w-6xl">
     <Breadcrumbs items={[{ label: toolInfo.crumb, url: toolInfo.path }, { label: entry.data.title }]} />
 
@@ -78,7 +79,7 @@ const jsonLd = {
 
     <div class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
       <article class="cc-prose" lang={lang}>
-        <Content />
+        <Content components={{ table: ScrollTable }} />
 
         <aside class="cc-cta not-prose">
           <h2>{toolInfo.ctaTitle}</h2>

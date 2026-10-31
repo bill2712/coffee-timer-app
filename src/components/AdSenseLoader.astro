@@ -1,14 +1,23 @@
 ---
 /**
- * Loads adsbygoogle.js without blocking rendering: after the page has finished
- * loading and the browser is idle, or on the first scroll / tap / key press —
- * whichever comes first. The site-verification meta tag stays in <head>.
+ * Loads adsbygoogle.js according to the visitor's choice in CookieBanner, without blocking rendering.
+ * - "declined": the script is never requested.
+ * - no choice yet: only non-personalised ads may be requested.
+ * - "accepted": personalised ads are allowed.
+ * The script is injected after load/idle or on the first interaction, whichever comes first.
+ * In the EEA, UK and Switzerland, Google's certified consent message (enabled in AdSense) runs on top of this.
+ * The site-verification meta tag stays in <head>.
  */
 import { ADSENSE_CLIENT } from '../config/monetization';
 ---
 
 <script is:inline define:vars={{ client: ADSENSE_CLIENT }}>
   (function () {
+    var choice = null;
+    try { choice = localStorage.getItem('barista_flow_cookie_consent'); } catch (error) {}
+    if (choice === 'declined') return;
+    window.adsbygoogle = window.adsbygoogle || [];
+    if (choice !== 'accepted') window.adsbygoogle.requestNonPersonalizedAds = 1;
     var done = false;
     function load() {
       if (done) return;

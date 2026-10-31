@@ -5,6 +5,7 @@ import AdSlot from '../components/AdSlot.astro';
 import PWAInstallPrompt from '../components/PWAInstallPrompt.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
 import PageFeedback from '../components/PageFeedback.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 import AdSenseLoader from '../components/AdSenseLoader.astro';
 import { ADSENSE_CLIENT, BMC_CONFIGURED, BMC_URL } from '../config/monetization';
 import { useCaffeineT } from '../i18n/caffeine';
@@ -56,6 +57,9 @@ const finalKeywords = keywords || t('seo.keywords');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/svg+xml" href={base + "favicon.svg"} />
+    <link rel="icon" href={base + "favicon.ico"} sizes="32x32" />
+    <link rel="apple-touch-icon" href={base + "apple-touch-icon.png"} />
+    <meta name="theme-color" content="#12100E" />
     <link rel="manifest" href={base + "manifest.json"} />
     
     <!-- Google Fonts Preconnect and Links -->
@@ -69,7 +73,7 @@ const finalKeywords = keywords || t('seo.keywords');
     <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-    <!-- AdSense loader: injected after load/idle so it never blocks rendering. Ad units stay disabled until approval. -->
+    <!-- AdSense loader: respects the visitor's cookie choice and loads after the page is idle. Ad units stay disabled until approval. -->
     <AdSenseLoader />
   </head>
   <body class="bg-coffee-dark text-coffee-light min-h-screen flex flex-col selection:bg-coffee-gold selection:text-coffee-dark overflow-x-hidden transition-colors duration-500 break-words hyphens-auto">
@@ -201,6 +205,7 @@ const finalKeywords = keywords || t('seo.keywords');
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/contact`} class="hover:text-coffee-gold transition-colors">{t('nav.contact')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/terms-of-service`} class="hover:text-coffee-gold transition-colors">{t('nav.terms')}</a>
             <a href={`${import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL}/${lang}/privacy-policy`} class="hover:text-coffee-gold transition-colors">{t('nav.privacy')}</a>
+            <button type="button" data-cookie-settings class="text-start hover:text-coffee-gold transition-colors">{lang === 'zh-TW' ? 'Cookie 設定' : 'Cookie settings'}</button>
           </div>
         </div>
         
@@ -337,5 +342,6 @@ const finalKeywords = keywords || t('seo.keywords');
       });
     </script>
     <PWAInstallPrompt />
+    <CookieBanner lang={lang} />
   </body>
 </html>

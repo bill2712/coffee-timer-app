@@ -1,4 +1,4 @@
-const CACHE_NAME = 'barista-flow-v13';
+const CACHE_NAME = 'barista-flow-v14';
 const APP_SHELL = ['/', '/zh-TW/', '/en/', '/zh-TW/training/', '/en/training/', '/zh-TW/equipment/', '/en/equipment/', '/zh-TW/beans/', '/en/beans/', '/zh-TW/insights/', '/en/insights/', '/zh-TW/tools/grinder-calibration/', '/en/tools/grinder-calibration/', '/zh-TW/caffeine-calculator/', '/en/caffeine-calculator/', '/zh-TW/focus/', '/en/focus/', '/zh-TW/focus/stats/', '/en/focus/stats/', '/manifest.json', '/favicon.svg'];
 
 self.addEventListener('install', (event) => {
@@ -27,8 +27,11 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          // Only keep successful pages; caching a 404 would replay it offline.
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
           return response;
         })
         .catch(async () => (

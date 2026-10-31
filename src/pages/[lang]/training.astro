@@ -61,7 +61,7 @@ const c = isZh ? {
           <div class="flex gap-4">
             <span class="lesson-number flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-coffee-sand/20 bg-coffee-dark font-bold text-coffee-sand">{index + 1}</span>
             <div class="min-w-0 flex-1">
-              <div class="flex flex-wrap items-center justify-between gap-2"><h2 class="font-display text-xl font-bold text-coffee-light">{lesson[0]}</h2><span class="lesson-status text-[10px] font-bold uppercase tracking-wider text-coffee-muted">{c.locked}</span></div>
+              <div class="flex flex-wrap items-center justify-between gap-2"><h2 class="font-display text-xl font-bold text-coffee-light">{lesson[0]}</h2><span class="lesson-status text-[10px] font-bold uppercase tracking-wider text-coffee-sand">{c.locked}</span></div>
               <p class="mt-2 text-sm leading-6 text-coffee-sand/80">{lesson[1]}</p>
               <p class="mt-3 rounded-lg border border-coffee-sand/10 bg-coffee-dark/50 px-3 py-2 text-xs leading-5 text-coffee-muted">{lesson[2]}</p>
               <button type="button" class="lesson-start mt-4 hidden min-h-[46px] w-full rounded-xl border border-coffee-gold/35 px-4 text-sm font-bold text-coffee-gold hover:bg-coffee-gold/10 disabled:cursor-not-allowed disabled:opacity-40" data-start-lesson={index + 1}>{c.start}</button>
@@ -104,10 +104,10 @@ const c = isZh ? {
         const number = card.querySelector('.lesson-number');
         card.classList.toggle('border-green-400/30', done);
         card.classList.toggle('border-coffee-gold/45', current && !done);
-        card.classList.toggle('opacity-55', !available);
+        card.classList.toggle('opacity-80', !available);
         number?.classList.toggle('bg-green-400', done);
         number?.classList.toggle('text-coffee-dark', done);
-        if (status) { status.textContent = done ? pageCopy.complete : current ? pageCopy.current : pageCopy.locked; status.className = `lesson-status text-[10px] font-bold uppercase tracking-wider ${done ? 'text-green-300' : current ? 'text-coffee-gold' : 'text-coffee-muted'}`; }
+        if (status) { status.textContent = done ? pageCopy.complete : current ? pageCopy.current : pageCopy.locked; status.className = `lesson-status text-[10px] font-bold uppercase tracking-wider ${done ? 'text-green-300' : current ? 'text-coffee-gold' : 'text-coffee-sand'}`; }
         if (button) { button.classList.toggle('hidden', !available); button.disabled = !available; button.textContent = done ? pageCopy.repeat : pageCopy.start; }
       });
     };

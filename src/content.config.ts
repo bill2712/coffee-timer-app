@@ -32,6 +32,8 @@ const guides = defineCollection({
     tool: z.enum(['caffeine', 'focus']).default('caffeine'),
     /** Disclaimer shown on the page: health (not medical advice) or general productivity. */
     disclaimer: z.enum(['health', 'general']).optional(),
+    /** Keep the page online but out of search results and the sitemap (general productivity topics). */
+    noindex: z.boolean().default(false),
   }),
 });
 
