@@ -1,7 +1,28 @@
 # Machine-translated editions published 2026-06-14 to 2026-08-30 were removed.
-# Send their old URLs to the same page in a reviewed language (Simplified Chinese -> Traditional Chinese).
+# Old URLs go to the same page in a reviewed language (Simplified Chinese -> Traditional Chinese).
+# Rules are matched top to bottom; static rules come before dynamic ones.
+
+# Stray paths from the removed editions (translated app names, locale-less glossary).
+/glossary /zh-TW/glossary/ 301
+/glossary/ /zh-TW/glossary/ 301
+/%E0%A4%95%E0%A5%89%E0%A4%AB%E0%A5%80-%E0%A4%9F%E0%A4%BE%E0%A4%87%E0%A4%AE%E0%A4%B0-%E0%A4%90%E0%A4%AA/ / 301
+/%E0%A6%95%E0%A6%AB%E0%A6%BF-%E0%A6%9F%E0%A6%BE%E0%A6%87%E0%A6%AE%E0%A6%BE%E0%A6%B0-%E0%A6%85%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%AA/ / 301
+
+# An old glossary-link bug nested a second locale, e.g. /pt/zh-tw/glossary/crema/.
+# Send these, and lower-case /zh-tw/ glossary links, to the term on the glossary index.
+# Pointing at /zh-TW/glossary/#term (not /zh-TW/glossary/term/) cannot loop even if matching ignores case.
+/:locale/zh-tw/glossary/:term/ /zh-TW/glossary/#:term 301
+/:locale/zh-tw/glossary/:term /zh-TW/glossary/#:term 301
+/:locale/zh-cn/glossary/:term/ /zh-TW/glossary/#:term 301
+/:locale/zh-cn/glossary/:term /zh-TW/glossary/#:term 301
+/zh-tw/glossary/:term/ /zh-TW/glossary/#:term 301
+/zh-tw/glossary/:term /zh-TW/glossary/#:term 301
+
+# Removed language editions.
 /zh-CN /zh-TW/ 301
 /zh-CN/* /zh-TW/:splat 301
+/zh-cn /zh-TW/ 301
+/zh-cn/* /zh-TW/:splat 301
 /fr /en/ 301
 /fr/* /en/:splat 301
 /ja /en/ 301
