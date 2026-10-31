@@ -15,7 +15,7 @@ export const changelog: ChangelogEntry[] = [
       title: '私隱選擇、電郵聯絡、舊網址轉址與網站維護',
       items: [
         '新增私隱選擇：拒絕廣告 Cookie 後不再載入 AdSense 程式碼，可隨時在頁尾「Cookie 設定」更改，私隱政策亦已同步更新。',
-        '新增電郵聯絡 hello@coffeetimer.online，不需要 GitHub 帳戶也可以查詢或要求更正。',
+        '新增電郵聯絡 beyond01hk@gmail.com，不需要 GitHub 帳戶也可以查詢或要求更正。',
         '2026 年 8 月下架的機器翻譯語言版本，其舊網址現會轉到相同內容的中文或英文頁面，不再顯示「找不到頁面」。',
         '番茄鐘及減少看手機兩篇一般效率指南保留在網站，但不再提交搜尋引擎索引，讓網站集中於咖啡沖煮。',
         '更換為 Barista Flow 自己的網站圖示；修正私隱模式下備份頁無法載入、部分文字對比不足等問題；計時圖表不再依賴外部 CDN，並在每次更新前自動檢查失效連結。'
@@ -25,7 +25,7 @@ export const changelog: ChangelogEntry[] = [
       title: 'Privacy choice, email contact, old-URL redirects and maintenance',
       items: [
         'Added a privacy choice: declining ad cookies stops AdSense code from loading, and “Cookie settings” in the footer changes it at any time. The privacy policy was updated to match.',
-        'Added email contact at hello@coffeetimer.online, so questions and correction requests no longer need a GitHub account.',
+        'Added email contact at beyond01hk@gmail.com, so questions and correction requests no longer need a GitHub account.',
         'Old addresses from the machine-translated language editions removed in August 2026 now redirect to the same page in Chinese or English instead of showing “page not found”.',
         'The Pomodoro and phone-distraction guides stay on the site but are no longer submitted to search engines, keeping the site focused on coffee brewing.',
         'Replaced the default browser icon with Barista Flow’s own; fixed the backup page failing in private browsing and some low-contrast text; the timer chart no longer depends on an external CDN, and every update is checked automatically for broken links.'

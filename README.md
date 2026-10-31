@@ -151,4 +151,4 @@ Cloudflare Workers Builds builds and deploys `main` to coffeetimer.online (see `
 
 GitHub Actions (`.github/workflows/ci.yml`) runs the check, build and link check on every pull request and push to `main`. It does not deploy.
 
-Mail to `hello@coffeetimer.online` relies on Cloudflare Email Routing.
+The public contact address is set by `CONTACT_EMAIL` in `src/config.js`.
