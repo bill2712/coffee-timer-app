@@ -1,0 +1,70 @@
+## How the caffeine calculator works
+
+Most people know roughly how much coffee they drink. Far fewer know how much caffeine is still in their body at 11 p.m. — and that second number is the one that matters for sleep. This calculator estimates it from three things: what you drank, when you drank it, and how quickly your body clears caffeine.
+
+### 1. Caffeine is absorbed over the first hour
+
+Caffeine passes from the stomach and small intestine into the blood almost completely. Peak blood levels usually arrive somewhere between 15 and 120 minutes after drinking, depending on how fast you drink, whether you have eaten and the drink itself. The calculator uses a smooth absorption curve that reaches its peak about **45 minutes** after each drink. That is why the curve on the chart rises for a while after you log a cup instead of jumping straight up.
+
+### 2. Your body removes a fixed share every hour
+
+Once absorbed, caffeine is broken down mainly by a liver enzyme called CYP1A2. Elimination is roughly *exponential*: in each half-life, half of what is left disappears. With the default half-life of 5 hours, a 100 mg cup leaves about 50 mg after 5 hours, about 25 mg after 10 hours and about 12 mg after 15 hours.
+
+Five hours is a reasonable middle value for healthy adults, but the published range is wide — from under 2 hours to more than 9 hours — and some situations, such as late pregnancy or certain medications, push it far higher. That is why you can change the half-life in Settings. Our [caffeine half-life guide](/en/guides/caffeine-half-life/) explains what speeds it up or slows it down.
+
+### 3. Every drink adds its own curve
+
+Each drink you log produces its own rise-and-fall curve. The calculator adds all of them together to get the total amount in your body at every moment. A morning espresso and an afternoon cold brew therefore stack: the second drink starts on top of whatever is left of the first.
+
+In technical terms this is a one-compartment pharmacokinetic model with first-order absorption and elimination (sometimes called the Bateman function). We report the result as **milligrams in your body**, not as a blood concentration, because milligrams are easier to compare with the label on a can or the size of a cup.
+
+### 4. Checking your bedtime and finding your last call
+
+The dashboard looks ahead to your next bedtime and estimates how much caffeine will be left then. It also checks the first three hours of sleep. This matters because a drink taken right before bed has not been fully absorbed yet: the amount *at* bedtime looks small, but it keeps rising after you lie down. Checking the early hours of sleep avoids rewarding a late cup.
+
+The **last call** time answers a practical question: *if I want one more standard cup (95 mg, about a 240 ml mug of filter coffee), what is the latest time I can drink it?* The calculator tries that cup at five-minute steps before your bedtime and returns the latest time at which everything you have logged plus that cup stays at or under your threshold. If you are already above the threshold without another cup, it tells you to skip more caffeine today instead.
+
+## How to read the chart
+
+The chart covers 24 hours: from 18 hours before your bedtime to 6 hours after it.
+
+- **Gold line and shaded area** — your estimated caffeine over time.
+- **Dashed red line** — your sleep threshold (50 mg by default).
+- **Solid brown line with a moon** — your bedtime.
+- **Dotted line labelled “Now”** — the current time. The headline number on the dashboard is the value of the gold line at this point.
+- **Circles on the bottom axis** — the drinks you have logged.
+- **Dashed blue line** — appears when you use the “What if?” simulator and shows how the curve would change.
+
+Hover over the chart, tap it on a phone, or focus it with the Tab key and use the arrow keys to read exact values. A text summary of the chart is also available to screen readers.
+
+A good-looking day has the gold line well below the red dashed line by the time it reaches the bedtime marker. If the line crosses the bedtime marker above the red line, the status shows “Too high”, and the chart makes it easy to see which drink caused it.
+
+## Choosing your settings
+
+**Bedtime.** Use the time you actually try to fall asleep, not the time you go to your bedroom. The default is 11:00 p.m.
+
+**Half-life.** If you have no reason to think otherwise, keep 5 hours. Pick the *fast* preset (about 3 hours) if you smoke or find that coffee wears off quickly. Pick the *slow* preset (about 7 hours) if an afternoon coffee regularly keeps you awake. If you are pregnant, use hormonal contraception, have liver disease or take medication, do not guess — ask a doctor or pharmacist, because your half-life could be well outside the slider range.
+
+**Sleep threshold.** There is no official “safe for sleep” level of caffeine. We use 50 mg — about half a cup of filter coffee — as a cautious general guideline. If you sleep well with more, raise it; if caffeine affects you easily, lower it.
+
+**Daily reference.** The default of 400 mg reflects the amount the U.S. Food and Drug Administration and the European Food Safety Authority cite for healthy adults. It is a reference point, not a target. The calculator shows a gentle warning when your total passes it, and a stronger warning if a single entry exceeds 1,000 mg.
+
+## Limitations
+
+This calculator is designed to help you notice patterns and plan your day. It cannot measure anything, and you should be aware of what it leaves out:
+
+- **Drink values are estimates.** The caffeine in coffee varies with the beans, roast, grind, brew method and cup size. Laboratory tests of the same coffee-shop drink bought on different days have found large differences. Our [guide to caffeine in drinks](/en/guides/caffeine-in-drinks/) shows typical ranges; enter the exact amount whenever you know it.
+- **Everyone is different.** Genetics, pregnancy, smoking, medications, liver health, age and body size all change how caffeine is handled. The model uses one half-life for the whole day and assumes a standard absorption time.
+- **Sensitivity is not the same as level.** Two people with the same amount in their body can react differently; some genetic differences affect how strongly the brain responds to caffeine, not just how fast it is cleared.
+- **Sleep has many causes.** Stress, light, alcohol, exercise, noise and your body clock all matter. A “good” status does not guarantee a good night, and a “too high” status does not mean you will not sleep.
+- **It is not for medical decisions.** Do not use this tool to decide how to take medication, to manage a health condition or during pregnancy without professional advice.
+
+If you ever feel unwell after consuming caffeine — a racing or irregular heartbeat, chest pain, vomiting, confusion or seizures — stop and get medical help immediately.
+
+## Sources
+
+- U.S. Food and Drug Administration. [Spilling the Beans: How Much Caffeine Is Too Much?](https://www.fda.gov/consumers/consumer-updates/spilling-beans-how-much-caffeine-too-much)
+- EFSA Panel on Dietetic Products, Nutrition and Allergies (2015). [Scientific Opinion on the safety of caffeine](https://www.efsa.europa.eu/en/efsajournal/pub/4102). *EFSA Journal* 13(5):4102.
+- Institute of Medicine (2001). [Pharmacology of Caffeine](https://www.ncbi.nlm.nih.gov/books/NBK223808/), in *Caffeine for the Sustainment of Mental Task Performance*. National Academies Press.
+- Nehlig A. (2018). [Interindividual Differences in Caffeine Metabolism and Factors Driving Caffeine Consumption](https://pubmed.ncbi.nlm.nih.gov/29514871/). *Pharmacological Reviews* 70(2):384–411.
+- Drake C, Roehrs T, Shambroom J, Roth T. (2013). [Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed](https://pmc.ncbi.nlm.nih.gov/articles/PMC3805807/). *Journal of Clinical Sleep Medicine* 9(11):1195–1200.

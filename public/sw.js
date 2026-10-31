@@ -1,5 +1,5 @@
-const CACHE_NAME = 'barista-flow-v12';
-const APP_SHELL = ['/', '/zh-TW/', '/en/', '/zh-TW/training/', '/en/training/', '/zh-TW/equipment/', '/en/equipment/', '/zh-TW/beans/', '/en/beans/', '/zh-TW/insights/', '/en/insights/', '/zh-TW/tools/grinder-calibration/', '/en/tools/grinder-calibration/', '/manifest.json', '/favicon.svg'];
+const CACHE_NAME = 'barista-flow-v14';
+const APP_SHELL = ['/', '/zh-TW/', '/en/', '/zh-TW/training/', '/en/training/', '/zh-TW/equipment/', '/en/equipment/', '/zh-TW/beans/', '/en/beans/', '/zh-TW/insights/', '/en/insights/', '/zh-TW/tools/grinder-calibration/', '/en/tools/grinder-calibration/', '/zh-TW/caffeine-calculator/', '/en/caffeine-calculator/', '/zh-TW/focus/', '/en/focus/', '/zh-TW/focus/stats/', '/en/focus/stats/', '/manifest.json', '/favicon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

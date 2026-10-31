@@ -1,10 +1,105 @@
 ---
 /**
- * Ad placements are intentionally disabled while the site is under review.
- * Empty ad boxes made content pages look unfinished and reduced the
- * content-to-ad ratio. Re-enable only after AdSense approval and after a
- * Google-certified CMP has been configured.
+ * Reusable AdSense unit.
+ *
+ * - Renders nothing until ads are enabled (PUBLIC_ADS_ENABLED=true) AND the slot
+ *   has a real ad-unit ID (see src/config/monetization.ts). In `astro dev` a dashed
+ *   outline shows where the unit would go.
+ * - Reserves a fixed height so the page does not jump when the ad loads (CLS).
+ * - Is labelled "Advertisement" and must never be placed next to buttons, inputs
+ *   or the drink logger (AdSense policy on accidental clicks). Keep at least one
+ *   block of text between an ad and any interactive control.
+ * - Fills only when scrolled near the viewport (lazy), after the loader script
+ *   has been injected by AdSenseLoader.astro.
  */
+import { ADS_ENABLED, ADSENSE_CLIENT, AD_SLOTS, isSlotConfigured, type AdSlotType } from '../config/monetization';
+import { getLangFromUrl } from '../i18n/utils';
+
+interface Props {
+  type?: AdSlotType | string;
+  id?: string;
+  class?: string;
+}
+
+const { type = 'in-article', id, class: className = '' } = Astro.props;
+const slotType = (type in AD_SLOTS ? type : 'in-article') as AdSlotType;
+const lang = getLangFromUrl(Astro.url);
+const label = lang === 'zh-TW' ? '廣告' : 'Advertisement';
+
+// Reserved heights (px): mobile / desktop. Sidebar is desktop-only.
+const sizes: Record<AdSlotType, { mobile: number; desktop: number; desktopOnly?: boolean; format: string }> = {
+  results: { mobile: 280, desktop: 250, format: 'auto' },
+  'in-article': { mobile: 280, desktop: 280, format: 'fluid' },
+  sidebar: { mobile: 0, desktop: 600, desktopOnly: true, format: 'vertical' },
+  'top-leaderboard': { mobile: 100, desktop: 90, format: 'horizontal' },
+  'bottom-utility': { mobile: 250, desktop: 250, format: 'auto' }
+};
+const size = sizes[slotType];
+const live = ADS_ENABLED && isSlotConfigured(slotType);
+const preview = !live && import.meta.env.DEV && (slotType === 'results' || slotType === 'in-article' || slotType === 'sidebar');
+const visibility = size.desktopOnly ? 'hidden lg:block' : 'block';
 ---
 
-<!-- Advertising disabled pending publisher review. -->
+{(live || preview) && (
+  <aside
+    id={id}
+    class={`ad-slot ${visibility} ${className}`}
+    style={`--ad-h-m:${size.mobile}px;--ad-h-d:${size.desktop}px`}
+    aria-label={label}
+    data-ad-type={slotType}
+  >
+    <span class="ad-slot-label">{label}</span>
+    {live ? (
+      <ins
+        class="adsbygoogle ad-slot-ins"
+        style="display:block"
+        data-ad-client={ADSENSE_CLIENT}
+        data-ad-slot={AD_SLOTS[slotType]}
+        data-ad-format={size.format === 'fluid' ? 'fluid' : size.format}
+        data-ad-layout={size.format === 'fluid' ? 'in-article' : undefined}
+        data-full-width-responsive={size.format === 'auto' ? 'true' : undefined}
+      ></ins>
+    ) : (
+      <div class="ad-slot-preview">Ad slot: {slotType} (disabled — preview in dev only)</div>
+    )}
+  </aside>
+)}
+
+<style is:global>
+  .ad-slot { min-height: calc(var(--ad-h-m) + 1.25rem); overflow: hidden; }
+  @media (min-width: 1024px) { .ad-slot { min-height: calc(var(--ad-h-d) + 1.25rem); } }
+  .ad-slot-label { display: block; margin-bottom: .25rem; color: var(--color-coffee-muted); font-size: .65rem; letter-spacing: .12em; text-align: center; text-transform: uppercase; }
+  .ad-slot-ins, .ad-slot-preview { min-height: var(--ad-h-m); }
+  @media (min-width: 1024px) { .ad-slot-ins, .ad-slot-preview { min-height: var(--ad-h-d); } }
+  .ad-slot-preview { display: grid; place-items: center; border: 1px dashed color-mix(in srgb, var(--color-coffee-sand) 40%, transparent); border-radius: .75rem; color: var(--color-coffee-muted); font-size: .75rem; }
+</style>
+
+<script>
+  // Fill each unit once it is close to the viewport (lazy loading).
+  const units = document.querySelectorAll<HTMLModElement>('ins.adsbygoogle:not([data-bf-queued])');
+  if (units.length) {
+    const fill = (unit: HTMLModElement) => {
+      if (unit.dataset.bfQueued || unit.offsetParent === null) return; // hidden (e.g. desktop-only on mobile)
+      unit.dataset.bfQueued = 'true';
+      try {
+        const w = window as unknown as { adsbygoogle?: unknown[] };
+        (w.adsbygoogle = w.adsbygoogle || []).push({});
+      } catch {
+        /* ad blocked or not approved yet */
+      }
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            fill(entry.target as HTMLModElement);
+            io.unobserve(entry.target);
+          }
+        }
+      }, { rootMargin: '400px 0px' });
+      units.forEach((unit) => io.observe(unit));
+    } else {
+      units.forEach(fill);
+    }
+  }
+</script>

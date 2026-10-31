@@ -43,7 +43,7 @@ const c = isZh ? {
       try { localStorage.setItem(KEY, value); } catch (error) {}
       banner.hidden = true;
       // Apply the choice on this page without reloading (a reload would reset a running brew timer).
-      // AdsLoader reads the stored choice on every later page load.
+      // AdSenseLoader reads the stored choice on every later page load.
       var ads = window.adsbygoogle = window.adsbygoogle || [];
       if (value === 'accepted') { ads.requestNonPersonalizedAds = 0; ads.pauseAdRequests = 0; }
       if (value === 'declined') { ads.pauseAdRequests = 1; }

@@ -1,0 +1,6 @@
+---
+// Article tables scroll sideways on narrow screens; tabindex lets keyboard users scroll them too.
+const { class: className, ...rest } = Astro.props;
+---
+
+<table tabindex="0" class={className} {...rest}><slot /></table>

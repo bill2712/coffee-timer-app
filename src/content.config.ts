@@ -15,4 +15,26 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+// Long-form caffeine guides at /[lang]/guides/[slug]/ (see src/pages/[lang]/guides/[slug].astro).
+const guides = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: "./src/content/guides" }),
+  schema: z.object({
+    title: z.string(),
+    /** Shorter <title> for search results (falls back to `title`). */
+    seoTitle: z.string().optional(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    author: z.string().default('Barista Flow editorial team'),
+    /** Sort order in "related guides" lists. */
+    order: z.number().default(0),
+    /** Which tool the guide belongs to (breadcrumb, call to action, share image). */
+    tool: z.enum(['caffeine', 'focus']).default('caffeine'),
+    /** Disclaimer shown on the page: health (not medical advice) or general productivity. */
+    disclaimer: z.enum(['health', 'general']).optional(),
+    /** Keep the page online but out of search results and the sitemap (general productivity topics). */
+    noindex: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, guides };

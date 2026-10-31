@@ -1,0 +1,164 @@
+---
+/**
+ * Personal Brew Focus statistics. Data lives only in the browser, so this page is
+ * noindex and excluded from the sitemap (like /history and /insights).
+ */
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { getLanguagePaths } from '../../../i18n/routes';
+import { getLangFromUrl } from '../../../i18n/utils';
+import { focusLang, focusStrings, useFocusT } from '../../../i18n/focus';
+import { CUP_TIERS } from '../../../lib/focus/stats';
+import { cupSvg } from '../../../lib/focus/cups';
+import '../../../styles/focus.css';
+
+export function getStaticPaths() {
+  return getLanguagePaths();
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useFocusT(lang);
+const i18nJson = JSON.stringify(focusStrings[focusLang(lang)]).replace(/</g, '\\u003c');
+const tiers = [...CUP_TIERS].reverse();
+---
+
+<Layout title={t('stats.meta.title')} description={t('stats.meta.desc')} noindex hideTopAd ogImage="/images/og-focus.jpg">
+  <div id="bf-stats" class="bf mx-auto max-w-4xl" data-lang={lang}>
+    <script is:inline type="application/json" id="bf-i18n" set:html={i18nJson} />
+    <Breadcrumbs items={[{ label: t('breadcrumb'), url: 'focus/' }, { label: t('breadcrumb.stats') }]} />
+    <header class="mb-8">
+      <h1 class="font-display text-4xl font-bold text-coffee-light sm:text-5xl">{t('stats.heading')}</h1>
+      <p class="mt-3 text-coffee-sand">{t('stats.intro')}</p>
+      <p id="bf-storage-warning" class="bf-alert mt-4" role="status" hidden>{t('stats.storageOff')}</p>
+    </header>
+
+    <dl class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div class="bf-tile"><dt>{t('stats.streak')}</dt><dd id="st-streak">—</dd></div>
+      <div class="bf-tile"><dt>{t('stats.longest')}</dt><dd id="st-longest">—</dd></div>
+      <div class="bf-tile"><dt>{t('stats.total')}</dt><dd id="st-total">—</dd></div>
+      <div class="bf-tile"><dt>{t('stats.sessions')}</dt><dd id="st-sessions">—</dd></div>
+      <div class="bf-tile"><dt>{t('stats.success')}</dt><dd id="st-success">—</dd></div>
+      <div class="bf-tile"><dt>{t('stats.month')}</dt><dd id="st-month">—</dd></div>
+    </dl>
+
+    <section class="bf-card mt-8" aria-labelledby="st-week-title">
+      <h2 id="st-week-title" class="bf-h2">{t('stats.week')}</h2>
+      <div id="st-week" class="st-week mt-4" role="img" aria-label={t('stats.weekLabel')}></div>
+      <p id="st-week-summary" class="sr-only"></p>
+    </section>
+
+    <section class="bf-card mt-6" aria-labelledby="st-heat-title">
+      <h2 id="st-heat-title" class="bf-h2">{t('stats.heatmap')}</h2>
+      <div class="st-heat-scroll mt-4">
+        <div id="st-heat" role="img" aria-label={t('stats.heatmapLabel')} aria-describedby="st-heat-summary"></div>
+      </div>
+      <div class="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-coffee-muted">
+        <p id="st-heat-summary" class="m-0"></p>
+        <span class="flex items-center gap-1" aria-hidden="true">{t('stats.less')}
+          {[0, 1, 2, 3, 4].map((l) => <span class={`st-cell st-l${l}`}></span>)}{t('stats.more')}
+        </span>
+      </div>
+    </section>
+
+    <AdSlot type="results" id="focus-stats-ad" class="mt-8" />
+
+    <section class="bf-card mt-8" aria-labelledby="st-shelf-title">
+      <h2 id="st-shelf-title" class="bf-h2">{t('stats.shelf')}</h2>
+      <p class="mt-1 text-sm text-coffee-muted">{t('stats.shelfIntro')}</p>
+      <ul class="st-tiers mt-4">
+        {tiers.map((tier) => (
+          <li><Fragment set:html={cupSvg(tier.style, 32)} /><span>{t('cup.tier', { cup: t(`cup.${tier.style}` as any), min: tier.minMinutes })}</span><b id={`st-count-${tier.style}`}>0</b></li>
+        ))}
+      </ul>
+      <div id="st-shelf" class="st-shelf mt-5"></div>
+      <p id="st-shelf-empty" class="mt-3 text-sm text-coffee-muted">{t('stats.shelfEmpty')}</p>
+    </section>
+
+    <section class="bf-card mt-6" aria-labelledby="st-history-title">
+      <h2 id="st-history-title" class="bf-h2">{t('stats.history')}</h2>
+      <ul id="st-history" class="st-history mt-4"></ul>
+      <p id="st-history-empty" class="text-sm text-coffee-muted">{t('stats.historyEmpty')}</p>
+    </section>
+
+    <section class="bf-card mt-6" aria-labelledby="st-share-title">
+      <h2 id="st-share-title" class="bf-h2">{t('share.heading')}</h2>
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <button type="button" class="bf-btn bf-btn-ghost" data-share="story">📱 {t('share.story')}</button>
+        <button type="button" class="bf-btn bf-btn-ghost" data-share="square">🟫 {t('share.square')}</button>
+      </div>
+      <div id="bf-share-result" class="mt-4" hidden>
+        <img id="bf-share-img" alt={t('share.alt')} class="bf-share-preview" width="1080" height="1920" decoding="async" />
+        <div class="mt-3 grid grid-cols-2 gap-3">
+          <a id="bf-share-download" class="bf-btn bf-btn-primary" href="#" download="brew-focus.png">⬇️ {t('share.download')}</a>
+          <button id="bf-share-native" type="button" class="bf-btn bf-btn-ghost" hidden>↗️ {t('share.share')}</button>
+        </div>
+      </div>
+      <p id="bf-share-error" class="bf-error mt-2" role="alert" hidden>{t('share.error')}</p>
+    </section>
+
+    <section class="bf-card mt-6" aria-labelledby="st-data-title">
+      <h2 id="st-data-title" class="bf-h2">🔒 {t('stats.data')}</h2>
+      <p class="mt-1 text-sm text-coffee-muted">{t('stats.dataBody')}</p>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <button id="st-export" type="button" class="bf-btn bf-btn-ghost">⬇️ {t('stats.export')}</button>
+        <label class="bf-btn bf-btn-ghost" for="st-import">⬆️ {t('stats.import')}</label>
+        <input id="st-import" type="file" accept="application/json,.json" class="sr-only" />
+        <button id="st-clear" type="button" class="bf-btn bf-btn-danger">{t('stats.clear')}</button>
+      </div>
+      <p id="st-data-status" class="mt-3 text-sm text-coffee-sand" role="status"></p>
+    </section>
+
+    <p class="mt-8"><a href={`/${lang}/focus/`} class="inline-flex min-h-[44px] items-center font-bold text-coffee-gold hover:text-coffee-light">{t('stats.back')}</a></p>
+
+    <dialog id="st-confirm" class="cc-dialog" aria-labelledby="st-confirm-title" aria-describedby="st-confirm-body">
+      <form method="dialog">
+        <h2 id="st-confirm-title" class="bf-h2">{t('stats.confirm.title')}</h2>
+        <p id="st-confirm-body" class="mt-2 text-sm leading-6 text-coffee-sand">{t('stats.confirm.body')}</p>
+        <div class="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button value="cancel" class="bf-btn bf-btn-ghost" autofocus>{t('stats.confirm.no')}</button>
+          <button value="confirm" class="bf-btn bf-btn-danger-solid">{t('stats.confirm.yes')}</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
+</Layout>
+
+<script>
+  import { initFocusStats } from '../../../lib/focus/statsApp';
+  initFocusStats();
+</script>
+
+<style is:global>
+  .st-week svg { display: block; width: 100%; height: 200px; }
+  .st-week .bar { fill: var(--color-coffee-gold); }
+  .st-week .bar-empty { fill: color-mix(in srgb, var(--color-coffee-sand) 18%, transparent); }
+  .st-week text { fill: var(--color-coffee-muted); font-size: 12px; font-family: var(--font-sans); }
+  .st-week .val { fill: var(--color-coffee-light); font-weight: 700; }
+  .st-heat-scroll { overflow-x: auto; padding-bottom: .25rem; }
+  .st-heat { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 14px); gap: 3px; width: max-content; }
+  .st-cell { display: inline-block; width: 14px; height: 14px; border-radius: 3px; }
+  .st-l0 { background: color-mix(in srgb, var(--color-coffee-sand) 14%, transparent); }
+  .st-l1 { background: color-mix(in srgb, var(--color-coffee-gold) 35%, transparent); }
+  .st-l2 { background: color-mix(in srgb, var(--color-coffee-gold) 55%, transparent); }
+  .st-l3 { background: color-mix(in srgb, var(--color-coffee-gold) 78%, transparent); }
+  .st-l4 { background: var(--color-coffee-gold); }
+  .st-future { visibility: hidden; }
+  .st-tiers { display: grid; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 640px) { .st-tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .st-tiers li { display: flex; align-items: center; gap: .6rem; color: var(--color-coffee-sand); font-size: .85rem; }
+  .st-tiers li span { flex: 1; }
+  .st-tiers b { color: var(--color-coffee-light); font-variant-numeric: tabular-nums; }
+  .st-shelf { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .35rem; border-bottom: 6px solid color-mix(in srgb, var(--color-coffee-accent) 70%, transparent); padding-bottom: .25rem; color: var(--color-coffee-sand); }
+  .st-shelf:empty { display: none; }
+  .st-shelf .bf-cup { animation: bf-pop .35s ease both; }
+  .st-shelf-more { align-self: center; color: var(--color-coffee-muted); font-size: .85rem; }
+  .st-history { display: grid; margin: 0; padding: 0; list-style: none; }
+  .st-history li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; border-bottom: 1px solid color-mix(in srgb, var(--color-coffee-sand) 14%, transparent); padding: .6rem 0; color: var(--color-coffee-light); font-size: .9rem; }
+  .st-history li:last-child { border-bottom: 0; }
+  .st-history small { color: var(--color-coffee-muted); }
+  .st-ok { color: var(--bf-good); font-weight: 700; }
+  .st-bad { color: var(--bf-bad); font-weight: 700; }
+  .cc-dialog { margin: auto; max-height: calc(100dvh - 2rem); overflow-y: auto; max-width: min(28rem, calc(100vw - 2rem)); border: 1px solid color-mix(in srgb, var(--color-coffee-sand) 20%, transparent); border-radius: 1.25rem; background: var(--color-coffee-darker); padding: 1.5rem; color: var(--color-coffee-light); }
+  .cc-dialog::backdrop { background: rgb(0 0 0 / .55); }
+</style>

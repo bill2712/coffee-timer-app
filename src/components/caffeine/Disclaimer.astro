@@ -1,0 +1,24 @@
+---
+import { useCaffeineT } from '../../i18n/caffeine';
+
+interface Props {
+  lang: string;
+  class?: string;
+  /** Override the default (health) disclaimer text and label. */
+  text?: string;
+  label?: string;
+}
+
+const { lang, class: className = '', text, label } = Astro.props;
+const t = useCaffeineT(lang);
+---
+
+<p class={`cc-disclaimer ${className}`} role="note">
+  <span aria-hidden="true">ℹ️</span>
+  <span><strong>{label ?? t('disclaimer.label')}:</strong> {text ?? t('disclaimer')}</span>
+</p>
+
+<style>
+  .cc-disclaimer { display: flex; gap: .6rem; align-items: flex-start; border: 1px solid color-mix(in srgb, var(--color-coffee-sand) 25%, transparent); border-radius: .9rem; background: color-mix(in srgb, var(--color-coffee-sand) 7%, transparent); padding: .75rem 1rem; color: var(--color-coffee-sand); font-size: .85rem; line-height: 1.55; }
+  .cc-disclaimer strong { color: var(--color-coffee-light); }
+</style>

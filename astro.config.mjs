@@ -21,8 +21,10 @@ export default defineConfig({
       // Exclude private, device-only views and short glossary detail pages
       // (glossary pages are noindex; the glossary index and full guides are indexed).
       filter: (page) =>
-        !/\/(?:zh-TW|en)\/(?:history|beans|insights|data)\/?$/.test(page) &&
-        !/\/(?:zh-TW|en)\/glossary\/[^/]+\/?$/.test(page),
+        !/\/(?:zh-TW|en)\/(?:history|beans|insights|data|focus\/stats)\/?$/.test(page) &&
+        !/\/(?:zh-TW|en)\/glossary\/[^/]+\/?$/.test(page) &&
+        // General productivity guides stay online but are noindex (frontmatter `noindex: true`).
+        !/\/(?:zh-TW|en)\/guides\/(?:pomodoro-technique|phone-distraction)\/?$/.test(page),
       i18n: {
         defaultLocale: 'zh-TW',
         locales: {
