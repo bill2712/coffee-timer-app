@@ -2,6 +2,9 @@
 # Send their old URLs to the same page in a reviewed language (Simplified Chinese -> Traditional Chinese).
 /zh-CN /zh-TW/ 301
 /zh-CN/* /zh-TW/:splat 301
+# Some old links used a lower-case locale (seen in Search Console as /zh-cn/...).
+/zh-cn /zh-TW/ 301
+/zh-cn/* /zh-TW/:splat 301
 /fr /en/ 301
 /fr/* /en/:splat 301
 /ja /en/ 301
