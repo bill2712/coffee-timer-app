@@ -20,7 +20,7 @@ const c = isZh ? {
 };
 ---
 
-<div id="cookie-banner" role="region" aria-labelledby="cookie-banner-title" hidden class="fixed bottom-0 start-0 z-[100] flex w-full justify-center border-t border-coffee-sand/20 bg-coffee-dark shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<div id="cookie-banner" role="region" aria-labelledby="cookie-banner-title" hidden class="fixed bottom-0 start-0 z-[100] flex w-full justify-center border-t border-coffee-sand/20 bg-coffee-dark pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
   <div class="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 py-5 sm:px-6 md:flex-row lg:px-8">
     <div class="flex-1 md:pe-8">
       <p id="cookie-banner-title" class="mb-1 text-sm font-bold text-coffee-light">{c.title}</p>
@@ -48,7 +48,13 @@ const c = isZh ? {
       if (value === 'accepted') { ads.requestNonPersonalizedAds = 0; ads.pauseAdRequests = 0; }
       if (value === 'declined') { ads.pauseAdRequests = 1; }
     };
+    // Publish the banner's height so bottom toasts and prompts can sit above it.
+    var root = document.documentElement;
+    var syncHeight = function () { root.style.setProperty('--cookie-banner-h', banner.hidden ? '0px' : banner.offsetHeight + 'px'); };
+    if ('ResizeObserver' in window) new ResizeObserver(syncHeight).observe(banner);
+    new MutationObserver(syncHeight).observe(banner, { attributes: true, attributeFilter: ['hidden'] });
     if (!read()) banner.hidden = false;
+    syncHeight();
     document.getElementById('btn-cookie-accept')?.addEventListener('click', function () { save('accepted'); });
     document.getElementById('btn-cookie-decline')?.addEventListener('click', function () { save('declined'); });
     document.querySelectorAll('[data-cookie-settings]').forEach(function (button) {
