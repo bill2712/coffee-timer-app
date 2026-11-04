@@ -56,6 +56,8 @@
   /* Session view */
   html.bf-session-active, html.bf-session-active body { overflow: hidden; }
   html.bf-session-active .ad-slot { visibility: hidden; }
+  /* Keep the full-screen session clear: the cookie banner returns when the session ends. */
+  .bf-session-active #cookie-banner { display: none !important; }
   .bf-session { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; overflow-y: auto; background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--color-coffee-gold) 10%, var(--color-coffee-dark)) 0%, var(--color-coffee-darker) 70%); padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom)); }
   .bf-session[hidden] { display: none; }
   .bf-session-inner { display: flex; width: 100%; max-width: 28rem; flex-direction: column; align-items: center; text-align: center; }
